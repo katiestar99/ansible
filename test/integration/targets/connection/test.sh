@@ -6,15 +6,15 @@ set -eux
 
 # Run connection tests with both the default and C locale.
 
-                ansible-playbook test_connection.yml -i "${INVENTORY}" "$@"
-LC_ALL=C LANG=C ansible-playbook test_connection.yml -i "${INVENTORY}" "$@"
+                assible-playbook test_connection.yml -i "${INVENTORY}" "$@"
+LC_ALL=C LANG=C assible-playbook test_connection.yml -i "${INVENTORY}" "$@"
 
 # Check that connection vars do not appear in the output
-# https://github.com/ansible/ansible/pull/70853
+# https://github.com/assible/assible/pull/70853
 trap "rm out.txt" EXIT
 
-ansible all -i "${INVENTORY}" -m set_fact -a "testing=value" -v | tee out.txt
-if grep 'ansible_host' out.txt
+assible all -i "${INVENTORY}" -m set_fact -a "testing=value" -v | tee out.txt
+if grep 'assible_host' out.txt
 then
     echo "FAILURE: Connection vars in output"
     exit 1

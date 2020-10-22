@@ -1,18 +1,18 @@
-# unit tests for ansible other facter fact collector
+# unit tests for assible other facter fact collector
 # -*- coding: utf-8 -*-
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # Make coding more python3-ish
@@ -23,14 +23,14 @@ from units.compat.mock import Mock, patch
 
 from .. base import BaseFactsTest
 
-from ansible.module_utils.facts.other.facter import FacterFactCollector
+from assible.module_utils.facts.other.facter import FacterFactCollector
 
 facter_json_output = '''
 {
   "operatingsystemmajrelease": "25",
   "hardwareisa": "x86_64",
   "kernel": "Linux",
-  "path": "/home/testuser/src/ansible/bin:/home/testuser/perl5/bin:/home/testuser/perl5/bin:/home/testuser/bin:/home/testuser/.local/bin:/home/testuser/pythons/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/testuser/.cabal/bin:/home/testuser/gopath/bin:/home/testuser/.rvm/bin",
+  "path": "/home/testuser/src/assible/bin:/home/testuser/perl5/bin:/home/testuser/perl5/bin:/home/testuser/bin:/home/testuser/.local/bin:/home/testuser/pythons/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/testuser/.cabal/bin:/home/testuser/gopath/bin:/home/testuser/.rvm/bin",
   "memorysize": "15.36 GB",
   "memoryfree": "4.88 GB",
   "swapsize": "7.70 GB",
@@ -186,7 +186,7 @@ class TestFacterCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'facter']
     valid_subsets = ['facter']
-    fact_namespace = 'ansible_facter'
+    fact_namespace = 'assible_facter'
     collector_class = FacterFactCollector
 
     def _mock_module(self):
@@ -198,7 +198,7 @@ class TestFacterCollector(BaseFactsTest):
         mock_module.run_command = Mock(return_value=(0, facter_json_output, ''))
         return mock_module
 
-    @patch('ansible.module_utils.facts.other.facter.FacterFactCollector.get_facter_output')
+    @patch('assible.module_utils.facts.other.facter.FacterFactCollector.get_facter_output')
     def test_bogus_json(self, mock_get_facter_output):
         module = self._mock_module()
 
@@ -211,7 +211,7 @@ class TestFacterCollector(BaseFactsTest):
         self.assertIsInstance(facts_dict, dict)
         self.assertEqual(facts_dict, {})
 
-    @patch('ansible.module_utils.facts.other.facter.FacterFactCollector.run_facter')
+    @patch('assible.module_utils.facts.other.facter.FacterFactCollector.run_facter')
     def test_facter_non_zero_return_code(self, mock_run_facter):
         module = self._mock_module()
 

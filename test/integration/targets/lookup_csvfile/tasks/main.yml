@@ -47,7 +47,7 @@
   assert:
     that:
       - lookup('csvfile', 'this file file=crlf.csv delimiter=, col=2') == "crlf"
-      - lookup('csvfile', 'ansible file=crlf.csv delimiter=, col=1') == "parses"
+      - lookup('csvfile', 'assible file=crlf.csv delimiter=, col=1') == "parses"
 
 - name: Check file with multi word filename
   assert:

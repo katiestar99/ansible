@@ -37,7 +37,7 @@
 # we do, then we do another test to make sure attribute and case_sensitive
 # work on it.
 - name: Test for do_unique
-  shell: "{{ansible_python_interpreter}} -c 'from jinja2 import filters; print(\"do_unique\" in dir(filters))'"
+  shell: "{{assible_python_interpreter}} -c 'from jinja2 import filters; print(\"do_unique\" in dir(filters))'"
   tags: unique
   register: do_unique_res
 

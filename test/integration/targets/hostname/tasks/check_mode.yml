@@ -6,7 +6,7 @@
 
     - name: Change hostname (check_mode)
       hostname:
-        name: crocodile.ansible.test.doesthiswork.net.example.com
+        name: crocodile.assible.test.doesthiswork.net.example.com
       check_mode: true
       register: hn
 

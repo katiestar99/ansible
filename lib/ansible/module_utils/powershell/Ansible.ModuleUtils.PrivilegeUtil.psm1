@@ -1,7 +1,7 @@
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
-#AnsibleRequires -CSharpUtil Ansible.Privilege
+#AssibleRequires -CSharpUtil Assible.Privilege
 
 Function Import-PrivilegeUtil {
     <#
@@ -15,13 +15,13 @@ Function Import-PrivilegeUtil {
         Add-DeprecationWarning -obj $result.Value -message $msg -version 2.12
     } else {
         $module = Get-Variable -Name module -ErrorAction SilentlyContinue
-        if ($null -ne $module -and $module.Value.GetType().FullName -eq "Ansible.Basic.AnsibleModule") {
+        if ($null -ne $module -and $module.Value.GetType().FullName -eq "Assible.Basic.AssibleModule") {
             $module.Value.Deprecate($msg, "2.12")
         }
     }
 }
 
-Function Get-AnsiblePrivilege {
+Function Get-AssiblePrivilege {
     <#
     .SYNOPSIS
     Get the status of a privilege for the current process. This returns
@@ -33,28 +33,28 @@ Function Get-AnsiblePrivilege {
     ArgumentException.
 
     .EXAMPLE
-    Get-AnsiblePrivilege -Name SeDebugPrivilege
+    Get-AssiblePrivilege -Name SeDebugPrivilege
     #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)][String]$Name
     )
 
-    if (-not [Ansible.Privilege.PrivilegeUtil]::CheckPrivilegeName($Name)) {
+    if (-not [Assible.Privilege.PrivilegeUtil]::CheckPrivilegeName($Name)) {
         throw [System.ArgumentException] "Invalid privilege name '$Name'"
     }
 
-    $process_token = [Ansible.Privilege.PrivilegeUtil]::GetCurrentProcess()
-    $privilege_info = [Ansible.Privilege.PrivilegeUtil]::GetAllPrivilegeInfo($process_token)
+    $process_token = [Assible.Privilege.PrivilegeUtil]::GetCurrentProcess()
+    $privilege_info = [Assible.Privilege.PrivilegeUtil]::GetAllPrivilegeInfo($process_token)
     if ($privilege_info.ContainsKey($Name)) {
         $status = $privilege_info.$Name
-        return $status.HasFlag([Ansible.Privilege.PrivilegeAttributes]::Enabled)
+        return $status.HasFlag([Assible.Privilege.PrivilegeAttributes]::Enabled)
     } else {
         return $null
     }
 }
 
-Function Set-AnsiblePrivilege {
+Function Set-AssiblePrivilege {
     <#
     .SYNOPSIS
     Enables/Disables a privilege on the current process' token. If a privilege
@@ -63,10 +63,10 @@ Function Set-AnsiblePrivilege {
 
     .EXAMPLE
     # enable a privilege
-    Set-AnsiblePrivilege -Name SeCreateSymbolicLinkPrivilege -Value $true
+    Set-AssiblePrivilege -Name SeCreateSymbolicLinkPrivilege -Value $true
 
     # disable a privilege
-    Set-AnsiblePrivilege -Name SeCreateSymbolicLinkPrivilege -Value $false
+    Set-AssiblePrivilege -Name SeCreateSymbolicLinkPrivilege -Value $false
     #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -79,7 +79,7 @@ Function Set-AnsiblePrivilege {
         $false { "Disable" }
     }
 
-    $current_state = Get-AnsiblePrivilege -Name $Name
+    $current_state = Get-AssiblePrivilege -Name $Name
     if ($current_state -eq $Value) {
         return  # no change needs to occur
     } elseif ($null -eq $current_state) {
@@ -87,13 +87,13 @@ Function Set-AnsiblePrivilege {
         throw [System.InvalidOperationException] "Cannot $($action.ToLower()) the privilege '$Name' as it has been removed from the token"
     }
 
-    $process_token = [Ansible.Privilege.PrivilegeUtil]::GetCurrentProcess()
+    $process_token = [Assible.Privilege.PrivilegeUtil]::GetCurrentProcess()
     if ($PSCmdlet.ShouldProcess($Name, "$action the privilege $Name")) {
         $new_state = New-Object -TypeName 'System.Collections.Generic.Dictionary`2[[System.String], [System.Nullable`1[System.Boolean]]]'
         $new_state.Add($Name, $Value)
-        [Ansible.Privilege.PrivilegeUtil]::SetTokenPrivileges($process_token, $new_state) > $null
+        [Assible.Privilege.PrivilegeUtil]::SetTokenPrivileges($process_token, $new_state) > $null
     }
 }
 
-Export-ModuleMember -Function Import-PrivilegeUtil, Get-AnsiblePrivilege, Set-AnsiblePrivilege
+Export-ModuleMember -Function Import-PrivilegeUtil, Get-AssiblePrivilege, Set-AssiblePrivilege
 

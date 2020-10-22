@@ -1,6 +1,6 @@
-.. _ansible_configuration_settings:
+.. _assible_configuration_settings:
 
-{% set name = 'Ansible Configuration Settings' -%}
+{% set name = 'Assible Configuration Settings' -%}
 {% set name_slug = 'config' -%}
 
 {% set name_len = name|length + 0-%}
@@ -8,24 +8,24 @@
 {{name}}
 {{ '=' * name_len }}
 
-Ansible supports several sources for configuring its behavior, including an ini file named ``ansible.cfg``, environment variables, command-line options, playbook keywords, and variables. See :ref:`general_precedence_rules` for details on the relative precedence of each source.
+Assible supports several sources for configuring its behavior, including an ini file named ``assible.cfg``, environment variables, command-line options, playbook keywords, and variables. See :ref:`general_precedence_rules` for details on the relative precedence of each source.
 
-The ``ansible-config`` utility allows users to see all the configuration settings available, their defaults, how to set them and
-where their current value comes from. See :ref:`ansible-config` for more information.
+The ``assible-config`` utility allows users to see all the configuration settings available, their defaults, how to set them and
+where their current value comes from. See :ref:`assible-config` for more information.
 
-.. _ansible_configuration_settings_locations:
+.. _assible_configuration_settings_locations:
 
 The configuration file
 ======================
 
 Changes can be made and used in a configuration file which will be searched for in the following order:
 
- * ``ANSIBLE_CONFIG`` (environment variable if set)
- * ``ansible.cfg`` (in the current directory)
- * ``~/.ansible.cfg`` (in the home directory)
- * ``/etc/ansible/ansible.cfg``
+ * ``ASSIBLE_CONFIG`` (environment variable if set)
+ * ``assible.cfg`` (in the current directory)
+ * ``~/.assible.cfg`` (in the home directory)
+ * ``/etc/assible/assible.cfg``
 
-Ansible will process the above list and use the first file found, all others are ignored.
+Assible will process the above list and use the first file found, all others are ignored.
 
 .. note::
 
@@ -37,40 +37,40 @@ Ansible will process the above list and use the first file found, all others are
    For instance::
 
         # some basic default values...
-        inventory = /etc/ansible/hosts  ; This points to the file that lists your hosts
+        inventory = /etc/assible/hosts  ; This points to the file that lists your hosts
 
 
 .. _cfg_in_world_writable_dir:
 
-Avoiding security risks with ``ansible.cfg`` in the current directory
+Avoiding security risks with ``assible.cfg`` in the current directory
 ---------------------------------------------------------------------
 
 
-If Ansible were to load ``ansible.cfg`` from a world-writable current working
+If Assible were to load ``assible.cfg`` from a world-writable current working
 directory, it would create a serious security risk. Another user could place
-their own config file there, designed to make Ansible run malicious code both
+their own config file there, designed to make Assible run malicious code both
 locally and remotely, possibly with elevated privileges. For this reason,
-Ansible will not automatically load a config file from the current working
+Assible will not automatically load a config file from the current working
 directory if the directory is world-writable.
 
-If you depend on using Ansible with a config file in the current working
+If you depend on using Assible with a config file in the current working
 directory, the best way to avoid this problem is to restrict access to your
-Ansible directories to particular user(s) and/or group(s). If your Ansible
+Assible directories to particular user(s) and/or group(s). If your Assible
 directories live on a filesystem which has to emulate Unix permissions, like
 Vagrant or Windows Subsystem for Linux (WSL), you may, at first, not know how
 you can fix this as ``chmod``, ``chown``, and ``chgrp`` might not work there.
 In most of those cases, the correct fix is to modify the mount options of the
 filesystem so the files and directories are readable and writable by the users
-and groups running Ansible but closed to others.  For more details on the
+and groups running Assible but closed to others.  For more details on the
 correct settings, see:
 
 * for Vagrant, the `Vagrant documentation <https://www.vagrantup.com/docs/synced-folders/>`_ covers synced folder permissions.
 * for WSL, the `WSL docs <https://docs.microsoft.com/en-us/windows/wsl/wsl-config#set-wsl-launch-settings>`_
   and this `Microsoft blog post <https://blogs.msdn.microsoft.com/commandline/2018/01/12/chmod-chown-wsl-improvements/>`_ cover mount options.
 
-If you absolutely depend on storing your Ansible config in a world-writable current
+If you absolutely depend on storing your Assible config in a world-writable current
 working directory, you can explicitly specify the config file via the
-:envvar:`ANSIBLE_CONFIG` environment variable. Please take
+:envvar:`ASSIBLE_CONFIG` environment variable. Please take
 appropriate steps to mitigate the security concerns above before doing so.
 
 
@@ -78,19 +78,19 @@ Relative paths for configuration
 --------------------------------
 
 You can specify a relative path for many configuration options. In most of
-those cases the path used will be relative to the ``ansible.cfg`` file used
+those cases the path used will be relative to the ``assible.cfg`` file used
 for the current execution. If you need a path relative to your current working
 directory (CWD) you can use the ``{%raw%}{{CWD}}{%endraw%}`` macro to specify
 it. We do not recommend this approach, as using your CWD as the root of
 relative paths can be a security risk. For example:
-``cd /tmp; secureinfo=./newrootpassword ansible-playbook ~/safestuff/change_root_pwd.yml``.
+``cd /tmp; secureinfo=./newrootpassword assible-playbook ~/safestuff/change_root_pwd.yml``.
 
 
 Common Options
 ==============
 
 This is a copy of the options available from our release, your local install might have extra options due to additional plugins,
-you can use the command line utility mentioned above (`ansible-config`) to browse through those.
+you can use the command line utility mentioned above (`assible-config`) to browse through those.
 
 {% if config_options %}
 
@@ -133,10 +133,10 @@ you can use the command line utility mentioned above (`ansible-config`) to brows
 Environment Variables
 =====================
 
-.. envvar:: ANSIBLE_CONFIG
+.. envvar:: ASSIBLE_CONFIG
 
 
-    Override the default ansible config file
+    Override the default assible config file
 
 
 {% for config_option in config_options %}

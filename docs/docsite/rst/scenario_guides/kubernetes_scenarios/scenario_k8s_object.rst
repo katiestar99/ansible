@@ -10,20 +10,20 @@ Creating K8S object
 Introduction
 ============
 
-This guide will show you how to utilize Ansible to create Kubernetes objects such as Pods, Deployments, and Secrets.
+This guide will show you how to utilize Assible to create Kubernetes objects such as Pods, Deployments, and Secrets.
 
 Scenario Requirements
 =====================
 
 * Software
 
-    * Ansible 2.9.10 or later must be installed
+    * Assible 2.9.10 or later must be installed
 
-    * The Python modules ``openshift`` and ``kubernetes`` must be installed on the Ansible controller (or Target host if not executing against localhost)
+    * The Python modules ``openshift`` and ``kubernetes`` must be installed on the Assible controller (or Target host if not executing against localhost)
 
     * Kubernetes Cluster
 
-    * Kubectl binary installed on the Ansible controller
+    * Kubectl binary installed on the Assible controller
 
 
 * Access / Credentials
@@ -39,18 +39,18 @@ Assumptions
 Caveats
 =======
 
-- community.kubernetes 1.1.0 is going to migrate to `kubernetes.core <https://github.com/ansible-collections/kubernetes.core>`_
+- community.kubernetes 1.1.0 is going to migrate to `kubernetes.core <https://github.com/assible-collections/kubernetes.core>`_
 
 Example Description
 ===================
 
-In this use case / example, we will create a Pod in the given Kubernetes Cluster.  The following Ansible playbook showcases the basic parameters that are needed for this.
+In this use case / example, we will create a Pod in the given Kubernetes Cluster.  The following Assible playbook showcases the basic parameters that are needed for this.
 
 .. literalinclude:: task_outputs/Add_a_pod_using_k8s.yaml
 
-Since Ansible utilizes the Kubernetes API to perform actions, in this use case we will be connecting directly to the Kubernetes cluster.
+Since Assible utilizes the Kubernetes API to perform actions, in this use case we will be connecting directly to the Kubernetes cluster.
 
-To begin, there are a few bits of information we will need. Here you are using Kubeconfig which is pre-configured in your machine. The Kubeconfig is generally located at ``~/.kube/config``. It is highly recommended to store sensitive information such as password, user certificates in a more secure fashion using :ref:`ansible-vault` or using `Ansible Tower credentials <https://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html>`_.
+To begin, there are a few bits of information we will need. Here you are using Kubeconfig which is pre-configured in your machine. The Kubeconfig is generally located at ``~/.kube/config``. It is highly recommended to store sensitive information such as password, user certificates in a more secure fashion using :ref:`assible-vault` or using `Assible Tower credentials <https://docs.assible.com/assible-tower/latest/html/userguide/credentials.html>`_.
 
 Now you need to supply the information about the Pod which will be created. Using ``definition`` parameter of the ``community.kubernetes.k8s`` module, you specify `PodTemplate <https://kubernetes.io/docs/concepts/workloads/pods/#pod-templates>`_. This PodTemplate is identical to what you provide to the ``kubectl`` command.
 

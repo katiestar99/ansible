@@ -1,19 +1,19 @@
 # (c) 2016, James Cammarata <jimi@sngx.net>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -22,7 +22,7 @@ __metaclass__ = type
 from units.compat import unittest
 from units.compat.mock import patch, MagicMock
 
-from ansible.executor.task_result import TaskResult
+from assible.executor.task_result import TaskResult
 
 
 class TestTaskResult(unittest.TestCase):
@@ -34,7 +34,7 @@ class TestTaskResult(unittest.TestCase):
         tr = TaskResult(mock_host, mock_task, dict())
 
         # test loading a result with a JSON string
-        with patch('ansible.parsing.dataloader.DataLoader.load') as p:
+        with patch('assible.parsing.dataloader.DataLoader.load') as p:
             tr = TaskResult(mock_host, mock_task, '{}')
 
     def test_task_result_is_changed(self):
@@ -144,7 +144,7 @@ class TestTaskResult(unittest.TestCase):
         mock_task = MagicMock()
 
         # no_log should remove secrets
-        tr = TaskResult(mock_host, mock_task, dict(_ansible_no_log=True, secret='DONTSHOWME'))
+        tr = TaskResult(mock_host, mock_task, dict(_assible_no_log=True, secret='DONTSHOWME'))
         clean = tr.clean_copy()
         self.assertTrue('secret' not in clean._result)
 
@@ -157,7 +157,7 @@ class TestTaskResult(unittest.TestCase):
             mock_host,
             mock_task,
             dict(
-                _ansible_no_log=True,
+                _assible_no_log=True,
                 retries=5,
                 attempts=5,
                 changed=False,

@@ -1,5 +1,5 @@
 # Test that unarchiving is performed if files are missing
-# https://github.com/ansible/ansible-modules-core/issues/1064
+# https://github.com/assible/assible-modules-core/issues/1064
 - name: create our unarchive destination
   file:
     path: '{{remote_tmp_dir}}/test-unarchive-tar-gz'

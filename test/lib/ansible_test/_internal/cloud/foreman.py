@@ -32,14 +32,14 @@ class ForemanProvider(CloudProvider):
 
     DOCKER_SIMULATOR_NAME = 'foreman-stub'
 
-    DOCKER_IMAGE = 'quay.io/ansible/foreman-test-container:1.4.0'
+    DOCKER_IMAGE = 'quay.io/assible/foreman-test-container:1.4.0'
     """Default image to run Foreman stub from.
 
     The simulator must be pinned to a specific version
     to guarantee CI passes with the version used.
 
     It's source source itself resides at:
-    https://github.com/ansible/foreman-test-container
+    https://github.com/assible/foreman-test-container
     """
 
     def __init__(self, args):
@@ -49,10 +49,10 @@ class ForemanProvider(CloudProvider):
         """
         super(ForemanProvider, self).__init__(args)
 
-        self.__container_from_env = os.environ.get('ANSIBLE_FRMNSIM_CONTAINER')
+        self.__container_from_env = os.environ.get('ASSIBLE_FRMNSIM_CONTAINER')
         """Overrides target container, might be used for development.
 
-        Use ANSIBLE_FRMNSIM_CONTAINER=whatever_you_want if you want
+        Use ASSIBLE_FRMNSIM_CONTAINER=whatever_you_want if you want
         to use other image. Omit/empty otherwise.
         """
 

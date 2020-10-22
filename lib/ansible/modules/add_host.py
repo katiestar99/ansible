@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 
 # Copyright: (c) 2012, Seth Vidal (@skvidal)
-# Copyright: Ansible Team
+# Copyright: Assible Team
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -11,7 +11,7 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: add_host
-short_description: Add a host (and alternatively a group) to the ansible-playbook in-memory inventory
+short_description: Add a host (and alternatively a group) to the assible-playbook in-memory inventory
 description:
 - Use variables to create new hosts and groups in inventory for use in later plays of the same playbook.
 - Takes variables so you can define the new hosts more fully.
@@ -33,15 +33,15 @@ notes:
 - This module bypasses the play host loop and only runs once for all the hosts in the play, if you need it
   to iterate use a C(loop) construct. If you need to dynamically add all hosts targeted by a playbook for
   later use, the C(group_by) module is potentially a better choice.
-- The alias C(host) of the parameter C(name) is only available on Ansible 2.4 and newer.
-- Since Ansible 2.4, the C(inventory_dir) variable is now set to C(None) instead of the 'global inventory source',
+- The alias C(host) of the parameter C(name) is only available on Assible 2.4 and newer.
+- Since Assible 2.4, the C(inventory_dir) variable is now set to C(None) instead of the 'global inventory source',
   because you can now have multiple sources.  An example was added that shows how to partially restore the previous behaviour.
 - Windows targets are supported by this module.
 - Though this module does not change the remote host, we do provide 'changed' status as it can be useful for those trying to track inventory changes.
 seealso:
-- module: ansible.builtin.group_by
+- module: assible.builtin.group_by
 author:
-- Ansible Core Team
+- Assible Core Team
 - Seth Vidal (@skvidal)
 '''
 
@@ -63,19 +63,19 @@ EXAMPLES = r'''
   add_host:
     name: '{{ new_ip }}:{{ new_port }}'
 
-- name: Add a host alias that we reach through a tunnel (Ansible 1.9 and older)
+- name: Add a host alias that we reach through a tunnel (Assible 1.9 and older)
   add_host:
     hostname: '{{ new_ip }}'
-    ansible_ssh_host: '{{ inventory_hostname }}'
-    ansible_ssh_port: '{{ new_port }}'
+    assible_ssh_host: '{{ inventory_hostname }}'
+    assible_ssh_port: '{{ new_port }}'
 
-- name: Add a host alias that we reach through a tunnel (Ansible 2.0 and newer)
+- name: Add a host alias that we reach through a tunnel (Assible 2.0 and newer)
   add_host:
     hostname: '{{ new_ip }}'
-    ansible_host: '{{ inventory_hostname }}'
-    ansible_port: '{{ new_port }}'
+    assible_host: '{{ inventory_hostname }}'
+    assible_port: '{{ new_port }}'
 
-- name: Ensure inventory vars are set to the same value as the inventory_hostname has (close to pre Ansible 2.4 behaviour)
+- name: Ensure inventory vars are set to the same value as the inventory_hostname has (close to pre Assible 2.4 behaviour)
   add_host:
     hostname: charlie
     inventory_dir: '{{ inventory_dir }}'
@@ -84,5 +84,5 @@ EXAMPLES = r'''
   add_host:
     name: '{{ item }}'
     groups: done
-  loop: "{{ ansible_play_hosts }}"
+  loop: "{{ assible_play_hosts }}"
 '''

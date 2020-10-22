@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'status': ['preview'],
+ASSIBLE_METADATA = {'status': ['preview'],
                     'supported_by': 'community',
                     'metadata_version': '1.1'}
 
@@ -19,10 +19,10 @@ DOCUMENTATION = '''
 module: tower_credential_type
 author: "Adrien Fleury (@fleu42)"
 version_added: "2.7"
-short_description: Create, update, or destroy custom Ansible Tower credential type.
+short_description: Create, update, or destroy custom Assible Tower credential type.
 description:
-    - Create, update, or destroy Ansible Tower credential type. See
-      U(https://www.ansible.com/tower) for an overview.
+    - Create, update, or destroy Assible Tower credential type. See
+      U(https://www.assible.com/tower) for an overview.
 options:
     name:
       description:
@@ -36,21 +36,21 @@ options:
       description:
         - >-
           The type of credential type being added. Note that only cloud and
-          net can be used for creating credential types. Refer to the Ansible
+          net can be used for creating credential types. Refer to the Assible
           for more information.
       choices: [ 'ssh', 'vault', 'net', 'scm', 'cloud', 'insights' ]
       required: False
     inputs:
       description:
         - >-
-          Enter inputs using either JSON or YAML syntax. Refer to the Ansible
+          Enter inputs using either JSON or YAML syntax. Refer to the Assible
           Tower documentation for example syntax.
       required: False
     injectors:
       description:
         - >-
           Enter injectors using either JSON or YAML syntax. Refer to the
-          Ansible Tower documentation for example syntax.
+          Assible Tower documentation for example syntax.
       required: False
     state:
       description:
@@ -87,7 +87,7 @@ EXAMPLES = '''
 RETURN = ''' # '''
 
 
-from ansible.module_utils.ansible_tower import (
+from assible.module_utils.assible_tower import (
     TowerModule,
     tower_auth_config,
     tower_check_mode
@@ -103,7 +103,7 @@ except ImportError:
 
 KIND_CHOICES = {
     'ssh': 'Machine',
-    'vault': 'Ansible Vault',
+    'vault': 'Assible Vault',
     'net': 'Network',
     'scm': 'Source Control',
     'cloud': 'Lots of others',

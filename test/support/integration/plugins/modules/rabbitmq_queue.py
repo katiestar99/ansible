@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -101,9 +101,9 @@ except ImportError:
     REQUESTS_IMP_ERR = traceback.format_exc()
     HAS_REQUESTS = False
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.six.moves.urllib import parse as urllib_parse
-from ansible.module_utils.rabbitmq import rabbitmq_argument_spec
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils.six.moves.urllib import parse as urllib_parse
+from assible.module_utils.rabbitmq import rabbitmq_argument_spec
 
 
 def main():
@@ -124,7 +124,7 @@ def main():
             max_priority=dict(default=None, type='int')
         )
     )
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
+    module = AssibleModule(argument_spec=argument_spec, supports_check_mode=True)
 
     url = "%s://%s:%s/api/queues/%s/%s" % (
         module.params['login_protocol'],

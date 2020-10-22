@@ -1,12 +1,12 @@
 .. _sample_setup:
 
 ********************
-Sample Ansible setup
+Sample Assible setup
 ********************
 
-You have learned about playbooks, inventory, roles, and variables. This section pulls all those elements together, outlining a sample setup for automating a web service. You can find more example playbooks illustrating these patterns in our `ansible-examples repository <https://github.com/ansible/ansible-examples>`_.  (NOTE: These may not use all of the features in the latest release, but are still an excellent reference!).
+You have learned about playbooks, inventory, roles, and variables. This section pulls all those elements together, outlining a sample setup for automating a web service. You can find more example playbooks illustrating these patterns in our `assible-examples repository <https://github.com/assible/assible-examples>`_.  (NOTE: These may not use all of the features in the latest release, but are still an excellent reference!).
 
-The sample setup organizes playbooks, roles, inventory, and variables files by function, with tags at the play and task level for greater granularity and control. This is a powerful and flexible approach, but there are other ways to organize Ansible content. Your usage of Ansible should fit your needs, not ours, so feel free to modify this approach and organize your content as you see fit.
+The sample setup organizes playbooks, roles, inventory, and variables files by function, with tags at the play and task level for greater granularity and control. This is a powerful and flexible approach, but there are other ways to organize Assible content. Your usage of Assible should fit your needs, not ours, so feel free to modify this approach and organize your content as you see fit.
 
 .. contents::
    :local:
@@ -61,7 +61,7 @@ This layout organizes most tasks in roles, with a single inventory file for each
         monitoring/           # ""
         fooapp/               # ""
 
-.. note: By default, Ansible assumes your playbooks are stored in one directory with roles stored in a sub-directory called ``roles/``. As you use Ansible to automate more tasks, you may want to move your playbooks into a sub-directory called ``playbooks/``. If you do this, you must configure the path to your ``roles/`` directory using the ``roles_path`` setting in ansible.cfg.
+.. note: By default, Assible assumes your playbooks are stored in one directory with roles stored in a sub-directory called ``roles/``. As you use Assible to automate more tasks, you may want to move your playbooks into a sub-directory called ``playbooks/``. If you do this, you must configure the path to your ``roles/`` directory using the ``roles_path`` setting in assible.cfg.
 
 Alternative directory layout
 ----------------------------
@@ -136,7 +136,7 @@ If necessary, you can define specific hardware variance in systems in a host_var
     foo_agent_port: 86
     bar_agent_port: 99
 
-Again, if you are using :ref:`dynamic inventory <dynamic_inventory>`, Ansible creates many dynamic groups automatically.  So a tag like "class:webserver" would load in variables from the file "group_vars/ec2_tag_class_webserver" automatically.
+Again, if you are using :ref:`dynamic inventory <dynamic_inventory>`, Assible creates many dynamic groups automatically.  So a tag like "class:webserver" would load in variables from the file "group_vars/ec2_tag_class_webserver" automatically.
 
 .. _split_by_role:
 
@@ -159,17 +159,17 @@ The webservers.yml file, also at the top level, maps the configuration of the we
         - common
         - webtier
 
-With this setup, you can configure your whole infrastructure by "running" site.yml, or run a subset by running webservers.yml.  This is analogous to the Ansible "--limit" parameter but a little more explicit::
+With this setup, you can configure your whole infrastructure by "running" site.yml, or run a subset by running webservers.yml.  This is analogous to the Assible "--limit" parameter but a little more explicit::
 
-   ansible-playbook site.yml --limit webservers
-   ansible-playbook webservers.yml
+   assible-playbook site.yml --limit webservers
+   assible-playbook webservers.yml
 
 .. _role_organization:
 
 Sample task and handler files in a function-based role
 ------------------------------------------------------
 
-Ansible loads any file called ``main.yml`` in a role sub-directory. This sample ``tasks/main.yml`` file is simple - it sets up NTP, but it could do more if we wanted::
+Assible loads any file called ``main.yml`` in a role sub-directory. This sample ``tasks/main.yml`` file is simple - it sets up NTP, but it could do more if we wanted::
 
     ---
     # file: roles/common/tasks/main.yml
@@ -215,37 +215,37 @@ What the sample setup enables
 
 The basic organizational structure described above enables a lot of different automation options. To reconfigure your entire infrastructure::
 
-    ansible-playbook -i production site.yml
+    assible-playbook -i production site.yml
 
 To reconfigure NTP on everything::
 
-    ansible-playbook -i production site.yml --tags ntp
+    assible-playbook -i production site.yml --tags ntp
 
 To reconfigure only the webservers::
 
-    ansible-playbook -i production webservers.yml
+    assible-playbook -i production webservers.yml
 
 To reconfigure only the webservers in Boston::
 
-    ansible-playbook -i production webservers.yml --limit boston
+    assible-playbook -i production webservers.yml --limit boston
 
 To reconfigure only the first 10 webservers in Boston, and then the next 10::
 
-    ansible-playbook -i production webservers.yml --limit boston[0:9]
-    ansible-playbook -i production webservers.yml --limit boston[10:19]
+    assible-playbook -i production webservers.yml --limit boston[0:9]
+    assible-playbook -i production webservers.yml --limit boston[10:19]
 
 The sample setup also supports basic ad-hoc commands::
 
-    ansible boston -i production -m ping
-    ansible boston -i production -m command -a '/sbin/reboot'
+    assible boston -i production -m ping
+    assible boston -i production -m command -a '/sbin/reboot'
 
-To discover what tasks would run or what hostnames would be affected by a particular Ansible command::
+To discover what tasks would run or what hostnames would be affected by a particular Assible command::
 
     # confirm what task names would be run if I ran this command and said "just ntp tasks"
-    ansible-playbook -i production webservers.yml --tags ntp --list-tasks
+    assible-playbook -i production webservers.yml --tags ntp --list-tasks
 
     # confirm what hostnames might be communicated with if I said "limit to boston"
-    ansible-playbook -i production webservers.yml --limit boston --list-hosts
+    assible-playbook -i production webservers.yml --limit boston --list-hosts
 
 .. _dep_vs_config:
 
@@ -254,17 +254,17 @@ Organizing for deployment or configuration
 
 The sample setup models a typical configuration topology.  When doing multi-tier deployments, there are going
 to be some additional playbooks that hop between tiers to roll out an application. In this case, 'site.yml'
-may be augmented by playbooks like 'deploy_exampledotcom.yml' but the general concepts still apply. Ansible allows you to deploy and configure using the same tool, so you would likely reuse groups and keep the OS configuration in separate playbooks or roles from the app deployment.
+may be augmented by playbooks like 'deploy_exampledotcom.yml' but the general concepts still apply. Assible allows you to deploy and configure using the same tool, so you would likely reuse groups and keep the OS configuration in separate playbooks or roles from the app deployment.
 
 Consider "playbooks" as a sports metaphor -- you can have one set of plays to use against all your infrastructure and situational plays that you use at different times and for different purposes.
 
 .. _ship_modules_with_playbooks:
 
-Using local Ansible modules
+Using local Assible modules
 ---------------------------
 
-If a playbook has a :file:`./library` directory relative to its YAML file, this directory can be used to add Ansible modules that will
-automatically be in the Ansible module path.  This is a great way to keep modules that go with a playbook together.  This is shown
+If a playbook has a :file:`./library` directory relative to its YAML file, this directory can be used to add Assible modules that will
+automatically be in the Assible module path.  This is a great way to keep modules that go with a playbook together.  This is shown
 in the directory structure example at the start of this section.
 
 .. seealso::
@@ -276,10 +276,10 @@ in the directory structure example at the start of this section.
    :ref:`list_of_collections`
        Browse existing collections, modules, and plugins
    :ref:`developing_modules`
-       Learn how to extend Ansible by writing your own modules
+       Learn how to extend Assible by writing your own modules
    :ref:`intro_patterns`
        Learn about how to select hosts
-   `GitHub examples directory <https://github.com/ansible/ansible-examples>`_
+   `GitHub examples directory <https://github.com/assible/assible-examples>`_
        Complete playbook files from the github project source
-   `Mailing List <https://groups.google.com/group/ansible-project>`_
+   `Mailing List <https://groups.google.com/group/assible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups

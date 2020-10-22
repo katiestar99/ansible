@@ -1,18 +1,18 @@
-# unit tests for ansible system lsb fact collectors
+# unit tests for assible system lsb fact collectors
 # -*- coding: utf-8 -*-
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # Make coding more python3-ish
@@ -23,7 +23,7 @@ from units.compat.mock import Mock, patch
 
 from .. base import BaseFactsTest
 
-from ansible.module_utils.facts.system.lsb import LSBFactCollector
+from assible.module_utils.facts.system.lsb import LSBFactCollector
 
 
 lsb_release_a_fedora_output = '''
@@ -51,7 +51,7 @@ class TestLSBFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'lsb']
     valid_subsets = ['lsb']
-    fact_namespace = 'ansible_lsb'
+    fact_namespace = 'assible_lsb'
     collector_class = LSBFactCollector
 
     def _mock_module(self):
@@ -78,9 +78,9 @@ class TestLSBFacts(BaseFactsTest):
     def test_etc_lsb_release(self):
         module = self._mock_module()
         module.get_bin_path = Mock(return_value=None)
-        with patch('ansible.module_utils.facts.system.lsb.os.path.exists',
+        with patch('assible.module_utils.facts.system.lsb.os.path.exists',
                    return_value=True):
-            with patch('ansible.module_utils.facts.system.lsb.get_file_lines',
+            with patch('assible.module_utils.facts.system.lsb.get_file_lines',
                        return_value=etc_lsb_release_ubuntu14.splitlines()):
                 fact_collector = self.collector_class()
                 facts_dict = fact_collector.collect(module=module)
@@ -94,9 +94,9 @@ class TestLSBFacts(BaseFactsTest):
     def test_etc_lsb_release_no_decimal_release(self):
         module = self._mock_module()
         module.get_bin_path = Mock(return_value=None)
-        with patch('ansible.module_utils.facts.system.lsb.os.path.exists',
+        with patch('assible.module_utils.facts.system.lsb.os.path.exists',
                    return_value=True):
-            with patch('ansible.module_utils.facts.system.lsb.get_file_lines',
+            with patch('assible.module_utils.facts.system.lsb.get_file_lines',
                        return_value=etc_lsb_release_no_decimal.splitlines()):
                 fact_collector = self.collector_class()
                 facts_dict = fact_collector.collect(module=module)

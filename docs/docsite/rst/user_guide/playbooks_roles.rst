@@ -10,7 +10,7 @@ The documentation regarding roles and includes for playbooks have moved. Their n
 
 .. seealso::
 
-   :ref:`ansible_galaxy`
+   :ref:`assible_galaxy`
        How to share roles on galaxy, role management
    :ref:`working_with_playbooks`
        Review the basic Playbook language features

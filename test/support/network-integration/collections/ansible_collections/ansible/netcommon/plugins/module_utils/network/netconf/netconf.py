@@ -1,20 +1,20 @@
 #
 # (c) 2018 Red Hat, Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 import json
 
@@ -26,9 +26,9 @@ try:
 except ImportError:
     from xml.etree.ElementTree import fromstring, tostring
 
-from ansible.module_utils._text import to_text, to_bytes
-from ansible.module_utils.connection import Connection, ConnectionError
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.netconf import (
+from assible.module_utils._text import to_text, to_bytes
+from assible.module_utils.connection import Connection, ConnectionError
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.netconf import (
     NetconfConnection,
 )
 

@@ -22,19 +22,19 @@ from ..data import (
 )
 
 from ..payload import (
-    ANSIBLE_BIN_SYMLINK_MAP,
+    ASSIBLE_BIN_SYMLINK_MAP,
     __file__ as symlink_map_full_path,
 )
 
 from ..util import (
-    ANSIBLE_BIN_PATH,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_BIN_PATH,
+    ASSIBLE_TEST_DATA_ROOT,
 )
 
 
 class BinSymlinksTest(SanityVersionNeutral):
     """Sanity test for symlinks in the bin directory."""
-    ansible_only = True
+    assible_only = True
 
     @property
     def can_ignore(self):  # type: () -> bool
@@ -53,11 +53,11 @@ class BinSymlinksTest(SanityVersionNeutral):
         :type targets: SanityTargets
         :rtype: TestResult
         """
-        bin_root = ANSIBLE_BIN_PATH
+        bin_root = ASSIBLE_BIN_PATH
         bin_names = os.listdir(bin_root)
         bin_paths = sorted(os.path.join(bin_root, path) for path in bin_names)
 
-        injector_root = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'injector')
+        injector_root = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'injector')
         injector_names = os.listdir(injector_root)
 
         errors = []  # type: t.List[t.Tuple[str, str]]
@@ -79,24 +79,24 @@ class BinSymlinksTest(SanityVersionNeutral):
                 errors.append((bin_path, 'points to non-file "%s"' % dest))
                 continue
 
-            map_dest = ANSIBLE_BIN_SYMLINK_MAP.get(os.path.basename(bin_path))
+            map_dest = ASSIBLE_BIN_SYMLINK_MAP.get(os.path.basename(bin_path))
 
             if not map_dest:
-                errors.append((bin_path, 'missing from ANSIBLE_BIN_SYMLINK_MAP in file "%s"' % symlink_map_path))
+                errors.append((bin_path, 'missing from ASSIBLE_BIN_SYMLINK_MAP in file "%s"' % symlink_map_path))
                 continue
 
             if dest != map_dest:
-                errors.append((bin_path, 'points to "%s" instead of "%s" from ANSIBLE_BIN_SYMLINK_MAP in file "%s"' % (dest, map_dest, symlink_map_path)))
+                errors.append((bin_path, 'points to "%s" instead of "%s" from ASSIBLE_BIN_SYMLINK_MAP in file "%s"' % (dest, map_dest, symlink_map_path)))
                 continue
 
             if not os.access(bin_path, os.X_OK):
                 errors.append((bin_path, 'points to non-executable file "%s"' % dest))
                 continue
 
-        for bin_name, dest in ANSIBLE_BIN_SYMLINK_MAP.items():
+        for bin_name, dest in ASSIBLE_BIN_SYMLINK_MAP.items():
             if bin_name not in bin_names:
                 bin_path = os.path.join(bin_root, bin_name)
-                errors.append((bin_path, 'missing symlink to "%s" defined in ANSIBLE_BIN_SYMLINK_MAP in file "%s"' % (dest, symlink_map_path)))
+                errors.append((bin_path, 'missing symlink to "%s" defined in ASSIBLE_BIN_SYMLINK_MAP in file "%s"' % (dest, symlink_map_path)))
 
             if bin_name not in injector_names:
                 injector_path = os.path.join(injector_root, bin_name)

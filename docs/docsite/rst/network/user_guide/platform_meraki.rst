@@ -4,7 +4,7 @@
 Meraki Platform Options
 ***************************************
 
-The `cisco.meraki <https://galaxy.ansible.com/cisco/meraki>`_ collection only supports the ``local`` connection type at this time.
+The `cisco.meraki <https://galaxy.assible.com/cisco/meraki>`_ collection only supports the ``local`` connection type at this time.
 
 .. contents::
   :local:
@@ -22,7 +22,7 @@ Connections available
 
     Credentials           uses API key from Dashboard
 
-    Connection Settings   ``ansible_connection: localhost``
+    Connection Settings   ``assible_connection: localhost``
 
     Returned Data Format  ``data.``
     ====================  ==========================================

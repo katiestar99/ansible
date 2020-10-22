@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -26,13 +26,13 @@ import uuid
 from json import dumps
 
 
-from ansible import constants as C
-from ansible import context
-from ansible.errors import AnsibleError, AnsibleOptionsError
-from ansible.module_utils.six import iteritems, string_types, PY3
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common._collections_compat import MutableMapping, MutableSequence
-from ansible.parsing.splitter import parse_kv
+from assible import constants as C
+from assible import context
+from assible.errors import AssibleError, AssibleOptionsError
+from assible.module_utils.six import iteritems, string_types, PY3
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common._collections_compat import MutableMapping, MutableSequence
+from assible.parsing.splitter import parse_kv
 
 
 ADDITIONAL_PY2_KEYWORDS = frozenset(("True", "False", "None"))
@@ -61,7 +61,7 @@ def _validate_mutable_mappings(a, b):
 
     This checks that all arguments are MutableMappings or raises an error
 
-    :raises AnsibleError: if one of the arguments is not a MutableMapping
+    :raises AssibleError: if one of the arguments is not a MutableMapping
     """
 
     # If this becomes generally needed, change the signature to operate on
@@ -74,7 +74,7 @@ def _validate_mutable_mappings(a, b):
                 myvars.append(dumps(x))
             except Exception:
                 myvars.append(to_native(x))
-        raise AnsibleError("failed to combine variables, expected dicts but got a '{0}' and a '{1}': \n{2}\n{3}".format(
+        raise AssibleError("failed to combine variables, expected dicts but got a '{0}' and a '{1}': \n{2}\n{3}".format(
             a.__class__.__name__, b.__class__.__name__, myvars[0], myvars[1])
         )
 
@@ -101,7 +101,7 @@ def merge_hash(x, y, recursive=True, list_merge='replace'):
     (x and y aren't modified)
     """
     if list_merge not in ('replace', 'keep', 'append', 'prepend', 'append_rp', 'prepend_rp'):
-        raise AnsibleError("merge_hash: 'list_merge' argument can only be equal to 'replace', 'keep', 'append', 'prepend', 'append_rp' or 'prepend_rp'")
+        raise AssibleError("merge_hash: 'list_merge' argument can only be equal to 'replace', 'keep', 'append', 'prepend', 'append_rp' or 'prepend_rp'")
 
     # verify x & y are dicts
     _validate_mutable_mappings(x, y)
@@ -194,7 +194,7 @@ def load_extra_vars(loader):
             # Argument is a YAML file (JSON is a subset of YAML)
             data = loader.load_from_file(extra_vars_opt[1:])
         elif extra_vars_opt[0] in [u'/', u'.']:
-            raise AnsibleOptionsError("Please prepend extra_vars filename '%s' with '@'" % extra_vars_opt)
+            raise AssibleOptionsError("Please prepend extra_vars filename '%s' with '@'" % extra_vars_opt)
         elif extra_vars_opt[0] in [u'[', u'{']:
             # Arguments as YAML
             data = loader.load(extra_vars_opt)
@@ -205,7 +205,7 @@ def load_extra_vars(loader):
         if isinstance(data, MutableMapping):
             extra_vars = combine_vars(extra_vars, data)
         else:
-            raise AnsibleOptionsError("Invalid extra vars data supplied. '%s' could not be made into a dictionary" % extra_vars_opt)
+            raise AssibleOptionsError("Invalid extra vars data supplied. '%s' could not be made into a dictionary" % extra_vars_opt)
 
     return extra_vars
 
@@ -214,7 +214,7 @@ def load_options_vars(version):
 
     if version is None:
         version = 'Unknown'
-    options_vars = {'ansible_version': version}
+    options_vars = {'assible_version': version}
     attrs = {'check': 'check_mode',
              'diff': 'diff_mode',
              'forks': 'forks',
@@ -227,7 +227,7 @@ def load_options_vars(version):
     for attr, alias in attrs.items():
         opt = context.CLIARGS.get(attr)
         if opt is not None:
-            options_vars['ansible_%s' % alias] = opt
+            options_vars['assible_%s' % alias] = opt
 
     return options_vars
 

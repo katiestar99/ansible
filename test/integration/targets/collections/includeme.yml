@@ -3,4 +3,4 @@
 
 - assert:
     that:
-    - included_plugin_lookup_out.collection_list == ['bogus.bogus', 'ansible.legacy']
+    - included_plugin_lookup_out.collection_list == ['bogus.bogus', 'assible.legacy']

@@ -71,7 +71,7 @@
 # contains the SHA1
 - name: SPECIFIC-REVISION | update to revision by specifying the refspec
   git:
-    repo: https://github.com/ansible/ansible-examples.git
+    repo: https://github.com/assible/assible-examples.git
     dest: '{{ checkout_dir }}'
     version: 5473e343e33255f2da0b160f53135c56921d875c
     refspec: refs/pull/7/merge
@@ -94,7 +94,7 @@
 
 - name: SPECIFIC-REVISION | update to revision by specifying the refspec with depth=1
   git:
-    repo: https://github.com/ansible/ansible-examples.git
+    repo: https://github.com/assible/assible-examples.git
     dest: '{{ checkout_dir }}'
     version: 5473e343e33255f2da0b160f53135c56921d875c
     refspec: refs/pull/7/merge
@@ -131,7 +131,7 @@
 
 - name: SPECIFIC-REVISION | clone to revision by specifying the refspec
   git:
-    repo: https://github.com/ansible/ansible-examples.git
+    repo: https://github.com/assible/assible-examples.git
     dest: "{{ checkout_dir }}"
     version: 5473e343e33255f2da0b160f53135c56921d875c
     refspec: refs/pull/7/merge

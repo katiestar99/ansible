@@ -63,13 +63,13 @@ def main():
 
             dirname = os.path.dirname(path)
 
-            if path.startswith('lib/ansible/modules/'):
+            if path.startswith('lib/assible/modules/'):
                 is_module = True
             elif re.search('^test/support/[^/]+/plugins/modules/', path):
                 is_module = True
-            elif re.search('^test/support/[^/]+/collections/ansible_collections/[^/]+/[^/]+/plugins/modules/', path):
+            elif re.search('^test/support/[^/]+/collections/assible_collections/[^/]+/[^/]+/plugins/modules/', path):
                 is_module = True
-            elif path.startswith('test/lib/ansible_test/_data/'):
+            elif path.startswith('test/lib/assible_test/_data/'):
                 pass
             elif path.startswith('lib/') or path.startswith('test/lib/'):
                 if executable:

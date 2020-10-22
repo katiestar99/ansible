@@ -1,4 +1,4 @@
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -19,11 +19,11 @@ try:
 except ImportError:
     HAS_LIBYAML = False
 
-import ansible
-from ansible import constants as C
-from ansible.module_utils._text import to_native
-from ansible.release import __version__
-from ansible.utils.path import unfrackpath
+import assible
+from assible import constants as C
+from assible.module_utils._text import to_native
+from assible.release import __version__
+from assible.utils.path import unfrackpath
 
 
 #
@@ -35,10 +35,10 @@ class SortingHelpFormatter(argparse.HelpFormatter):
         super(SortingHelpFormatter, self).add_arguments(actions)
 
 
-class AnsibleVersion(argparse.Action):
+class AssibleVersion(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        ansible_version = to_native(version(getattr(parser, 'prog')))
-        print(ansible_version)
+        assible_version = to_native(version(getattr(parser, 'prog')))
+        print(assible_version)
         parser.exit()
 
 
@@ -92,7 +92,7 @@ def ensure_value(namespace, name, value):
 # Callbacks to validate and normalize Options
 #
 def unfrack_path(pathsep=False):
-    """Turn an Option's data into a single path in Ansible locations"""
+    """Turn an Option's data into a single path in Assible locations"""
     def inner(value):
         if pathsep:
             return [unfrackpath(x) for x in value.split(os.pathsep) if x]
@@ -153,7 +153,7 @@ def _gitinfo():
 
 
 def version(prog=None):
-    """ return ansible version """
+    """ return assible version """
     if prog:
         result = [" ".join((prog, __version__))]
     else:
@@ -168,8 +168,8 @@ def version(prog=None):
     else:
         cpath = C.DEFAULT_MODULE_PATH
     result.append("  configured module search path = %s" % cpath)
-    result.append("  ansible python module location = %s" % ':'.join(ansible.__path__))
-    result.append("  ansible collection location = %s" % ':'.join(C.COLLECTIONS_PATHS))
+    result.append("  assible python module location = %s" % ':'.join(assible.__path__))
+    result.append("  assible collection location = %s" % ':'.join(C.COLLECTIONS_PATHS))
     result.append("  executable location = %s" % sys.argv[0])
     result.append("  python version = %s" % ''.join(sys.version.splitlines()))
     result.append("  libyaml = %s" % HAS_LIBYAML)
@@ -182,7 +182,7 @@ def version(prog=None):
 
 def create_base_parser(prog, usage="", desc=None, epilog=None):
     """
-    Create an options parser for all ansible scripts
+    Create an options parser for all assible scripts
     """
     # base opts
     parser = argparse.ArgumentParser(
@@ -195,7 +195,7 @@ def create_base_parser(prog, usage="", desc=None, epilog=None):
     version_help = "show program's version number, config file location, configured module search path," \
                    " module location, executable location and exit"
 
-    parser.add_argument('--version', action=AnsibleVersion, nargs=0, help=version_help)
+    parser.add_argument('--version', action=AssibleVersion, nargs=0, help=version_help)
     add_verbosity_options(parser)
     return parser
 
@@ -312,7 +312,7 @@ def add_runas_options(parser):
                              help="run operations with become (does not imply password prompting)")
     runas_group.add_argument('--become-method', dest='become_method', default=C.DEFAULT_BECOME_METHOD,
                              help='privilege escalation method to use (default=%s)' % C.DEFAULT_BECOME_METHOD +
-                                  ', use `ansible-doc -t become -l` to list valid choices.')
+                                  ', use `assible-doc -t become -l` to list valid choices.')
     runas_group.add_argument('--become-user', default=None, dest='become_user', type=str,
                              help='run operations as this user (default=%s)' % C.DEFAULT_BECOME_USER)
 

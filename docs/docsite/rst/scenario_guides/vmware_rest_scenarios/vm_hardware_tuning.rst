@@ -11,7 +11,7 @@ How to modify a virtual machine
 Introduction
 ============
 
-This section shows you how to use Ansible to modify an existing virtual machine.
+This section shows you how to use Assible to modify an existing virtual machine.
 
 Scenario requirements
 =====================

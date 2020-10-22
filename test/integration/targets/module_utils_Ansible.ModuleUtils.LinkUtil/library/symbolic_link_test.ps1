@@ -1,12 +1,12 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.LinkUtil
-#Requires -Module Ansible.ModuleUtils.CommandUtil
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.LinkUtil
+#Requires -Module Assible.ModuleUtils.CommandUtil
 
 $ErrorActionPreference = 'Stop'
 
-$path = Join-Path -Path ([System.IO.Path]::GetFullPath($env:TEMP)) -ChildPath '.ansible .ÅÑŚÌβŁÈ [$!@^&test(;)]'
+$path = Join-Path -Path ([System.IO.Path]::GetFullPath($env:TEMP)) -ChildPath '.assible .ÅÑŚÌβŁÈ [$!@^&test(;)]'
 
 $folder_target = "$path\folder"
 $file_target = "$path\file"

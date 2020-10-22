@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C): 2017, Ansible Project
+# Copyright (C): 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Requirements
@@ -42,8 +42,8 @@ from time import time
 
 from jinja2 import Environment
 
-from ansible.module_utils.six import integer_types, PY3
-from ansible.module_utils.six.moves import configparser
+from assible.module_utils.six import integer_types, PY3
+from assible.module_utils.six.moves import configparser
 
 try:
     import argparse
@@ -214,8 +214,8 @@ class VMWareInventory(object):
             'password': '',
             'validate_certs': True,
             'ini_path': os.path.join(os.path.dirname(__file__), '%s.ini' % scriptbasename),
-            'cache_name': 'ansible-vmware',
-            'cache_path': '~/.ansible/tmp',
+            'cache_name': 'assible-vmware',
+            'cache_path': '~/.assible/tmp',
             'cache_max_age': 3600,
             'max_object_level': 1,
             'skip_keys': 'declaredalarmstate,'
@@ -326,7 +326,7 @@ class VMWareInventory(object):
     def parse_cli_args(self):
         ''' Command line argument processing '''
 
-        parser = argparse.ArgumentParser(description='Produce an Ansible Inventory file based on PyVmomi')
+        parser = argparse.ArgumentParser(description='Produce an Assible Inventory file based on PyVmomi')
         parser.add_argument('--debug', action='store_true', default=False,
                             help='show debug info')
         parser.add_argument('--list', action='store_true', default=True,
@@ -443,7 +443,7 @@ class VMWareInventory(object):
             # Put it in the inventory
             inventory['all']['hosts'].append(thisid)
             inventory['_meta']['hostvars'][thisid] = idata.copy()
-            inventory['_meta']['hostvars'][thisid]['ansible_uuid'] = thisid
+            inventory['_meta']['hostvars'][thisid]['assible_uuid'] = thisid
 
         # Make a map of the uuid to the alias the user wants
         name_mapping = self.create_template_mapping(
@@ -463,11 +463,11 @@ class VMWareInventory(object):
             if not host_mapping or k not in host_mapping:
                 continue
 
-            # set ansible_host (2.x)
+            # set assible_host (2.x)
             try:
-                inventory['_meta']['hostvars'][k]['ansible_host'] = host_mapping[k]
+                inventory['_meta']['hostvars'][k]['assible_host'] = host_mapping[k]
                 # 1.9.x backwards compliance
-                inventory['_meta']['hostvars'][k]['ansible_ssh_host'] = host_mapping[k]
+                inventory['_meta']['hostvars'][k]['assible_ssh_host'] = host_mapping[k]
             except Exception:
                 continue
 

@@ -2,4 +2,4 @@
 
 set -eux
 
-ansible-playbook test_environment.yml -i ../../inventory "$@"
+assible-playbook test_environment.yml -i ../../inventory "$@"

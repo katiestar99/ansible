@@ -1,9 +1,9 @@
 #!powershell
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#AnsibleRequires -PowerShell ..module_utils.PSRel1
+#AssibleRequires -CSharpUtil Assible.Basic
+#AssibleRequires -PowerShell ..module_utils.PSRel1
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, @{})
+$module = [Assible.Basic.AssibleModule]::Create($args, @{})
 
 $module.Result.data = Invoke-FromPSRel1
 

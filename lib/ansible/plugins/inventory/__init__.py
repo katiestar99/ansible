@@ -1,19 +1,19 @@
 # (c) 2017,  Red Hat, inc
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <https://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <https://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -23,18 +23,18 @@ import hashlib
 import os
 import string
 
-from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.inventory.group import to_safe_group_name as original_safe
-from ansible.parsing.utils.addresses import parse_address
-from ansible.plugins import AnsiblePlugin
-from ansible.plugins.cache import CachePluginAdjudicator as CacheObject
-from ansible.module_utils._text import to_bytes, to_native
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.module_utils.six import string_types
-from ansible.template import Templar
-from ansible.utils.display import Display
-from ansible.utils.vars import combine_vars, load_extra_vars
+from assible.errors import AssibleError, AssibleParserError
+from assible.inventory.group import to_safe_group_name as original_safe
+from assible.parsing.utils.addresses import parse_address
+from assible.plugins import AssiblePlugin
+from assible.plugins.cache import CachePluginAdjudicator as CacheObject
+from assible.module_utils._text import to_bytes, to_native
+from assible.module_utils.common._collections_compat import Mapping
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils.six import string_types
+from assible.template import Templar
+from assible.utils.display import Display
+from assible.utils.vars import combine_vars, load_extra_vars
 
 display = Display()
 
@@ -65,7 +65,7 @@ def expand_hostname_range(line=None):
     appearance. They are replaced in this function with '|' to ease
     string splitting.
 
-    References: https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#hosts-and-groups
+    References: https://docs.assible.com/assible/latest/user_guide/intro_inventory.html#hosts-and-groups
     '''
     all_hosts = []
     if line:
@@ -85,7 +85,7 @@ def expand_hostname_range(line=None):
         (head, nrange, tail) = line.replace('[', '|', 1).replace(']', '|', 1).split('|')
         bounds = nrange.split(":")
         if len(bounds) != 2 and len(bounds) != 3:
-            raise AnsibleError("host range must be begin:end or begin:end:step")
+            raise AssibleError("host range must be begin:end or begin:end:step")
         beg = bounds[0]
         end = bounds[1]
         if len(bounds) == 2:
@@ -95,11 +95,11 @@ def expand_hostname_range(line=None):
         if not beg:
             beg = "0"
         if not end:
-            raise AnsibleError("host range must specify end value")
+            raise AssibleError("host range must specify end value")
         if beg[0] == '0' and len(beg) > 1:
             rlen = len(beg)  # range length formatting hint
             if rlen != len(end):
-                raise AnsibleError("host range must specify equal-length begin and end formats")
+                raise AssibleError("host range must specify equal-length begin and end formats")
 
             def fill(x):
                 return str(x).zfill(rlen)  # range sequence
@@ -111,7 +111,7 @@ def expand_hostname_range(line=None):
             i_beg = string.ascii_letters.index(beg)
             i_end = string.ascii_letters.index(end)
             if i_beg > i_end:
-                raise AnsibleError("host range must have begin <= end")
+                raise AssibleError("host range must have begin <= end")
             seq = list(string.ascii_letters[i_beg:i_end + 1:int(step)])
         except ValueError:  # not an alpha range
             seq = range(int(beg), int(end) + 1, int(step))
@@ -130,23 +130,23 @@ def expand_hostname_range(line=None):
 def get_cache_plugin(plugin_name, **kwargs):
     try:
         cache = CacheObject(plugin_name, **kwargs)
-    except AnsibleError as e:
+    except AssibleError as e:
         if 'fact_caching_connection' in to_native(e):
-            raise AnsibleError("error, '%s' inventory cache plugin requires the one of the following to be set "
-                               "to a writeable directory path:\nansible.cfg:\n[default]: fact_caching_connection,\n"
-                               "[inventory]: cache_connection;\nEnvironment:\nANSIBLE_INVENTORY_CACHE_CONNECTION,\n"
-                               "ANSIBLE_CACHE_PLUGIN_CONNECTION." % plugin_name)
+            raise AssibleError("error, '%s' inventory cache plugin requires the one of the following to be set "
+                               "to a writeable directory path:\nassible.cfg:\n[default]: fact_caching_connection,\n"
+                               "[inventory]: cache_connection;\nEnvironment:\nASSIBLE_INVENTORY_CACHE_CONNECTION,\n"
+                               "ASSIBLE_CACHE_PLUGIN_CONNECTION." % plugin_name)
         else:
             raise e
 
     if plugin_name != 'memory' and kwargs and not getattr(cache._plugin, '_options', None):
-        raise AnsibleError('Unable to use cache plugin {0} for inventory. Cache options were provided but may not reconcile '
+        raise AssibleError('Unable to use cache plugin {0} for inventory. Cache options were provided but may not reconcile '
                            'correctly unless set via set_options. Refer to the porting guide if the plugin derives user settings '
-                           'from ansible.constants.'.format(plugin_name))
+                           'from assible.constants.'.format(plugin_name))
     return cache
 
 
-class BaseInventoryPlugin(AnsiblePlugin):
+class BaseInventoryPlugin(AssiblePlugin):
     """ Parses an Inventory Source"""
 
     TYPE = 'generator'
@@ -198,7 +198,7 @@ class BaseInventoryPlugin(AnsiblePlugin):
 
     def _populate_host_vars(self, hosts, variables, group=None, port=None):
         if not isinstance(variables, Mapping):
-            raise AnsibleParserError("Invalid data from file, expected dictionary and got:\n\n%s" % to_native(variables))
+            raise AssibleParserError("Invalid data from file, expected dictionary and got:\n\n%s" % to_native(variables))
 
         for host in hosts:
             self.inventory.add_host(host, group=group, port=port)
@@ -216,20 +216,20 @@ class BaseInventoryPlugin(AnsiblePlugin):
             # if we read more than once, fs cache should be good enough
             config = self.loader.load_from_file(path, cache=False)
         except Exception as e:
-            raise AnsibleParserError(to_native(e))
+            raise AssibleParserError(to_native(e))
 
         # a plugin can be loaded via many different names with redirection- if so, we want to accept any of those names
         valid_names = getattr(self, '_redirected_names') or [self.NAME]
 
         if not config:
             # no data
-            raise AnsibleParserError("%s is empty" % (to_native(path)))
+            raise AssibleParserError("%s is empty" % (to_native(path)))
         elif config.get('plugin') not in valid_names:
             # this is not my config file
-            raise AnsibleParserError("Incorrect plugin name in file: %s" % config.get('plugin', 'none found'))
+            raise AssibleParserError("Incorrect plugin name in file: %s" % config.get('plugin', 'none found'))
         elif not isinstance(config, Mapping):
             # configs are dictionaries
-            raise AnsibleParserError('inventory source has invalid structure, it should be a dictionary, got: %s' % type(config))
+            raise AssibleParserError('inventory source has invalid structure, it should be a dictionary, got: %s' % type(config))
 
         self.set_options(direct=config, var_options=self._vars)
         if 'cache' in self._options and self.get_option('cache'):
@@ -240,7 +240,7 @@ class BaseInventoryPlugin(AnsiblePlugin):
         return config
 
     def _consume_options(self, data):
-        ''' update existing options from alternate configuration sources not normally used by Ansible.
+        ''' update existing options from alternate configuration sources not normally used by Assible.
             Many API libraries already have existing configuration sources, this allows plugin author to leverage them.
             :arg data: key/value pairs that correspond to configuration options for this plugin
         '''
@@ -293,7 +293,7 @@ class DeprecatedCache(object):
         display.deprecated('InventoryModule should utilize self._cache as a dict instead of self.cache. '
                            'When expecting a KeyError, use self._cache[key] instead of using self.cache.get(key). '
                            'self._cache is a dictionary and will return a default value instead of raising a KeyError '
-                           'when the key does not exist', version='2.12', collection_name='ansible.builtin')
+                           'when the key does not exist', version='2.12', collection_name='assible.builtin')
         return self.real_cacheable._cache[key]
 
     def set(self, key, value):
@@ -301,13 +301,13 @@ class DeprecatedCache(object):
                            'To set the self._cache dictionary, use self._cache[key] = value instead of self.cache.set(key, value). '
                            'To force update the underlying cache plugin with the contents of self._cache before parse() is complete, '
                            'call self.set_cache_plugin and it will use the self._cache dictionary to update the cache plugin',
-                           version='2.12', collection_name='ansible.builtin')
+                           version='2.12', collection_name='assible.builtin')
         self.real_cacheable._cache[key] = value
         self.real_cacheable.set_cache_plugin()
 
     def __getattr__(self, name):
         display.deprecated('InventoryModule should utilize self._cache instead of self.cache',
-                           version='2.12', collection_name='ansible.builtin')
+                           version='2.12', collection_name='assible.builtin')
         return self.real_cacheable._cache.__getattribute__(name)
 
 
@@ -354,7 +354,7 @@ class Cacheable(object):
 class Constructable(object):
 
     def _compose(self, template, variables):
-        ''' helper method for plugins to compose variables for Ansible based on jinja2 expression and inventory vars'''
+        ''' helper method for plugins to compose variables for Assible based on jinja2 expression and inventory vars'''
         t = self.templar
 
         try:
@@ -377,7 +377,7 @@ class Constructable(object):
                     composite = self._compose(compose[varname], variables)
                 except Exception as e:
                     if strict:
-                        raise AnsibleError("Could not set %s for host %s: %s" % (varname, host, to_native(e)))
+                        raise AssibleError("Could not set %s for host %s: %s" % (varname, host, to_native(e)))
                     continue
                 self.inventory.set_variable(host, varname, composite)
 
@@ -394,7 +394,7 @@ class Constructable(object):
                     result = boolean(self.templar.template(conditional))
                 except Exception as e:
                     if strict:
-                        raise AnsibleParserError("Could not add host %s to group %s: %s" % (host, group_name, to_native(e)))
+                        raise AssibleParserError("Could not add host %s to group %s: %s" % (host, group_name, to_native(e)))
                     continue
 
                 if result:
@@ -414,7 +414,7 @@ class Constructable(object):
                         key = self._compose(keyed.get('key'), variables)
                     except Exception as e:
                         if strict:
-                            raise AnsibleParserError("Could not generate group for host %s from %s entry: %s" % (host, keyed.get('key'), to_native(e)))
+                            raise AssibleParserError("Could not generate group for host %s from %s entry: %s" % (host, keyed.get('key'), to_native(e)))
                         continue
 
                     if key:
@@ -424,9 +424,9 @@ class Constructable(object):
                         if raw_parent_name:
                             try:
                                 raw_parent_name = self.templar.template(raw_parent_name)
-                            except AnsibleError as e:
+                            except AssibleError as e:
                                 if strict:
-                                    raise AnsibleParserError("Could not generate parent group %s for group %s: %s" % (raw_parent_name, key, to_native(e)))
+                                    raise AssibleParserError("Could not generate parent group %s for group %s: %s" % (raw_parent_name, key, to_native(e)))
                                 continue
 
                         new_raw_group_names = []
@@ -440,7 +440,7 @@ class Constructable(object):
                                 name = '%s%s%s' % (gname, sep, gval)
                                 new_raw_group_names.append(name)
                         else:
-                            raise AnsibleParserError("Invalid group name format, expected a string or a list of them or dictionary, got: %s" % type(key))
+                            raise AssibleParserError("Invalid group name format, expected a string or a list of them or dictionary, got: %s" % type(key))
 
                         for bare_name in new_raw_group_names:
                             gname = self._sanitize_group_name('%s%s%s' % (prefix, sep, bare_name))
@@ -456,6 +456,6 @@ class Constructable(object):
                         # exclude case of empty list and dictionary, because these are valid constructions
                         # simply no groups need to be constructed, but are still falsy
                         if strict and key not in ([], {}):
-                            raise AnsibleParserError("No key or key resulted empty for %s in host %s, invalid entry" % (keyed.get('key'), host))
+                            raise AssibleParserError("No key or key resulted empty for %s in host %s, invalid entry" % (keyed.get('key'), host))
                 else:
-                    raise AnsibleParserError("Invalid keyed group entry, it must be a dictionary: %s " % keyed)
+                    raise AssibleParserError("Invalid keyed group entry, it must be a dictionary: %s " % keyed)

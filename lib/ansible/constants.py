@@ -1,5 +1,5 @@
 # Copyright: (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -12,17 +12,17 @@ from ast import literal_eval
 from jinja2 import Template
 from string import ascii_letters, digits
 
-from ansible.config.manager import ConfigManager, ensure_type, get_ini_config_value
-from ansible.module_utils._text import to_text
-from ansible.module_utils.common.collections import Sequence
-from ansible.module_utils.parsing.convert_bool import boolean, BOOLEANS_TRUE
-from ansible.module_utils.six import string_types
+from assible.config.manager import ConfigManager, ensure_type, get_ini_config_value
+from assible.module_utils._text import to_text
+from assible.module_utils.common.collections import Sequence
+from assible.module_utils.parsing.convert_bool import boolean, BOOLEANS_TRUE
+from assible.module_utils.six import string_types
 
 
 def _warning(msg):
     ''' display is not guaranteed here, nor it being the full class, but try anyways, fallback to sys.stderr.write '''
     try:
-        from ansible.utils.display import Display
+        from assible.utils.display import Display
         Display().warning(msg)
     except Exception:
         import sys
@@ -32,7 +32,7 @@ def _warning(msg):
 def _deprecated(msg, version='2.8'):
     ''' display is not guaranteed here, nor it being the full class, but try anyways, fallback to sys.stderr.write '''
     try:
-        from ansible.utils.display import Display
+        from assible.utils.display import Display
         Display().deprecated(msg, version=version)
     except Exception:
         import sys
@@ -74,11 +74,11 @@ DOCUMENTABLE_PLUGINS = CONFIGURABLE_PLUGINS + ('module', 'strategy')
 IGNORE_FILES = ("COPYING", "CONTRIBUTING", "LICENSE", "README", "VERSION", "GUIDELINES")  # ignore during module search
 INTERNAL_RESULT_KEYS = ('add_host', 'add_group')
 LOCALHOST = ('127.0.0.1', 'localhost', '::1')
-MODULE_REQUIRE_ARGS = ('command', 'win_command', 'ansible.windows.win_command', 'shell', 'win_shell',
-                       'ansible.windows.win_shell', 'raw', 'script')
-MODULE_NO_JSON = ('command', 'win_command', 'ansible.windows.win_command', 'shell', 'win_shell',
-                  'ansible.windows.win_shell', 'raw')
-RESTRICTED_RESULT_KEYS = ('ansible_rsync_path', 'ansible_playbook_python', 'ansible_facts')
+MODULE_REQUIRE_ARGS = ('command', 'win_command', 'assible.windows.win_command', 'shell', 'win_shell',
+                       'assible.windows.win_shell', 'raw', 'script')
+MODULE_NO_JSON = ('command', 'win_command', 'assible.windows.win_command', 'shell', 'win_shell',
+                  'assible.windows.win_shell', 'raw')
+RESTRICTED_RESULT_KEYS = ('assible_rsync_path', 'assible_playbook_python', 'assible_facts')
 TREE_DIR = None
 VAULT_VERSION_MIN = 1.0
 VAULT_VERSION_MAX = 1.0
@@ -93,49 +93,49 @@ INVALID_VARIABLE_NAMES = re.compile(r'^[\d\W]|[^\w]')
 # object. The dictionary values are tuples, to account for aliases
 # in variable names.
 
-COMMON_CONNECTION_VARS = frozenset(('ansible_connection', 'ansible_host', 'ansible_user', 'ansible_shell_executable',
-                                    'ansible_port', 'ansible_pipelining', 'ansible_password', 'ansible_timeout',
-                                    'ansible_shell_type', 'ansible_module_compression', 'ansible_private_key_file'))
+COMMON_CONNECTION_VARS = frozenset(('assible_connection', 'assible_host', 'assible_user', 'assible_shell_executable',
+                                    'assible_port', 'assible_pipelining', 'assible_password', 'assible_timeout',
+                                    'assible_shell_type', 'assible_module_compression', 'assible_private_key_file'))
 
 MAGIC_VARIABLE_MAPPING = dict(
 
     # base
-    connection=('ansible_connection', ),
-    module_compression=('ansible_module_compression', ),
-    shell=('ansible_shell_type', ),
-    executable=('ansible_shell_executable', ),
+    connection=('assible_connection', ),
+    module_compression=('assible_module_compression', ),
+    shell=('assible_shell_type', ),
+    executable=('assible_shell_executable', ),
 
     # connection common
-    remote_addr=('ansible_ssh_host', 'ansible_host'),
-    remote_user=('ansible_ssh_user', 'ansible_user'),
-    password=('ansible_ssh_pass', 'ansible_password'),
-    port=('ansible_ssh_port', 'ansible_port'),
-    pipelining=('ansible_ssh_pipelining', 'ansible_pipelining'),
-    timeout=('ansible_ssh_timeout', 'ansible_timeout'),
-    private_key_file=('ansible_ssh_private_key_file', 'ansible_private_key_file'),
+    remote_addr=('assible_ssh_host', 'assible_host'),
+    remote_user=('assible_ssh_user', 'assible_user'),
+    password=('assible_ssh_pass', 'assible_password'),
+    port=('assible_ssh_port', 'assible_port'),
+    pipelining=('assible_ssh_pipelining', 'assible_pipelining'),
+    timeout=('assible_ssh_timeout', 'assible_timeout'),
+    private_key_file=('assible_ssh_private_key_file', 'assible_private_key_file'),
 
     # networking modules
-    network_os=('ansible_network_os', ),
-    connection_user=('ansible_connection_user',),
+    network_os=('assible_network_os', ),
+    connection_user=('assible_connection_user',),
 
     # ssh TODO: remove
-    ssh_executable=('ansible_ssh_executable', ),
-    ssh_common_args=('ansible_ssh_common_args', ),
-    sftp_extra_args=('ansible_sftp_extra_args', ),
-    scp_extra_args=('ansible_scp_extra_args', ),
-    ssh_extra_args=('ansible_ssh_extra_args', ),
-    ssh_transfer_method=('ansible_ssh_transfer_method', ),
+    ssh_executable=('assible_ssh_executable', ),
+    ssh_common_args=('assible_ssh_common_args', ),
+    sftp_extra_args=('assible_sftp_extra_args', ),
+    scp_extra_args=('assible_scp_extra_args', ),
+    ssh_extra_args=('assible_ssh_extra_args', ),
+    ssh_transfer_method=('assible_ssh_transfer_method', ),
 
     # docker TODO: remove
-    docker_extra_args=('ansible_docker_extra_args', ),
+    docker_extra_args=('assible_docker_extra_args', ),
 
     # become
-    become=('ansible_become', ),
-    become_method=('ansible_become_method', ),
-    become_user=('ansible_become_user', ),
-    become_pass=('ansible_become_password', 'ansible_become_pass'),
-    become_exe=('ansible_become_exe', ),
-    become_flags=('ansible_become_flags', ),
+    become=('assible_become', ),
+    become_method=('assible_become_method', ),
+    become_user=('assible_become_user', ),
+    become_pass=('assible_become_password', 'assible_become_pass'),
+    become_exe=('assible_become_exe', ),
+    become_flags=('assible_become_flags', ),
 )
 
 # POPULATE SETTINGS FROM CONFIG ###

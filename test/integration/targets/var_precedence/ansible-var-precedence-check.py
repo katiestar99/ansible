@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-# A tool to check the order of precedence for ansible variables
-# https://github.com/ansible/ansible/blob/devel/test/integration/test_var_precedence.yml
+# A tool to check the order of precedence for assible variables
+# https://github.com/assible/assible/blob/devel/test/integration/test_var_precedence.yml
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -173,7 +173,7 @@ class VarTestMaker(object):
         self.playbook = dict(hosts='testhost', gather_facts=False)
         self.tasks = []
         self.roles = []
-        self.ansible_command = None
+        self.assible_command = None
         self.stdout = None
 
     def write_playbook(self):
@@ -377,15 +377,15 @@ class VarTestMaker(object):
     def run(self):
         '''
         if self.dynamic_inventory:
-            cmd = 'ansible-playbook -c local -i inventory/hosts site.yml'
+            cmd = 'assible-playbook -c local -i inventory/hosts site.yml'
         else:
-            cmd = 'ansible-playbook -c local -i inventory site.yml'
+            cmd = 'assible-playbook -c local -i inventory site.yml'
         '''
-        cmd = 'ansible-playbook -c local -i inventory site.yml'
+        cmd = 'assible-playbook -c local -i inventory site.yml'
         if 'extra_vars' in self.features:
             cmd += ' --extra-vars="findme=extra_vars"'
         cmd = cmd + ' -vvvvv'
-        self.ansible_command = cmd
+        self.assible_command = cmd
         (rc, so, se) = run_command(cmd, cwd=TESTDIR)
         self.stdout = so
 
@@ -408,7 +408,7 @@ class VarTestMaker(object):
 
     def show_stdout(self):
         print('## COMMAND')
-        print(self.ansible_command)
+        print(self.assible_command)
         print('## STDOUT')
         print(self.stdout)
 

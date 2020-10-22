@@ -3,7 +3,7 @@
   include: initialize.yml
 
 # We need to make this more consistent:
-# https://github.com/ansible/proposals/issues/111
+# https://github.com/assible/proposals/issues/111
 #
 # This series of tests document the current inconsistencies.  We should not
 # break these by accident but if we approve a proposal we can break these on

@@ -109,11 +109,11 @@ class AzurePipelines(CIProvider):
         return result.paths
 
     def supports_core_ci_auth(self, context):  # type: (AuthContext) -> bool
-        """Return True if Ansible Core CI is supported."""
+        """Return True if Assible Core CI is supported."""
         return True
 
     def prepare_core_ci_auth(self, context):  # type: (AuthContext) -> t.Dict[str, t.Any]
-        """Return authentication details for Ansible Core CI."""
+        """Return authentication details for Assible Core CI."""
         try:
             request = dict(
                 org_name=os.environ['SYSTEM_COLLECTIONURI'].strip('/').split('/')[-1],
@@ -163,7 +163,7 @@ class AzurePipelinesAuthHelper(CryptographyAuthHelper):
             public_key_file.flush()
 
         # make the agent aware of the public key by declaring it as an attachment
-        vso_add_attachment('ansible-core-ci', 'public-key.pem', public_key_file.name)
+        vso_add_attachment('assible-core-ci', 'public-key.pem', public_key_file.name)
 
 
 class AzurePipelinesChanges:

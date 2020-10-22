@@ -1,6 +1,6 @@
 - name: main block
   vars:
-    test_file: /tmp/ansible-test.module_defaults.foo
+    test_file: /tmp/assible-test.module_defaults.foo
   module_defaults:
     debug:
       msg: test default

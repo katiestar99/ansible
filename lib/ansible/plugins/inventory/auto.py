@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -22,9 +22,9 @@ EXAMPLES = '''
 # all installed inventory plugins.
 '''
 
-from ansible.errors import AnsibleParserError
-from ansible.plugins.inventory import BaseInventoryPlugin
-from ansible.plugins.loader import inventory_loader
+from assible.errors import AssibleParserError
+from assible.plugins.inventory import BaseInventoryPlugin
+from assible.plugins.loader import inventory_loader
 
 
 class InventoryModule(BaseInventoryPlugin):
@@ -45,15 +45,15 @@ class InventoryModule(BaseInventoryPlugin):
             plugin_name = None
 
         if not plugin_name:
-            raise AnsibleParserError("no root 'plugin' key found, '{0}' is not a valid YAML inventory plugin config file".format(path))
+            raise AssibleParserError("no root 'plugin' key found, '{0}' is not a valid YAML inventory plugin config file".format(path))
 
         plugin = inventory_loader.get(plugin_name)
 
         if not plugin:
-            raise AnsibleParserError("inventory config '{0}' specifies unknown plugin '{1}'".format(path, plugin_name))
+            raise AssibleParserError("inventory config '{0}' specifies unknown plugin '{1}'".format(path, plugin_name))
 
         if not plugin.verify_file(path):
-            raise AnsibleParserError("inventory config '{0}' could not be verified by plugin '{1}'".format(path, plugin_name))
+            raise AssibleParserError("inventory config '{0}' could not be verified by plugin '{1}'".format(path, plugin_name))
 
         plugin.parse(inventory, loader, path, cache=cache)
         try:

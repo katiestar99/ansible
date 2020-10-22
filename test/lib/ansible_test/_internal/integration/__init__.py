@@ -1,4 +1,4 @@
-"""Ansible integration test infrastructure."""
+"""Assible integration test infrastructure."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -145,8 +145,8 @@ def check_inventory(args, inventory_path):  # type: (IntegrationConfig, str) -> 
         if os.path.exists(inventory_path):
             inventory = read_text_file(inventory_path)
 
-            if 'ansible_ssh_private_key_file' in inventory:
-                display.warning('Use of "ansible_ssh_private_key_file" in inventory with the --docker or --remote option is unsupported and will likely fail.')
+            if 'assible_ssh_private_key_file' in inventory:
+                display.warning('Use of "assible_ssh_private_key_file" in inventory with the --docker or --remote option is unsupported and will likely fail.')
 
 
 def get_inventory_relative_path(args):  # type: (IntegrationConfig) -> str
@@ -196,8 +196,8 @@ def integration_test_environment(args, target, inventory_path_src):
     :type target: IntegrationTarget
     :type inventory_path_src: str
     """
-    ansible_config_src = args.get_ansible_config()
-    ansible_config_relative = os.path.join(data_context().content.integration_path, '%s.cfg' % args.command)
+    assible_config_src = args.get_assible_config()
+    assible_config_relative = os.path.join(data_context().content.integration_path, '%s.cfg' % args.command)
 
     if args.no_temp_workdir or 'no/temp_workdir/' in target.aliases:
         display.warning('Disabling the temp work dir is a temporary debugging feature that may be removed in the future without notice.')
@@ -205,10 +205,10 @@ def integration_test_environment(args, target, inventory_path_src):
         integration_dir = os.path.join(data_context().content.root, data_context().content.integration_path)
         targets_dir = os.path.join(data_context().content.root, data_context().content.integration_targets_path)
         inventory_path = inventory_path_src
-        ansible_config = ansible_config_src
+        assible_config = assible_config_src
         vars_file = os.path.join(data_context().content.root, data_context().content.integration_vars_path)
 
-        yield IntegrationEnvironment(integration_dir, targets_dir, inventory_path, ansible_config, vars_file)
+        yield IntegrationEnvironment(integration_dir, targets_dir, inventory_path, assible_config, vars_file)
         return
 
     # When testing a collection, the temporary directory must reside within the collection.
@@ -220,7 +220,7 @@ def integration_test_environment(args, target, inventory_path_src):
 
     if args.no_temp_unicode or 'no/temp_unicode/' in target.aliases:
         display.warning('Disabling unicode in the temp work dir is a temporary debugging feature that may be removed in the future without notice.')
-        suffix = '-ansible'
+        suffix = '-assible'
 
     if args.explain:
         temp_dir = os.path.join(root_temp_dir, '%stemp%s' % (prefix, suffix))
@@ -242,13 +242,13 @@ def integration_test_environment(args, target, inventory_path_src):
 
         integration_dir = os.path.join(temp_dir, data_context().content.integration_path)
         targets_dir = os.path.join(temp_dir, data_context().content.integration_targets_path)
-        ansible_config = os.path.join(temp_dir, ansible_config_relative)
+        assible_config = os.path.join(temp_dir, assible_config_relative)
 
         vars_file_src = os.path.join(data_context().content.root, data_context().content.integration_vars_path)
         vars_file = os.path.join(temp_dir, data_context().content.integration_vars_path)
 
         file_copies = [
-            (ansible_config_src, ansible_config),
+            (assible_config_src, assible_config),
             (inventory_path_src, inventory_path),
         ]
 
@@ -286,7 +286,7 @@ def integration_test_environment(args, target, inventory_path_src):
                 make_dirs(os.path.dirname(file_dst))
                 shutil.copy2(file_src, file_dst)
 
-        yield IntegrationEnvironment(integration_dir, targets_dir, inventory_path, ansible_config, vars_file)
+        yield IntegrationEnvironment(integration_dir, targets_dir, inventory_path, assible_config, vars_file)
     finally:
         if not args.explain:
             shutil.rmtree(temp_dir)
@@ -303,10 +303,10 @@ def integration_test_config_file(args, env_config, integration_dir):
         yield None
         return
 
-    config_vars = (env_config.ansible_vars or {}).copy()
+    config_vars = (env_config.assible_vars or {}).copy()
 
     config_vars.update(dict(
-        ansible_test=dict(
+        assible_test=dict(
             environment=env_config.env_vars,
             module_defaults=env_config.module_defaults,
         )
@@ -324,11 +324,11 @@ def integration_test_config_file(args, env_config, integration_dir):
 
 class IntegrationEnvironment:
     """Details about the integration environment."""
-    def __init__(self, integration_dir, targets_dir, inventory_path, ansible_config, vars_file):
+    def __init__(self, integration_dir, targets_dir, inventory_path, assible_config, vars_file):
         self.integration_dir = integration_dir
         self.targets_dir = targets_dir
         self.inventory_path = inventory_path
-        self.ansible_config = ansible_config
+        self.assible_config = assible_config
         self.vars_file = vars_file
 
 

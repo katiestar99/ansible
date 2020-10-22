@@ -2,7 +2,7 @@
 
 set -eu
 
-ansible-playbook playbook.yml "$@" > output.log 2>&1 || true
+assible-playbook playbook.yml "$@" > output.log 2>&1 || true
 
 if grep "task should always execute" output.log >/dev/null; then
   echo "Test passed (playbook failed with expected output, output not shown)."

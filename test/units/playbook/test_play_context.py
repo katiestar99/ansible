@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -9,14 +9,14 @@ __metaclass__ = type
 
 import pytest
 
-from ansible import constants as C
-from ansible import context
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.errors import AnsibleError
-from ansible.playbook.play_context import PlayContext
-from ansible.playbook.play import Play
-from ansible.plugins.loader import become_loader
-from ansible.utils import context_objects as co
+from assible import constants as C
+from assible import context
+from assible.cli.arguments import option_helpers as opt_help
+from assible.errors import AssibleError
+from assible.playbook.play_context import PlayContext
+from assible.playbook.play import Play
+from assible.plugins.loader import become_loader
+from assible.utils import context_objects as co
 
 
 @pytest.fixture
@@ -76,8 +76,8 @@ def test_play_context(mocker, parser, reset_cli_args):
     mock_task.delegate_to = None
 
     all_vars = dict(
-        ansible_connection='mock_inventory',
-        ansible_ssh_port=4321,
+        assible_connection='mock_inventory',
+        assible_ssh_port=4321,
     )
 
     mock_templar = mocker.MagicMock()
@@ -107,5 +107,5 @@ def test_play_context_make_become_bad(mocker, parser, reset_cli_args):
     play_context.set_become_plugin(become_loader.get('bad'))
     play_context.become_method = 'bad'
 
-    with pytest.raises(AnsibleError):
+    with pytest.raises(AssibleError):
         play_context.make_become_cmd(cmd=default_cmd, executable=default_exe)

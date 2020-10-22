@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 # PYTHON_ARGCOMPLETE_OK
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -29,7 +29,7 @@ def build_lib_path(this_script=__file__):
     return libdir
 
 
-def ansible_lib_path(this_script=__file__):
+def assible_lib_path(this_script=__file__):
     """Return path to the common build library directory."""
     hacking_dir = os.path.dirname(this_script)
     libdir = os.path.abspath(os.path.join(hacking_dir, '..', 'lib'))
@@ -37,11 +37,11 @@ def ansible_lib_path(this_script=__file__):
     return libdir
 
 
-sys.path.insert(0, ansible_lib_path())
+sys.path.insert(0, assible_lib_path())
 sys.path.insert(0, build_lib_path())
 
 
-from build_ansible import commands, errors
+from build_assible import commands, errors
 
 
 def create_arg_parser(program_name):
@@ -51,7 +51,7 @@ def create_arg_parser(program_name):
     :arg program_name: The name of the script.  Used in help texts
     """
     parser = argparse.ArgumentParser(prog=program_name,
-                                     description="Implements utilities to build Ansible")
+                                     description="Implements utilities to build Assible")
     return parser
 
 
@@ -61,14 +61,14 @@ def main():
 
     "It all starts here"
     """
-    subcommands = load('build_ansible.command_plugins', subclasses=commands.Command)
+    subcommands = load('build_assible.command_plugins', subclasses=commands.Command)
 
     arg_parser = create_arg_parser(os.path.basename(sys.argv[0]))
     arg_parser.add_argument('--debug', dest='debug', required=False, default=False,
                             action='store_true',
                             help='Show tracebacks and other debugging information')
     subparsers = arg_parser.add_subparsers(title='Subcommands', dest='command',
-                                           help='for help use build-ansible.py SUBCOMMANDS -h')
+                                           help='for help use build-assible.py SUBCOMMANDS -h')
     subcommands.pipe('init_parser', subparsers.add_parser)
 
     if argcomplete:

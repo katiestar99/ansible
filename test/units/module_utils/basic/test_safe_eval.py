@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017, Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2015-2017, Toshio Kuratomi <tkuratomi@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish

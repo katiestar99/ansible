@@ -1,4 +1,4 @@
-+ ansible-playbook -i inventory test.yml
++ assible-playbook -i inventory test.yml
 ++ set +x
 fatal: [testhost]: FAILED! => {"changed": false, "msg": "no reason"}
 fatal: [testhost]: FAILED! => {"msg": "One or more items failed"}

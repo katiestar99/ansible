@@ -4,19 +4,19 @@ __metaclass__ = type
 import json
 import sys
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
     if "--interactive" in sys.argv:
-        import ansible.module_utils.basic
-        ansible.module_utils.basic._ANSIBLE_ARGS = json.dumps(dict(
-            ANSIBLE_MODULE_ARGS=dict(
+        import assible.module_utils.basic
+        assible.module_utils.basic._ASSIBLE_ARGS = json.dumps(dict(
+            ASSIBLE_MODULE_ARGS=dict(
                 fail_mode="graceful"
             )
         ))
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             fail_mode=dict(type='list', default=['success'])
         )

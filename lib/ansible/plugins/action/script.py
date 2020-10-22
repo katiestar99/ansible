@@ -1,19 +1,19 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -21,10 +21,10 @@ import os
 import re
 import shlex
 
-from ansible.errors import AnsibleError, AnsibleAction, _AnsibleActionDone, AnsibleActionFail, AnsibleActionSkip
-from ansible.executor.powershell import module_manifest as ps_manifest
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.plugins.action import ActionBase
+from assible.errors import AssibleError, AssibleAction, _AssibleActionDone, AssibleActionFail, AssibleActionSkip
+from assible.executor.powershell import module_manifest as ps_manifest
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.plugins.action import ActionBase
 
 
 class ActionModule(ActionBase):
@@ -50,7 +50,7 @@ class ActionModule(ActionBase):
                 # and the filename already exists. This allows idempotence
                 # of command executions.
                 if self._remote_file_exists(creates):
-                    raise AnsibleActionSkip("%s exists, matching creates option" % creates)
+                    raise AssibleActionSkip("%s exists, matching creates option" % creates)
 
             removes = self._task.args.get('removes')
             if removes:
@@ -58,7 +58,7 @@ class ActionModule(ActionBase):
                 # and the filename does not exist. This allows idempotence
                 # of command executions.
                 if not self._remote_file_exists(removes):
-                    raise AnsibleActionSkip("%s does not exist, matching removes option" % removes)
+                    raise AssibleActionSkip("%s does not exist, matching removes option" % removes)
 
             # The chdir must be absolute, because a relative path would rely on
             # remote node behaviour & user config.
@@ -67,10 +67,10 @@ class ActionModule(ActionBase):
                 # Powershell is the only Windows-path aware shell
                 if getattr(self._connection._shell, "_IS_WINDOWS", False) and \
                         not self.windows_absolute_path_detection.match(chdir):
-                    raise AnsibleActionFail('chdir %s must be an absolute path for a Windows remote node' % chdir)
+                    raise AssibleActionFail('chdir %s must be an absolute path for a Windows remote node' % chdir)
                 # Every other shell is unix-path-aware.
                 if not getattr(self._connection._shell, "_IS_WINDOWS", False) and not chdir.startswith('/'):
-                    raise AnsibleActionFail('chdir %s must be an absolute path for a Unix-aware remote node' % chdir)
+                    raise AssibleActionFail('chdir %s must be an absolute path for a Unix-aware remote node' % chdir)
 
             # Split out the script as the first item in raw_params using
             # shlex.split() in order to support paths and files with spaces in the name.
@@ -84,8 +84,8 @@ class ActionModule(ActionBase):
 
             try:
                 source = self._loader.get_real_file(self._find_needle('files', source), decrypt=self._task.args.get('decrypt', True))
-            except AnsibleError as e:
-                raise AnsibleActionFail(to_native(e))
+            except AssibleError as e:
+                raise AssibleActionFail(to_native(e))
 
             # now we execute script, always assume changed.
             result['changed'] = True
@@ -119,7 +119,7 @@ class ActionModule(ActionBase):
                     script_cmd = ' '.join([env_string, target_command])
 
             if self._play_context.check_mode:
-                raise _AnsibleActionDone()
+                raise _AssibleActionDone()
 
             script_cmd = self._connection._shell.wrap_for_exec(script_cmd)
 
@@ -142,9 +142,9 @@ class ActionModule(ActionBase):
             result.update(self._low_level_execute_command(cmd=script_cmd, in_data=exec_data, sudoable=True, chdir=chdir))
 
             if 'rc' in result and result['rc'] != 0:
-                raise AnsibleActionFail('non-zero return code')
+                raise AssibleActionFail('non-zero return code')
 
-        except AnsibleAction as e:
+        except AssibleAction as e:
             result.update(e.result)
         finally:
             self._remove_tmp_path(self._connection._shell.tmpdir)

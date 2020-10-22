@@ -25,4 +25,4 @@
         name: sos
         state: absent
 
-  when: ansible_pkg_mgr == 'yum'
+  when: assible_pkg_mgr == 'yum'

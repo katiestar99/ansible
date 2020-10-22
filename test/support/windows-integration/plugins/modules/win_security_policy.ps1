@@ -3,17 +3,17 @@
 # Copyright: (c) 2017, Jordan Borean <jborean93@gmail.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 $ErrorActionPreference = 'Stop'
 
 $params = Parse-Args $args -supports_check_mode $true
-$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
-$diff_mode = Get-AnsibleParam -obj $Params -name "_ansible_diff" -type "bool" -default $false
+$check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -type "bool" -default $false
+$diff_mode = Get-AssibleParam -obj $Params -name "_assible_diff" -type "bool" -default $false
 
-$section = Get-AnsibleParam -obj $params -name "section" -type "str" -failifempty $true
-$key = Get-AnsibleParam -obj $params -name "key" -type "str" -failifempty $true
-$value = Get-AnsibleParam -obj $params -name "value" -failifempty $true
+$section = Get-AssibleParam -obj $params -name "section" -type "str" -failifempty $true
+$key = Get-AssibleParam -obj $params -name "key" -type "str" -failifempty $true
+$value = Get-AssibleParam -obj $params -name "value" -failifempty $true
 
 $result = @{
     changed = $false

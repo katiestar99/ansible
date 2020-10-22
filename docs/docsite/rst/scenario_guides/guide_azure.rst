@@ -1,27 +1,27 @@
 Microsoft Azure Guide
 =====================
 
-Ansible includes a suite of modules for interacting with Azure Resource Manager, giving you the tools to easily create
+Assible includes a suite of modules for interacting with Azure Resource Manager, giving you the tools to easily create
 and orchestrate infrastructure on the Microsoft Azure Cloud.
 
 Requirements
 ------------
 
 Using the Azure Resource Manager modules requires having specific Azure SDK modules
-installed on the host running Ansible.
+installed on the host running Assible.
 
 .. code-block:: bash
 
-    $ pip install 'ansible[azure]'
+    $ pip install 'assible[azure]'
 
-If you are running Ansible from source, you can install the dependencies from the
-root directory of the Ansible repo.
+If you are running Assible from source, you can install the dependencies from the
+root directory of the Assible repo.
 
 .. code-block:: bash
 
     $ pip install .[azure]
 
-You can also directly run Ansible in `Azure Cloud Shell <https://shell.azure.com>`_, where Ansible is pre-installed.
+You can also directly run Assible in `Azure Cloud Shell <https://shell.azure.com>`_, where Assible is pre-installed.
 
 Authenticating with Azure
 -------------------------
@@ -65,7 +65,7 @@ To create an Active Directory username/password:
 Providing Credentials to Azure Modules
 ......................................
 
-The modules offer several ways to provide your credentials. For a CI/CD tool such as Ansible Tower or Jenkins, you will
+The modules offer several ways to provide your credentials. For a CI/CD tool such as Assible Tower or Jenkins, you will
 most likely want to use environment variables. For local development you may wish to store your credentials in a file
 within your home directory. And of course, you can always pass credentials as parameters to a task within a playbook. The
 order of precedence is parameters, then environment variables, and finally a file found in your home directory.
@@ -284,20 +284,20 @@ consider the following:
 Dynamic Inventory Script
 ------------------------
 
-If you are not familiar with Ansible's dynamic inventory scripts, check out :ref:`Intro to Dynamic Inventory <intro_dynamic_inventory>`.
+If you are not familiar with Assible's dynamic inventory scripts, check out :ref:`Intro to Dynamic Inventory <intro_dynamic_inventory>`.
 
-The Azure Resource Manager inventory script is called  `azure_rm.py  <https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/azure_rm.py>`_. It authenticates with the Azure API exactly the same as the
+The Azure Resource Manager inventory script is called  `azure_rm.py  <https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/azure_rm.py>`_. It authenticates with the Azure API exactly the same as the
 Azure modules, which means you will either define the same environment variables described above in `Using Environment Variables`_,
 create a ``$HOME/.azure/credentials`` file (also described above in `Storing in a File`_), or pass command line parameters. To see available command
 line options execute the following:
 
 .. code-block:: bash
 
-    $ wget https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/azure_rm.py
+    $ wget https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/azure_rm.py
     $ ./azure_rm.py --help
 
-As with all dynamic inventory scripts, the script can be executed directly, passed as a parameter to the ansible command,
-or passed directly to ansible-playbook using the -i option. No matter how it is executed the script produces JSON representing
+As with all dynamic inventory scripts, the script can be executed directly, passed as a parameter to the assible command,
+or passed directly to assible-playbook using the -i option. No matter how it is executed the script produces JSON representing
 all of the hosts found in your Azure subscription. You can narrow this down to just hosts found in a specific set of
 Azure resource groups, or even down to a specific host.
 
@@ -306,7 +306,7 @@ For a given host, the inventory script provides the following host variables:
 .. code-block:: JSON
 
     {
-      "ansible_host": "XXX.XXX.XXX.XXX",
+      "assible_host": "XXX.XXX.XXX.XXX",
       "computer_name": "computer_name2",
       "fqdn": null,
       "id": "/subscriptions/subscription-id/resourceGroups/galaxy-production/providers/Microsoft.Compute/virtualMachines/object-name",
@@ -397,7 +397,7 @@ If you don't need the powerstate, you can improve performance by turning off pow
 * AZURE_INCLUDE_POWERSTATE=no
 
 A sample azure_rm.ini file is included along with the inventory script in
-`here <https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/azure_rm.ini>`_.
+`here <https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/azure_rm.ini>`_.
 An .ini file will contain the following:
 
 .. code-block:: ini
@@ -432,22 +432,22 @@ Here are some examples using the inventory script:
 .. code-block:: bash
 
     # Download inventory script
-    $ wget https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/azure_rm.py
+    $ wget https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/azure_rm.py
 
     # Execute /bin/uname on all instances in the Testing resource group
-    $ ansible -i azure_rm.py Testing -m shell -a "/bin/uname -a"
+    $ assible -i azure_rm.py Testing -m shell -a "/bin/uname -a"
 
     # Execute win_ping on all Windows instances
-    $ ansible -i azure_rm.py windows -m win_ping
+    $ assible -i azure_rm.py windows -m win_ping
 
     # Execute ping on all Linux instances
-    $ ansible -i azure_rm.py linux -m ping
+    $ assible -i azure_rm.py linux -m ping
 
     # Use the inventory script to print instance specific information
     $ ./azure_rm.py --host my_instance_host_name --resource-groups=Testing --pretty
 
-    # Use the inventory script with ansible-playbook
-    $ ansible-playbook -i ./azure_rm.py test_playbook.yml
+    # Use the inventory script with assible-playbook
+    $ assible-playbook -i ./azure_rm.py test_playbook.yml
 
 Here is a simple playbook to exercise the Azure inventory script:
 
@@ -465,7 +465,7 @@ You can execute the playbook with something like:
 
 .. code-block:: bash
 
-    $ ansible-playbook -i ./azure_rm.py test_azure_inventory.yml
+    $ assible-playbook -i ./azure_rm.py test_azure_inventory.yml
 
 
 Disabling certificate validation on Azure endpoints

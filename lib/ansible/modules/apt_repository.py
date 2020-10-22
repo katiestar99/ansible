@@ -136,9 +136,9 @@ except ImportError:
     distro = None
     HAVE_PYTHON_APT = False
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native
-from ansible.module_utils.urls import fetch_url
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native
+from assible.module_utils.urls import fetch_url
 
 
 if sys.version_info[0] < 3:
@@ -512,7 +512,7 @@ def revert_sources_list(sources_before, sources_after, sourceslist_before):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             repo=dict(type='str', required=True),
             state=dict(type='str', default='present', choices=['absent', 'present']),

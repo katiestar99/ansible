@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -40,7 +40,7 @@ except ImportError:
     TOWER_CLI_IMP_ERR = traceback.format_exc()
     HAS_TOWER_CLI = False
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
+from assible.module_utils.basic import AssibleModule, missing_required_lib
 
 
 def tower_auth_config(module):
@@ -78,7 +78,7 @@ def tower_auth_config(module):
 
 
 def tower_check_mode(module):
-    '''Execute check mode logic for Ansible Tower modules'''
+    '''Execute check mode logic for Assible Tower modules'''
     if module.check_mode:
         try:
             result = client.get('/ping').json()
@@ -87,7 +87,7 @@ def tower_check_mode(module):
             module.fail_json(changed=False, msg='Failed check mode: {0}'.format(excinfo))
 
 
-class TowerModule(AnsibleModule):
+class TowerModule(AssibleModule):
     def __init__(self, argument_spec, **kwargs):
         args = dict(
             tower_host=dict(),
@@ -109,5 +109,5 @@ class TowerModule(AnsibleModule):
         super(TowerModule, self).__init__(argument_spec=args, **kwargs)
 
         if not HAS_TOWER_CLI:
-            self.fail_json(msg=missing_required_lib('ansible-tower-cli'),
+            self.fail_json(msg=missing_required_lib('assible-tower-cli'),
                            exception=TOWER_CLI_IMP_ERR)

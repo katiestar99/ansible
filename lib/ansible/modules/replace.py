@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2013, Evan Kaufman <evan@digitalflophouse.com
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -27,7 +27,7 @@ options:
   path:
     description:
       - The file to modify.
-      - Before Ansible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
+      - Before Assible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
     type: path
     required: true
     aliases: [ dest, destfile, name ]
@@ -43,7 +43,7 @@ options:
         any character I(except newlines). A common mistake is to assume that
         a negated character set like C([^#]) will also not match newlines.
       - In order to exclude newlines, they must be added to the set like C([^#\n]).
-      - Note that, as of Ansible 2.0, short form tasks should have any escape
+      - Note that, as of Assible 2.0, short form tasks should have any escape
         sequences backslash-escaped in order to prevent them being parsed
         as string literal escapes. See the examples.
     type: str
@@ -81,7 +81,7 @@ options:
     default: no
   others:
     description:
-      - All arguments accepted by the M(ansible.builtin.file) module also work here.
+      - All arguments accepted by the M(assible.builtin.file) module also work here.
     type: str
   encoding:
     description:
@@ -90,37 +90,37 @@ options:
     default: utf-8
     version_added: "2.4"
 notes:
-  - As of Ansible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
-  - As of Ansible 2.7.10, the combined use of I(before) and I(after) works properly. If you were relying on the
+  - As of Assible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
+  - As of Assible 2.7.10, the combined use of I(before) and I(after) works properly. If you were relying on the
     previous incorrect behavior, you may be need to adjust your tasks.
-    See U(https://github.com/ansible/ansible/issues/31354) for details.
-  - Option I(follow) has been removed in Ansible 2.5, because this module modifies the contents of the file so I(follow=no) doesn't make sense.
+    See U(https://github.com/assible/assible/issues/31354) for details.
+  - Option I(follow) has been removed in Assible 2.5, because this module modifies the contents of the file so I(follow=no) doesn't make sense.
 '''
 
 EXAMPLES = r'''
-- name: Before Ansible 2.3, option 'dest', 'destfile' or 'name' was used instead of 'path'
+- name: Before Assible 2.3, option 'dest', 'destfile' or 'name' was used instead of 'path'
   replace:
     path: /etc/hosts
     regexp: '(\s+)old\.host\.name(\s+.*)?$'
     replace: '\1new.host.name\2'
 
-- name: Replace after the expression till the end of the file (requires Ansible >= 2.4)
+- name: Replace after the expression till the end of the file (requires Assible >= 2.4)
   replace:
     path: /etc/apache2/sites-available/default.conf
     after: 'NameVirtualHost [*]'
     regexp: '^(.+)$'
     replace: '# \1'
 
-- name: Replace before the expression till the begin of the file (requires Ansible >= 2.4)
+- name: Replace before the expression till the begin of the file (requires Assible >= 2.4)
   replace:
     path: /etc/apache2/sites-available/default.conf
     before: '# live site config'
     regexp: '^(.+)$'
     replace: '# \1'
 
-# Prior to Ansible 2.7.10, using before and after in combination did the opposite of what was intended.
-# see https://github.com/ansible/ansible/issues/31354 for details.
-- name: Replace between the expressions (requires Ansible >= 2.4)
+# Prior to Assible 2.7.10, using before and after in combination did the opposite of what was intended.
+# see https://github.com/assible/assible/issues/31354 for details.
+- name: Replace between the expressions (requires Assible >= 2.4)
   replace:
     path: /etc/hosts
     after: '<VirtualHost [*]>'
@@ -143,7 +143,7 @@ EXAMPLES = r'''
     replace: '\1 127.0.0.1:8080'
     validate: '/usr/sbin/apache2ctl -f %s -t'
 
-- name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+- name: Short form task (in assible 2+) necessitates backslash-escaped sequences
   replace: path=/etc/hosts regexp='\\b(localhost)(\\d*)\\b' replace='\\1\\2.localdomain\\2 \\1\\2'
 
 - name: Long form task does not
@@ -169,8 +169,8 @@ import os
 import re
 import tempfile
 
-from ansible.module_utils._text import to_text, to_bytes
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils._text import to_text, to_bytes
+from assible.module_utils.basic import AssibleModule
 
 
 def write_changes(module, contents, path):
@@ -208,7 +208,7 @@ def check_file_attrs(module, changed, message):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             path=dict(type='path', required=True, aliases=['dest', 'destfile', 'name']),
             regexp=dict(type='str', required=True),

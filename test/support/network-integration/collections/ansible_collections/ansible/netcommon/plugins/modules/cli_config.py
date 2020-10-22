@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# (c) 2018, Ansible by Red Hat, inc
+# (c) 2018, Assible by Red Hat, inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": ["preview"],
     "supported_by": "network",
@@ -27,7 +27,7 @@ description:
 - This module provides platform agnostic way of pushing text based configuration to
   network devices over network_cli connection plugin.
 extends_documentation_fragment:
-- ansible.netcommon.network_agnostic
+- assible.netcommon.network_agnostic
 options:
   config:
     description:
@@ -56,7 +56,7 @@ options:
     - This argument will cause the module to create a full backup of the current running
       config from the remote device before any changes are made. If the C(backup_options)
       value is not given, the backup file is written to the C(backup) folder in the
-      playbook root directory or role root directory, if playbook is part of an ansible
+      playbook root directory or role root directory, if playbook is part of an assible
       role. If the directory does not exist, it is created.
     type: bool
     default: 'no'
@@ -173,7 +173,7 @@ EXAMPLES = """
 
 - name: junos replace config
   cli_config:
-    replace: '/var/home/ansible/junos01.cfg'
+    replace: '/var/home/assible/junos01.cfg'
 
 - name: commit with comment
   cli_config:
@@ -199,14 +199,14 @@ backup_path:
   description: The full path to the backup file
   returned: when backup is yes
   type: str
-  sample: /playbooks/ansible/backup/hostname_config.2016-07-16@22:28:34
+  sample: /playbooks/assible/backup/hostname_config.2016-07-16@22:28:34
 """
 
 import json
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.connection import Connection
-from ansible.module_utils._text import to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.connection import Connection
+from assible.module_utils._text import to_text
 
 
 def validate_args(module, device_operations):
@@ -384,7 +384,7 @@ def main():
     mutually_exclusive = [("config", "rollback")]
     required_one_of = [["backup", "config", "rollback"]]
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         mutually_exclusive=mutually_exclusive,
         required_one_of=required_one_of,

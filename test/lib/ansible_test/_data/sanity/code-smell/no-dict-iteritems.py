@@ -13,7 +13,7 @@ def main():
                 match = re.search(r'(?<! six)\.(iteritems)', text)
 
                 if match:
-                    print('%s:%d:%d: use `dict.items` or `ansible.module_utils.six.iteritems` instead of `dict.iteritems`' % (
+                    print('%s:%d:%d: use `dict.items` or `assible.module_utils.six.iteritems` instead of `dict.iteritems`' % (
                         path, line + 1, match.start(1) + 1))
 
 

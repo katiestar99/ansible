@@ -56,6 +56,6 @@
     that:
       # if the good message is not found then the cause is likely one of:
       # 1) the remote system does not write user.info messages to the logs
-      # 2) the AnsibleModule.log method is not working
+      # 2) the AssibleModule.log method is not working
       - good_message in grep.stdout
       - bad_message not in grep.stdout

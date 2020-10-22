@@ -6,7 +6,7 @@ import json
 
 
 def main():
-    print(json.dumps(dict(changed=False, source='user_ansible_bullcoll')))
+    print(json.dumps(dict(changed=False, source='user_assible_bullcoll')))
 
 
 if __name__ == '__main__':

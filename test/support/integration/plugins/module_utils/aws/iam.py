@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -11,11 +11,11 @@ try:
 except ImportError:
     pass  # caught by HAS_BOTO3
 
-from ansible.module_utils._text import to_native
+from assible.module_utils._text import to_native
 
 
 def get_aws_account_id(module):
-    """ Given AnsibleAWSModule instance, get the active AWS account ID
+    """ Given AssibleAWSModule instance, get the active AWS account ID
 
     get_account_id tries too find out the account that we are working
     on.  It's not guaranteed that this will be easy so we try in

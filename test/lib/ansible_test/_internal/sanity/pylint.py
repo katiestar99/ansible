@@ -33,8 +33,8 @@ from ..util_common import (
     run_command,
 )
 
-from ..ansible_util import (
-    ansible_environment,
+from ..assible_util import (
+    assible_environment,
     get_collection_detail,
     CollectionDetail,
     CollectionDetailError,
@@ -55,14 +55,14 @@ class PylintTest(SanitySingleVersion):
     def __init__(self):
         super(PylintTest, self).__init__()
         self.optional_error_codes.update([
-            'ansible-deprecated-date',
+            'assible-deprecated-date',
             'too-complex',
         ])
 
     @property
     def error_code(self):  # type: () -> t.Optional[str]
-        """Error code for ansible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
-        return 'ansible-test'
+        """Error code for assible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
+        return 'assible-test'
 
     def filter_targets(self, targets):  # type: (t.List[TestTarget]) -> t.List[TestTarget]
         """Return the given list of test targets, filtered to include only those relevant for the test."""
@@ -136,13 +136,13 @@ class PylintTest(SanitySingleVersion):
         if data_context().content.collection:
             add_context(remaining_paths, 'collection', lambda p: True)
         else:
-            add_context(remaining_paths, 'validate-modules', filter_path('test/lib/ansible_test/_data/sanity/validate-modules/'))
-            add_context(remaining_paths, 'validate-modules-unit', filter_path('test/lib/ansible_test/tests/validate-modules-unit/'))
-            add_context(remaining_paths, 'sanity', filter_path('test/lib/ansible_test/_data/sanity/'))
-            add_context(remaining_paths, 'ansible-test', filter_path('test/lib/'))
+            add_context(remaining_paths, 'validate-modules', filter_path('test/lib/assible_test/_data/sanity/validate-modules/'))
+            add_context(remaining_paths, 'validate-modules-unit', filter_path('test/lib/assible_test/tests/validate-modules-unit/'))
+            add_context(remaining_paths, 'sanity', filter_path('test/lib/assible_test/_data/sanity/'))
+            add_context(remaining_paths, 'assible-test', filter_path('test/lib/'))
             add_context(remaining_paths, 'test', filter_path('test/'))
             add_context(remaining_paths, 'hacking', filter_path('hacking/'))
-            add_context(remaining_paths, 'ansible', lambda p: True)
+            add_context(remaining_paths, 'assible', lambda p: True)
 
         messages = []
         context_times = []
@@ -220,8 +220,8 @@ class PylintTest(SanitySingleVersion):
         parser = ConfigParser()
         parser.read(rcfile)
 
-        if parser.has_section('ansible-test'):
-            config = dict(parser.items('ansible-test'))
+        if parser.has_section('assible-test'):
+            config = dict(parser.items('assible-test'))
         else:
             config = dict()
 
@@ -251,11 +251,11 @@ class PylintTest(SanitySingleVersion):
         if data_context().content.collection:
             append_python_path.append(data_context().content.collection.root)
 
-        env = ansible_environment(args)
+        env = assible_environment(args)
         env['PYTHONPATH'] += os.path.pathsep + os.path.pathsep.join(append_python_path)
 
         # expose plugin paths for use in custom plugins
-        env.update(dict(('ANSIBLE_TEST_%s_PATH' % k.upper(), os.path.abspath(v) + os.path.sep) for k, v in data_context().content.plugin_paths.items()))
+        env.update(dict(('ASSIBLE_TEST_%s_PATH' % k.upper(), os.path.abspath(v) + os.path.sep) for k, v in data_context().content.plugin_paths.items()))
 
         if paths:
             display.info('Checking %d file(s) in context "%s" with config: %s' % (len(paths), context, rcfile), verbosity=1)

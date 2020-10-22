@@ -10,7 +10,7 @@ Working with command output and prompts in network modules
 Conditionals in networking modules
 ===================================
 
-Ansible allows you to use conditionals to control the flow of your playbooks. Ansible networking command modules use the following unique conditional statements.
+Assible allows you to use conditionals to control the flow of your playbooks. Assible networking command modules use the following unique conditional statements.
 
 * ``eq`` - Equal
 * ``neq`` - Not equal
@@ -24,7 +24,7 @@ Ansible allows you to use conditionals to control the flow of your playbooks. An
 Conditional statements evaluate the results from the commands that are
 executed remotely on the device.  Once the task executes the command
 set, the ``wait_for`` argument can be used to evaluate the results before
-returning control to the Ansible playbook.
+returning control to the Assible playbook.
 
 For example::
 
@@ -70,19 +70,19 @@ command index in ``[]``, where ``0`` is the first command in the commands list,
 Handling prompts in network modules
 ===================================
 
-Network devices may require that you answer a prompt before performing a change on the device. Individual network modules such as :ref:`cisco.ios.ios_command <ansible_collections.cisco.ios.ios_command_module>` and :ref:`cisco.nxos.nxos_command <ansible_collections.cisco.nxos.nxos_command_module>` can handle this with a ``prompt`` parameter.
+Network devices may require that you answer a prompt before performing a change on the device. Individual network modules such as :ref:`cisco.ios.ios_command <assible_collections.cisco.ios.ios_command_module>` and :ref:`cisco.nxos.nxos_command <assible_collections.cisco.nxos.nxos_command_module>` can handle this with a ``prompt`` parameter.
 
 .. note::
 
 	``prompt`` is a Python regex. If you add special characters such as ``?`` in the ``prompt`` value, the prompt won't match and you will get a timeout. To avoid this, ensure that the ``prompt`` value is a Python regex that matches the actual device prompt. Any special characters must be handled correctly in the ``prompt`` regex.
 
-You can also use the :ref:`ansible.netcommon.cli_command <ansible_collections.ansible.netcommon.cli_command_module>` to handle multiple prompts.
+You can also use the :ref:`assible.netcommon.cli_command <assible_collections.assible.netcommon.cli_command_module>` to handle multiple prompts.
 
 .. code-block:: yaml
 
   ---
   - name: multiple prompt, multiple answer (mandatory check for all prompts)
-    ansible.netcommon.cli_command:
+    assible.netcommon.cli_command:
       command: "copy sftp sftp://user@host//user/test.img"
       check_all: True
       prompt:
@@ -104,7 +104,7 @@ In the following example, the second answer would be ignored and ``y`` would be 
 
   ---
    - name: reboot ios device
-     ansible.netcommon.cli_command:
+     assible.netcommon.cli_command:
        command: reload
        prompt:
          - Save\?
@@ -115,8 +115,8 @@ In the following example, the second answer would be ignored and ``y`` would be 
 
 .. seealso::
 
-  `Rebooting network devices with Ansible <https://www.ansible.com/blog/rebooting-network-devices-with-ansible>`_
+  `Rebooting network devices with Assible <https://www.assible.com/blog/rebooting-network-devices-with-assible>`_
       Examples using ``wait_for``, ``wait_for_connection``, and ``prompt`` for network devices.
 
-  `Deep dive on cli_command <https://www.ansible.com/blog/deep-dive-on-cli-command-for-network-automation>`_
+  `Deep dive on cli_command <https://www.assible.com/blog/deep-dive-on-cli-command-for-network-automation>`_
       Detailed overview of how to use the ``cli_command``.

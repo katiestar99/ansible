@@ -1,5 +1,5 @@
 ===========
-Ansible 2.5
+Assible 2.5
 ===========
 **Core Engine Freeze and Module Freeze: 22 January 2018**
 
@@ -31,20 +31,20 @@ Engine improvements
 - Add option to set playbook dir for adhoc, inventory and console to allow for 'relative path loading'
 
 
-Ansible-Config
+Assible-Config
 --------------
 - Extend config to more plugin types and update plugins to support the new config
 
 Inventory
 ---------
-- ansible-inventory option to output group variable assignment and data (--export)
+- assible-inventory option to output group variable assignment and data (--export)
 - Create inventory plugins for:
   - aws
 
 Facts
 -----
-- Namespacing fact variables (via a config option) implemented in ansible/ansible PR `#18445 <https://github.com/ansible/ansible/pull/18445>`_.
-  Proposal found in ansible/proposals issue `#17 <https://github.com/ansible/proposals/issues/17>`_.
+- Namespacing fact variables (via a config option) implemented in assible/assible PR `#18445 <https://github.com/assible/assible/pull/18445>`_.
+  Proposal found in assible/proposals issue `#17 <https://github.com/assible/proposals/issues/17>`_.
 - Make fact collectors and gather_subset specs finer grained
 - Eliminate unneeded deps between fact collectors
 - Allow fact collectors to indicate if they need information from another fact collector to be gathered first.
@@ -64,7 +64,7 @@ Runtime Check on Modules for Blacklisting
 -----------------------------------------
 - Filter on things like "supported_by" in module metadata
 - Provide users with an option of "warning, error or allow/ignore"
-- Configurable via ansible.cfg and environment variable
+- Configurable via assible.cfg and environment variable
 
 Windows
 -------
@@ -86,7 +86,7 @@ Windows
 General Cloud
 -------------
 - Make multi-cloud provisioning easier
-- Diff mode will output provisioning task results of ansible-playbook runs
+- Diff mode will output provisioning task results of assible-playbook runs
 - Terraform module
 
 AWS
@@ -117,8 +117,8 @@ Network Roadmap
 - Create netconf connection plugin **(done)**
 - Create netconf fact module
 - Turn network_cli into a usable connection type **(done)**
-- Implements jsonrpc message passing for ansible-connection **(done)**
-- Improve logging for ansible-connection **(done)**
+- Implements jsonrpc message passing for assible-connection **(done)**
+- Improve logging for assible-connection **(done)**
 - Improve stdout output for failures whilst using persistent connection **(done)**
 - Create IOS-XR NetConf Plugin and refactor iosxr modules to leverage netconf plugin **(done)**
 - Refactor junos modules to use netconf plugin **(done)**
@@ -138,5 +138,5 @@ Documentation
 
 Contributor Quality of Life
 ---------------------------
-- Finish PSScriptAnalyer integration with ansible-test (for enforcing Powershell style) **(done)**
+- Finish PSScriptAnalyer integration with assible-test (for enforcing Powershell style) **(done)**
 - Resolve issues requiring skipping of some integration tests on Python 3.

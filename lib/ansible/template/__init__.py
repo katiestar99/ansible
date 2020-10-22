@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -41,27 +41,27 @@ from jinja2.exceptions import TemplateSyntaxError, UndefinedError
 from jinja2.loaders import FileSystemLoader
 from jinja2.runtime import Context, StrictUndefined
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleFilterError, AnsiblePluginRemovedError, AnsibleUndefinedVariable, AnsibleAssertionError
-from ansible.module_utils.six import iteritems, string_types, text_type
-from ansible.module_utils.six.moves import range
-from ansible.module_utils._text import to_native, to_text, to_bytes
-from ansible.module_utils.common._collections_compat import Iterator, Sequence, Mapping, MappingView, MutableMapping
-from ansible.module_utils.common.collections import is_sequence
-from ansible.module_utils.compat.importlib import import_module
-from ansible.plugins.loader import filter_loader, lookup_loader, test_loader
-from ansible.template.safe_eval import safe_eval
-from ansible.template.template import AnsibleJ2Template
-from ansible.template.vars import AnsibleJ2Vars
-from ansible.utils.collection_loader import AnsibleCollectionRef
-from ansible.utils.display import Display
-from ansible.utils.collection_loader._collection_finder import _get_collection_metadata
-from ansible.utils.unsafe_proxy import wrap_var
+from assible import constants as C
+from assible.errors import AssibleError, AssibleFilterError, AssiblePluginRemovedError, AssibleUndefinedVariable, AssibleAssertionError
+from assible.module_utils.six import iteritems, string_types, text_type
+from assible.module_utils.six.moves import range
+from assible.module_utils._text import to_native, to_text, to_bytes
+from assible.module_utils.common._collections_compat import Iterator, Sequence, Mapping, MappingView, MutableMapping
+from assible.module_utils.common.collections import is_sequence
+from assible.module_utils.compat.importlib import import_module
+from assible.plugins.loader import filter_loader, lookup_loader, test_loader
+from assible.template.safe_eval import safe_eval
+from assible.template.template import AssibleJ2Template
+from assible.template.vars import AssibleJ2Vars
+from assible.utils.collection_loader import AssibleCollectionRef
+from assible.utils.display import Display
+from assible.utils.collection_loader._collection_finder import _get_collection_metadata
+from assible.utils.unsafe_proxy import wrap_var
 
 display = Display()
 
 
-__all__ = ['Templar', 'generate_ansible_template_vars']
+__all__ = ['Templar', 'generate_assible_template_vars']
 
 # A regex for checking to see if a variable we're trying to
 # expand is just a single variable name.
@@ -80,8 +80,8 @@ USE_JINJA2_NATIVE = False
 if C.DEFAULT_JINJA2_NATIVE:
     try:
         from jinja2.nativetypes import NativeEnvironment
-        from ansible.template.native_helpers import ansible_native_concat
-        from ansible.utils.native_jinja import NativeJinjaText
+        from assible.template.native_helpers import assible_native_concat
+        from assible.utils.native_jinja import NativeJinjaText
         USE_JINJA2_NATIVE = True
     except ImportError:
         from jinja2 import Environment
@@ -99,7 +99,7 @@ JINJA2_END_TOKENS = frozenset(('variable_end', 'block_end', 'comment_end', 'raw_
 RANGE_TYPE = type(range(0))
 
 
-def generate_ansible_template_vars(path, dest_path=None):
+def generate_assible_template_vars(path, dest_path=None):
     b_path = to_bytes(path)
     try:
         template_uid = pwd.getpwuid(os.stat(b_path).st_uid).pw_name
@@ -122,7 +122,7 @@ def generate_ansible_template_vars(path, dest_path=None):
         uid=temp_vars['template_uid'],
         file=temp_vars['template_path'],
     )
-    temp_vars['ansible_managed'] = to_text(time.strftime(to_native(managed_str), time.localtime(os.path.getmtime(b_path))))
+    temp_vars['assible_managed'] = to_text(time.strftime(to_native(managed_str), time.localtime(os.path.getmtime(b_path))))
 
     return temp_vars
 
@@ -232,7 +232,7 @@ def recursive_check_defined(item):
             recursive_check_defined(i)
     else:
         if isinstance(item, Undefined):
-            raise AnsibleFilterError("{0} is undefined".format(item))
+            raise AssibleFilterError("{0} is undefined".format(item))
 
 
 def _is_rolled(value):
@@ -280,7 +280,7 @@ def _update_wrapper(wrapper, func):
 def _wrap_native_text(func):
     """Wrapper function, that intercepts the result of a filter
     and wraps it into NativeJinjaText which is then used
-    in ``ansible_native_concat`` to indicate that it is a text
+    in ``assible_native_concat`` to indicate that it is a text
     which should not be passed into ``literal_eval``.
     """
     def wrapper(*args, **kwargs):
@@ -290,14 +290,14 @@ def _wrap_native_text(func):
     return _update_wrapper(wrapper, func)
 
 
-class AnsibleUndefined(StrictUndefined):
+class AssibleUndefined(StrictUndefined):
     '''
     A custom Undefined class, which returns further Undefined objects on access,
     rather than throwing an exception.
     '''
     def __getattr__(self, name):
         if name == '__UNSAFE__':
-            # AnsibleUndefined should never be assumed to be unsafe
+            # AssibleUndefined should never be assumed to be unsafe
             # This prevents ``hasattr(val, '__UNSAFE__')`` from evaluating to ``True``
             raise AttributeError(name)
         # Return original Undefined object to preserve the first failure context
@@ -308,22 +308,22 @@ class AnsibleUndefined(StrictUndefined):
         return self
 
     def __repr__(self):
-        return 'AnsibleUndefined'
+        return 'AssibleUndefined'
 
     def __contains__(self, item):
         # Return original Undefined object to preserve the first failure context
         return self
 
 
-class AnsibleContext(Context):
+class AssibleContext(Context):
     '''
     A custom context, which intercepts resolve() calls and sets a flag
-    internally if any variable lookup returns an AnsibleUnsafe value. This
+    internally if any variable lookup returns an AssibleUnsafe value. This
     flag is checked post-templating, and (when set) will result in the
-    final templated result being wrapped in AnsibleUnsafe.
+    final templated result being wrapped in AssibleUnsafe.
     '''
     def __init__(self, *args, **kwargs):
-        super(AnsibleContext, self).__init__(*args, **kwargs)
+        super(AssibleContext, self).__init__(*args, **kwargs)
         self.unsafe = False
 
     def _is_unsafe(self, val):
@@ -331,7 +331,7 @@ class AnsibleContext(Context):
         Our helper function, which will also recursively check dict and
         list entries due to the fact that they may be repr'd and contain
         a key or value which contains jinja2 syntax and would otherwise
-        lose the AnsibleUnsafe value.
+        lose the AssibleUnsafe value.
         '''
         if isinstance(val, dict):
             for key in val.keys():
@@ -354,12 +354,12 @@ class AnsibleContext(Context):
         The intercepted resolve(), which uses the helper above to set the
         internal flag whenever an unsafe variable value is returned.
         '''
-        val = super(AnsibleContext, self).resolve(key)
+        val = super(AssibleContext, self).resolve(key)
         self._update_unsafe(val)
         return val
 
     def resolve_or_missing(self, key):
-        val = super(AnsibleContext, self).resolve_or_missing(key)
+        val = super(AssibleContext, self).resolve_or_missing(key)
         self._update_unsafe(val)
         return val
 
@@ -368,21 +368,21 @@ class AnsibleContext(Context):
         variables. For optimizations reasons this might not return an
         actual copy so be careful with using it.
 
-        This is to prevent from running ``AnsibleJ2Vars`` through dict():
+        This is to prevent from running ``AssibleJ2Vars`` through dict():
 
             ``dict(self.parent, **self.vars)``
 
-        In Ansible this means that ALL variables would be templated in the
-        process of re-creating the parent because ``AnsibleJ2Vars`` templates
+        In Assible this means that ALL variables would be templated in the
+        process of re-creating the parent because ``AssibleJ2Vars`` templates
         each variable in its ``__getitem__`` method. Instead we re-create the
-        parent via ``AnsibleJ2Vars.add_locals`` that creates a new
-        ``AnsibleJ2Vars`` copy without templating each variable.
+        parent via ``AssibleJ2Vars.add_locals`` that creates a new
+        ``AssibleJ2Vars`` copy without templating each variable.
 
         This will prevent unnecessarily templating unused variables in cases
         like setting a local variable and passing it to {% include %}
         in a template.
 
-        Also see ``AnsibleJ2Template``and
+        Also see ``AssibleJ2Template``and
         https://github.com/pallets/jinja/commit/d67f0fd4cc2a4af08f51f4466150d49da7798729
         """
         if LooseVersion(j2_version) >= LooseVersion('2.9'):
@@ -391,10 +391,10 @@ class AnsibleContext(Context):
             if not self.parent:
                 return self.vars
 
-        if isinstance(self.parent, AnsibleJ2Vars):
+        if isinstance(self.parent, AssibleJ2Vars):
             return self.parent.add_locals(self.vars)
         else:
-            # can this happen in Ansible?
+            # can this happen in Assible?
             return dict(self.parent, **self.vars)
 
 
@@ -431,11 +431,11 @@ class JinjaPluginIntercept(MutableMapping):
 
                 # didn't find it in the pre-built Jinja env, assume it's a former builtin and follow the normal routing path
                 leaf_key = key
-                key = 'ansible.builtin.' + key
+                key = 'assible.builtin.' + key
             else:
                 leaf_key = key.split('.')[-1]
 
-            acr = AnsibleCollectionRef.try_parse_fqcr(key, self._dirname)
+            acr = AssibleCollectionRef.try_parse_fqcr(key, self._dirname)
 
             if not acr:
                 raise KeyError('invalid plugin name: {0}'.format(key))
@@ -471,11 +471,11 @@ class JinjaPluginIntercept(MutableMapping):
                 exc_msg = display.get_deprecation_message(warning_text, version=removal_version, date=removal_date,
                                                           collection_name=acr.collection, removed=True)
 
-                raise AnsiblePluginRemovedError(exc_msg)
+                raise AssiblePluginRemovedError(exc_msg)
 
             redirect_fqcr = routing_entry.get('redirect', None)
             if redirect_fqcr:
-                acr = AnsibleCollectionRef.from_fqcr(ref=redirect_fqcr, ref_type=self._dirname)
+                acr = AssibleCollectionRef.from_fqcr(ref=redirect_fqcr, ref_type=self._dirname)
                 display.vvv('redirecting {0} {1} to {2}.{3}'.format(self._dirname, key, acr.collection, acr.resource))
                 key = redirect_fqcr
             # TODO: handle recursive forwarding (not necessary for builtin, but definitely for further collection redirs)
@@ -518,7 +518,7 @@ class JinjaPluginIntercept(MutableMapping):
 
             function_impl = self._collection_jinja_func_cache[key]
             return function_impl
-        except AnsiblePluginRemovedError as apre:
+        except AssiblePluginRemovedError as apre:
             raise TemplateSyntaxError(to_native(apre), 0)
         except KeyError:
             raise
@@ -542,38 +542,38 @@ class JinjaPluginIntercept(MutableMapping):
         return len(self._delegatee)
 
 
-class AnsibleEnvironment(Environment):
+class AssibleEnvironment(Environment):
     '''
     Our custom environment, which simply allows us to override the class-level
     values for the Template and Context classes used by jinja2 internally.
 
     NOTE: Any changes to this class must be reflected in
-          :class:`AnsibleNativeEnvironment` as well.
+          :class:`AssibleNativeEnvironment` as well.
     '''
-    context_class = AnsibleContext
-    template_class = AnsibleJ2Template
+    context_class = AssibleContext
+    template_class = AssibleJ2Template
 
     def __init__(self, *args, **kwargs):
-        super(AnsibleEnvironment, self).__init__(*args, **kwargs)
+        super(AssibleEnvironment, self).__init__(*args, **kwargs)
 
         self.filters = JinjaPluginIntercept(self.filters, filter_loader, jinja2_native=False)
         self.tests = JinjaPluginIntercept(self.tests, test_loader, jinja2_native=False)
 
 
 if USE_JINJA2_NATIVE:
-    class AnsibleNativeEnvironment(NativeEnvironment):
+    class AssibleNativeEnvironment(NativeEnvironment):
         '''
         Our custom environment, which simply allows us to override the class-level
         values for the Template and Context classes used by jinja2 internally.
 
         NOTE: Any changes to this class must be reflected in
-              :class:`AnsibleEnvironment` as well.
+              :class:`AssibleEnvironment` as well.
         '''
-        context_class = AnsibleContext
-        template_class = AnsibleJ2Template
+        context_class = AssibleContext
+        template_class = AssibleJ2Template
 
         def __init__(self, *args, **kwargs):
-            super(AnsibleNativeEnvironment, self).__init__(*args, **kwargs)
+            super(AssibleNativeEnvironment, self).__init__(*args, **kwargs)
 
             self.filters = JinjaPluginIntercept(self.filters, filter_loader, jinja2_native=True)
             self.tests = JinjaPluginIntercept(self.tests, test_loader, jinja2_native=True)
@@ -613,11 +613,11 @@ class Templar:
         self._fail_on_filter_errors = True
         self._fail_on_undefined_errors = C.DEFAULT_UNDEFINED_VAR_BEHAVIOR
 
-        environment_class = AnsibleNativeEnvironment if USE_JINJA2_NATIVE else AnsibleEnvironment
+        environment_class = AssibleNativeEnvironment if USE_JINJA2_NATIVE else AssibleEnvironment
 
         self.environment = environment_class(
             trim_blocks=True,
-            undefined=AnsibleUndefined,
+            undefined=AssibleUndefined,
             extensions=self._get_extensions(),
             finalize=self._finalize,
             loader=FileSystemLoader(self._basedir),
@@ -642,9 +642,9 @@ class Templar:
 
     @property
     def jinja2_native(self):
-        return not isinstance(self.environment, AnsibleEnvironment)
+        return not isinstance(self.environment, AssibleEnvironment)
 
-    def copy_with_new_env(self, environment_class=AnsibleEnvironment, **kwargs):
+    def copy_with_new_env(self, environment_class=AssibleEnvironment, **kwargs):
         r"""Creates a new copy of Templar with a new environment. The new environment is based on
         given environment class and kwargs.
 
@@ -723,7 +723,7 @@ class Templar:
         '''
         Return jinja2 extensions to load.
 
-        If some extensions are set via jinja_extensions in ansible.cfg, we try
+        If some extensions are set via jinja_extensions in assible.cfg, we try
         to load them with the jinja environment.
         '''
 
@@ -749,14 +749,14 @@ class Templar:
         '''
 
         if not isinstance(variables, Mapping):
-            raise AnsibleAssertionError("the type of 'variables' should be a Mapping but was a %s" % (type(variables)))
+            raise AssibleAssertionError("the type of 'variables' should be a Mapping but was a %s" % (type(variables)))
         self._available_variables = variables
         self._cached_result = {}
 
     def set_available_variables(self, variables):
         display.deprecated(
             'set_available_variables is being deprecated. Use "@available_variables.setter" instead.',
-            version='2.13', collection_name='ansible.builtin'
+            version='2.13', collection_name='assible.builtin'
         )
         self.available_variables = variables
 
@@ -902,7 +902,7 @@ class Templar:
             else:
                 return variable
 
-        except AnsibleFilterError:
+        except AssibleFilterError:
             if self._fail_on_filter_errors:
                 raise
             else:
@@ -964,7 +964,7 @@ class Templar:
         A custom finalize method for jinja2, which prevents None from being returned. This
         avoids a string of ``"None"`` as ``None`` has no importance in YAML.
 
-        If using ANSIBLE_JINJA2_NATIVE we bypass this and return the actual value always
+        If using ASSIBLE_JINJA2_NATIVE we bypass this and return the actual value always
         '''
         if _is_rolled(thing):
             # Auto unroll a generator, so that users are not required to
@@ -981,7 +981,7 @@ class Templar:
         return thing if thing is not None else ''
 
     def _fail_lookup(self, name, *args, **kwargs):
-        raise AnsibleError("The lookup `%s` was found, however lookups were disabled from templating" % name)
+        raise AssibleError("The lookup `%s` was found, however lookups were disabled from templating" % name)
 
     def _now_datetime(self, utc=False, fmt=None):
         '''jinja2 global function to return current datetime, potentially formatted via strftime'''
@@ -1008,13 +1008,13 @@ class Templar:
             allow_unsafe = kwargs.pop('allow_unsafe', C.DEFAULT_ALLOW_UNSAFE_LOOKUPS)
             errors = kwargs.pop('errors', 'strict')
 
-            from ansible.utils.listify import listify_lookup_plugin_terms
+            from assible.utils.listify import listify_lookup_plugin_terms
             loop_terms = listify_lookup_plugin_terms(terms=args, templar=self, loader=self._loader, fail_on_undefined=True, convert_bare=False)
             # safely catch run failures per #5059
             try:
                 ran = instance.run(loop_terms, variables=self._available_variables, **kwargs)
-            except (AnsibleUndefinedVariable, UndefinedError) as e:
-                raise AnsibleUndefinedVariable(e)
+            except (AssibleUndefinedVariable, UndefinedError) as e:
+                raise AssibleUndefinedVariable(e)
             except Exception as e:
                 if self._fail_on_lookup_errors:
                     msg = u"An unhandled exception occurred while running the lookup plugin '%s'. Error was a %s, original message: %s" % \
@@ -1024,7 +1024,7 @@ class Templar:
                     elif errors == 'ignore':
                         display.display(msg, log_only=True)
                     else:
-                        raise AnsibleError(to_native(msg))
+                        raise AssibleError(to_native(msg))
                 ran = [] if wantlist else None
 
             if ran and not allow_unsafe:
@@ -1040,7 +1040,7 @@ class Templar:
                         # Lookup Plugins should always return lists.  Throw an error if that's not
                         # the case:
                         if not isinstance(ran, Sequence):
-                            raise AnsibleError("The lookup plugin '%s' did not return a list."
+                            raise AssibleError("The lookup plugin '%s' did not return a list."
                                                % name)
 
                         # The TypeError we can recover from is when the value *inside* of the list
@@ -1054,7 +1054,7 @@ class Templar:
                     self.cur_context.unsafe = True
             return ran
         else:
-            raise AnsibleError("lookup plugin (%s) not found" % name)
+            raise AssibleError("lookup plugin (%s) not found" % name)
 
     def do_template(self, data, preserve_trailing_newlines=True, escape_backslashes=True, fail_on_undefined=None, overrides=None, disable_lookups=False):
         if self.jinja2_native and not isinstance(data, string_types):
@@ -1084,7 +1084,7 @@ class Templar:
                     key = key.strip()
                     setattr(myenv, key, ast.literal_eval(val.strip()))
 
-            # Adds Ansible custom filters and tests
+            # Adds Assible custom filters and tests
             myenv.filters.update(self._get_filters())
             for k in myenv.filters:
                 if not getattr(myenv.filters[k], '__UNROLLED__', False):
@@ -1098,36 +1098,36 @@ class Templar:
             try:
                 t = myenv.from_string(data)
             except TemplateSyntaxError as e:
-                raise AnsibleError("template error while templating string: %s. String: %s" % (to_native(e), to_native(data)))
+                raise AssibleError("template error while templating string: %s. String: %s" % (to_native(e), to_native(data)))
             except Exception as e:
                 if 'recursion' in to_native(e):
-                    raise AnsibleError("recursive loop detected in template string: %s" % to_native(data))
+                    raise AssibleError("recursive loop detected in template string: %s" % to_native(data))
                 else:
                     return data
 
             if disable_lookups:
                 t.globals['query'] = t.globals['q'] = t.globals['lookup'] = self._fail_lookup
 
-            jvars = AnsibleJ2Vars(self, t.globals)
+            jvars = AssibleJ2Vars(self, t.globals)
 
             self.cur_context = new_context = t.new_context(jvars, shared=True)
             rf = t.root_render_func(new_context)
 
             try:
                 if self.jinja2_native:
-                    res = ansible_native_concat(rf)
+                    res = assible_native_concat(rf)
                 else:
                     res = j2_concat(rf)
                 if getattr(new_context, 'unsafe', False):
                     res = wrap_var(res)
             except TypeError as te:
-                if 'AnsibleUndefined' in to_native(te):
+                if 'AssibleUndefined' in to_native(te):
                     errmsg = "Unable to look up a name or access an attribute in template string (%s).\n" % to_native(data)
                     errmsg += "Make sure your variable name does not contain invalid characters like '-': %s" % to_native(te)
-                    raise AnsibleUndefinedVariable(errmsg)
+                    raise AssibleUndefinedVariable(errmsg)
                 else:
                     display.debug("failing because of a type error, template data is: %s" % to_text(data))
-                    raise AnsibleError("Unexpected templating type error occurred on (%s): %s" % (to_native(data), to_native(te)))
+                    raise AssibleError("Unexpected templating type error occurred on (%s): %s" % (to_native(data), to_native(te)))
 
             if self.jinja2_native and not isinstance(res, string_types):
                 return res
@@ -1149,9 +1149,9 @@ class Templar:
                 if data_newlines > res_newlines:
                     res += self.environment.newline_sequence * (data_newlines - res_newlines)
             return res
-        except (UndefinedError, AnsibleUndefinedVariable) as e:
+        except (UndefinedError, AssibleUndefinedVariable) as e:
             if fail_on_undefined:
-                raise AnsibleUndefinedVariable(e)
+                raise AssibleUndefinedVariable(e)
             else:
                 display.debug("Ignoring undefined failure: %s" % to_text(e))
                 return data

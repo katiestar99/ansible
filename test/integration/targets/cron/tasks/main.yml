@@ -45,7 +45,7 @@
   always:
     - name: display some logs in case of failure
       command: 'journalctl -u {{ cron_service }}'
-      when: wait_canary is failed and ansible_service_mgr == 'systemd'
+      when: wait_canary is failed and assible_service_mgr == 'systemd'
 
 - debug:
     msg: 'elapsed time waiting for canary: {{ wait_canary.elapsed }}'
@@ -101,7 +101,7 @@
     that: remove_cron_file is not changed
 
 - name: Non regression test - cron file should not be empty after adding var (#71207)
-  when: ansible_distribution != 'Alpine'
+  when: assible_distribution != 'Alpine'
   block:
   - name: Cron file creation
     cron:
@@ -128,7 +128,7 @@
 
 # BusyBox does not have /etc/cron.d
 - name: Removing a cron file when the name is specified is allowed (#57471)
-  when: ansible_distribution != 'Alpine'
+  when: assible_distribution != 'Alpine'
   block:
   - name: Cron file creation
     cron:
@@ -152,7 +152,7 @@
       that: not cron_file_stats.stat.exists
 
 - name: Allow non-ascii chars in job (#69492)
-  when: ansible_distribution != 'Alpine'
+  when: assible_distribution != 'Alpine'
   block:
   - name: Cron file creation
     cron:
@@ -184,13 +184,13 @@
       that: not cron_file_stats.stat.exists
 
 - name: Allow non-ascii chars in cron_file (#69492)
-  when: ansible_distribution != 'Alpine'
+  when: assible_distribution != 'Alpine'
   block:
   - name: Cron file creation with non-ascii filename (これは日本語です; This is Japanese)
     cron:
       cron_file: 'なせば大抵なんとかなる👊'
       name: "integration test cron"
-      job: 'echo "Hello, ansible!"'
+      job: 'echo "Hello, assible!"'
       user: root
 
   - name: Check file exists

@@ -4,9 +4,9 @@
 Using filters to manipulate data
 ********************************
 
-Filters let you transform JSON data into YAML data, split a URL to extract the hostname, get the SHA1 hash of a string, add or multiply integers, and much more. You can use the Ansible-specific filters documented here to manipulate your data, or use any of the standard filters shipped with Jinja2 - see the list of :ref:`built-in filters <jinja2:builtin-filters>` in the official Jinja2 template documentation. You can also use :ref:`Python methods <jinja2:python-methods>` to transform data. You can :ref:`create custom Ansible filters as plugins <developing_filter_plugins>`, though we generally welcome new filters into the ansible-base repo so everyone can use them.
+Filters let you transform JSON data into YAML data, split a URL to extract the hostname, get the SHA1 hash of a string, add or multiply integers, and much more. You can use the Assible-specific filters documented here to manipulate your data, or use any of the standard filters shipped with Jinja2 - see the list of :ref:`built-in filters <jinja2:builtin-filters>` in the official Jinja2 template documentation. You can also use :ref:`Python methods <jinja2:python-methods>` to transform data. You can :ref:`create custom Assible filters as plugins <developing_filter_plugins>`, though we generally welcome new filters into the assible-base repo so everyone can use them.
 
-Because templating happens on the Ansible controller, **not** on the target host, filters execute on the controller and transform data locally.
+Because templating happens on the Assible controller, **not** on the target host, filters execute on the controller and transform data locally.
 
 .. contents::
    :local:
@@ -14,7 +14,7 @@ Because templating happens on the Ansible controller, **not** on the target host
 Handling undefined variables
 ============================
 
-Filters can help you manage missing or undefined variables by providing defaults or making some variables optional. If you configure Ansible to ignore most undefined variables, you can mark some variables as requiring values with the ``mandatory`` filter.
+Filters can help you manage missing or undefined variables by providing defaults or making some variables optional. If you configure Assible to ignore most undefined variables, you can mark some variables as requiring values with the ``mandatory`` filter.
 
 .. _defaulting_undefined_variables:
 
@@ -25,7 +25,7 @@ You can provide default values for variables directly in your templates using th
 
     {{ some_variable | default(5) }}
 
-In the above example, if the variable 'some_variable' is not defined, Ansible uses the default value 5, rather than raising an "undefined variable" error and failing. If you are working within a role, you can also add a ``defaults/main.yml`` to define the default values for variables in your role.
+In the above example, if the variable 'some_variable' is not defined, Assible uses the default value 5, rather than raising an "undefined variable" error and failing. If you are working within a role, you can also add a ``defaults/main.yml`` to define the default values for variables in your role.
 
 Beginning in version 2.8, attempting to access an attribute of an Undefined value in Jinja will return another Undefined value, rather than throwing an error immediately. This means that you can now simply use
 a default with a value in a nested data structure (in other words, :code:`{{ foo.bar.baz | default('DEFAULT') }}`) when you do not know if the intermediate values are defined.
@@ -39,10 +39,10 @@ If you want to use the default value when variables evaluate to false or an empt
 Making variables optional
 -------------------------
 
-By default Ansible requires values for all variables in a templated expression. However, you can make specific variables optional. For example, you might want to use a system default for some items and control the value for others. To make a variable optional, set the default value to the special variable ``omit``::
+By default Assible requires values for all variables in a templated expression. However, you can make specific variables optional. For example, you might want to use a system default for some items and control the value for others. To make a variable optional, set the default value to the special variable ``omit``::
 
     - name: Touch files with an optional mode
-      ansible.builtin.file:
+      assible.builtin.file:
         dest: "{{ item.path }}"
         state: touch
         mode: "{{ item.mode | default(omit) }}"
@@ -52,7 +52,7 @@ By default Ansible requires values for all variables in a templated expression. 
         - path: /tmp/baz
           mode: "0444"
 
-In this example, the default mode for the files ``/tmp/foo`` and ``/tmp/bar`` is determined by the umask of the system. Ansible does not send a value for ``mode``. Only the third file, ``/tmp/baz``, receives the `mode=0444` option.
+In this example, the default mode for the files ``/tmp/foo`` and ``/tmp/bar`` is determined by the umask of the system. Assible does not send a value for ``mode``. Only the third file, ``/tmp/baz``, receives the `mode=0444` option.
 
 .. note:: If you are "chaining" additional filters after the ``default(omit)`` filter, you should instead do something like this:
       ``"{{ foo | default(None) | some_filter or omit }}"``. In this example, the default ``None`` (Python null) value will cause the later filters to fail, which will trigger the ``or omit`` portion of the logic. Using ``omit`` in this manner is very specific to the later filters you are chaining though, so be prepared for some trial and error if you do this.
@@ -62,7 +62,7 @@ In this example, the default mode for the files ``/tmp/foo`` and ``/tmp/bar`` is
 Defining mandatory values
 -------------------------
 
-If you configure Ansible to ignore undefined variables, you may want to define some values as mandatory. By default, Ansible fails if a variable in your playbook or command is undefined. You can configure Ansible to allow undefined variables by setting :ref:`DEFAULT_UNDEFINED_VAR_BEHAVIOR` to ``false``. In that case, you may want to require some variables to be defined. You can do this with::
+If you configure Assible to ignore undefined variables, you may want to define some values as mandatory. By default, Assible fails if a variable in your playbook or command is undefined. You can configure Assible to allow undefined variables by setting :ref:`DEFAULT_UNDEFINED_VAR_BEHAVIOR` to ``false``. In that case, you may want to require some variables to be defined. You can do this with::
 
     {{ variable | mandatory }}
 
@@ -184,16 +184,16 @@ If you do not pass these arguments, or do not pass the correct values for your l
 Forcing the data type
 ---------------------
 
-You can cast values as certain types. For example, if you expect the input "True" from a :ref:`vars_prompt <playbooks_prompts>` and you want Ansible to recognize it as a boolean value instead of a string::
+You can cast values as certain types. For example, if you expect the input "True" from a :ref:`vars_prompt <playbooks_prompts>` and you want Assible to recognize it as a boolean value instead of a string::
 
    - debug:
      msg: test
      when: some_string_value | bool
 
-If you want to perform a mathematical comparison on a fact and you want Ansible to recognize it as an integer instead of a string::
+If you want to perform a mathematical comparison on a fact and you want Assible to recognize it as an integer instead of a string::
 
    - shell: echo "only on Red Hat 6, derivatives, and later"
-     when: ansible_facts['os_family'] == "RedHat" and ansible_facts['lsb']['major_release'] | int >= 6
+     when: assible_facts['os_family'] == "RedHat" and assible_facts['lsb']['major_release'] | int >= 6
 
 
 .. versionadded:: 1.6
@@ -235,11 +235,11 @@ for example::
 
   tasks:
     - name: Register JSON output as a variable 
-      ansible.builtin.shell: cat /some/path/to/file.json
+      assible.builtin.shell: cat /some/path/to/file.json
       register: result
 
     - name: Set a variable
-      ansible.builtin.set_fact:
+      assible.builtin.set_fact:
         myvar: "{{ result.stdout | from_json }}"
 
 
@@ -269,11 +269,11 @@ for example::
 
   tasks:
     - name: Register a file content as a variable
-      ansible.builtin.shell: cat /some/path/to/multidoc-file.yaml
+      assible.builtin.shell: cat /some/path/to/multidoc-file.yaml
       register: result
 
     - name: Print the transformed variable
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: '{{ item }}'
       loop: '{{ result.stdout | from_yaml_all | list }}'
 
@@ -292,17 +292,17 @@ Combining items from multiple lists: zip and zip_longest
 To get a list combining the elements of other lists use ``zip``::
 
     - name: Give me list combo of two lists
-      ansible.builtin.debug:
+      assible.builtin.debug:
        msg: "{{ [1,2,3,4,5] | zip(['a','b','c','d','e','f']) | list }}"
 
     - name: Give me shortest combo of two lists
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ [1,2,3] | zip(['a','b','c','d','e','f']) | list }}"
 
 To always exhaust all lists use ``zip_longest``::
 
     - name: Give me longest combo of three lists , fill with X
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ [1,2,3] | zip_longest(['a','b','c','d','e','f'], [21, 22, 23], fillvalue='X') | list }}"
 
 Similarly to the output of the ``items2dict`` filter mentioned above, these filters can be used to construct a ``dict``::
@@ -379,7 +379,7 @@ Data after applying the ``subelements`` filter::
 You can use the transformed data with ``loop`` to iterate over the same subelement for multiple objects::
 
     - name: Set authorized ssh key, extracting just that data from 'users'
-      ansible.posix.authorized_key:
+      assible.posix.authorized_key:
         user: "{{ item.0.name }}"
         key: "{{ lookup('file', item.1) }}"
       loop: "{{ users | subelements('authorized') }}"
@@ -411,7 +411,7 @@ The filter also accepts two optional parameters: ``recursive`` and ``list_merge`
 recursive
   Is a boolean, default to ``False``.
   Should the ``combine`` recursively merge nested hashes.
-  Note: It does **not** depend on the value of the ``hash_behaviour`` setting in ``ansible.cfg``.
+  Note: It does **not** depend on the value of the ``hash_behaviour`` setting in ``assible.cfg``.
 
 list_merge
   Is a string, its possible values are ``replace`` (default), ``keep``, ``append``, ``prepend``, ``append_rp`` or ``prepend_rp``.
@@ -639,11 +639,11 @@ permutations
 To get permutations of a list::
 
     - name: Give me largest permutations (order matters)
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ [1,2,3,4,5] | permutations | list }}"
 
     - name: Give me permutations of sets of three
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ [1,2,3,4,5] | permutations(3) | list }}"
 
 combinations
@@ -651,7 +651,7 @@ combinations
 Combinations always require a set size::
 
     - name: Give me combinations for sets of two
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ [1,2,3,4,5] | combinations(2) | list }}"
 
 Also see the :ref:`zip_filter`
@@ -663,7 +663,7 @@ The product filter returns the `cartesian product <https://docs.python.org/3/lib
 For example::
 
   - name: Generate multiple hostnames
-    ansible.builtin.debug:
+    assible.builtin.debug:
       msg: "{{ ['foo', 'bar'] | product(['com']) | map('join', '.') | join(',') }}"
 
 This would result in::
@@ -675,11 +675,11 @@ This would result in::
 Selecting JSON data: JSON queries
 ---------------------------------
 
-To select a single element or a data subset from a complex data structure in JSON format (for example, Ansible facts), use the ``json_query`` filter.  The ``json_query`` filter lets you query a complex JSON structure and iterate over it using a loop structure.
+To select a single element or a data subset from a complex data structure in JSON format (for example, Assible facts), use the ``json_query`` filter.  The ``json_query`` filter lets you query a complex JSON structure and iterate over it using a loop structure.
 
 .. note::
 
-	This filter has migrated to the `community.general <https://galaxy.ansible.com/community/general>`_ collection. Follow the installation instructions to install that collection.
+	This filter has migrated to the `community.general <https://galaxy.assible.com/community/general>`_ collection. Follow the installation instructions to install that collection.
 
 
 .. note:: This filter is built upon **jmespath**, and you can use the same syntax. For examples, see `jmespath examples <http://jmespath.org/examples.html>`_.
@@ -736,20 +736,20 @@ Consider this data structure::
 To extract all clusters from this structure, you can use the following query::
 
     - name: Display all cluster names
-      ansible.builtin.debug:
+      assible.builtin.debug:
         var: item
       loop: "{{ domain_definition | community.general.json_query('domain.cluster[*].name') }}"
 
 To extract all server names::
 
     - name: Display all server names
-      ansible.builtin.debug:
+      assible.builtin.debug:
         var: item
       loop: "{{ domain_definition | community.general.json_query('domain.server[*].name') }}"
 
 To extract ports from cluster1::
 
-    - ansible.builtin.name: Display all ports from cluster1
+    - assible.builtin.name: Display all ports from cluster1
       debug:
         var: item
       loop: "{{ domain_definition | community.general.json_query(server_name_cluster1_query) }}"
@@ -761,7 +761,7 @@ To extract ports from cluster1::
 To print out the ports from cluster1 in a comma separated string::
 
     - name: Display all ports from cluster1 as a string
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ domain_definition | community.general.json_query('domain.server[?cluster==`cluster1`].port') | join(', ') }}"
 
 .. note:: In the example above, quoting literals using backticks avoids escaping quotes and maintains readability.
@@ -769,7 +769,7 @@ To print out the ports from cluster1 in a comma separated string::
 You can use YAML `single quote escaping <https://yaml.org/spec/current.html#id2534365>`_::
 
     - name: Display all ports from cluster1
-      ansible.builtin.debug:
+      assible.builtin.debug:
         var: item
       loop: "{{ domain_definition | community.general.json_query('domain.server[?cluster==''cluster1''].port') }}"
 
@@ -778,7 +778,7 @@ You can use YAML `single quote escaping <https://yaml.org/spec/current.html#id25
 To get a hash map with all ports and names of a cluster::
 
     - name: Display all server ports and names from cluster1
-      ansible.builtin.debug:
+      assible.builtin.debug:
         var: item
       loop: "{{ domain_definition | community.general.json_query(server_name_cluster1_query) }}"
       vars:
@@ -802,7 +802,7 @@ This filter can be used to generate a random MAC address from a string prefix.
 
 .. note::
 
-	This filter has migrated to the `community.general <https://galaxy.ansible.com/community/general>`_ collection. Follow the installation instructions to install that collection.
+	This filter has migrated to the `community.general <https://galaxy.assible.com/community/general>`_ collection. Follow the installation instructions to install that collection.
 
 To get a random MAC address from a string prefix starting with '52:54:00'::
 
@@ -813,7 +813,7 @@ Note that if anything is wrong with the prefix string, the filter will issue an 
 
  .. versionadded:: 2.9
 
-As of Ansible version 2.9, you can also initialize the random number generator from a seed to create random-but-idempotent MAC addresses::
+As of Assible version 2.9, you can also initialize the random number generator from a seed to create random-but-idempotent MAC addresses::
 
     "{{ '52:54:00' | community.general.random_mac(seed=inventory_hostname) }}"
 
@@ -823,7 +823,7 @@ As of Ansible version 2.9, you can also initialize the random number generator f
 Random items or numbers
 -----------------------
 
-The ``random`` filter in Ansible is an extension of the default Jinja2 random filter, and can be used to return a random item from a sequence of items or to generate a random number based on a range.
+The ``random`` filter in Assible is an extension of the default Jinja2 random filter, and can be used to return a random item from a sequence of items or to generate a random number based on a range.
 
 To get a random item from a list::
 
@@ -967,7 +967,7 @@ Calculating numbers (math)
 
 .. versionadded:: 1.9
 
-You can calculate logs, powers, and roots of numbers with Ansible filters. Jinja2 provides other mathematical functions like abs() and round().
+You can calculate logs, powers, and roots of numbers with Assible filters. Jinja2 provides other mathematical functions like abs() and round().
 
 Get the logarithm (default is e)::
 
@@ -995,7 +995,7 @@ These filters help you with common network tasks.
 
 .. note::
 
-	These filters have migrated to the `ansible.netcommon <https://galaxy.ansible.com/ansible/netcommon>`_ collection. Follow the installation instructions to install that collection.
+	These filters have migrated to the `assible.netcommon <https://galaxy.assible.com/assible/netcommon>`_ collection. Follow the installation instructions to install that collection.
 
 .. _ipaddr_filter:
 
@@ -1006,17 +1006,17 @@ IP address filters
 
 To test if a string is a valid IP address::
 
-  {{ myvar | ansible.netcommon.ipaddr }}
+  {{ myvar | assible.netcommon.ipaddr }}
 
 You can also require a specific IP protocol version::
 
-  {{ myvar | ansible.netcommon.ipv4 }}
-  {{ myvar | ansible.netcommon.ipv6 }}
+  {{ myvar | assible.netcommon.ipv4 }}
+  {{ myvar | assible.netcommon.ipv6 }}
 
 IP address filter can also be used to extract specific information from an IP
 address. For example, to get the IP address itself from a CIDR, you can use::
 
-  {{ '192.0.2.1/24' | ansible.netcommon.ipaddr('address') }}
+  {{ '192.0.2.1/24' | assible.netcommon.ipaddr('address') }}
 
 More information about ``ipaddr`` filter and complete usage guide can be found
 in :ref:`playbooks_filters_ipaddr`.
@@ -1031,7 +1031,7 @@ Network CLI filters
 To convert the output of a network device CLI command into structured JSON
 output, use the ``parse_cli`` filter::
 
-    {{ output | ansible.netcommon.parse_cli('path/to/spec') }}
+    {{ output | assible.netcommon.parse_cli('path/to/spec') }}
 
 The ``parse_cli`` filter will load the spec file and pass the command output
 through it, returning JSON output. The YAML spec file defines how to parse the CLI output.
@@ -1115,7 +1115,7 @@ The network filters also support parsing the output of a CLI command using the
 TextFSM library.  To parse the CLI output with TextFSM use the following
 filter::
 
-  {{ output.stdout[0] | ansible.netcommon.parse_cli_textfsm('path/to/fsm') }}
+  {{ output.stdout[0] | assible.netcommon.parse_cli_textfsm('path/to/fsm') }}
 
 Use of the TextFSM filter requires the TextFSM library to be installed.
 
@@ -1127,7 +1127,7 @@ Network XML filters
 To convert the XML output of a network device command into structured JSON
 output, use the ``parse_xml`` filter::
 
-  {{ output | ansible.netcommon.parse_xml('path/to/spec') }}
+  {{ output | assible.netcommon.parse_xml('path/to/spec') }}
 
 The ``parse_xml`` filter will load the spec file and pass the command output
 through formatted as JSON.
@@ -1235,7 +1235,7 @@ sorted string list of integers according to IOS-like VLAN list rules. This list 
 
 To sort a VLAN list::
 
-    {{ [3003, 3004, 3005, 100, 1688, 3002, 3999] | ansible.netcommon.vlan_parser }}
+    {{ [3003, 3004, 3005, 100, 1688, 3002, 3999] | assible.netcommon.vlan_parser }}
 
 This example renders the following sorted list::
 
@@ -1244,7 +1244,7 @@ This example renders the following sorted list::
 
 Another example Jinja template::
 
-    {% set parsed_vlans = vlans | ansible.netcommon.vlan_parser %}
+    {% set parsed_vlans = vlans | assible.netcommon.vlan_parser %}
     switchport trunk allowed vlan {{ parsed_vlans[0] }}
     {% for i in range (1, parsed_vlans | count) %}
     switchport trunk allowed vlan add {{ parsed_vlans[i] }}
@@ -1287,7 +1287,7 @@ An idempotent method to generate unique hashes per system is to use a salt that 
 
     {{ 'secretpassword' | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}
 
-Hash types available depend on the master system running Ansible, 'hash' depends on hashlib, password_hash depends on passlib (https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html).
+Hash types available depend on the master system running Assible, 'hash' depends on hashlib, password_hash depends on passlib (https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html).
 
 .. versionadded:: 2.7
 
@@ -1307,7 +1307,7 @@ Several filters work with text, including URLs, file names, and path names.
 Adding comments to files
 ------------------------
 
-The ``comment`` filter lets you create comments in a file from text in a template, with a variety of comment styles. By default Ansible uses ``#`` to start a comment line and adds a blank comment line above and below your comment text. For example the following::
+The ``comment`` filter lets you create comments in a file from text in a template, with a variety of comment styles. By default Assible uses ``#`` to start a comment line and adds a blank comment line above and below your comment text. For example the following::
 
     {{ "Plain style (default)" | comment }}
 
@@ -1319,7 +1319,7 @@ produces this output:
     # Plain style (default)
     #
 
-Ansible offers styles for comments in C (``//...``), C block
+Assible offers styles for comments in C (``//...``), C block
 (``/*...*/``), Erlang (``%...``) and XML (``<!--...-->``)::
 
     {{ "C style" | comment('c') }}
@@ -1355,15 +1355,15 @@ That creates the following output:
        ###
         #
 
-The filter can also be applied to any Ansible variable. For example to
-make the output of the ``ansible_managed`` variable more readable, we can
-change the definition in the ``ansible.cfg`` file to this:
+The filter can also be applied to any Assible variable. For example to
+make the output of the ``assible_managed`` variable more readable, we can
+change the definition in the ``assible.cfg`` file to this:
 
 .. code-block:: jinja
 
     [defaults]
 
-    ansible_managed = This file is managed by Ansible.%n
+    assible_managed = This file is managed by Assible.%n
       template: {file}
       date: %Y-%m-%d %H:%M:%S
       user: {uid}
@@ -1371,18 +1371,18 @@ change the definition in the ``ansible.cfg`` file to this:
 
 and then use the variable with the `comment` filter::
 
-    {{ ansible_managed | comment }}
+    {{ assible_managed | comment }}
 
 which produces this output:
 
 .. code-block:: sh
 
     #
-    # This file is managed by Ansible.
+    # This file is managed by Assible.
     #
-    # template: /home/ansible/env/dev/ansible_managed/roles/role1/templates/test.j2
+    # template: /home/assible/env/dev/assible_managed/roles/role1/templates/test.j2
     # date: 2015-09-10 11:02:58
-    # user: ansible
+    # user: assible
     # host: myhost
     #
 
@@ -1443,7 +1443,7 @@ To search a string with a regex, use the "regex_search" filter::
     {{ 'foobar' | regex_search('(foo)') }}
 
     # will return empty if it cannot find a match
-    {{ 'ansible' | regex_search('(foobar)') }}
+    {{ 'assible' | regex_search('(foobar)') }}
 
     # case insensitive search in multiline mode
     {{ 'foo\nBAR' | regex_search("^bar", multiline=True, ignorecase=True) }}
@@ -1457,8 +1457,8 @@ To search for all occurrences of regex matches, use the "regex_findall" filter::
 
 To replace text in a string with regex, use the "regex_replace" filter::
 
-    # convert "ansible" to "able"
-    {{ 'ansible' | regex_replace('^a.*i(.*)$', 'a\\1') }}
+    # convert "assible" to "able"
+    {{ 'assible' | regex_replace('^a.*i(.*)$', 'a\\1') }}
 
     # convert "foobar" to "bar"
     {{ 'foobar' | regex_replace('^f.*o(.*)$', '\\1') }}
@@ -1494,7 +1494,7 @@ To replace text in a string with regex, use the "regex_replace" filter::
       {{ hosts | map('regex_replace', '(.*)', '\\1:80') | list }}
 
 .. note::
-   Prior to ansible 2.0, if "regex_replace" filter was used with variables inside YAML arguments (as opposed to simpler 'key=value' arguments), then you needed to escape backreferences (for example, ``\\1``) with 4 backslashes (``\\\\``) instead of 2 (``\\``).
+   Prior to assible 2.0, if "regex_replace" filter was used with variables inside YAML arguments (as opposed to simpler 'key=value' arguments), then you needed to escape backreferences (for example, ``\\1``) with 4 backslashes (``\\\\``) instead of 2 (``\\``).
 
 .. versionadded:: 2.0
 
@@ -1587,7 +1587,7 @@ Manipulating strings
 To add quotes for shell usage::
 
     - name: Run a shell command
-      ansible.builtin.shell: echo {{ string_value | quote }}
+      assible.builtin.shell: echo {{ string_value | quote }}
 
 To concatenate a list into a string::
 
@@ -1616,7 +1616,7 @@ To create a namespaced UUIDv5::
 
 .. versionadded:: 2.10
 
-To create a namespaced UUIDv5 using the default Ansible namespace '361E6D51-FAEC-444A-9079-341386DA8E2E'::
+To create a namespaced UUIDv5 using the default Assible namespace '361E6D51-FAEC-444A-9079-341386DA8E2E'::
 
     {{ string | to_uuid }}
 
@@ -1625,7 +1625,7 @@ To create a namespaced UUIDv5 using the default Ansible namespace '361E6D51-FAEC
 To make use of one attribute from each item in a list of complex variables, use the :func:`Jinja2 map filter <jinja2:map>`::
 
     # get a comma-separated list of the mount points (for example, "/,/mnt/stuff") on a host
-    {{ ansible_mounts | map(attribute='mount') | join(',') }}
+    {{ assible_mounts | map(attribute='mount') | join(',') }}
 
 Handling dates and times
 ========================
@@ -1652,8 +1652,8 @@ To format a date using a string (like with the shell date command), use the "str
     # Display hour:min:sec
     {{ '%H:%M:%S' | strftime }}
 
-    # Use ansible_date_time.epoch fact
-    {{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}
+    # Use assible_date_time.epoch fact
+    {{ '%Y-%m-%d %H:%M:%S' | strftime(assible_date_time.epoch) }}
 
     # Use arbitrary epoch value
     {{ '%Y-%m-%d' | strftime(0) }}          # => 1970-01-01
@@ -1666,7 +1666,7 @@ Getting Kubernetes resource names
 
 .. note::
 
-	These filters have migrated to the `community.kubernetes <https://galaxy.ansible.com/community/kubernetes>`_ collection. Follow the installation instructions to install that collection.
+	These filters have migrated to the `community.kubernetes <https://galaxy.assible.com/community/kubernetes>`_ collection. Follow the installation instructions to install that collection.
 
 Use the "k8s_config_resource_name" filter to obtain the name of a Kubernetes ConfigMap or Secret,
 including its hash::
@@ -1710,7 +1710,7 @@ This can then be used to reference hashes in Pod specifications::
        Playbook organization by roles
    :ref:`playbooks_best_practices`
        Tips and tricks for playbooks
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

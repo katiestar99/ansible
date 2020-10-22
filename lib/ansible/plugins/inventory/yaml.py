@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -23,8 +23,8 @@ DOCUMENTATION = '''
         type: list
         default: ['.yaml', '.yml', '.json']
         env:
-          - name: ANSIBLE_YAML_FILENAME_EXT
-          - name: ANSIBLE_INVENTORY_PLUGIN_EXTS
+          - name: ASSIBLE_YAML_FILENAME_EXT
+          - name: ASSIBLE_INVENTORY_PLUGIN_EXTS
         ini:
           - key: yaml_valid_extensions
             section: defaults
@@ -57,7 +57,7 @@ all: # keys must be unique, i.e. only one 'hosts' per group
                 g2_var2: value3
             hosts:
                 test4:
-                    ansible_host: 127.0.0.1
+                    assible_host: 127.0.0.1
         last_group:
             hosts:
                 test1 # same host as above, additional group membership
@@ -67,11 +67,11 @@ all: # keys must be unique, i.e. only one 'hosts' per group
 
 import os
 
-from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.module_utils.six import string_types
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common._collections_compat import MutableMapping
-from ansible.plugins.inventory import BaseFileInventoryPlugin
+from assible.errors import AssibleError, AssibleParserError
+from assible.module_utils.six import string_types
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common._collections_compat import MutableMapping
+from assible.plugins.inventory import BaseFileInventoryPlugin
 
 NoneType = type(None)
 
@@ -102,14 +102,14 @@ class InventoryModule(BaseFileInventoryPlugin):
         try:
             data = self.loader.load_from_file(path, cache=False)
         except Exception as e:
-            raise AnsibleParserError(e)
+            raise AssibleParserError(e)
 
         if not data:
-            raise AnsibleParserError('Parsed empty YAML file')
+            raise AssibleParserError('Parsed empty YAML file')
         elif not isinstance(data, MutableMapping):
-            raise AnsibleParserError('YAML inventory has invalid structure, it should be a dictionary, got: %s' % type(data))
+            raise AssibleParserError('YAML inventory has invalid structure, it should be a dictionary, got: %s' % type(data))
         elif data.get('plugin'):
-            raise AnsibleParserError('Plugin configuration YAML file, not YAML inventory')
+            raise AssibleParserError('Plugin configuration YAML file, not YAML inventory')
 
         # We expect top level keys to correspond to groups, iterate over them
         # to get host, vars and subgroups (which we iterate over recursivelly)
@@ -117,7 +117,7 @@ class InventoryModule(BaseFileInventoryPlugin):
             for group_name in data:
                 self._parse_group(group_name, data[group_name])
         else:
-            raise AnsibleParserError("Invalid data from file, expected dictionary and got:\n\n%s" % to_native(data))
+            raise AssibleParserError("Invalid data from file, expected dictionary and got:\n\n%s" % to_native(data))
 
     def _parse_group(self, group, group_data):
 
@@ -125,8 +125,8 @@ class InventoryModule(BaseFileInventoryPlugin):
 
             try:
                 group = self.inventory.add_group(group)
-            except AnsibleError as e:
-                raise AnsibleParserError("Unable to add group %s: %s" % (group, to_text(e)))
+            except AssibleError as e:
+                raise AssibleParserError("Unable to add group %s: %s" % (group, to_text(e)))
 
             if group_data is not None:
                 # make sure they are dicts
@@ -137,7 +137,7 @@ class InventoryModule(BaseFileInventoryPlugin):
                             group_data[section] = {group_data[section]: None}
 
                         if not isinstance(group_data[section], (MutableMapping, NoneType)):
-                            raise AnsibleParserError('Invalid "%s" entry for "%s" group, requires a dictionary, found "%s" instead.' %
+                            raise AssibleParserError('Invalid "%s" entry for "%s" group, requires a dictionary, found "%s" instead.' %
                                                      (section, group, type(group_data[section])))
 
                 for key in group_data:

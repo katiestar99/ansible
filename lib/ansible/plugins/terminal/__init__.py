@@ -1,20 +1,20 @@
 #
 # (c) 2016 Red Hat Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -23,20 +23,20 @@ import re
 
 from abc import ABCMeta, abstractmethod
 
-from ansible.errors import AnsibleConnectionFailure
-from ansible.module_utils.six import with_metaclass
+from assible.errors import AssibleConnectionFailure
+from assible.module_utils.six import with_metaclass
 
 
 class TerminalBase(with_metaclass(ABCMeta, object)):
     '''
     A base class for implementing cli connections
 
-    .. note:: Unlike most of Ansible, nearly all strings in
+    .. note:: Unlike most of Assible, nearly all strings in
         :class:`TerminalBase` plugins are byte strings.  This is because of
         how close to the underlying platform these plugins operate.  Remember
         to mark literal strings as byte string (``b"string"``) and to use
-        :func:`~ansible.module_utils._text.to_bytes` and
-        :func:`~ansible.module_utils._text.to_text` to avoid unexpected
+        :func:`~assible.module_utils._text.to_bytes` and
+        :func:`~assible.module_utils._text.to_text` to avoid unexpected
         problems.
     '''
 

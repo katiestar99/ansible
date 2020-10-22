@@ -7,7 +7,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import pytest
-from ansible.module_utils.basic import sanitize_keys
+from assible.module_utils.basic import sanitize_keys
 
 
 def test_sanitize_keys_non_dict_types():

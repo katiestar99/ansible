@@ -1,2 +1,2 @@
 minor_changes:
-  - Add support for datetime.date object type in module result (https://github.com/ansible/ansible/issues/70583).
+  - Add support for datetime.date object type in module result (https://github.com/assible/assible/issues/70583).

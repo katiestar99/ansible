@@ -11,7 +11,7 @@
       when: not detect_paramiko.found
       include_tasks: "{{ item }}"
       with_first_found:
-        - "install-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}-python-{{ ansible_python.version.major }}.yml"
-        - "install-{{ ansible_os_family }}-{{ ansible_distribution_major_version }}-python-{{ ansible_python.version.major }}.yml"
-        - "install-python-{{ ansible_python.version.major }}.yml"
+        - "install-{{ assible_distribution }}-{{ assible_distribution_major_version }}-python-{{ assible_python.version.major }}.yml"
+        - "install-{{ assible_os_family }}-{{ assible_distribution_major_version }}-python-{{ assible_python.version.major }}.yml"
+        - "install-python-{{ assible_python.version.major }}.yml"
         - "install-fail.yml"

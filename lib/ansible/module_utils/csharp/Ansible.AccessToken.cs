@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 
-namespace Ansible.AccessToken
+namespace Assible.AccessToken
 {
     internal class NativeHelpers
     {

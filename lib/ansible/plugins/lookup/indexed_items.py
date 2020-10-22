@@ -1,5 +1,5 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -34,8 +34,8 @@ RETURN = """
     elements: list
 """
 
-from ansible.errors import AnsibleError
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleError
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):
@@ -46,7 +46,7 @@ class LookupModule(LookupBase):
     def run(self, terms, variables, **kwargs):
 
         if not isinstance(terms, list):
-            raise AnsibleError("with_indexed_items expects a list")
+            raise AssibleError("with_indexed_items expects a list")
 
         items = self._flatten(terms)
         return list(zip(range(len(items)), items))

@@ -1,19 +1,19 @@
-# Copyright 2018 Red Hat | Ansible
+# Copyright 2018 Red Hat | Assible
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import, division, print_function
 
@@ -23,10 +23,10 @@ import os
 import traceback
 
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.common.dict_transformations import recursive_diff
-from ansible.module_utils.six import iteritems, string_types
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils.common.dict_transformations import recursive_diff
+from assible.module_utils.six import iteritems, string_types
+from assible.module_utils._text import to_native
 
 K8S_IMP_ERR = None
 try:
@@ -128,7 +128,7 @@ AUTH_ARG_SPEC = {
     },
 }
 
-# Map kubernetes-client parameters to ansible parameters
+# Map kubernetes-client parameters to assible parameters
 AUTH_ARG_MAP = {
     'kubeconfig': 'kubeconfig',
     'context': 'context',
@@ -145,13 +145,13 @@ AUTH_ARG_MAP = {
 }
 
 
-class K8sAnsibleMixin(object):
+class K8sAssibleMixin(object):
     _argspec_cache = None
 
     @property
     def argspec(self):
         """
-        Introspect the model properties, and return an Ansible module arg_spec dict.
+        Introspect the model properties, and return an Assible module arg_spec dict.
         :return: dict
         """
         if self._argspec_cache:
@@ -191,7 +191,7 @@ class K8sAnsibleMixin(object):
             except kubernetes.config.ConfigException:
                 kubernetes.config.load_kube_config(auth.get('kubeconfig'), auth.get('context'), persist_config=auth.get('persist_config'))
 
-        # Override any values in the default configuration with Ansible parameters
+        # Override any values in the default configuration with Assible parameters
         configuration = kubernetes.client.Configuration()
         for key, value in iteritems(auth):
             if key in AUTH_ARG_MAP.keys() and value is not None:
@@ -265,7 +265,7 @@ class K8sAnsibleMixin(object):
         return not diff, result
 
 
-class KubernetesAnsibleModule(AnsibleModule, K8sAnsibleMixin):
+class KubernetesAssibleModule(AssibleModule, K8sAssibleMixin):
     resource_definition = None
     api_version = None
     kind = None
@@ -273,7 +273,7 @@ class KubernetesAnsibleModule(AnsibleModule, K8sAnsibleMixin):
     def __init__(self, *args, **kwargs):
 
         kwargs['argument_spec'] = self.argspec
-        AnsibleModule.__init__(self, *args, **kwargs)
+        AssibleModule.__init__(self, *args, **kwargs)
 
         if not HAS_K8S_MODULE_HELPER:
             self.fail_json(msg=missing_required_lib('openshift'), exception=K8S_IMP_ERR,

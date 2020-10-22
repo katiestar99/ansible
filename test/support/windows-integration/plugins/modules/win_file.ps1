@@ -1,22 +1,22 @@
 #!powershell
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 $ErrorActionPreference = "Stop"
 
 $params = Parse-Args $args -supports_check_mode $true
 
-$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -default $false
-$_remote_tmp = Get-AnsibleParam $params "_ansible_remote_tmp" -type "path" -default $env:TMP
+$check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -default $false
+$_remote_tmp = Get-AssibleParam $params "_assible_remote_tmp" -type "path" -default $env:TMP
 
-$path = Get-AnsibleParam -obj $params -name "path" -type "path" -failifempty $true -aliases "dest","name"
-$state = Get-AnsibleParam -obj $params -name "state" -type "str" -validateset "absent","directory","file","touch"
+$path = Get-AssibleParam -obj $params -name "path" -type "path" -failifempty $true -aliases "dest","name"
+$state = Get-AssibleParam -obj $params -name "state" -type "str" -validateset "absent","directory","file","touch"
 
 # used in template/copy when dest is the path to a dir and source is a file
-$original_basename = Get-AnsibleParam -obj $params -name "_original_basename" -type "str"
+$original_basename = Get-AssibleParam -obj $params -name "_original_basename" -type "str"
 if ((Test-Path -LiteralPath $path -PathType Container) -and ($null -ne $original_basename)) {
     $path = Join-Path -Path $path -ChildPath $original_basename
 }
@@ -31,7 +31,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace Ansible.Command {
+namespace Assible.Command {
     public class SymLinkHelper {
         [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
         public static extern bool DeleteFileW(string lpFileName);
@@ -64,11 +64,11 @@ function Remove-File($file, $checkmode) {
             # to an invalid path it will fail, using Win32 API to do this instead
             if ($file.PSIsContainer) {
                 if (-not $checkmode) {
-                    [Ansible.Command.SymLinkHelper]::DeleteDirectory($file.FullName)
+                    [Assible.Command.SymLinkHelper]::DeleteDirectory($file.FullName)
                 }
             } else {
                 if (-not $checkmode) {
-                    [Ansible.Command.SymlinkHelper]::DeleteFile($file.FullName)
+                    [Assible.Command.SymlinkHelper]::DeleteFile($file.FullName)
                 }
             }
         } elseif ($file.PSIsContainer) {

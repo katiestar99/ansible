@@ -1,20 +1,20 @@
 # test code for the raw module when using winrm connection
 # (c) 2014, Chris Church <chris@ninemoreminutes.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 - name: run getmac
   raw: getmac
@@ -94,9 +94,9 @@
       - "raw_result.stdout_lines[0] == 'wwe=raw'"
 
 - name: unicode tests for winrm
-  when: ansible_connection != 'psrp'  # Write-Host does not work over PSRP
+  when: assible_connection != 'psrp'  # Write-Host does not work over PSRP
   block:
-  - name: run a raw command with unicode chars and quoted args (from https://github.com/ansible/ansible-modules-core/issues/1929)
+  - name: run a raw command with unicode chars and quoted args (from https://github.com/assible/assible-modules-core/issues/1929)
     raw: Write-Host --% icacls D:\somedir\ /grant "! ЗАО. Руководство":F
     register: raw_result2
 
@@ -106,7 +106,7 @@
         - "raw_result2.stdout_lines[0] == '--% icacls D:\\\\somedir\\\\ /grant \"! ЗАО. Руководство\":F'"
 
 - name: unicode tests for psrp
-  when: ansible_connection == 'psrp'
+  when: assible_connection == 'psrp'
   block:
   # Cannot test unicode passed into separate exec as PSRP doesn't run with a preset CP of 65001 which reuslts in ? for unicode chars
   - name: run a raw command with unicode chars

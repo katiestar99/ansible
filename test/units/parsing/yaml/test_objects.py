@@ -1,18 +1,18 @@
-# This file is part of Ansible
+# This file is part of Assible
 # -*- coding: utf-8 -*-
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Copyright 2016, Adrian Likins <alikins@redhat.com>
 
@@ -22,23 +22,23 @@ __metaclass__ = type
 
 from units.compat import unittest
 
-from ansible.errors import AnsibleError
+from assible.errors import AssibleError
 
-from ansible.module_utils._text import to_native
+from assible.module_utils._text import to_native
 
-from ansible.parsing import vault
-from ansible.parsing.yaml.loader import AnsibleLoader
+from assible.parsing import vault
+from assible.parsing.yaml.loader import AssibleLoader
 
 # module under test
-from ansible.parsing.yaml import objects
+from assible.parsing.yaml import objects
 
 from units.mock.yaml_helper import YamlTestUtils
 from units.mock.vault_helper import TextVaultSecret
 
 
-class TestAnsibleVaultUnicodeNoVault(unittest.TestCase, YamlTestUtils):
+class TestAssibleVaultUnicodeNoVault(unittest.TestCase, YamlTestUtils):
     def test_empty_init(self):
-        self.assertRaises(TypeError, objects.AnsibleVaultEncryptedUnicode)
+        self.assertRaises(TypeError, objects.AssibleVaultEncryptedUnicode)
 
     def test_empty_string_init(self):
         seq = ''.encode('utf8')
@@ -49,13 +49,13 @@ class TestAnsibleVaultUnicodeNoVault(unittest.TestCase, YamlTestUtils):
         self.assert_values(seq)
 
     def _assert_values(self, avu, seq):
-        self.assertIsInstance(avu, objects.AnsibleVaultEncryptedUnicode)
+        self.assertIsInstance(avu, objects.AssibleVaultEncryptedUnicode)
         self.assertTrue(avu.vault is None)
-        # AnsibleVaultEncryptedUnicode without a vault should never == any string
+        # AssibleVaultEncryptedUnicode without a vault should never == any string
         self.assertNotEquals(avu, seq)
 
     def assert_values(self, seq):
-        avu = objects.AnsibleVaultEncryptedUnicode(seq)
+        avu = objects.AssibleVaultEncryptedUnicode(seq)
         self._assert_values(avu, seq)
 
     def test_single_char(self):
@@ -71,7 +71,7 @@ class TestAnsibleVaultUnicodeNoVault(unittest.TestCase, YamlTestUtils):
         self.assert_values(seq)
 
 
-class TestAnsibleVaultEncryptedUnicode(unittest.TestCase, YamlTestUtils):
+class TestAssibleVaultEncryptedUnicode(unittest.TestCase, YamlTestUtils):
     def setUp(self):
         self.good_vault_password = "hunter42"
         good_vault_secret = TextVaultSecret(self.good_vault_password)
@@ -88,14 +88,14 @@ class TestAnsibleVaultEncryptedUnicode(unittest.TestCase, YamlTestUtils):
         self.vault_secrets = self.good_vault_secrets
 
     def _loader(self, stream):
-        return AnsibleLoader(stream, vault_secrets=self.vault_secrets)
+        return AssibleLoader(stream, vault_secrets=self.vault_secrets)
 
     def test_dump_load_cycle(self):
-        aveu = self._from_plaintext('the test string for TestAnsibleVaultEncryptedUnicode.test_dump_load_cycle')
+        aveu = self._from_plaintext('the test string for TestAssibleVaultEncryptedUnicode.test_dump_load_cycle')
         self._dump_load_cycle(aveu)
 
     def assert_values(self, avu, seq):
-        self.assertIsInstance(avu, objects.AnsibleVaultEncryptedUnicode)
+        self.assertIsInstance(avu, objects.AssibleVaultEncryptedUnicode)
 
         self.assertEqual(avu, seq)
         self.assertTrue(avu.vault is self.vault)
@@ -103,15 +103,15 @@ class TestAnsibleVaultEncryptedUnicode(unittest.TestCase, YamlTestUtils):
 
     def _from_plaintext(self, seq):
         id_secret = vault.match_encrypt_secret(self.good_vault_secrets)
-        return objects.AnsibleVaultEncryptedUnicode.from_plaintext(seq, vault=self.vault, secret=id_secret[1])
+        return objects.AssibleVaultEncryptedUnicode.from_plaintext(seq, vault=self.vault, secret=id_secret[1])
 
     def _from_ciphertext(self, ciphertext):
-        avu = objects.AnsibleVaultEncryptedUnicode(ciphertext)
+        avu = objects.AssibleVaultEncryptedUnicode(ciphertext)
         avu.vault = self.vault
         return avu
 
     def test_empty_init(self):
-        self.assertRaises(TypeError, objects.AnsibleVaultEncryptedUnicode)
+        self.assertRaises(TypeError, objects.AssibleVaultEncryptedUnicode)
 
     def test_empty_string_init_from_plaintext(self):
         seq = ''
@@ -137,7 +137,7 @@ class TestAnsibleVaultEncryptedUnicode(unittest.TestCase, YamlTestUtils):
         seq = u'some text here'
         avu = self._from_plaintext(seq)
         b_avu = avu.encode('utf-8', 'strict')
-        self.assertIsInstance(avu, objects.AnsibleVaultEncryptedUnicode)
+        self.assertIsInstance(avu, objects.AssibleVaultEncryptedUnicode)
         self.assertEqual(b_avu, seq.encode('utf-8', 'strict'))
         self.assertTrue(avu.vault is self.vault)
         self.assertIsInstance(avu.vault, vault.VaultLib)
@@ -151,7 +151,7 @@ class TestAnsibleVaultEncryptedUnicode(unittest.TestCase, YamlTestUtils):
         def compare(avu, seq):
             return avu == seq
 
-        self.assertRaises(AnsibleError, compare, avu, seq)
+        self.assertRaises(AssibleError, compare, avu, seq)
 
     def test_vaulted_utf8_value_37258(self):
         seq = u"aöffü"

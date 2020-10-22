@@ -19,13 +19,13 @@ description:
        the target host, requests will be sent through that proxy. This
        behaviour can be overridden by setting a variable for this task
        (see `setting the environment
-       <https://docs.ansible.com/playbooks_environment.html>`_),
+       <https://docs.assible.com/playbooks_environment.html>`_),
        or by using the use_proxy option.
      - HTTP redirects can redirect from HTTP to HTTPS so you should be sure that
        your proxy environment for both protocols is correct.
-     - From Ansible 2.4 when run with C(--check), it will do a HEAD request to validate the URL but
+     - From Assible 2.4 when run with C(--check), it will do a HEAD request to validate the URL but
        will not download the entire file or verify it against hashes.
-     - For Windows targets, use the M(ansible.windows.win_get_url) module instead.
+     - For Windows targets, use the M(assible.windows.win_get_url) module instead.
 version_added: '0.6'
 options:
   url:
@@ -46,8 +46,8 @@ options:
   tmp_dest:
     description:
       - Absolute path of where temporary file is downloaded to.
-      - When run on Ansible 2.5 or greater, path defaults to ansible's remote_tmp setting
-      - When run on Ansible prior to 2.5, it defaults to C(TMPDIR), C(TEMP) or C(TMP) env variables or a platform specific value.
+      - When run on Assible 2.5 or greater, path defaults to assible's remote_tmp setting
+      - When run on Assible prior to 2.5, it defaults to C(TMPDIR), C(TEMP) or C(TMP) env variables or a platform specific value.
       - U(https://docs.python.org/2/library/tempfile.html#tempfile.tempdir)
     type: path
     version_added: '2.1'
@@ -119,7 +119,7 @@ options:
   headers:
     description:
         - Add custom HTTP headers to a request in hash/dict format.
-        - The hash/dict format was added in Ansible 2.6.
+        - The hash/dict format was added in Assible 2.6.
         - Previous versions used a C("key:value,key:value") string format.
         - The C("key:value,key:value") string format is deprecated and has been removed in version 2.10.
     type: dict
@@ -165,7 +165,7 @@ options:
     description:
       - Header to identify as, generally appears in web server logs.
     type: str
-    default: ansible-httpget
+    default: assible-httpget
   use_gssapi:
     description:
       - Use GSSAPI to perform the authentication, typically this is for Kerberos or Kerberos through Negotiate
@@ -181,10 +181,10 @@ options:
 extends_documentation_fragment:
     - files
 notes:
-     - For Windows targets, use the M(ansible.windows.win_get_url) module instead.
+     - For Windows targets, use the M(assible.windows.win_get_url) module instead.
 seealso:
-- module: ansible.builtin.uri
-- module: ansible.windows.win_get_url
+- module: assible.builtin.uri
+- module: assible.windows.win_get_url
 author:
 - Jan-Piet Mens (@jpmens)
 '''
@@ -332,7 +332,7 @@ url:
     description: the actual URL used for the request
     returned: always
     type: str
-    sample: https://www.ansible.com/
+    sample: https://www.assible.com/
 '''
 
 import datetime
@@ -342,10 +342,10 @@ import shutil
 import tempfile
 import traceback
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.six.moves.urllib.parse import urlsplit
-from ansible.module_utils._text import to_native
-from ansible.module_utils.urls import fetch_url, url_argument_spec
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.six.moves.urllib.parse import urlsplit
+from assible.module_utils._text import to_native
+from assible.module_utils.urls import fetch_url, url_argument_spec
 
 # ==============================================================
 # url handling
@@ -457,7 +457,7 @@ def main():
         tmp_dest=dict(type='path'),
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         # not checking because of daisy chain to file module
         argument_spec=argument_spec,
         add_file_common_args=True,
@@ -467,11 +467,11 @@ def main():
 
     if module.params.get('thirsty'):
         module.deprecate('The alias "thirsty" has been deprecated and will be removed, use "force" instead',
-                         version='2.13', collection_name='ansible.builtin')
+                         version='2.13', collection_name='assible.builtin')
 
     if module.params.get('sha256sum'):
         module.deprecate('The parameter "sha256sum" has been deprecated and will be removed, use "checksum" instead',
-                         version='2.14', collection_name='ansible.builtin')
+                         version='2.14', collection_name='assible.builtin')
 
     url = module.params['url']
     dest = module.params['dest']

@@ -1,20 +1,20 @@
 # Test code for the package module.
 # (c) 2017, James Tanner <tanner.jc@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 - set_fact: output_dir_test={{output_dir}}/at
 
@@ -25,7 +25,7 @@
   file: path="{{ output_dir_test }}" state=directory
 
 # Verify correct default package manager for Fedora
-# Validates: https://github.com/ansible/ansible/issues/34014
+# Validates: https://github.com/assible/assible/issues/34014
 - block:
     - name: install apt
       dnf:
@@ -36,7 +36,7 @@
     - name: validate output
       assert:
         that:
-          - 'ansible_pkg_mgr == "dnf"'
+          - 'assible_pkg_mgr == "dnf"'
   always:
     - name: remove apt
       dnf:
@@ -44,7 +44,7 @@
         state: absent
     - name: gather facts again
       setup:
-  when: ansible_distribution == "Fedora"
+  when: assible_distribution == "Fedora"
 
 # Verify correct default package manager for Debian/Ubuntu when Zypper installed
 - block:
@@ -60,7 +60,7 @@
     - name: validate output
       assert:
         that:
-          - 'ansible_pkg_mgr == "apt"'
+          - 'assible_pkg_mgr == "apt"'
   always:
     - name: remove fake zypper
       file:
@@ -68,7 +68,7 @@
         state: absent
     - name: gather facts again
       setup:
-  when: ansible_os_family == "Debian"
+  when: assible_os_family == "Debian"
 
 ##
 ## package
@@ -111,4 +111,4 @@
     - name: verify at command is installed
       shell: which at
 
-  when: ansible_distribution in package_distros
+  when: assible_distribution in package_distros

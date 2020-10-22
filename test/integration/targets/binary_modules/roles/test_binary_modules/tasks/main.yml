@@ -1,12 +1,12 @@
-- debug: var=ansible_system
+- debug: var=assible_system
 
 - name: ping
   ping:
-  when: ansible_system != 'Win32NT'
+  when: assible_system != 'Win32NT'
 
 - name: win_ping
   action: win_ping
-  when: ansible_system == 'Win32NT'
+  when: assible_system == 'Win32NT'
 
 - name: Hello, World!
   action: "{{ filename }}"
@@ -16,21 +16,21 @@
     that:
       - 'hello_world.msg == "Hello, World!"'
 
-- name: Hello, Ansible!
+- name: Hello, Assible!
   action: "{{ filename }}"
   args:
-    name: Ansible
-  register: hello_ansible
+    name: Assible
+  register: hello_assible
 
 - assert:
     that:
-      - 'hello_ansible.msg == "Hello, Ansible!"'
+      - 'hello_assible.msg == "Hello, Assible!"'
 
 - name: Async Hello, World!
   action: "{{ filename }}"
   async: 10
   poll: 1
-  when: ansible_system != 'Win32NT'
+  when: assible_system != 'Win32NT'
   register: async_hello_world
 
 - assert:
@@ -38,16 +38,16 @@
       - 'async_hello_world.msg == "Hello, World!"'
   when: async_hello_world is not skipped
 
-- name: Async Hello, Ansible!
+- name: Async Hello, Assible!
   action: "{{ filename }}"
   args:
-    name: Ansible
+    name: Assible
   async: 10
   poll: 1
-  when: ansible_system != 'Win32NT'
-  register: async_hello_ansible
+  when: assible_system != 'Win32NT'
+  register: async_hello_assible
 
 - assert:
     that:
-      - 'async_hello_ansible.msg == "Hello, Ansible!"'
-  when: async_hello_ansible is not skipped
+      - 'async_hello_assible.msg == "Hello, Assible!"'
+  when: async_hello_assible is not skipped

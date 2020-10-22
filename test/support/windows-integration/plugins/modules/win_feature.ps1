@@ -3,7 +3,7 @@
 # Copyright: (c) 2014, Paul Durivage <paul.durivage@rackspace.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 Import-Module -Name ServerManager
 
@@ -12,23 +12,23 @@ $result = @{
 }
 
 $params = Parse-Args $args -supports_check_mode $true
-$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
+$check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -type "bool" -default $false
 
-$name = Get-AnsibleParam -obj $params -name "name" -type "list" -failifempty $true
-$state = Get-AnsibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent"
+$name = Get-AssibleParam -obj $params -name "name" -type "list" -failifempty $true
+$state = Get-AssibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent"
 
-$include_sub_features = Get-AnsibleParam -obj $params -name "include_sub_features" -type "bool" -default $false
-$include_management_tools = Get-AnsibleParam -obj $params -name "include_management_tools" -type "bool" -default $false
-$source = Get-AnsibleParam -obj $params -name "source" -type "str"
+$include_sub_features = Get-AssibleParam -obj $params -name "include_sub_features" -type "bool" -default $false
+$include_management_tools = Get-AssibleParam -obj $params -name "include_management_tools" -type "bool" -default $false
+$source = Get-AssibleParam -obj $params -name "source" -type "str"
 
 $install_cmdlet = $false
 if (Get-Command -Name Install-WindowsFeature -ErrorAction SilentlyContinue) {
-    Set-Alias -Name Install-AnsibleWindowsFeature -Value Install-WindowsFeature
-    Set-Alias -Name Uninstall-AnsibleWindowsFeature -Value Uninstall-WindowsFeature
+    Set-Alias -Name Install-AssibleWindowsFeature -Value Install-WindowsFeature
+    Set-Alias -Name Uninstall-AssibleWindowsFeature -Value Uninstall-WindowsFeature
     $install_cmdlet = $true
 } elseif (Get-Command -Name Add-WindowsFeature -ErrorAction SilentlyContinue) {
-    Set-Alias -Name Install-AnsibleWindowsFeature -Value Add-WindowsFeature
-    Set-Alias -Name Uninstall-AnsibleWindowsFeature -Value Remove-WindowsFeature
+    Set-Alias -Name Install-AssibleWindowsFeature -Value Add-WindowsFeature
+    Set-Alias -Name Uninstall-AssibleWindowsFeature -Value Remove-WindowsFeature
 } else {
     Fail-Json -obj $result -message "This version of Windows does not support the cmdlets Install-WindowsFeature or Add-WindowsFeature"
 }
@@ -54,7 +54,7 @@ if ($state -eq "present") {
     }
 
     try {
-        $action_results = Install-AnsibleWindowsFeature @install_args
+        $action_results = Install-AssibleWindowsFeature @install_args
     } catch {
         Fail-Json -obj $result -message "Failed to install Windows Feature: $($_.Exception.Message)"
     }
@@ -70,7 +70,7 @@ if ($state -eq "present") {
     }
 
     try {
-        $action_results = Uninstall-AnsibleWindowsFeature @uninstall_args
+        $action_results = Uninstall-AssibleWindowsFeature @uninstall_args
     } catch {
         Fail-Json -obj $result -message "Failed to uninstall Windows Feature: $($_.Exception.Message)"
     }
@@ -105,7 +105,7 @@ $result.feature_result = $feature_results
 $result.success = ConvertTo-Bool -obj $action_results.Success
 $result.exitcode = $action_results.ExitCode.ToString()
 $result.reboot_required = ConvertTo-Bool -obj $action_results.RestartNeeded
-# controls whether Ansible will fail or not
+# controls whether Assible will fail or not
 $result.failed = (-not $action_results.Success)
 
 Exit-Json -obj $result

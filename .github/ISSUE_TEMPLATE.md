@@ -1,1 +1,1 @@
-Please raise issues via the [new interface](https://github.com/ansible/ansible/issues/new/choose)
+Please raise issues via the [new interface](https://github.com/assible/assible/issues/new/choose)

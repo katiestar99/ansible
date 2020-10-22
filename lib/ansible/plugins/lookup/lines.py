@@ -1,5 +1,5 @@
 # (c) 2012, Daniel Hokka Zakrisson <daniel@hozac.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -17,8 +17,8 @@ DOCUMENTATION = """
         description: command(s) to run
         required: True
     notes:
-      - Like all lookups, this runs on the Ansible controller and is unaffected by other keywords such as 'become'.
-        If you need to use different permissions, you must change the command or run Ansible as another user.
+      - Like all lookups, this runs on the Assible controller and is unaffected by other keywords such as 'become'.
+        If you need to use different permissions, you must change the command or run Assible as another user.
       - Alternatively, you can use a shell/command task that runs against localhost and registers the result.
 """
 
@@ -42,9 +42,9 @@ RETURN = """
 """
 
 import subprocess
-from ansible.errors import AnsibleError
-from ansible.plugins.lookup import LookupBase
-from ansible.module_utils._text import to_text
+from assible.errors import AssibleError
+from assible.plugins.lookup import LookupBase
+from assible.module_utils._text import to_text
 
 
 class LookupModule(LookupBase):
@@ -58,5 +58,5 @@ class LookupModule(LookupBase):
             if p.returncode == 0:
                 ret.extend([to_text(l) for l in stdout.splitlines()])
             else:
-                raise AnsibleError("lookup_plugin.lines(%s) returned %d" % (term, p.returncode))
+                raise AssibleError("lookup_plugin.lines(%s) returned %d" % (term, p.returncode))
         return ret

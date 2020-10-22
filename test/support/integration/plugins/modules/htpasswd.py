@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -64,7 +64,7 @@ notes:
   - "On Debian, Ubuntu, or Fedora: install I(python-passlib)."
   - "On RHEL or CentOS: Enable EPEL, then install I(python-passlib)."
 requirements: [ passlib>=1.6 ]
-author: "Ansible Core Team"
+author: "Assible Core Team"
 extends_documentation_fragment: files
 """
 
@@ -97,8 +97,8 @@ import os
 import tempfile
 import traceback
 from distutils.version import LooseVersion
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils._text import to_native
 
 PASSLIB_IMP_ERR = None
 try:
@@ -209,7 +209,7 @@ def main():
         create=dict(type='bool', default='yes'),
 
     )
-    module = AnsibleModule(argument_spec=arg_spec,
+    module = AssibleModule(argument_spec=arg_spec,
                            add_file_common_args=True,
                            supports_check_mode=True)
 

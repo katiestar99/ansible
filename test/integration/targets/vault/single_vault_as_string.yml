@@ -1,7 +1,7 @@
 - hosts: localhost
   vars:
     vaulted_value: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
+          $ASSIBLE_VAULT;1.1;AES256
           35323961353038346165643738646465376139363061353835303739663538343266303232326635
           3365353662646236356665323135633630656238316530640a663362363763633436373439663031
           33663433383037396438656464636433653837376361313638366362333037323961316364363363
@@ -69,19 +69,19 @@
           - vaulted_value|random(seed='foo') == ' '
           - vaulted_value|shuffle(seed='foo') == ["o", "f", "r", "b", "o", "a", " "]
           - vaulted_value|pprint == "'foo bar'"
-      when: ansible_python.version.major == 3
+      when: assible_python.version.major == 3
 
     - assert:
         that:
           - vaulted_value|random(seed='foo') == 'r'
           - vaulted_value|shuffle(seed='foo') == ["b", "o", "a", " ", "o", "f", "r"]
           - vaulted_value|pprint == "u'foo bar'"
-      when: ansible_python.version.major == 2
+      when: assible_python.version.major == 2
 
     - assert:
         that:
           - vaulted_value|map('upper')|list == ['F', 'O', 'O', ' ', 'B', 'A', 'R']
-      when: lookup('pipe', ansible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.7', '>=')
+      when: lookup('pipe', assible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.7', '>=')
 
 
     - assert:
@@ -90,27 +90,27 @@
           - vaulted_value|select('equalto', 'o')|list == ['o', 'o']
           - vaulted_value|title == 'Foo Bar'
           - vaulted_value is equalto('foo bar')
-      when: lookup('pipe', ansible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.8', '>=')
+      when: lookup('pipe', assible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.8', '>=')
 
     - assert:
         that:
           - vaulted_value|string|tojson == '"foo bar"'
           - vaulted_value|truncate(4) == 'foo bar'
-      when: lookup('pipe', ansible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.9', '>=')
+      when: lookup('pipe', assible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.9', '>=')
 
     - assert:
         that:
           - vaulted_value|wordwrap(4) == 'foo\nbar'
-      when: lookup('pipe', ansible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.11', '>=')
+      when: lookup('pipe', assible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.11', '>=')
 
     - assert:
         that:
           - vaulted_value|wordcount == 2
-      when: lookup('pipe', ansible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.11.2', '>=')
+      when: lookup('pipe', assible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.11.2', '>=')
 
     - ping:
         data: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
+          $ASSIBLE_VAULT;1.1;AES256
           35323961353038346165643738646465376139363061353835303739663538343266303232326635
           3365353662646236356665323135633630656238316530640a663362363763633436373439663031
           33663433383037396438656464636433653837376361313638366362333037323961316364363363

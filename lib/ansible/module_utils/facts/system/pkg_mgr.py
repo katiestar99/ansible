@@ -8,11 +8,11 @@ __metaclass__ = type
 import os
 import subprocess
 
-from ansible.module_utils.facts.collector import BaseFactCollector
+from assible.module_utils.facts.collector import BaseFactCollector
 
 # A list of dicts.  If there is a platform with more than one
 # package manager, put the preferred one last.  If there is an
-# ansible module, use that as the value for the 'name' key.
+# assible module, use that as the value for the 'name' key.
 PKG_MGRS = [{'path': '/usr/bin/yum', 'name': 'yum'},
             {'path': '/usr/bin/dnf', 'name': 'dnf'},
             {'path': '/usr/bin/apt-get', 'name': 'apt'},
@@ -61,11 +61,11 @@ class PkgMgrFactCollector(BaseFactCollector):
     required_facts = set(['distribution'])
 
     def _check_rh_versions(self, pkg_mgr_name, collected_facts):
-        if collected_facts['ansible_distribution'] == 'Fedora':
+        if collected_facts['assible_distribution'] == 'Fedora':
             if os.path.exists('/run/ostree-booted'):
                 return "atomic_container"
             try:
-                if int(collected_facts['ansible_distribution_major_version']) < 23:
+                if int(collected_facts['assible_distribution_major_version']) < 23:
                     for yum in [pkg_mgr for pkg_mgr in PKG_MGRS if pkg_mgr['name'] == 'yum']:
                         if os.path.exists(yum['path']):
                             pkg_mgr_name = 'yum'
@@ -79,16 +79,16 @@ class PkgMgrFactCollector(BaseFactCollector):
                 # If there's some new magical Fedora version in the future,
                 # just default to dnf
                 pkg_mgr_name = 'dnf'
-        elif collected_facts['ansible_distribution'] == 'Amazon':
+        elif collected_facts['assible_distribution'] == 'Amazon':
             pkg_mgr_name = 'yum'
         else:
             # If it's not one of the above and it's Red Hat family of distros, assume
-            # RHEL or a clone. For versions of RHEL < 8 that Ansible supports, the
+            # RHEL or a clone. For versions of RHEL < 8 that Assible supports, the
             # vendor supported official package manager is 'yum' and in RHEL 8+
             # (as far as we know at the time of this writing) it is 'dnf'.
             # If anyone wants to force a non-official package manager then they
             # can define a provider to either the package or yum action plugins.
-            if int(collected_facts['ansible_distribution_major_version']) < 8:
+            if int(collected_facts['assible_distribution_major_version']) < 8:
                 pkg_mgr_name = 'yum'
             else:
                 pkg_mgr_name = 'dnf'
@@ -121,15 +121,15 @@ class PkgMgrFactCollector(BaseFactCollector):
                 pkg_mgr_name = pkg['name']
 
         # Handle distro family defaults when more than one package manager is
-        # installed or available to the distro, the ansible_fact entry should be
+        # installed or available to the distro, the assible_fact entry should be
         # the default package manager officially supported by the distro.
-        if collected_facts['ansible_os_family'] == "RedHat":
+        if collected_facts['assible_os_family'] == "RedHat":
             pkg_mgr_name = self._check_rh_versions(pkg_mgr_name, collected_facts)
-        elif collected_facts['ansible_os_family'] == 'Debian' and pkg_mgr_name != 'apt':
+        elif collected_facts['assible_os_family'] == 'Debian' and pkg_mgr_name != 'apt':
             # It's possible to install yum, dnf, zypper, rpm, etc inside of
             # Debian. Doing so does not mean the system wants to use them.
             pkg_mgr_name = 'apt'
-        elif collected_facts['ansible_os_family'] == 'Altlinux':
+        elif collected_facts['assible_os_family'] == 'Altlinux':
             if pkg_mgr_name == 'apt':
                 pkg_mgr_name = 'apt_rpm'
 

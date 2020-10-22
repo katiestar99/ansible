@@ -11,10 +11,10 @@
 - name: SETUP | install git
   package:
     name: '{{ item }}'
-  when: ansible_distribution not in ["MacOSX", "Alpine"]
+  when: assible_distribution not in ["MacOSX", "Alpine"]
   notify:
     - cleanup
-  with_items: "{{ git_required_packages[ansible_os_family | default('default') ] | default(git_required_packages.default) }}"
+  with_items: "{{ git_required_packages[assible_os_family | default('default') ] | default(git_required_packages.default) }}"
 
 - name: SETUP | verify that git is installed so this test can continue
   shell: which git
@@ -31,7 +31,7 @@
   shell: git config --global user.email || git config --global user.email "noreply@example.com"
 
 - name: SETUP | set git global user.name if not already set
-  shell: git config --global user.name  || git config --global user.name  "Ansible Test Runner"
+  shell: git config --global user.name  || git config --global user.name  "Assible Test Runner"
 
 - name: SETUP | create repo_dir
   file:

@@ -16,7 +16,7 @@ from . import (
 )
 
 from ..core_ci import (
-    AnsibleCoreCI,
+    AssibleCoreCI,
 )
 
 
@@ -39,7 +39,7 @@ class HcloudCloudProvider(CloudProvider):
         if os.path.isfile(self.config_static_path):
             return
 
-        aci = self._create_ansible_core_ci()
+        aci = self._create_assible_core_ci()
 
         if aci.available:
             return
@@ -54,12 +54,12 @@ class HcloudCloudProvider(CloudProvider):
             self._setup_dynamic()
 
     def _setup_dynamic(self):
-        """Request Hetzner credentials through the Ansible Core CI service."""
+        """Request Hetzner credentials through the Assible Core CI service."""
         display.info('Provisioning %s cloud environment.' % self.platform, verbosity=1)
 
         config = self._read_config_template()
 
-        aci = self._create_ansible_core_ci()
+        aci = self._create_assible_core_ci()
 
         response = aci.start()
 
@@ -79,11 +79,11 @@ class HcloudCloudProvider(CloudProvider):
 
         self._write_config(config)
 
-    def _create_ansible_core_ci(self):
+    def _create_assible_core_ci(self):
         """
-        :rtype: AnsibleCoreCI
+        :rtype: AssibleCoreCI
         """
-        return AnsibleCoreCI(self.args, 'hetzner', 'hetzner', persist=False, stage=self.args.remote_stage, provider=self.args.remote_provider)
+        return AssibleCoreCI(self.args, 'hetzner', 'hetzner', persist=False, stage=self.args.remote_stage, provider=self.args.remote_provider)
 
 
 class HcloudCloudEnvironment(CloudEnvironment):
@@ -104,13 +104,13 @@ class HcloudCloudEnvironment(CloudEnvironment):
 
         display.sensitive.add(env_vars['HCLOUD_TOKEN'])
 
-        ansible_vars = dict(
+        assible_vars = dict(
             hcloud_prefix=self.resource_prefix,
         )
 
-        ansible_vars.update(dict((key.lower(), value) for key, value in env_vars.items()))
+        assible_vars.update(dict((key.lower(), value) for key, value in env_vars.items()))
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )

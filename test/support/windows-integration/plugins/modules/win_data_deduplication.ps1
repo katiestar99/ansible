@@ -3,8 +3,8 @@
 # Copyright: 2019, rnsc(@rnsc) <github@rnsc.be>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#AnsibleRequires -OSVersion 6.3
+#AssibleRequires -CSharpUtil Assible.Basic
+#AssibleRequires -OSVersion 6.3
 
 $spec = @{
     options = @{
@@ -25,7 +25,7 @@ $spec = @{
     supports_check_mode = $true
 }
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 
 $drive_letter = $module.Params.drive_letter
 $state = $module.Params.state
@@ -83,7 +83,7 @@ function Set-DataDedupJobSettings ($volume, $settings) {
 
     $update_key = $key
     $update_value = $settings.$($key)
-    # Transform Ansible style options to Powershell params
+    # Transform Assible style options to Powershell params
     $update_key = $update_key -replace('_', '')
 
     if ($update_key -eq "MinimumFileSize" -and $update_value -lt 32768) {

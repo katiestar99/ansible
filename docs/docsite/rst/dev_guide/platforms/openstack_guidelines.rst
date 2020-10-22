@@ -1,9 +1,9 @@
 .. _OpenStack_module_development:
 
-OpenStack Ansible Modules
+OpenStack Assible Modules
 =========================
 
-The OpenStack collection (on `Galaxy <https://galaxy.ansible.com/openstack/cloud>`_, source code `repository <https://opendev.org/openstack/ansible-collections-openstack.git>`_) contains modules for interacting with OpenStack as either an admin or an end user. If the module does not begin with ``os_``, it is either deprecated or soon to be deprecated. This document serves as developer coding guidelines for modules in this collection.
+The OpenStack collection (on `Galaxy <https://galaxy.assible.com/openstack/cloud>`_, source code `repository <https://opendev.org/openstack/assible-collections-openstack.git>`_) contains modules for interacting with OpenStack as either an admin or an end user. If the module does not begin with ``os_``, it is either deprecated or soon to be deprecated. This document serves as developer coding guidelines for modules in this collection.
 
 .. contents::
    :local:
@@ -29,12 +29,12 @@ Interoperability
 
 * It should be assumed that the cloud consumer does not know a bazillion
   details about the deployment choices their cloud provider made, and a best
-  effort should be made to present one sane interface to the Ansible user
+  effort should be made to present one sane interface to the Assible user
   regardless of deployer insanity.
 * All modules should work appropriately against all existing known public
   OpenStack clouds.
 * It should be assumed that a user may have more than one cloud account that
-  they wish to combine as part of a single Ansible-managed infrastructure.
+  they wish to combine as part of a single Assible-managed infrastructure.
 
 Libraries
 ---------
@@ -52,6 +52,6 @@ Libraries
 Testing
 -------
 
-* Integration testing is currently done in `OpenStack's CI system <https://git.openstack.org/cgit/openstack/openstacksdk/tree/openstack/tests/ansible>`_
+* Integration testing is currently done in `OpenStack's CI system <https://git.openstack.org/cgit/openstack/openstacksdk/tree/openstack/tests/assible>`_
 * Testing in openstacksdk produces an obvious chicken-and-egg scenario. Work is under
   way to trigger from and report on PRs directly.

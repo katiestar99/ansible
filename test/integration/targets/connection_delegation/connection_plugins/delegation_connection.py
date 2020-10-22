@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = """
-author: Ansible Core Team
+author: Assible Core Team
 connection: delegation_connection
 short_description: Test connection for delegated host check
 description:
@@ -12,13 +12,13 @@ options:
     description: The remote password
     type: str
     vars:
-    - name: ansible_password
+    - name: assible_password
     # Tests that an aliased key gets the -k option which hardcodes the value to password
     aliases:
     - password
 """
 
-from ansible.plugins.connection import ConnectionBase
+from assible.plugins.connection import ConnectionBase
 
 
 class Connection(ConnectionBase):

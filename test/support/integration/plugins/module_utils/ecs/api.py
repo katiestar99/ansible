@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is licensed under the
 # Modified BSD License. Modules you write using this snippet, which is embedded
-# dynamically by Ansible, still belong to the author of the module, and may assign
+# dynamically by Assible, still belong to the author of the module, and may assign
 # their own license to the complete work.
 #
 # Copyright (c), Entrust Datacard Corporation, 2019
@@ -37,11 +37,11 @@ import re
 import time
 import traceback
 
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils.six.moves.urllib.parse import urlencode
-from ansible.module_utils.six.moves.urllib.error import HTTPError
-from ansible.module_utils.urls import Request
+from assible.module_utils._text import to_text, to_native
+from assible.module_utils.basic import missing_required_lib
+from assible.module_utils.six.moves.urllib.parse import urlencode
+from assible.module_utils.six.moves.urllib.error import HTTPError
+from assible.module_utils.urls import Request
 
 YAML_IMP_ERR = None
 try:

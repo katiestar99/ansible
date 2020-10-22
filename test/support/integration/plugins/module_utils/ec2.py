@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -34,12 +34,12 @@ import re
 import sys
 import traceback
 
-from ansible.module_utils.ansible_release import __version__
-from ansible.module_utils.basic import missing_required_lib, env_fallback
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.cloud import CloudRetry
-from ansible.module_utils.six import string_types, binary_type, text_type
-from ansible.module_utils.common.dict_transformations import (
+from assible.module_utils.assible_release import __version__
+from assible.module_utils.basic import missing_required_lib, env_fallback
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.cloud import CloudRetry
+from assible.module_utils.six import string_types, binary_type, text_type
+from assible.module_utils.common.dict_transformations import (
     camel_dict_to_snake_dict, snake_dict_to_camel_dict,
     _camel_to_snake, _snake_to_camel,
 )
@@ -71,7 +71,7 @@ except ImportError:
     PY3_COMPARISON = False
 
 
-class AnsibleAWSError(Exception):
+class AssibleAWSError(Exception):
     pass
 
 
@@ -138,7 +138,7 @@ def _boto3_conn(conn_type=None, resource=None, region=None, endpoint=None, **par
                          'call')
 
     config = botocore.config.Config(
-        user_agent_extra='Ansible/{0}'.format(__version__),
+        user_agent_extra='Assible/{0}'.format(__version__),
     )
 
     if params.get('config') is not None:
@@ -182,7 +182,7 @@ def boto_exception(err):
 
 def aws_common_argument_spec():
     return dict(
-        debug_botocore_endpoint_logs=dict(fallback=(env_fallback, ['ANSIBLE_DEBUG_BOTOCORE_LOGS']), default=False, type='bool'),
+        debug_botocore_endpoint_logs=dict(fallback=(env_fallback, ['ASSIBLE_DEBUG_BOTOCORE_LOGS']), default=False, type='bool'),
         ec2_url=dict(),
         aws_secret_key=dict(aliases=['ec2_secret_key', 'secret_key'], no_log=True),
         aws_access_key=dict(aliases=['ec2_access_key', 'access_key']),
@@ -355,13 +355,13 @@ def connect_to_aws(aws_module, region, **params):
     try:
         conn = aws_module.connect_to_region(region, **params)
     except(boto.provider.ProfileNotFoundError):
-        raise AnsibleAWSError("Profile given for AWS was not found.  Please fix and retry.")
+        raise AssibleAWSError("Profile given for AWS was not found.  Please fix and retry.")
     if not conn:
         if region not in [aws_module_region.name for aws_module_region in aws_module.regions()]:
-            raise AnsibleAWSError("Region %s does not seem to be available for aws module %s. If the region definitely exists, you may need to upgrade "
+            raise AssibleAWSError("Region %s does not seem to be available for aws module %s. If the region definitely exists, you may need to upgrade "
                                   "boto or extend with endpoints_path" % (region, aws_module.__name__))
         else:
-            raise AnsibleAWSError("Unknown problem connecting to region %s for aws module %s." % (region, aws_module.__name__))
+            raise AssibleAWSError("Unknown problem connecting to region %s for aws module %s." % (region, aws_module.__name__))
     if params.get('profile_name'):
         conn = boto_fix_security_token_in_profile(conn, params['profile_name'])
     return conn
@@ -377,13 +377,13 @@ def ec2_connect(module):
     if region:
         try:
             ec2 = connect_to_aws(boto.ec2, region, **boto_params)
-        except (boto.exception.NoAuthHandlerFound, AnsibleAWSError, boto.provider.ProfileNotFoundError) as e:
+        except (boto.exception.NoAuthHandlerFound, AssibleAWSError, boto.provider.ProfileNotFoundError) as e:
             module.fail_json(msg=str(e))
     # Otherwise, no region so we fallback to the old connection method
     elif ec2_url:
         try:
             ec2 = boto.connect_ec2_endpoint(ec2_url, **boto_params)
-        except (boto.exception.NoAuthHandlerFound, AnsibleAWSError, boto.provider.ProfileNotFoundError) as e:
+        except (boto.exception.NoAuthHandlerFound, AssibleAWSError, boto.provider.ProfileNotFoundError) as e:
             module.fail_json(msg=str(e))
     else:
         module.fail_json(msg="Either region or ec2_url must be specified")
@@ -391,14 +391,14 @@ def ec2_connect(module):
     return ec2
 
 
-def ansible_dict_to_boto3_filter_list(filters_dict):
+def assible_dict_to_boto3_filter_list(filters_dict):
 
-    """ Convert an Ansible dict of filters to list of dicts that boto3 can use
+    """ Convert an Assible dict of filters to list of dicts that boto3 can use
     Args:
         filters_dict (dict): Dict of AWS filters.
     Basic Usage:
         >>> filters = {'some-aws-id': 'i-01234567'}
-        >>> ansible_dict_to_boto3_filter_list(filters)
+        >>> assible_dict_to_boto3_filter_list(filters)
         {
             'some-aws-id': 'i-01234567'
         }
@@ -427,7 +427,7 @@ def ansible_dict_to_boto3_filter_list(filters_dict):
     return filters_list
 
 
-def boto3_tag_list_to_ansible_dict(tags_list, tag_name_key_name=None, tag_value_key_name=None):
+def boto3_tag_list_to_assible_dict(tags_list, tag_name_key_name=None, tag_value_key_name=None):
 
     """ Convert a boto3 list of resource tags to a flat dict of key:value pairs
     Args:
@@ -436,7 +436,7 @@ def boto3_tag_list_to_ansible_dict(tags_list, tag_name_key_name=None, tag_value_
         tag_value_key_name (str): Value to use as the key for all tag values (useful because boto3 doesn't always use "Value")
     Basic Usage:
         >>> tags_list = [{'Key': 'MyTagKey', 'Value': 'MyTagValue'}]
-        >>> boto3_tag_list_to_ansible_dict(tags_list)
+        >>> boto3_tag_list_to_assible_dict(tags_list)
         [
             {
                 'Key': 'MyTagKey',
@@ -463,7 +463,7 @@ def boto3_tag_list_to_ansible_dict(tags_list, tag_name_key_name=None, tag_value_
     raise ValueError("Couldn't find tag key (candidates %s) in tag list %s" % (str(tag_candidates), str(tags_list)))
 
 
-def ansible_dict_to_boto3_tag_list(tags_dict, tag_name_key_name='Key', tag_value_key_name='Value'):
+def assible_dict_to_boto3_tag_list(tags_dict, tag_name_key_name='Key', tag_value_key_name='Value'):
 
     """ Convert a flat dict of key:value pairs representing AWS resource tags to a boto3 list of dicts
     Args:
@@ -472,7 +472,7 @@ def ansible_dict_to_boto3_tag_list(tags_dict, tag_name_key_name='Key', tag_value
         tag_value_key_name (str): Value to use as the key for all tag values (useful because boto3 doesn't always use "Value")
     Basic Usage:
         >>> tags_dict = {'MyTagKey': 'MyTagValue'}
-        >>> ansible_dict_to_boto3_tag_list(tags_dict)
+        >>> assible_dict_to_boto3_tag_list(tags_dict)
         {
             'MyTagKey': 'MyTagValue'
         }
@@ -733,7 +733,7 @@ def map_complex_type(complex_type, type_map):
 
 def compare_aws_tags(current_tags_dict, new_tags_dict, purge_tags=True):
     """
-    Compare two dicts of AWS tags. Dicts are expected to of been created using 'boto3_tag_list_to_ansible_dict' helper function.
+    Compare two dicts of AWS tags. Dicts are expected to of been created using 'boto3_tag_list_to_assible_dict' helper function.
     Two dicts are returned - the first is tags to be set, the second is any tags to remove. Since the AWS APIs differ
     these may not be able to be used out of the box.
 

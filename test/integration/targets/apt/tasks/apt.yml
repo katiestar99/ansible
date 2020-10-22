@@ -1,22 +1,22 @@
 - name: use python-apt
   set_fact:
     python_apt: python-apt
-  when: ansible_python_version is version('3', '<')
+  when: assible_python_version is version('3', '<')
 
 - name: use python3-apt
   set_fact:
     python_apt: python3-apt
-  when: ansible_python_version is version('3', '>=')
+  when: assible_python_version is version('3', '>=')
 
 - name: use Debian mirror
   set_fact:
     distro_mirror: http://ftp.debian.org/debian
-  when: ansible_distribution == 'Debian'
+  when: assible_distribution == 'Debian'
 
 - name: use Ubuntu mirror
   set_fact:
     distro_mirror: http://archive.ubuntu.com/ubuntu
-  when: ansible_distribution == 'Ubuntu'
+  when: assible_distribution == 'Ubuntu'
 
 # UNINSTALL 'python-apt'
 #  The `apt` module has the smarts to auto-install `python-apt`.  To test, we
@@ -309,7 +309,7 @@
 - name: autoclean during install
   apt: pkg=hello state=present autoclean=yes
 
-# https://github.com/ansible/ansible/issues/23155
+# https://github.com/assible/assible/issues/23155
 - name: create a repo file
   copy:
     dest: /etc/apt/sources.list.d/non-existing.list
@@ -332,7 +332,7 @@
     name: /etc/apt/sources.list.d/non-existing.list
     state: absent
 
-# https://github.com/ansible/ansible/issues/28907
+# https://github.com/assible/assible/issues/28907
 - name: Install parent package
   apt:
     name: libcaca-dev
@@ -368,7 +368,7 @@
       - libcaca-dev
       - libslang2-dev
 
-# https://github.com/ansible/ansible/issues/38995
+# https://github.com/assible/assible/issues/38995
 - name: build-dep for a package
   apt:
     name: tree

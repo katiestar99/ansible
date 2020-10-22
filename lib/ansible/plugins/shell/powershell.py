@@ -1,5 +1,5 @@
 # Copyright (c) 2014, Chris Church <chris@ninemoreminutes.com>
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -23,8 +23,8 @@ import pkgutil
 import xml.etree.ElementTree as ET
 import ntpath
 
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.plugins.shell import ShellBase
+from assible.module_utils._text import to_bytes, to_text
+from assible.plugins.shell import ShellBase
 
 
 _common_args = ['PowerShell', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Unrestricted']
@@ -41,7 +41,7 @@ def _parse_clixml(data, stream="Error"):
     # There are some scenarios where the stderr contains a nested CLIXML element like
     # '<# CLIXML\r\n<# CLIXML\r\n<Objs>...</Objs><Objs>...</Objs>'.
     # Parse each individual <Objs> element and add the error strings to our stderr list.
-    # https://github.com/ansible/ansible/issues/69550
+    # https://github.com/assible/assible/issues/69550
     while data:
         end_idx = data.find(b"</Objs>") + 7
         current_element = data[data.find(b"<Objs "):end_idx]
@@ -69,7 +69,7 @@ class ShellModule(ShellBase):
     _SHELL_REDIRECT_ALLNULL = '> $null'
     _SHELL_AND = ';'
 
-    # Used by various parts of Ansible to do Windows specific changes
+    # Used by various parts of Assible to do Windows specific changes
     _IS_WINDOWS = True
 
     # TODO: add binary module support
@@ -183,7 +183,7 @@ class ShellModule(ShellBase):
         return self._encode_script(script)
 
     def build_module_command(self, env_string, shebang, cmd, arg_path=None):
-        bootstrap_wrapper = pkgutil.get_data("ansible.executor.powershell", "bootstrap_wrapper.ps1")
+        bootstrap_wrapper = pkgutil.get_data("assible.executor.powershell", "bootstrap_wrapper.ps1")
 
         # pipelining bypass
         if cmd == '':

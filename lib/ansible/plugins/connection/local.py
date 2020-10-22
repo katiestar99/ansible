@@ -1,5 +1,5 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2015, 2017 Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2015, 2017 Toshio Kuratomi <tkuratomi@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -9,11 +9,11 @@ DOCUMENTATION = '''
     name: local
     short_description: execute on controller
     description:
-        - This connection plugin allows ansible to execute tasks on the Ansible 'controller' instead of on a remote host.
-    author: ansible (@core)
+        - This connection plugin allows assible to execute tasks on the Assible 'controller' instead of on a remote host.
+    author: assible (@core)
     version_added: historical
     notes:
-        - The remote user is ignored, the user with which the ansible CLI was executed is used instead.
+        - The remote user is ignored, the user with which the assible CLI was executed is used instead.
 '''
 
 import os
@@ -22,14 +22,14 @@ import subprocess
 import fcntl
 import getpass
 
-import ansible.constants as C
-from ansible.errors import AnsibleError, AnsibleFileNotFound
-from ansible.module_utils.compat import selectors
-from ansible.module_utils.six import text_type, binary_type
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.plugins.connection import ConnectionBase
-from ansible.utils.display import Display
-from ansible.utils.path import unfrackpath
+import assible.constants as C
+from assible.errors import AssibleError, AssibleFileNotFound
+from assible.module_utils.compat import selectors
+from assible.module_utils.six import text_type, binary_type
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.plugins.connection import ConnectionBase
+from assible.utils.display import Display
+from assible.utils.path import unfrackpath
 
 display = Display()
 
@@ -68,7 +68,7 @@ class Connection(ConnectionBase):
         executable = C.DEFAULT_EXECUTABLE.split()[0] if C.DEFAULT_EXECUTABLE else None
 
         if not os.path.exists(to_bytes(executable, errors='surrogate_or_strict')):
-            raise AnsibleError("failed to find the executable specified %s."
+            raise AssibleError("failed to find the executable specified %s."
                                " Please verify if the executable exists and re-try." % executable)
 
         display.vvv(u"EXEC {0}".format(to_text(cmd)), host=self._play_context.remote_addr)
@@ -103,7 +103,7 @@ class Connection(ConnectionBase):
                     events = selector.select(self._play_context.timeout)
                     if not events:
                         stdout, stderr = p.communicate()
-                        raise AnsibleError('timeout waiting for privilege escalation password prompt:\n' + to_native(become_output))
+                        raise AssibleError('timeout waiting for privilege escalation password prompt:\n' + to_native(become_output))
 
                     for key, event in events:
                         if key.fileobj == p.stdout:
@@ -113,7 +113,7 @@ class Connection(ConnectionBase):
 
                     if not chunk:
                         stdout, stderr = p.communicate()
-                        raise AnsibleError('privilege output closed while waiting for password prompt:\n' + to_native(become_output))
+                        raise AssibleError('privilege output closed while waiting for password prompt:\n' + to_native(become_output))
                     become_output += chunk
             finally:
                 selector.close()
@@ -141,13 +141,13 @@ class Connection(ConnectionBase):
 
         display.vvv(u"PUT {0} TO {1}".format(in_path, out_path), host=self._play_context.remote_addr)
         if not os.path.exists(to_bytes(in_path, errors='surrogate_or_strict')):
-            raise AnsibleFileNotFound("file or module does not exist: {0}".format(to_native(in_path)))
+            raise AssibleFileNotFound("file or module does not exist: {0}".format(to_native(in_path)))
         try:
             shutil.copyfile(to_bytes(in_path, errors='surrogate_or_strict'), to_bytes(out_path, errors='surrogate_or_strict'))
         except shutil.Error:
-            raise AnsibleError("failed to copy: {0} and {1} are the same".format(to_native(in_path), to_native(out_path)))
+            raise AssibleError("failed to copy: {0} and {1} are the same".format(to_native(in_path), to_native(out_path)))
         except IOError as e:
-            raise AnsibleError("failed to transfer file to {0}: {1}".format(to_native(out_path), to_native(e)))
+            raise AssibleError("failed to transfer file to {0}: {1}".format(to_native(out_path), to_native(e)))
 
     def fetch_file(self, in_path, out_path):
         ''' fetch a file from local to local -- for compatibility '''

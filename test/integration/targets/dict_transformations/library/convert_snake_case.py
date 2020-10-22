@@ -29,12 +29,12 @@ options:
 '''
 
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.dict_transformations import camel_dict_to_snake_dict
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.dict_transformations import camel_dict_to_snake_dict
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             data=dict(type='dict', required=True),
             reversible=dict(type='bool', default=False),

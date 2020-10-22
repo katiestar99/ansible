@@ -8,7 +8,7 @@ set -eu
 # Run these using en_US.UTF-8 because list-tasks is a user output function and so it tailors its output to the
 # user's locale.  For unicode tags, this means replacing non-ascii chars with "?"
 
-COMMAND=(ansible-playbook -i ../../inventory test_tags.yml -v --list-tasks)
+COMMAND=(assible-playbook -i ../../inventory test_tags.yml -v --list-tasks)
 
 export LC_ALL=en_US.UTF-8
 
@@ -68,11 +68,11 @@ export LC_ALL=en_US.UTF-8
 [ "$("${COMMAND[@]}" --tags untagged --skip-tags always | grep -F Task_with | xargs)" = \
 "Task_without_tag TAGS: []" ]
 
-# Test ansible_run_tags
-ansible-playbook -i ../../inventory ansible_run_tags.yml -e expect=all "$@"
-ansible-playbook -i ../../inventory ansible_run_tags.yml -e expect=all --tags all "$@"
-ansible-playbook -i ../../inventory ansible_run_tags.yml -e expect=list --tags tag1,tag3 "$@"
-ansible-playbook -i ../../inventory ansible_run_tags.yml -e expect=list --tags tag1 --tags tag3 "$@"
-ansible-playbook -i ../../inventory ansible_run_tags.yml -e expect=untagged --tags untagged "$@"
-ansible-playbook -i ../../inventory ansible_run_tags.yml -e expect=untagged_list --tags untagged,tag3 "$@"
-ansible-playbook -i ../../inventory ansible_run_tags.yml -e expect=tagged --tags tagged "$@"
+# Test assible_run_tags
+assible-playbook -i ../../inventory assible_run_tags.yml -e expect=all "$@"
+assible-playbook -i ../../inventory assible_run_tags.yml -e expect=all --tags all "$@"
+assible-playbook -i ../../inventory assible_run_tags.yml -e expect=list --tags tag1,tag3 "$@"
+assible-playbook -i ../../inventory assible_run_tags.yml -e expect=list --tags tag1 --tags tag3 "$@"
+assible-playbook -i ../../inventory assible_run_tags.yml -e expect=untagged --tags untagged "$@"
+assible-playbook -i ../../inventory assible_run_tags.yml -e expect=untagged_list --tags untagged,tag3 "$@"
+assible-playbook -i ../../inventory assible_run_tags.yml -e expect=tagged --tags tagged "$@"

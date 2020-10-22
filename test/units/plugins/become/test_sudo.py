@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2020 Ansible Project
+# (c) 2020 Assible Project
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -9,9 +9,9 @@ __metaclass__ = type
 
 import re
 
-from ansible import context
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.loader import become_loader
+from assible import context
+from assible.playbook.play_context import PlayContext
+from assible.plugins.loader import become_loader
 
 
 def test_sudo(mocker, parser, reset_cli_args):
@@ -41,5 +41,5 @@ def test_sudo(mocker, parser, reset_cli_args):
     play_context.become_pass = 'testpass'
     cmd = play_context.make_become_cmd(cmd=default_cmd, executable=default_exe)
     assert (re.match("""%s %s -p "%s" -u %s %s -c 'echo %s; %s'""" % (sudo_exe, sudo_flags.replace('-n', ''),
-                                                                      r"\[sudo via ansible, key=.+?\] password:", play_context.become_user,
+                                                                      r"\[sudo via assible, key=.+?\] password:", play_context.become_user,
                                                                       default_exe, success, default_cmd), cmd) is not None)

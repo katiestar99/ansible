@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright 2017, Ansible Project
+# Copyright 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -8,15 +8,15 @@ __metaclass__ = type
 import pytest
 import re
 
-from ansible.errors import AnsibleParserError
-from ansible.parsing.mod_args import ModuleArgsParser
-from ansible.utils.sentinel import Sentinel
+from assible.errors import AssibleParserError
+from assible.parsing.mod_args import ModuleArgsParser
+from assible.utils.sentinel import Sentinel
 
 
 class TestModArgsDwim:
 
     # TODO: add tests that construct ModuleArgsParser with a task reference
-    # TODO: verify the AnsibleError raised on failure knows the task
+    # TODO: verify the AssibleError raised on failure knows the task
     #       and the task knows the line numbers
 
     INVALID_MULTIPLE_ACTIONS = (
@@ -113,7 +113,7 @@ class TestModArgsDwim:
     @pytest.mark.parametrize("args_dict, msg", INVALID_MULTIPLE_ACTIONS)
     def test_multiple_actions(self, args_dict, msg):
         m = ModuleArgsParser(args_dict)
-        with pytest.raises(AnsibleParserError) as err:
+        with pytest.raises(AssibleParserError) as err:
             m.parse()
 
         assert err.value.args[0] == msg
@@ -121,7 +121,7 @@ class TestModArgsDwim:
     def test_multiple_actions(self):
         args_dict = {'ping': 'data=hi', 'shell': 'echo hi'}
         m = ModuleArgsParser(args_dict)
-        with pytest.raises(AnsibleParserError) as err:
+        with pytest.raises(AssibleParserError) as err:
             m.parse()
 
         assert err.value.args[0].startswith("conflicting action statements: ")
@@ -131,7 +131,7 @@ class TestModArgsDwim:
     def test_bogus_action(self):
         args_dict = {'bogusaction': {}}
         m = ModuleArgsParser(args_dict)
-        with pytest.raises(AnsibleParserError) as err:
+        with pytest.raises(AssibleParserError) as err:
             m.parse()
 
         assert err.value.args[0].startswith("couldn't resolve module/action 'bogusaction'")

@@ -4,7 +4,7 @@
 Platform Options
 ****************
 
-Some Ansible Network platforms support multiple connection types, privilege escalation (``enable`` mode), or other options. The pages in this section offer standardized guides to understanding available options on each network platform. We welcome contributions from community-maintained platforms to this section.
+Some Assible Network platforms support multiple connection types, privilege escalation (``enable`` mode), or other options. The pages in this section offer standardized guides to understanding available options on each network platform. We welcome contributions from community-maintained platforms to this section.
 
 .. toctree::
    :maxdepth: 2
@@ -55,9 +55,9 @@ Settings by Platform
     :name: network-platform-table
 
     ===============================  ================================  ===========  =======  =======  ===========
-    ..                                                                 ``ansible_connection:`` settings available
+    ..                                                                 ``assible_connection:`` settings available
     -----------------------------------------------------------------  ------------------------------------------
-    Network OS                       ``ansible_network_os:``           network_cli  netconf  httpapi  local
+    Network OS                       ``assible_network_os:``           network_cli  netconf  httpapi  local
     ===============================  ================================  ===========  =======  =======  ===========
     `Arista EOS`_ `[†]`_             ``arista.eos.eos``                ✓                     ✓        ✓
     `Ciena SAOS6`_                   ``ciena.saos6.saos6``             ✓                              ✓
@@ -89,33 +89,33 @@ Settings by Platform
     OS that supports Netconf `[†]`_  ``<network-os>``                               ✓                 ✓
     ===============================  ================================  ===========  =======  =======  ===========
 
-.. _Arista EOS: https://galaxy.ansible.com/arista/eos
-.. _Ciena SAOS6: https://galaxy.ansible.com/ciena/saos6
-.. _Cisco ASA: https://galaxy.ansible.com/cisco/asa
-.. _Cisco IOS: https://galaxy.ansible.com/cisco/ios
-.. _Cisco IOS XR: https://galaxy.ansible.com/cisco/iosxr
-.. _Cisco NX-OS: https://galaxy.ansible.com/cisco/nxos
-.. _Cloudengine OS: https://galaxy.ansible.com/community/network
-.. _Dell OS6: https://github.com/ansible-collections/dellemc.os6
-.. _Dell OS9: https://github.com/ansible-collections/dellemc.os9
-.. _Dell OS10: https://galaxy.ansible.com/dellemc/os10
-.. _Ericsson ECCLI: https://galaxy.ansible.com/community/network
-.. _Extreme EXOS: https://galaxy.ansible.com/community/network
-.. _Extreme IronWare: https://galaxy.ansible.com/community/network
-.. _Extreme NOS: https://galaxy.ansible.com/community/network
-.. _Extreme SLX-OS: https://galaxy.ansible.com/community/network
-.. _Extreme VOSS: https://galaxy.ansible.com/community/network
-.. _F5 BIG-IP: https://galaxy.ansible.com/f5networks/f5_modules
-.. _F5 BIG-IQ: https://galaxy.ansible.com/f5networks/f5_modules
-.. _Junos OS: https://galaxy.ansible.com/junipernetworks/junos
-.. _Lenovo CNOS: https://galaxy.ansible.com/community/network
-.. _Lenovo ENOS: https://galaxy.ansible.com/community/network
-.. _Meraki: https://galaxy.ansible.com/cisco/meraki
-.. _MikroTik RouterOS: https://galaxy.ansible.com/community/network
-.. _Nokia SR OS: https://galaxy.ansible.com/community/network
-.. _Pluribus Netvisor: https://galaxy.ansible.com/community/network
-.. _Ruckus ICX: https://galaxy.ansible.com/community/network
-.. _VyOS: https://galaxy.ansible.com/vyos/vyos
+.. _Arista EOS: https://galaxy.assible.com/arista/eos
+.. _Ciena SAOS6: https://galaxy.assible.com/ciena/saos6
+.. _Cisco ASA: https://galaxy.assible.com/cisco/asa
+.. _Cisco IOS: https://galaxy.assible.com/cisco/ios
+.. _Cisco IOS XR: https://galaxy.assible.com/cisco/iosxr
+.. _Cisco NX-OS: https://galaxy.assible.com/cisco/nxos
+.. _Cloudengine OS: https://galaxy.assible.com/community/network
+.. _Dell OS6: https://github.com/assible-collections/dellemc.os6
+.. _Dell OS9: https://github.com/assible-collections/dellemc.os9
+.. _Dell OS10: https://galaxy.assible.com/dellemc/os10
+.. _Ericsson ECCLI: https://galaxy.assible.com/community/network
+.. _Extreme EXOS: https://galaxy.assible.com/community/network
+.. _Extreme IronWare: https://galaxy.assible.com/community/network
+.. _Extreme NOS: https://galaxy.assible.com/community/network
+.. _Extreme SLX-OS: https://galaxy.assible.com/community/network
+.. _Extreme VOSS: https://galaxy.assible.com/community/network
+.. _F5 BIG-IP: https://galaxy.assible.com/f5networks/f5_modules
+.. _F5 BIG-IQ: https://galaxy.assible.com/f5networks/f5_modules
+.. _Junos OS: https://galaxy.assible.com/junipernetworks/junos
+.. _Lenovo CNOS: https://galaxy.assible.com/community/network
+.. _Lenovo ENOS: https://galaxy.assible.com/community/network
+.. _Meraki: https://galaxy.assible.com/cisco/meraki
+.. _MikroTik RouterOS: https://galaxy.assible.com/community/network
+.. _Nokia SR OS: https://galaxy.assible.com/community/network
+.. _Pluribus Netvisor: https://galaxy.assible.com/community/network
+.. _Ruckus ICX: https://galaxy.assible.com/community/network
+.. _VyOS: https://galaxy.assible.com/vyos/vyos
 .. _`[†]`:
 
-**[†]** Maintained by Ansible Network Team
+**[†]** Maintained by Assible Network Team

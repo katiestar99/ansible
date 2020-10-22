@@ -1,6 +1,6 @@
 # UNICODE
 
-# https://github.com/ansible/ansible/issues/65297
+# https://github.com/assible/assible/issues/65297
 - name: get UNICODE_VAR environment var value
   shell: "echo $UNICODE_VAR"
   register: unicode_var_value

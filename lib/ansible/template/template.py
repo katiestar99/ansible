@@ -1,19 +1,19 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,12 +21,12 @@ __metaclass__ = type
 
 import jinja2
 
-__all__ = ['AnsibleJ2Template']
+__all__ = ['AssibleJ2Template']
 
 
-class AnsibleJ2Template(jinja2.environment.Template):
+class AssibleJ2Template(jinja2.environment.Template):
     '''
-    A helper class, which prevents Jinja2 from running AnsibleJ2Vars through dict().
+    A helper class, which prevents Jinja2 from running AssibleJ2Vars through dict().
     Without this, {% include %} and similar will create new contexts unlike the special
     one created in Templar.template. This ensures they are all alike, except for
     potential locals.

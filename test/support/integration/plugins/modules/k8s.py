@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -198,13 +198,13 @@ EXAMPLES = '''
     src: /testing/deployment.yml
 
 - name: >-
-    Read definition file from the Ansible controller file system.
-    If the definition file has been encrypted with Ansible Vault it will automatically be decrypted.
+    Read definition file from the Assible controller file system.
+    If the definition file has been encrypted with Assible Vault it will automatically be decrypted.
   k8s:
     state: present
     definition: "{{ lookup('file', '/testing/deployment.yml') | from_yaml }}"
 
-- name: Read definition file from the Ansible controller file system after Jinja templating
+- name: Read definition file from the Assible controller file system after Jinja templating
   k8s:
     state: present
     definition: "{{ lookup('template', '/testing/deployment.yml') | from_yaml }}"
@@ -263,7 +263,7 @@ result:
        sample: 48
 '''
 
-from ansible.module_utils.k8s.raw import KubernetesRawModule
+from assible.module_utils.k8s.raw import KubernetesRawModule
 
 
 def main():

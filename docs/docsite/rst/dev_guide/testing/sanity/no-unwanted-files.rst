@@ -3,9 +3,9 @@ no-unwanted-files
 
 Specific file types are allowed in certain directories:
 
-- ``lib`` - All content must reside in the ``lib/ansible`` directory.
+- ``lib`` - All content must reside in the ``lib/assible`` directory.
 
-- ``lib/ansible`` - Only source code with one of the following extensions is allowed:
+- ``lib/assible`` - Only source code with one of the following extensions is allowed:
 
   - ``*.cs`` - C#
   - ``*.ps1`` - PowerShell

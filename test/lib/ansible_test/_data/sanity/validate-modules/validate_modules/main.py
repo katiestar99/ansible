@@ -38,28 +38,28 @@ from fnmatch import fnmatch
 
 import yaml
 
-from ansible import __version__ as ansible_version
-from ansible.executor.module_common import REPLACER_WINDOWS
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.module_utils._text import to_native
-from ansible.plugins.loader import fragment_loader
-from ansible.utils.collection_loader._collection_finder import _AnsibleCollectionFinder
-from ansible.utils.plugin_docs import BLACKLIST, add_collection_to_versions_and_dates, add_fragments, get_docstring
-from ansible.utils.version import SemanticVersion
+from assible import __version__ as assible_version
+from assible.executor.module_common import REPLACER_WINDOWS
+from assible.module_utils.common._collections_compat import Mapping
+from assible.module_utils._text import to_native
+from assible.plugins.loader import fragment_loader
+from assible.utils.collection_loader._collection_finder import _AssibleCollectionFinder
+from assible.utils.plugin_docs import BLACKLIST, add_collection_to_versions_and_dates, add_fragments, get_docstring
+from assible.utils.version import SemanticVersion
 
-from .module_args import AnsibleModuleImportError, AnsibleModuleNotInitialized, get_argument_spec
+from .module_args import AssibleModuleImportError, AssibleModuleNotInitialized, get_argument_spec
 
-from .schema import ansible_module_kwargs_schema, doc_schema, return_schema
+from .schema import assible_module_kwargs_schema, doc_schema, return_schema
 
-from .utils import CaptureStd, NoArgsAnsibleModule, compare_unordered_lists, is_empty, parse_yaml, parse_isodate
+from .utils import CaptureStd, NoArgsAssibleModule, compare_unordered_lists, is_empty, parse_yaml, parse_isodate
 from voluptuous.humanize import humanize_error
 
-from ansible.module_utils.six import PY3, with_metaclass, string_types
+from assible.module_utils.six import PY3, with_metaclass, string_types
 
 if PY3:
     # Because there is no ast.TryExcept in Python 3 ast module
     TRY_EXCEPT = ast.Try
-    # REPLACER_WINDOWS from ansible.executor.module_common is byte
+    # REPLACER_WINDOWS from assible.executor.module_common is byte
     # string but we need unicode for Python 3
     REPLACER_WINDOWS = REPLACER_WINDOWS.decode('utf-8')
 else:
@@ -75,7 +75,7 @@ BLACKLIST_IMPORTS = {
         'error': {
             'code': 'use-module-utils-urls',
             'msg': ('requests import found, should use '
-                    'ansible.module_utils.urls instead')
+                    'assible.module_utils.urls instead')
         }
     },
     r'boto(?:\.|$)': {
@@ -90,7 +90,7 @@ SUBPROCESS_REGEX = re.compile(r'subprocess\.Po.*')
 OS_CALL_REGEX = re.compile(r'os\.call.*')
 
 
-LOOSE_ANSIBLE_VERSION = LooseVersion('.'.join(ansible_version.split('.')[:3]))
+LOOSE_ASSIBLE_VERSION = LooseVersion('.'.join(assible_version.split('.')[:3]))
 
 
 def compare_dates(d1, d2):
@@ -268,7 +268,7 @@ class ModuleValidator(Validator):
         self._StrictVersion = StrictVersion
 
         self.collection = collection
-        self.collection_name = 'ansible.builtin'
+        self.collection_name = 'assible.builtin'
         if self.collection:
             self._Version = SemanticVersion
             self._StrictVersion = SemanticVersion
@@ -301,7 +301,7 @@ class ModuleValidator(Validator):
     def _create_version(self, v, collection_name=None):
         if not v:
             raise ValueError('Empty string is not a valid version')
-        if collection_name == 'ansible.builtin':
+        if collection_name == 'assible.builtin':
             return LooseVersion(v)
         if collection_name is not None:
             return SemanticVersion(v)
@@ -310,7 +310,7 @@ class ModuleValidator(Validator):
     def _create_strict_version(self, v, collection_name=None):
         if not v:
             raise ValueError('Empty string is not a valid version')
-        if collection_name == 'ansible.builtin':
+        if collection_name == 'assible.builtin':
             return StrictVersion(v)
         if collection_name is not None:
             return SemanticVersion(v)
@@ -370,7 +370,7 @@ class ModuleValidator(Validator):
             return False
 
     def _get_base_branch_module_path(self):
-        """List all paths within lib/ansible/modules to try and match a moved module"""
+        """List all paths within lib/assible/modules to try and match a moved module"""
         return self.git_cache.base_module_paths.get(self.object_name)
 
     def _has_alias(self):
@@ -464,7 +464,7 @@ class ModuleValidator(Validator):
                     path=self.object_path,
                     code='use-short-gplv3-license',
                     msg='Found old style GPLv3 license header: '
-                        'https://docs.ansible.com/ansible/devel/dev_guide/developing_modules_documenting.html#copyright'
+                        'https://docs.assible.com/assible/devel/dev_guide/developing_modules_documenting.html#copyright'
                 )
 
     def _check_for_subprocess(self):
@@ -537,7 +537,7 @@ class ModuleValidator(Validator):
                     pass
                 names.extend([n.name for n in child.names])
 
-                if [n for n in names if n.startswith('ansible.module_utils')]:
+                if [n for n in names if n.startswith('assible.module_utils')]:
                     linenos.append(child.lineno)
 
                     for name in child.names:
@@ -572,7 +572,7 @@ class ModuleValidator(Validator):
             self.reporter.warning(
                 path=self.object_path,
                 code='missing-module-utils-basic-import',
-                msg='Did not find "ansible.module_utils.basic" import'
+                msg='Did not find "assible.module_utils.basic" import'
             )
 
         return linenos
@@ -763,8 +763,8 @@ class ModuleValidator(Validator):
         # get module list for each
         # check "shape" of each module name
 
-        module_requires = r'(?im)^#\s*requires\s+\-module(?:s?)\s*(Ansible\.ModuleUtils\..+)'
-        csharp_requires = r'(?im)^#\s*ansiblerequires\s+\-csharputil\s*(Ansible\..+)'
+        module_requires = r'(?im)^#\s*requires\s+\-module(?:s?)\s*(Assible\.ModuleUtils\..+)'
+        csharp_requires = r'(?im)^#\s*assiblerequires\s+\-csharputil\s*(Assible\..+)'
         found_requires = False
 
         for req_stmt in re.finditer(module_requires, self.text):
@@ -775,7 +775,7 @@ class ModuleValidator(Validator):
                 self.reporter.error(
                     path=self.object_path,
                     code='multiple-utils-per-requires',
-                    msg='Ansible.ModuleUtils requirements do not support multiple modules per statement: "%s"' % req_stmt.group(0)
+                    msg='Assible.ModuleUtils requirements do not support multiple modules per statement: "%s"' % req_stmt.group(0)
                 )
                 continue
 
@@ -796,7 +796,7 @@ class ModuleValidator(Validator):
                 self.reporter.error(
                     path=self.object_path,
                     code='multiple-csharp-utils-per-requires',
-                    msg='Ansible C# util requirements do not support multiple utils per statement: "%s"' % req_stmt.group(0)
+                    msg='Assible C# util requirements do not support multiple utils per statement: "%s"' % req_stmt.group(0)
                 )
                 continue
 
@@ -806,7 +806,7 @@ class ModuleValidator(Validator):
                 self.reporter.error(
                     path=self.object_path,
                     code='illegal-extension-cs',
-                    msg='Module #AnsibleRequires -CSharpUtil should not end in .cs: "%s"' % module_name
+                    msg='Module #AssibleRequires -CSharpUtil should not end in .cs: "%s"' % module_name
                 )
 
         # also accept the legacy #POWERSHELL_COMMON replacer signal
@@ -814,7 +814,7 @@ class ModuleValidator(Validator):
             self.reporter.error(
                 path=self.object_path,
                 code='missing-module-utils-import-csharp-requirements',
-                msg='No Ansible.ModuleUtils or C# Ansible util requirements/imports found'
+                msg='No Assible.ModuleUtils or C# Assible util requirements/imports found'
             )
 
     def _find_ps_docs_py_file(self):
@@ -887,7 +887,7 @@ class ModuleValidator(Validator):
         for error in errors:
             path = [str(p) for p in error.path]
 
-            local_error_code = getattr(error, 'ansible_error_code', error_code)
+            local_error_code = getattr(error, 'assible_error_code', error_code)
 
             if isinstance(error.data, dict):
                 error_message = humanize_error(error.data, error)
@@ -1151,7 +1151,7 @@ class ModuleValidator(Validator):
                             routing_version, documentation_version)
                     )
 
-            # In the future we should error if ANSIBLE_METADATA exists in a collection
+            # In the future we should error if ASSIBLE_METADATA exists in a collection
 
         return doc_info, doc
 
@@ -1184,28 +1184,28 @@ class ModuleValidator(Validator):
         if not self._is_new_module():
             return
 
-        should_be = '.'.join(ansible_version.split('.')[:2])
-        strict_ansible_version = self._create_strict_version(should_be, collection_name='ansible.builtin')
+        should_be = '.'.join(assible_version.split('.')[:2])
+        strict_assible_version = self._create_strict_version(should_be, collection_name='assible.builtin')
 
-        if (version_added < strict_ansible_version or
-                strict_ansible_version < version_added):
+        if (version_added < strict_assible_version or
+                strict_assible_version < version_added):
             self.reporter.error(
                 path=self.object_path,
                 code='module-incorrect-version-added',
                 msg='version_added should be %r. Currently %r' % (should_be, version_added_raw)
             )
 
-    def _validate_ansible_module_call(self, docs):
+    def _validate_assible_module_call(self, docs):
         try:
             spec, args, kwargs = get_argument_spec(self.path, self.collection)
-        except AnsibleModuleNotInitialized:
+        except AssibleModuleNotInitialized:
             self.reporter.error(
                 path=self.object_path,
-                code='ansible-module-not-initialized',
-                msg="Execution of the module did not result in initialization of AnsibleModule",
+                code='assible-module-not-initialized',
+                msg="Execution of the module did not result in initialization of AssibleModule",
             )
             return
-        except AnsibleModuleImportError as e:
+        except AssibleModuleImportError as e:
             self.reporter.error(
                 path=self.object_path,
                 code='import-error',
@@ -1217,8 +1217,8 @@ class ModuleValidator(Validator):
             )
             return
 
-        self._validate_docs_schema(kwargs, ansible_module_kwargs_schema(for_collection=bool(self.collection)),
-                                   'AnsibleModule', 'invalid-ansiblemodule-schema')
+        self._validate_docs_schema(kwargs, assible_module_kwargs_schema(for_collection=bool(self.collection)),
+                                   'AssibleModule', 'invalid-assiblemodule-schema')
 
         self._validate_argument_spec(docs, spec, kwargs)
 
@@ -1436,7 +1436,7 @@ class ModuleValidator(Validator):
             return
 
         # Use this to access type checkers later
-        module = NoArgsAnsibleModule({})
+        module = NoArgsAssibleModule({})
 
         self._validate_list_of_module_args('mutually_exclusive', last_context_spec.get('mutually_exclusive'), spec, context)
         self._validate_list_of_module_args('required_together', last_context_spec.get('required_together'), spec, context)
@@ -1457,7 +1457,7 @@ class ModuleValidator(Validator):
                 if context:
                     msg += " found in %s" % " -> ".join(context)
                 msg += "must not be one of %s as it is used " \
-                       "internally by Ansible Core Engine" % (",".join(restricted_argument_names))
+                       "internally by Assible Core Engine" % (",".join(restricted_argument_names))
                 self.reporter.error(
                     path=self.object_path,
                     code='invalid-argument-name',
@@ -1471,7 +1471,7 @@ class ModuleValidator(Validator):
                         if context:
                             msg += " found in %s" % " -> ".join(context)
                         msg += "must not be one of %s as it is used " \
-                               "internally by Ansible Core Engine" % (",".join(restricted_argument_names))
+                               "internally by Assible Core Engine" % (",".join(restricted_argument_names))
                         self.reporter.error(
                             path=self.object_path,
                             code='invalid-argument-name',
@@ -1539,9 +1539,9 @@ class ModuleValidator(Validator):
                 code_prefix = 'collection'
                 has_version = True
             elif not self.collection:
-                compare_version = LOOSE_ANSIBLE_VERSION
-                version_of_what = "Ansible (%s)" % ansible_version
-                code_prefix = 'ansible'
+                compare_version = LOOSE_ASSIBLE_VERSION
+                version_of_what = "Assible (%s)" % assible_version
+                code_prefix = 'assible'
                 has_version = True
 
             removed_in_version = data.get('removed_in_version', None)
@@ -1658,7 +1658,7 @@ class ModuleValidator(Validator):
             else:
                 deprecated_args_from_argspec.add(arg)
                 deprecated_args_from_argspec.update(aliases)
-            if arg == 'provider' and self.object_path.startswith('lib/ansible/modules/network/'):
+            if arg == 'provider' and self.object_path.startswith('lib/assible/modules/network/'):
                 if data.get('options') is not None and not isinstance(data.get('options'), Mapping):
                     self.reporter.error(
                         path=self.object_path,
@@ -2035,8 +2035,8 @@ class ModuleValidator(Validator):
 
         options = doc.get('options', {}) or {}
 
-        should_be = '.'.join(ansible_version.split('.')[:2])
-        strict_ansible_version = self._create_strict_version(should_be, collection_name='ansible.builtin')
+        should_be = '.'.join(assible_version.split('.')[:2])
+        strict_assible_version = self._create_strict_version(should_be, collection_name='assible.builtin')
 
         for option, details in options.items():
             try:
@@ -2083,9 +2083,9 @@ class ModuleValidator(Validator):
 
             if collection_name != self.collection_name:
                 continue
-            if (strict_ansible_version != mod_version_added and
-                    (version_added < strict_ansible_version or
-                     strict_ansible_version < version_added)):
+            if (strict_assible_version != mod_version_added and
+                    (version_added < strict_assible_version or
+                     strict_assible_version < version_added)):
                 self.reporter.error(
                     path=self.object_path,
                     code='option-incorrect-version-added',
@@ -2119,7 +2119,7 @@ class ModuleValidator(Validator):
             self.reporter.error(
                 path=self.object_path,
                 code='invalid-extension',
-                msg=('Official Ansible modules must have a .py '
+                msg=('Official Assible modules must have a .py '
                      'extension for python modules or a .ps1 '
                      'for powershell modules')
             )
@@ -2169,12 +2169,12 @@ class ModuleValidator(Validator):
 
                     if removed_in:
                         if not self.collection:
-                            strict_ansible_version = self._create_strict_version(
-                                '.'.join(ansible_version.split('.')[:2]), self.collection_name)
-                            end_of_deprecation_should_be_removed_only = strict_ansible_version >= removed_in
+                            strict_assible_version = self._create_strict_version(
+                                '.'.join(assible_version.split('.')[:2]), self.collection_name)
+                            end_of_deprecation_should_be_removed_only = strict_assible_version >= removed_in
                         elif self.collection_version:
-                            strict_ansible_version = self.collection_version
-                            end_of_deprecation_should_be_removed_only = strict_ansible_version >= removed_in
+                            strict_assible_version = self.collection_version
+                            end_of_deprecation_should_be_removed_only = strict_assible_version >= removed_in
 
                 # handle deprecation by date
                 if 'removed_at_date' in docs['deprecated']:
@@ -2188,7 +2188,7 @@ class ModuleValidator(Validator):
                         pass
 
         if self._python_module() and not self._just_docs() and not end_of_deprecation_should_be_removed_only:
-            self._validate_ansible_module_call(docs)
+            self._validate_assible_module_call(docs)
             self._check_for_sys_exit()
             self._find_blacklist_imports()
             main = self._find_main_call()
@@ -2206,12 +2206,12 @@ class ModuleValidator(Validator):
             self._validate_ps_replacers()
             docs_path = self._find_ps_docs_py_file()
 
-            # We can only validate PowerShell arg spec if it is using the new Ansible.Basic.AnsibleModule util
-            pattern = r'(?im)^#\s*ansiblerequires\s+\-csharputil\s*Ansible\.Basic'
+            # We can only validate PowerShell arg spec if it is using the new Assible.Basic.AssibleModule util
+            pattern = r'(?im)^#\s*assiblerequires\s+\-csharputil\s*Assible\.Basic'
             if re.search(pattern, self.text) and self.object_name not in self.PS_ARG_VALIDATE_BLACKLIST:
                 with ModuleValidator(docs_path, base_branch=self.base_branch, git_cache=self.git_cache) as docs_mv:
                     docs = docs_mv._validate_docs()[1]
-                    self._validate_ansible_module_call(docs)
+                    self._validate_assible_module_call(docs)
 
         self._check_gpl3_header()
         if not self._just_docs() and not end_of_deprecation_should_be_removed_only:
@@ -2224,7 +2224,7 @@ class ModuleValidator(Validator):
             main = self._find_main_call('removed_module')
             # FIXME: Ensure that the version in the call to removed_module is less than +2.
             # Otherwise it's time to remove the file (This may need to be done in another test to
-            # avoid breaking whenever the Ansible version bumps)
+            # avoid breaking whenever the Assible version bumps)
 
 
 class PythonPackageValidator(Validator):
@@ -2255,13 +2255,13 @@ class PythonPackageValidator(Validator):
             self.reporter.error(
                 path=self.object_path,
                 code='subdirectory-missing-init',
-                msg='Ansible module subdirectories must contain an __init__.py'
+                msg='Assible module subdirectories must contain an __init__.py'
             )
 
 
 def setup_collection_loader():
-    collections_paths = os.environ.get('ANSIBLE_COLLECTIONS_PATH', '').split(os.pathsep)
-    _AnsibleCollectionFinder(collections_paths)
+    collections_paths = os.environ.get('ASSIBLE_COLLECTIONS_PATH', '').split(os.pathsep)
+    _AssibleCollectionFinder(collections_paths)
 
 
 def re_compile(value):
@@ -2299,7 +2299,7 @@ def run():
     parser.add_argument('--collection',
                         help='Specifies the path to the collection, when '
                              'validating files within a collection. Ensure '
-                             'that ANSIBLE_COLLECTIONS_PATH is set so the '
+                             'that ASSIBLE_COLLECTIONS_PATH is set so the '
                              'contents of the collection can be located')
     parser.add_argument('--collection-version',
                         help='The collection\'s version number used to check '
@@ -2380,12 +2380,12 @@ class GitCache:
         self.base_branch = base_branch
 
         if self.base_branch:
-            self.base_tree = self._git(['ls-tree', '-r', '--name-only', self.base_branch, 'lib/ansible/modules/'])
+            self.base_tree = self._git(['ls-tree', '-r', '--name-only', self.base_branch, 'lib/assible/modules/'])
         else:
             self.base_tree = []
 
         try:
-            self.head_tree = self._git(['ls-tree', '-r', '--name-only', 'HEAD', 'lib/ansible/modules/'])
+            self.head_tree = self._git(['ls-tree', '-r', '--name-only', 'HEAD', 'lib/assible/modules/'])
         except GitError as ex:
             if ex.status == 128:
                 # fallback when there is no .git directory
@@ -2416,7 +2416,7 @@ class GitCache:
     def _get_module_files():
         module_files = []
 
-        for (dir_path, dir_names, file_names) in os.walk('lib/ansible/modules/'):
+        for (dir_path, dir_names, file_names) in os.walk('lib/assible/modules/'):
             for file_name in file_names:
                 module_files.append(os.path.join(dir_path, file_name))
 

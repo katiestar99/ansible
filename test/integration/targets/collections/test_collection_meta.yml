@@ -4,7 +4,7 @@
   - testns.testcoll
   vars:
     # redirect connection
-    ansible_connection: testns.testcoll.redirected_local
+    assible_connection: testns.testcoll.redirected_local
   tasks:
   - assert:
       that: ('data' | testns.testcoll.testfilter) == 'data_via_testfilter_from_userdir'

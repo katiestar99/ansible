@@ -2,15 +2,15 @@
 .. _porting_2.4_guide:
 
 *************************
-Ansible 2.4 Porting Guide
+Assible 2.4 Porting Guide
 *************************
 
-This section discusses the behavioral changes between Ansible 2.3 and Ansible 2.4.
+This section discusses the behavioral changes between Assible 2.3 and Assible 2.4.
 
-It is intended to assist in updating your playbooks, plugins and other parts of your Ansible infrastructure so they will work with this version of Ansible.
+It is intended to assist in updating your playbooks, plugins and other parts of your Assible infrastructure so they will work with this version of Assible.
 
 
-We suggest you read this page along with `Ansible Changelog for 2.4 <https://github.com/ansible/ansible/blob/stable-2.4/CHANGELOG.md>`_ to understand what updates you may need to make.
+We suggest you read this page along with `Assible Changelog for 2.4 <https://github.com/assible/assible/blob/stable-2.4/CHANGELOG.md>`_ to understand what updates you may need to make.
 
 This document is part of a collection on porting. The complete list of porting guides can be found at :ref:`porting guides <porting_guides>`.
 
@@ -19,7 +19,7 @@ This document is part of a collection on porting. The complete list of porting g
 Python version
 ==============
 
-Ansible will not support Python 2.4 or 2.5 on the target hosts anymore. Going forward, Python 2.6+ will be required on targets, as already is the case on the controller.
+Assible will not support Python 2.4 or 2.5 on the target hosts anymore. Going forward, Python 2.6+ will be required on targets, as already is the case on the controller.
 
 
 Inventory
@@ -41,10 +41,10 @@ A bug was fixed with the inventory path/directory, which was defaulting to the c
 Initial playbook relative group_vars and host_vars
 --------------------------------------------------
 
-In Ansible versions prior to 2.4, the inventory system would maintain the context of the initial playbook that was executed. This allowed successively included playbooks from other directories to inherit group_vars and host_vars placed relative to the top level playbook file.
+In Assible versions prior to 2.4, the inventory system would maintain the context of the initial playbook that was executed. This allowed successively included playbooks from other directories to inherit group_vars and host_vars placed relative to the top level playbook file.
 
 Due to some behavioral inconsistencies, this functionality will not be included in the new
-inventory system starting with Ansible version 2.4.
+inventory system starting with Assible version 2.4.
 
 Similar functionality can still be achieved by using vars_files, include_vars, or group_vars and host_vars placed relative to the inventory file.
 
@@ -55,13 +55,13 @@ Specifying Inventory sources
 -----------------------------
 
 Use of ``--inventory-file`` on the command line is now deprecated. Use ``--inventory`` or ``-i``.
-The associated ini configuration key, ``hostfile``, and environment variable, ``ANSIBLE_HOSTS``,
-are also deprecated.  Replace them with the configuration key ``inventory`` and environment variable :envvar:`ANSIBLE_INVENTORY`.
+The associated ini configuration key, ``hostfile``, and environment variable, ``ASSIBLE_HOSTS``,
+are also deprecated.  Replace them with the configuration key ``inventory`` and environment variable :envvar:`ASSIBLE_INVENTORY`.
 
 Use of multiple tags
 --------------------
 
-Specifying ``--tags`` (or ``--skip-tags``) multiple times on the command line currently leads to the last one overriding all the previous ones. This behavior is deprecated. In the future, if you specify --tags multiple times the tags will be merged together. From now on, using ``--tags`` multiple times on one command line will emit a deprecation warning. Setting the ``merge_multiple_cli_tags`` option to True in the ``ansible.cfg`` file will enable the new behavior.
+Specifying ``--tags`` (or ``--skip-tags``) multiple times on the command line currently leads to the last one overriding all the previous ones. This behavior is deprecated. In the future, if you specify --tags multiple times the tags will be merged together. From now on, using ``--tags`` multiple times on one command line will emit a deprecation warning. Setting the ``merge_multiple_cli_tags`` option to True in the ``assible.cfg`` file will enable the new behavior.
 
 In 2.4, the default has change to merge the tags. You can enable the old overwriting behavior via the config option.
 
@@ -78,7 +78,7 @@ Modules
 
 Major changes in popular modules are detailed here
 
-* The :ref:`win_shell <win_shell_module>` and :ref:`win_command <win_command_module>` modules now properly preserve quoted arguments in the command-line. Tasks that attempted to work around the issue by adding extra quotes/escaping may need to be reworked to remove the superfluous escaping. See `Issue 23019 <https://github.com/ansible/ansible/issues/23019>`_ for additional detail.
+* The :ref:`win_shell <win_shell_module>` and :ref:`win_command <win_command_module>` modules now properly preserve quoted arguments in the command-line. Tasks that attempted to work around the issue by adding extra quotes/escaping may need to be reworked to remove the superfluous escaping. See `Issue 23019 <https://github.com/assible/assible/issues/23019>`_ for additional detail.
 
 Modules removed
 ---------------
@@ -90,7 +90,7 @@ The following modules no longer exist:
 Deprecation notices
 -------------------
 
-The following modules will be removed in Ansible 2.8. Please update your playbooks accordingly.
+The following modules will be removed in Assible 2.8. Please update your playbooks accordingly.
 
 * azure, use :ref:`azure_rm_virtualmachine <azure_rm_virtualmachine_module>`, which uses the new Resource Manager SDK.
 * win_msi, use :ref:`win_package <win_package_module>` instead
@@ -98,9 +98,9 @@ The following modules will be removed in Ansible 2.8. Please update your playboo
 Noteworthy module changes
 -------------------------
 
-* The :ref:`win_get_url <win_get_url_module>`  module has the dictionary ``win_get_url`` in its results deprecated, its content is now also available directly in the resulting output, like other modules. This dictionary will be removed in Ansible 2.8.
+* The :ref:`win_get_url <win_get_url_module>`  module has the dictionary ``win_get_url`` in its results deprecated, its content is now also available directly in the resulting output, like other modules. This dictionary will be removed in Assible 2.8.
 * The :ref:`win_unzip <win_unzip_module>` module no longer includes the dictionary ``win_unzip`` in its results; the contents are now included directly in the resulting output, like other modules.
-* The :ref:`win_package <win_package_module>` module return values ``exit_code`` and ``restart_required`` have been deprecated in favour of ``rc`` and ``reboot_required`` respectively. The deprecated return values will be removed in Ansible 2.6.
+* The :ref:`win_package <win_package_module>` module return values ``exit_code`` and ``restart_required`` have been deprecated in favour of ``rc`` and ``reboot_required`` respectively. The deprecated return values will be removed in Assible 2.6.
 
 
 Plugins
@@ -124,7 +124,7 @@ The most notable difference to users is that vars plugins now get invoked on dem
 Inventory plugins
 -----------------
 
-Developers should start migrating from hardcoded inventory with dynamic inventory scripts to the new Inventory Plugins. The scripts will still work via the ``script`` inventory plugin but Ansible development efforts will now concentrate on writing plugins rather than enhancing existing scripts.
+Developers should start migrating from hardcoded inventory with dynamic inventory scripts to the new Inventory Plugins. The scripts will still work via the ``script`` inventory plugin but Assible development efforts will now concentrate on writing plugins rather than enhancing existing scripts.
 
 Both users and developers should look into the new plugins because they are intended to alleviate the need for many of the hacks and workarounds found in the dynamic inventory scripts.
 
@@ -140,14 +140,14 @@ Developers:
 
 * If your callback does not inherit from ``CallbackBase`` (directly or indirectly via another callback), it will still work, but issue a deprecation notice.
   To avoid this and ensure it works in the future change it to inherit from ``CallbackBase`` so it has the new options handling methods and properties.
-  You can also implement the new options handling methods and properties but that won't automatically inherit changes added in the future.  You can look at ``CallbackBase`` itself and/or ``AnsiblePlugin`` for details.
+  You can also implement the new options handling methods and properties but that won't automatically inherit changes added in the future.  You can look at ``CallbackBase`` itself and/or ``AssiblePlugin`` for details.
 * Any callbacks inheriting from other callbacks might need to also be updated to contain the same documented options
   as the parent or the options won't be available.  This is noted in the developer guide.
 
 Template lookup plugin: Escaping Strings
 ----------------------------------------
 
-Prior to Ansible 2.4, backslashes in strings passed to the template lookup plugin would be escaped
+Prior to Assible 2.4, backslashes in strings passed to the template lookup plugin would be escaped
 automatically. In 2.4, users are responsible for escaping backslashes themselves. This change
 brings the template lookup plugin inline with the template module so that the same backslash
 escaping rules apply to both.
@@ -157,13 +157,13 @@ If you have a template lookup like this::
     - debug:
         msg: '{{ lookup("template", "template.j2") }}'
 
-**OLD** In Ansible 2.3 (and earlier) :file:`template.j2` would look like this:
+**OLD** In Assible 2.3 (and earlier) :file:`template.j2` would look like this:
 
 .. code-block:: jinja
 
     {{ "name surname" | regex_replace("^[^\s]+\s+(.*)", "\1") }}
 
-**NEW** In Ansible 2.4 it should be changed to look like this:
+**NEW** In Assible 2.4 it should be changed to look like this:
 
 .. code-block:: jinja
 
@@ -175,7 +175,7 @@ Tests
 Tests succeeded/failed
 -----------------------
 
-Prior to Ansible version 2.4, a task return code of ``rc`` would override a return code of ``failed``. In version 2.4,  both ``rc`` and ``failed`` are used to calculate the state of the task. Because of this, test plugins ``succeeded``/``failed``` have also been changed. This means that overriding a task failure with ``failed_when: no`` will result in ``succeeded``/``failed`` returning ``True``/``False``. For example::
+Prior to Assible version 2.4, a task return code of ``rc`` would override a return code of ``failed``. In version 2.4,  both ``rc`` and ``failed`` are used to calculate the state of the task. Because of this, test plugins ``succeeded``/``failed``` have also been changed. This means that overriding a task failure with ``failed_when: no`` will result in ``succeeded``/``failed`` returning ``True``/``False``. For example::
 
     - command: /bin/false
       register: result
@@ -193,7 +193,7 @@ Prior to Ansible version 2.4, a task return code of ``rc`` would override a retu
         msg: 'This is always printed'
       when: result.rc != 0
 
-As we can see from the example above, in Ansible 2.3 ``succeeded``/``failed`` only checked the value of ``rc``.
+As we can see from the example above, in Assible 2.3 ``succeeded``/``failed`` only checked the value of ``rc``.
 
 Networking
 ==========
@@ -205,11 +205,11 @@ Playbooks should still use ``connection: local``.
 Persistent Connection
 ---------------------
 
-The configuration variables ``connection_retries`` and ``connect_interval`` which were added in Ansible 2.3 are now deprecated. For Ansible 2.4 and later use ``connection_retry_timeout``.
+The configuration variables ``connection_retries`` and ``connect_interval`` which were added in Assible 2.3 are now deprecated. For Assible 2.4 and later use ``connection_retry_timeout``.
 
 To control timeouts use ``command_timeout`` rather than the previous top level ``timeout`` variable under ``[default]``
 
-See :ref:`Ansible Network debug guide <network_debug_troubleshooting>` for more information.
+See :ref:`Assible Network debug guide <network_debug_troubleshooting>` for more information.
 
 
 Configuration
@@ -218,7 +218,7 @@ Configuration
 
 The configuration system has had some major changes. Users should be unaffected except for the following:
 
-* All relative paths defined are relative to the `ansible.cfg` file itself. Previously they varied by setting. The new behavior should be more predictable.
+* All relative paths defined are relative to the `assible.cfg` file itself. Previously they varied by setting. The new behavior should be more predictable.
 * A new macro ``{{CWD}}`` is available for paths, which will make paths relative to the 'current working directory',
   this is unsafe but some users really want to rely on this behaviour.
 

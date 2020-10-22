@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
 Designed to set a Windows host to connect to the httptester container running
-on the Ansible host. This will setup the Windows host file and forward the
+on the Assible host. This will setup the Windows host file and forward the
 local ports to use this connection. This will continue to run in the background
 until the script is deleted.
 
@@ -10,7 +10,7 @@ httptester container.
 
 .PARAMETER Hosts
 A list of hostnames, delimited by '|', to add to the Windows hosts file for the
-httptester container, e.g. 'ansible.host.com|secondary.host.test'.
+httptester container, e.g. 'assible.host.com|secondary.host.test'.
 #>
 [CmdletBinding()]
 param(
@@ -70,7 +70,7 @@ $hosts_file = "$env:SystemRoot\System32\drivers\etc\hosts"
 $hosts_file_lines = [System.IO.File]::ReadAllLines($hosts_file)
 $changed = $false
 foreach ($httptester_host in $Hosts) {
-    $host_line = "127.0.0.1 $httptester_host # ansible-test httptester"
+    $host_line = "127.0.0.1 $httptester_host # assible-test httptester"
     if ($host_line -notin $hosts_file_lines) {
         $hosts_file_lines += $host_line
         $changed = $true
@@ -113,7 +113,7 @@ if ($os_version -ge [Version]"6.2") {
     # versions of Windows. Use custom application Port Mapper to acheive the
     # same outcome
     # http://www.analogx.com/contents/download/Network/pmapper/Freeware.htm
-    $s3_url = "https://ansible-ci-files.s3.amazonaws.com/ansible-test/pmapper-1.04.exe"
+    $s3_url = "https://assible-ci-files.s3.amazonaws.com/assible-test/pmapper-1.04.exe"
 
     # download the Port Mapper executable to a temporary directory
     $pmapper_folder = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([System.IO.Path]::GetRandomFileName())
@@ -175,7 +175,7 @@ $hosts_file_lines = [System.IO.File]::ReadAllLines($hosts_file)
 $new_lines = [System.Collections.ArrayList]@()
 $changed = $false
 foreach ($host_line in $hosts_file_lines) {
-    if ($host_line.EndsWith("# ansible-test httptester")) {
+    if ($host_line.EndsWith("# assible-test httptester")) {
         $changed = $true
         continue
     }

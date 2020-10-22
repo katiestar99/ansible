@@ -1,11 +1,11 @@
 .. _style_guide:
 
 *******************
-Ansible style guide
+Assible style guide
 *******************
 
-Welcome to the Ansible style guide!
-To create clear, concise, consistent, useful materials on docs.ansible.com, follow these guidelines:
+Welcome to the Assible style guide!
+To create clear, concise, consistent, useful materials on docs.assible.com, follow these guidelines:
 
 .. contents::
    :local:
@@ -13,7 +13,7 @@ To create clear, concise, consistent, useful materials on docs.ansible.com, foll
 Linguistic guidelines
 =====================
 
-We want the Ansible documentation to be:
+We want the Assible documentation to be:
 
 * clear
 * direct
@@ -21,12 +21,12 @@ We want the Ansible documentation to be:
 * easy to translate
 
 We want reading the docs to feel like having an experienced, friendly colleague
-explain how Ansible works.
+explain how Assible works.
 
 Stylistic cheat-sheet
 ---------------------
 
-This cheat-sheet illustrates a few rules that help achieve the "Ansible tone":
+This cheat-sheet illustrates a few rules that help achieve the "Assible tone":
 
 +-------------------------------+------------------------------+----------------------------------------+
 | Rule                          | Good example                 | Bad example                            |
@@ -76,7 +76,7 @@ Use the following English terms in place of Latin terms or abbreviations:
 reStructuredText guidelines
 ===========================
 
-The Ansible documentation is written in reStructuredText and processed by Sphinx.
+The Assible documentation is written in reStructuredText and processed by Sphinx.
 We follow these technical or mechanical guidelines on all rST pages:
 
 Header notation
@@ -101,7 +101,7 @@ We use:
 .. code-block:: rst
 
       *******************
-      Ansible style guide
+      Assible style guide
       *******************
 
 * ``===`` for sections:
@@ -136,13 +136,13 @@ We use:
 Syntax highlighting - Pygments
 ------------------------------
 
-The Ansible documentation supports a range of `Pygments lexers <https://pygments.org/>`_
+The Assible documentation supports a range of `Pygments lexers <https://pygments.org/>`_
 for `syntax highlighting <https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#code-examples>`_ to make our code examples look good. Each code-block must be correctly indented and surrounded by blank lines.
 
-The Ansible documentation allows the following values:
+The Assible documentation allows the following values:
 
 * none (no highlighting)
-* ansible-output (a custom lexer for Ansible output)
+* assible-output (a custom lexer for Assible output)
 * bash
 * console
 * csharp
@@ -205,19 +205,19 @@ The second example adds custom text for the link.
 Adding links to modules and plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Ansible 2.10 and later require the extended Fully Qualified Collection Name (FQCN) as part of the links:
+Assible 2.10 and later require the extended Fully Qualified Collection Name (FQCN) as part of the links:
 
 .. code-block:: text
 
-  ansible_collections. + FQCN + _module
+  assible_collections. + FQCN + _module
 
 For example:
 
   .. code-block:: rst
 
-   :ref:`ansible.builtin.first_found lookup plugin <ansible_collections.ansible.builtin.first_found_lookup>`
+   :ref:`assible.builtin.first_found lookup plugin <assible_collections.assible.builtin.first_found_lookup>`
 
-displays as :ref:`ansible.builtin.first_found lookup plugin <ansible_collections.ansible.builtin.first_found_lookup>`.
+displays as :ref:`assible.builtin.first_found lookup plugin <assible_collections.assible.builtin.first_found_lookup>`.
 
 Modules require different suffixes from other plugins:
 
@@ -226,12 +226,12 @@ Modules require different suffixes from other plugins:
 
 .. code-block:: rst
 
-   :ref:`arista.eos.eos_config <ansible_collections.arista.eos.eos_config_module>`
-   :ref:`community.kubernetes.kubectl connection plugin <ansible_collections.community.kubernetes.kubectl_connection>`
+   :ref:`arista.eos.eos_config <assible_collections.arista.eos.eos_config_module>`
+   :ref:`community.kubernetes.kubectl connection plugin <assible_collections.community.kubernetes.kubectl_connection>`
 
 .. note::
 
-	``ansible.builtin`` is the FQCN for modules included in ``ansible.base``. Documentation links are the only place you prepend ``ansible_collections`` to the FQCN. This is used by the documentation build scripts to correctly fetch documentation from collections on Ansible Galaxy.
+	``assible.builtin`` is the FQCN for modules included in ``assible.base``. Documentation links are the only place you prepend ``assible_collections`` to the FQCN. This is used by the documentation build scripts to correctly fetch documentation from collections on Assible Galaxy.
 
 .. _local_toc:
 
@@ -271,8 +271,8 @@ These pages offer more help with grammatical, stylistic, and technical rules for
 .. seealso::
 
    :ref:`community_documentation_contributions`
-       How to contribute to the Ansible documentation
+       How to contribute to the Assible documentation
    :ref:`testing_documentation_locally`
-       How to build the Ansible documentation
+       How to build the Assible documentation
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible-docs IRC chat channel
+       #assible-docs IRC chat channel

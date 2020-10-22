@@ -1,15 +1,15 @@
-examples/hosts etc/ansible
+examples/hosts etc/assible
 docs/man/man1/*.1 usr/share/man/man1
-debian/tmp/usr/bin/ansible-galaxy usr/bin
-debian/tmp/usr/bin/ansible-vault usr/bin
-debian/tmp/usr/bin/ansible-doc usr/bin
-debian/tmp/usr/bin/ansible-console usr/bin
-debian/tmp/usr/bin/ansible-connection usr/bin
-debian/tmp/usr/bin/ansible-inventory usr/bin
-debian/tmp/usr/bin/ansible-config usr/bin
-debian/tmp/usr/bin/ansible-pull usr/bin
-debian/tmp/usr/bin/ansible-playbook usr/bin
-debian/tmp/usr/bin/ansible usr/bin
-examples/ansible.cfg etc/ansible
-debian/tmp/usr/lib/python3/dist-packages/ansible usr/lib/python3/dist-packages
-debian/tmp/usr/lib/python3/dist-packages/ansible_*.egg-info
+debian/tmp/usr/bin/assible-galaxy usr/bin
+debian/tmp/usr/bin/assible-vault usr/bin
+debian/tmp/usr/bin/assible-doc usr/bin
+debian/tmp/usr/bin/assible-console usr/bin
+debian/tmp/usr/bin/assible-connection usr/bin
+debian/tmp/usr/bin/assible-inventory usr/bin
+debian/tmp/usr/bin/assible-config usr/bin
+debian/tmp/usr/bin/assible-pull usr/bin
+debian/tmp/usr/bin/assible-playbook usr/bin
+debian/tmp/usr/bin/assible usr/bin
+examples/assible.cfg etc/assible
+debian/tmp/usr/lib/python3/dist-packages/assible usr/lib/python3/dist-packages
+debian/tmp/usr/lib/python3/dist-packages/assible_*.egg-info

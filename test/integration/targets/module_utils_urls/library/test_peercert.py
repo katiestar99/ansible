@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2020, Ansible Project
+# Copyright: (c) 2020, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -16,7 +16,7 @@ options:
     required: true
     type: str
 author:
-- Ansible Project
+- Assible Project
 '''
 
 EXAMPLES = r'''
@@ -29,9 +29,9 @@ RETURN = r'''
 
 import base64
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.text.converters import to_text
-from ansible.module_utils.urls import getpeercert, Request
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.text.converters import to_text
+from assible.module_utils.urls import getpeercert, Request
 
 
 def get_x509_shorthand(name, value):
@@ -51,7 +51,7 @@ def main():
     module_args = dict(
         url=dict(type='str', required=True),
     )
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
     )

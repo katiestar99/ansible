@@ -3,7 +3,7 @@ __metaclass__ = type
 
 
 def test_name_ok(value):
-    return __name__ == 'ansible_collections.my_ns.my_col.plugins.test.test_test'
+    return __name__ == 'assible_collections.my_ns.my_col.plugins.test.test_test'
 
 
 class TestModule:

@@ -3,20 +3,20 @@
 
 # (c) 2020 Red Hat, Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 """CLI tool for reporting on incidental test coverage."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -66,7 +66,7 @@ def parse_args():
     parser.add_argument('--source',
                         type=optional_directory,
                         default=source,
-                        help='path to git repository containing Ansible source')
+                        help='path to git repository containing Assible source')
 
     parser.add_argument('--skip-checks',
                         action='store_true',
@@ -194,7 +194,7 @@ def incidental_report(args):
 
     # exclude test support plugins from analysis
     # also exclude six, which for an unknown reason reports bogus coverage lines (indicating coverage of comments)
-    exclude_path = '^(test/support/|lib/ansible/module_utils/six/)'
+    exclude_path = '^(test/support/|lib/assible/module_utils/six/)'
 
     # process coverage for each target and then generate a report
     # save sources for generating a summary report at the end
@@ -256,11 +256,11 @@ def get_target_name_from_plugin_path(path):  # type: (str) -> str
     parts = os.path.splitext(path)[0].split(os.path.sep)
     plugin_name = parts[-1]
 
-    if path.startswith('lib/ansible/modules/'):
+    if path.startswith('lib/assible/modules/'):
         plugin_type = None
-    elif path.startswith('lib/ansible/plugins/'):
+    elif path.startswith('lib/assible/plugins/'):
         plugin_type = parts[3]
-    elif path.startswith('lib/ansible/module_utils/'):
+    elif path.startswith('lib/assible/module_utils/'):
         plugin_type = parts[2]
     elif path.startswith('plugins/'):
         plugin_type = parts[1]
@@ -321,7 +321,7 @@ class Git:
 
 class CoverageTool:
     def __init__(self):
-        self.analyze_cmd = ['ansible-test', 'coverage', 'analyze', 'targets']
+        self.analyze_cmd = ['assible-test', 'coverage', 'analyze', 'targets']
 
     def combine(self, input_paths, output_path):
         subprocess.check_call(self.analyze_cmd + ['combine'] + input_paths + [output_path])

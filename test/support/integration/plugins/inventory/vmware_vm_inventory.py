@@ -1,5 +1,5 @@
 #
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # Copyright: (c) 2018, Abhijeet Kasurde <akasurde@redhat.com>
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -104,7 +104,7 @@ EXAMPLES = '''
 
 import ssl
 import atexit
-from ansible.errors import AnsibleError, AnsibleParserError
+from assible.errors import AssibleError, AssibleParserError
 
 try:
     # requests is required for exception handling of the ConnectionError
@@ -128,7 +128,7 @@ except ImportError:
     HAS_VSPHERE = False
 
 
-from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable
+from assible.plugins.inventory import BaseInventoryPlugin, Cacheable
 
 
 class BaseVMwareInventory:
@@ -171,7 +171,7 @@ class BaseVMwareInventory:
                                        password=self.password,
                                        session=session)
         if client is None:
-            raise AnsibleError("Failed to login to %s using %s" % (server, self.username))
+            raise AssibleError("Failed to login to %s using %s" % (server, self.username))
         return client
 
     def _login(self):
@@ -181,7 +181,7 @@ class BaseVMwareInventory:
 
         """
         if self.validate_certs and not hasattr(ssl, 'SSLContext'):
-            raise AnsibleError('pyVim does not support changing verification mode with python < 2.7.9. Either update '
+            raise AssibleError('pyVim does not support changing verification mode with python < 2.7.9. Either update '
                                'python or set validate_certs to false in configuration YAML file.')
 
         ssl_context = None
@@ -195,21 +195,21 @@ class BaseVMwareInventory:
                                                     pwd=self.password, sslContext=ssl_context,
                                                     port=self.port)
         except vim.fault.InvalidLogin as e:
-            raise AnsibleParserError("Unable to log on to vCenter or ESXi API at %s:%s as %s: %s" % (self.hostname, self.port, self.username, e.msg))
+            raise AssibleParserError("Unable to log on to vCenter or ESXi API at %s:%s as %s: %s" % (self.hostname, self.port, self.username, e.msg))
         except vim.fault.NoPermission as e:
-            raise AnsibleParserError("User %s does not have required permission"
+            raise AssibleParserError("User %s does not have required permission"
                                      " to log on to vCenter or ESXi API at %s:%s : %s" % (self.username, self.hostname, self.port, e.msg))
         except (requests.ConnectionError, ssl.SSLError) as e:
-            raise AnsibleParserError("Unable to connect to vCenter or ESXi API at %s on TCP/%s: %s" % (self.hostname, self.port, e))
+            raise AssibleParserError("Unable to connect to vCenter or ESXi API at %s on TCP/%s: %s" % (self.hostname, self.port, e))
         except vmodl.fault.InvalidRequest as e:
             # Request is malformed
-            raise AnsibleParserError("Failed to get a response from server %s:%s as "
+            raise AssibleParserError("Failed to get a response from server %s:%s as "
                                      "request is malformed: %s" % (self.hostname, self.port, e.msg))
         except Exception as e:
-            raise AnsibleParserError("Unknown error while connecting to vCenter or ESXi API at %s:%s : %s" % (self.hostname, self.port, e))
+            raise AssibleParserError("Unknown error while connecting to vCenter or ESXi API at %s:%s : %s" % (self.hostname, self.port, e))
 
         if service_instance is None:
-            raise AnsibleParserError("Unknown error while connecting to vCenter or ESXi API at %s:%s" % (self.hostname, self.port))
+            raise AssibleParserError("Unknown error while connecting to vCenter or ESXi API at %s:%s" % (self.hostname, self.port))
 
         atexit.register(connect.Disconnect, service_instance)
         return service_instance.RetrieveContent()
@@ -217,10 +217,10 @@ class BaseVMwareInventory:
     def check_requirements(self):
         """ Check all requirements for this inventory are satisified"""
         if not HAS_REQUESTS:
-            raise AnsibleParserError('Please install "requests" Python module as this is required'
+            raise AssibleParserError('Please install "requests" Python module as this is required'
                                      ' for VMware Guest dynamic inventory plugin.')
         elif not HAS_PYVMOMI:
-            raise AnsibleParserError('Please install "PyVmomi" Python module as this is required'
+            raise AssibleParserError('Please install "PyVmomi" Python module as this is required'
                                      ' for VMware Guest dynamic inventory plugin.')
         if HAS_REQUESTS:
             # Pyvmomi 5.5 and onwards requires requests 2.3
@@ -230,20 +230,20 @@ class BaseVMwareInventory:
             try:
                 requests_major_minor = tuple(map(int, requests_version))
             except ValueError:
-                raise AnsibleParserError("Failed to parse 'requests' library version.")
+                raise AssibleParserError("Failed to parse 'requests' library version.")
 
             if requests_major_minor < required_version:
-                raise AnsibleParserError("'requests' library version should"
+                raise AssibleParserError("'requests' library version should"
                                          " be >= %s, found: %s." % (".".join([str(w) for w in required_version]),
                                                                     requests.__version__))
 
         if not HAS_VSPHERE and self.with_tags:
-            raise AnsibleError("Unable to find 'vSphere Automation SDK' Python library which is required."
+            raise AssibleError("Unable to find 'vSphere Automation SDK' Python library which is required."
                                " Please refer this URL for installation steps"
                                " - https://code.vmware.com/web/sdk/65/vsphere-automation-python")
 
         if not all([self.hostname, self.username, self.password]):
-            raise AnsibleError("Missing one of the following : hostname, username, password. Please read "
+            raise AssibleError("Missing one of the following : hostname, username, password. Please read "
                                "the documentation for more information.")
 
     def _get_managed_objects_properties(self, vim_type, properties=None):
@@ -423,7 +423,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
 
                     host_ip = vm_obj.obj.guest.ipAddress
                     if host_ip:
-                        self.inventory.set_variable(current_host, 'ansible_host', host_ip)
+                        self.inventory.set_variable(current_host, 'assible_host', host_ip)
 
                     self._populate_host_properties(vm_obj, current_host)
 

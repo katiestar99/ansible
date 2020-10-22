@@ -30,7 +30,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": ["preview"],
     "supported_by": "network",
@@ -479,11 +479,11 @@ commands:
 """
 
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.lldp_interfaces.lldp_interfaces import (
+from assible.module_utils.basic import AssibleModule
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.lldp_interfaces.lldp_interfaces import (
     Lldp_interfacesArgs,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.config.lldp_interfaces.lldp_interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.config.lldp_interfaces.lldp_interfaces import (
     Lldp_interfaces,
 )
 
@@ -499,7 +499,7 @@ def main():
         ("state", "replaced", ("config",)),
         ("state", "overridden", ("config",)),
     ]
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=Lldp_interfacesArgs.argument_spec,
         required_if=required_if,
         supports_check_mode=True,

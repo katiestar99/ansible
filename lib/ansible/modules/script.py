@@ -1,4 +1,4 @@
-# Copyright: (c) 2012, Ansible Project
+# Copyright: (c) 2012, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -15,7 +15,7 @@ description:
      - Either a free form command or C(cmd) parameter is required, see the examples.
      - The local script at path will be transferred to the remote node and then executed.
      - The given script will be processed through the shell environment on the remote node.
-     - This module does not require python on the remote system, much like the M(ansible.builtin.raw) module.
+     - This module does not require python on the remote system, much like the M(assible.builtin.raw) module.
      - This module is also supported for Windows targets.
 options:
   free_form:
@@ -42,16 +42,16 @@ options:
       - Name or path of a executable to invoke the script with.
     version_added: "2.6"
 notes:
-  - It is usually preferable to write Ansible modules rather than pushing scripts. Convert your script to an Ansible module for bonus points!
+  - It is usually preferable to write Assible modules rather than pushing scripts. Convert your script to an Assible module for bonus points!
   - The C(ssh) connection plugin will force pseudo-tty allocation via C(-tt) when scripts are executed. Pseudo-ttys do not have a stderr channel and all
     stderr is sent to stdout. If you depend on separated stdout and stderr result keys, please switch to a copy+command set of tasks instead of using script.
   - If the path to the local script contains spaces, it needs to be quoted.
   - This module is also supported for Windows targets.
 seealso:
-- module: ansible.builtin.shell
-- module: ansible.windows.win_shell
+- module: assible.builtin.shell
+- module: assible.windows.win_shell
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Michael DeHaan
 extends_documentation_fragment:
     - decrypt

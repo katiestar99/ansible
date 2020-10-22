@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -89,8 +89,8 @@ cloud_init_data_facts:
 
 import os
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_text
 
 
 CLOUD_INIT_PATH = "/var/lib/cloud/data/"
@@ -118,7 +118,7 @@ def gather_cloud_init_data_facts(module):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             filter=dict(choices=['result', 'status']),
         ),
@@ -126,7 +126,7 @@ def main():
     )
 
     facts = gather_cloud_init_data_facts(module)
-    result = dict(changed=False, ansible_facts=facts, **facts)
+    result = dict(changed=False, assible_facts=facts, **facts)
     module.exit_json(**result)
 
 

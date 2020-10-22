@@ -1,22 +1,22 @@
 #!/usr/bin/python
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": ["preview"],
     "supported_by": "network",
@@ -60,10 +60,10 @@ options:
   backup:
     description:
     - The C(backup) argument will backup the current devices active configuration
-      to the Ansible control host prior to making any changes. If the C(backup_options)
+      to the Assible control host prior to making any changes. If the C(backup_options)
       value is not given, the backup file will be located in the backup folder in
       the playbook root directory or role root directory, if playbook is part of an
-      ansible role. If the directory does not exist, it is created.
+      assible role. If the directory does not exist, it is created.
     type: bool
     default: 'no'
   comment:
@@ -154,7 +154,7 @@ backup_path:
   description: The full path to the backup file
   returned: when backup is yes
   type: str
-  sample: /playbooks/ansible/backup/vyos_config.2016-07-16@22:28:34
+  sample: /playbooks/assible/backup/vyos_config.2016-07-16@22:28:34
 filename:
   description: The name of the backup file
   returned: when backup is yes and filename is not specified in backup options
@@ -164,7 +164,7 @@ shortname:
   description: The full path to the backup file excluding the timestamp
   returned: when backup is yes and filename is not specified in backup options
   type: str
-  sample: /playbooks/ansible/backup/vyos_config
+  sample: /playbooks/assible/backup/vyos_config
 date:
   description: The date extracted from the backup file name
   returned: when backup is yes
@@ -178,15 +178,15 @@ time:
 """
 import re
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.connection import ConnectionError
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
+from assible.module_utils._text import to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.connection import ConnectionError
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
     load_config,
     get_config,
     run_commands,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
     vyos_argument_spec,
     get_connection,
 )
@@ -324,7 +324,7 @@ def main():
 
     mutually_exclusive = [("lines", "src")]
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         mutually_exclusive=mutually_exclusive,
         supports_check_mode=True,

@@ -2,5 +2,5 @@
 testhost[00:11]
 
 [localhosts:vars]
-ansible_connection=local
-ansible_python_interpreter="{{ ansible_playbook_python }}"
+assible_connection=local
+assible_python_interpreter="{{ assible_playbook_python }}"

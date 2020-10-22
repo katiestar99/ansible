@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -15,7 +15,7 @@ extends_documentation_fragment:
 
 import re
 
-from ansible.plugins.shell.powershell import ShellModule as PSShellModule
+from assible.plugins.shell.powershell import ShellModule as PSShellModule
 
 # these are the metachars that have a special meaning in cmd that we want to escape when quoting
 _find_unsafe = re.compile(r'[\s\(\)\%\!^\"\<\>\&\|]').search
@@ -31,7 +31,7 @@ class ShellModule(PSShellModule):
     _SHELL_REDIRECT_ALLNULL = '>nul 2>&1'
     _SHELL_AND = '&&'
 
-    # Used by various parts of Ansible to do Windows specific changes
+    # Used by various parts of Assible to do Windows specific changes
     _IS_WINDOWS = True
 
     def quote(self, s):

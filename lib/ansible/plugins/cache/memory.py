@@ -1,5 +1,5 @@
 # (c) 2014, Brian Coca, Josh Drake, et al
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
@@ -14,10 +14,10 @@ DOCUMENTATION = '''
         - This is the default used if no other plugin is specified.
         - There are no options to configure.
     version_added: historical
-    author: core team (@ansible-core)
+    author: core team (@assible-core)
 '''
 
-from ansible.plugins.cache import BaseCacheModule
+from assible.plugins.cache import BaseCacheModule
 
 
 class CacheModule(BaseCacheModule):

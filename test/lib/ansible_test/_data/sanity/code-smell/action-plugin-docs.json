@@ -1,8 +1,8 @@
 {
     "all_targets": true,
     "prefixes": [
-        "lib/ansible/modules/",
-        "lib/ansible/plugins/action/",
+        "lib/assible/modules/",
+        "lib/assible/plugins/action/",
         "plugins/modules/",
         "plugins/action/"
     ],

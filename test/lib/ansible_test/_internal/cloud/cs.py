@@ -48,7 +48,7 @@ class CsCloudProvider(CloudProvider):
         """
         super(CsCloudProvider, self).__init__(args)
 
-        self.image = os.environ.get('ANSIBLE_CLOUDSTACK_CONTAINER', 'quay.io/ansible/cloudstack-test-container:1.4.0')
+        self.image = os.environ.get('ASSIBLE_CLOUDSTACK_CONTAINER', 'quay.io/assible/cloudstack-test-container:1.4.0')
         self.container_name = ''
         self.endpoint = ''
         self.host = ''
@@ -282,11 +282,11 @@ class CsCloudEnvironment(CloudEnvironment):
 
         display.sensitive.add(env_vars['CLOUDSTACK_SECRET'])
 
-        ansible_vars = dict(
+        assible_vars = dict(
             cs_resource_prefix=self.resource_prefix,
         )
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )

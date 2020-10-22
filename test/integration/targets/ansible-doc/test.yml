@@ -1,10 +1,10 @@
 - hosts: localhost
   gather_facts: no
   environment:
-    ANSIBLE_LIBRARY: "{{ playbook_dir }}/library"
+    ASSIBLE_LIBRARY: "{{ playbook_dir }}/library"
   tasks:
     - name: module with missing description return docs
-      command: ansible-doc test_docs_missing_description
+      command: assible-doc test_docs_missing_description
       register: result
       ignore_errors: true
 
@@ -16,7 +16,7 @@
             in result.stderr
 
     - name: module with suboptions
-      command: ansible-doc test_docs_suboptions
+      command: assible-doc test_docs_suboptions
       register: result
       ignore_errors: true
 
@@ -31,7 +31,7 @@
           - actual_output == expected_output
 
     - name: module with return docs
-      command: ansible-doc test_docs_returns
+      command: assible-doc test_docs_returns
       register: result
       ignore_errors: true
 
@@ -46,7 +46,7 @@
           - actual_output == expected_output
 
     - name: module with broken return docs
-      command: ansible-doc test_docs_returns_broken
+      command: assible-doc test_docs_returns_broken
       register: result
       ignore_errors: true
 
@@ -56,60 +56,60 @@
           - '"ERROR! module test_docs_returns_broken missing documentation (or could not parse documentation)" in result.stderr'
 
     - name: non-existent module
-      command: ansible-doc test_does_not_exist
+      command: assible-doc test_does_not_exist
       register: result
     - assert:
         that:
           - '"[WARNING]: module test_does_not_exist not found in:" in result.stderr'
 
     - name: documented module
-      command: ansible-doc test_docs
+      command: assible-doc test_docs
       register: result
     - assert:
         that:
           - '"WARNING" not in result.stderr'
           - '"TEST_DOCS " in result.stdout'
-          - '"AUTHOR: Ansible Core Team" in result.stdout'
+          - '"AUTHOR: Assible Core Team" in result.stdout'
 
     - name: documented module without metadata
-      command: ansible-doc test_docs_no_metadata
+      command: assible-doc test_docs_no_metadata
       register: result
     - assert:
         that:
           - '"WARNING" not in result.stderr'
           - '"TEST_DOCS_NO_METADATA " in result.stdout'
-          - '"AUTHOR: Ansible Core Team" in result.stdout'
+          - '"AUTHOR: Assible Core Team" in result.stdout'
 
     - name: documented module with no status in metadata
-      command: ansible-doc test_docs_no_status
+      command: assible-doc test_docs_no_status
       register: result
     - assert:
         that:
           - '"WARNING" not in result.stderr'
           - '"TEST_DOCS_NO_STATUS " in result.stdout'
-          - '"AUTHOR: Ansible Core Team" in result.stdout'
+          - '"AUTHOR: Assible Core Team" in result.stdout'
 
     - name: documented module with non-iterable status in metadata
-      command: ansible-doc test_docs_non_iterable_status
+      command: assible-doc test_docs_non_iterable_status
       register: result
     - assert:
         that:
           - '"WARNING" not in result.stderr'
           - '"TEST_DOCS_NON_ITERABLE_STATUS " in result.stdout'
-          - '"AUTHOR: Ansible Core Team" in result.stdout'
+          - '"AUTHOR: Assible Core Team" in result.stdout'
 
     - name: documented module with removed status
-      command: ansible-doc test_docs_removed_status
+      command: assible-doc test_docs_removed_status
       register: result
 
     - assert:
         that:
           - '"WARNING" not in result.stderr'
           - '"TEST_DOCS_REMOVED_STATUS " in result.stdout'
-          - '"AUTHOR: Ansible Core Team" in result.stdout'
+          - '"AUTHOR: Assible Core Team" in result.stdout'
 
     - name: empty module
-      command: ansible-doc test_empty
+      command: assible-doc test_empty
       register: result
       ignore_errors: true
 
@@ -118,7 +118,7 @@
           - result is failed
 
     - name: module with no documentation
-      command: ansible-doc test_no_docs
+      command: assible-doc test_no_docs
       register: result
       ignore_errors: true
 
@@ -127,7 +127,7 @@
           - result is failed
 
     - name: deprecated module with both removed date and version (date should get precedence)
-      command: ansible-doc test_docs_removed_precedence
+      command: assible-doc test_docs_removed_precedence
       register: result
 
     - assert:
@@ -138,7 +138,7 @@
           - '"Alternatives: new_module" in result.stdout'
 
     - name: documented module with YAML anchors
-      command: ansible-doc test_docs_yaml_anchors
+      command: assible-doc test_docs_yaml_anchors
       register: result
     - set_fact:
         actual_output: >-

@@ -11,7 +11,7 @@ from datetime import datetime
 
 from pytz import timezone as tz
 
-from ansible.module_utils.common.text.converters import _json_encode_fallback
+from assible.module_utils.common.text.converters import _json_encode_fallback
 
 
 @pytest.mark.parametrize(

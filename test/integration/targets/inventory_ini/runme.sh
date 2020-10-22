@@ -2,4 +2,4 @@
 
 set -eux
 
-ansible-playbook -v -i inventory.ini test_ansible_become.yml
+assible-playbook -v -i inventory.ini test_assible_become.yml

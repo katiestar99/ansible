@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -18,10 +18,10 @@ class ModuleDocFragment(object):
         env:
           - name: DISPLAY_SKIPPED_HOSTS
             deprecated:
-              why: environment variables without "ANSIBLE_" prefix are deprecated
+              why: environment variables without "ASSIBLE_" prefix are deprecated
               version: "2.12"
-              alternatives: the "ANSIBLE_DISPLAY_SKIPPED_HOSTS" environment variable
-          - name: ANSIBLE_DISPLAY_SKIPPED_HOSTS
+              alternatives: the "ASSIBLE_DISPLAY_SKIPPED_HOSTS" environment variable
+          - name: ASSIBLE_DISPLAY_SKIPPED_HOSTS
         ini:
           - key: display_skipped_hosts
             section: defaults
@@ -31,7 +31,7 @@ class ModuleDocFragment(object):
         type: bool
         default: yes
         env:
-          - name: ANSIBLE_DISPLAY_OK_HOSTS
+          - name: ASSIBLE_DISPLAY_OK_HOSTS
         ini:
           - key: display_ok_hosts
             section: defaults
@@ -42,7 +42,7 @@ class ModuleDocFragment(object):
         type: bool
         default: no
         env:
-          - name: ANSIBLE_DISPLAY_FAILED_STDERR
+          - name: ASSIBLE_DISPLAY_FAILED_STDERR
         ini:
           - key: display_failed_stderr
             section: defaults
@@ -53,7 +53,7 @@ class ModuleDocFragment(object):
         type: bool
         default: no
         env:
-          - name: ANSIBLE_SHOW_CUSTOM_STATS
+          - name: ASSIBLE_SHOW_CUSTOM_STATS
         ini:
           - key: show_custom_stats
             section: defaults
@@ -63,7 +63,7 @@ class ModuleDocFragment(object):
         type: bool
         default: no
         env:
-          - name: ANSIBLE_SHOW_PER_HOST_START
+          - name: ASSIBLE_SHOW_PER_HOST_START
         ini:
           - key: show_per_host_start
             section: defaults
@@ -72,13 +72,13 @@ class ModuleDocFragment(object):
         name: Show markers when running in check mode
         description:
         - Toggle to control displaying markers when running in check mode.
-        - "The markers are C(DRY RUN) at the beggining and ending of playbook execution (when calling C(ansible-playbook --check))
+        - "The markers are C(DRY RUN) at the beggining and ending of playbook execution (when calling C(assible-playbook --check))
         and C(CHECK MODE) as a suffix at every play and task that is run in check mode."
         type: bool
         default: no
         version_added: '2.9'
         env:
-          - name: ANSIBLE_CHECK_MODE_MARKERS
+          - name: ASSIBLE_CHECK_MODE_MARKERS
         ini:
           - key: check_mode_markers
             section: defaults

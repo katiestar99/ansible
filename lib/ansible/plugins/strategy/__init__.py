@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -31,27 +31,27 @@ from collections import deque
 from multiprocessing import Lock
 from jinja2.exceptions import UndefinedError
 
-from ansible import constants as C
-from ansible import context
-from ansible.errors import AnsibleError, AnsibleFileNotFound, AnsibleParserError, AnsibleUndefinedVariable
-from ansible.executor import action_write_locks
-from ansible.executor.process.worker import WorkerProcess
-from ansible.executor.task_result import TaskResult
-from ansible.executor.task_queue_manager import CallbackSend
-from ansible.module_utils.six.moves import queue as Queue
-from ansible.module_utils.six import iteritems, itervalues, string_types
-from ansible.module_utils._text import to_text
-from ansible.module_utils.connection import Connection, ConnectionError
-from ansible.playbook.conditional import Conditional
-from ansible.playbook.handler import Handler
-from ansible.playbook.helpers import load_list_of_blocks
-from ansible.playbook.included_file import IncludedFile
-from ansible.playbook.task_include import TaskInclude
-from ansible.plugins import loader as plugin_loader
-from ansible.template import Templar
-from ansible.utils.display import Display
-from ansible.utils.vars import combine_vars
-from ansible.vars.clean import strip_internal_keys, module_response_deepcopy
+from assible import constants as C
+from assible import context
+from assible.errors import AssibleError, AssibleFileNotFound, AssibleParserError, AssibleUndefinedVariable
+from assible.executor import action_write_locks
+from assible.executor.process.worker import WorkerProcess
+from assible.executor.task_result import TaskResult
+from assible.executor.task_queue_manager import CallbackSend
+from assible.module_utils.six.moves import queue as Queue
+from assible.module_utils.six import iteritems, itervalues, string_types
+from assible.module_utils._text import to_text
+from assible.module_utils.connection import Connection, ConnectionError
+from assible.playbook.conditional import Conditional
+from assible.playbook.handler import Handler
+from assible.playbook.helpers import load_list_of_blocks
+from assible.playbook.included_file import IncludedFile
+from assible.playbook.task_include import TaskInclude
+from assible.plugins import loader as plugin_loader
+from assible.template import Templar
+from assible.utils.display import Display
+from assible.utils.vars import combine_vars
+from assible.vars.clean import strip_internal_keys, module_response_deepcopy
 
 display = Display()
 
@@ -164,7 +164,7 @@ def debug_closure(func):
                     _processed_results.append(result)
                     break
                 elif next_action.result == NextAction.EXIT:
-                    # Matches KeyboardInterrupt from bin/ansible
+                    # Matches KeyboardInterrupt from bin/assible
                     sys.exit(99)
             else:
                 _processed_results.append(result)
@@ -318,8 +318,8 @@ class StrategyBase:
         Base class method to add extra variables/information to the list of task
         vars sent through the executor engine regarding the task queue manager state.
         '''
-        vars['ansible_current_hosts'] = self.get_hosts_remaining(play)
-        vars['ansible_failed_hosts'] = self.get_failed_hosts(play)
+        vars['assible_current_hosts'] = self.get_hosts_remaining(play)
+        vars['assible_failed_hosts'] = self.get_failed_hosts(play)
 
     def _queue_task(self, host, task, task_vars, play_context):
         ''' handles queueing the task up to be sent to a worker '''
@@ -347,7 +347,7 @@ class StrategyBase:
         try:
             throttle = int(templar.template(task.throttle))
         except Exception as e:
-            raise AnsibleError("Failed to convert the throttle value to an integer.", obj=task._ds, orig_exc=e)
+            raise AssibleError("Failed to convert the throttle value to an integer.", obj=task._ds, orig_exc=e)
 
         # and then queue the new task
         try:
@@ -415,7 +415,7 @@ class StrategyBase:
         return host_list
 
     def get_delegated_hosts(self, result, task):
-        host_name = result.get('_ansible_delegated_vars', {}).get('ansible_delegated_host', None)
+        host_name = result.get('_assible_delegated_vars', {}).get('assible_delegated_host', None)
         return [host_name or task.delegate_to]
 
     def _set_always_delegated_facts(self, result, task):
@@ -429,7 +429,7 @@ class StrategyBase:
         if task.delegate_to is None:
             return
 
-        facts = result['ansible_facts']
+        facts = result['assible_facts']
         always_keys = set()
         _add = always_keys.add
         for fact_key in facts:
@@ -439,7 +439,7 @@ class StrategyBase:
         if always_keys:
             _pop = facts.pop
             always_facts = {
-                'ansible_facts': dict((k, _pop(k)) for k in list(facts) if k in always_keys)
+                'assible_facts': dict((k, _pop(k)) for k in list(facts) if k in always_keys)
             }
             host_list = self.get_delegated_hosts(result, task)
             _set_host_facts = self._variable_manager.set_host_facts
@@ -491,7 +491,7 @@ class StrategyBase:
 
                             if handler_name in candidates:
                                 return handler_task
-                        except (UndefinedError, AnsibleUndefinedVariable):
+                        except (UndefinedError, AssibleUndefinedVariable):
                             # We skip this handler due to the fact that it may be using
                             # a variable in the name that was conditionally included via
                             # set_fact or some other method, and we don't want to error
@@ -524,10 +524,10 @@ class StrategyBase:
             task_result._task = original_task
 
             # send callbacks for 'non final' results
-            if '_ansible_retry' in task_result._result:
+            if '_assible_retry' in task_result._result:
                 self._tqm.send_callback('v2_runner_retry', task_result)
                 continue
-            elif '_ansible_item_result' in task_result._result:
+            elif '_assible_item_result' in task_result._result:
                 if task_result.is_failed() or task_result.is_unreachable():
                     self._tqm.send_callback('v2_runner_item_on_failed', task_result)
                 elif task_result.is_skipped():
@@ -574,8 +574,8 @@ class StrategyBase:
                         self._variable_manager.set_nonpersistent_facts(
                             original_host.name,
                             dict(
-                                ansible_failed_task=original_task.serialize(),
-                                ansible_failed_result=task_result._result,
+                                assible_failed_task=original_task.serialize(),
+                                assible_failed_result=task_result._result,
                             ),
                         )
                     else:
@@ -610,13 +610,13 @@ class StrategyBase:
                     result_items = [task_result._result]
 
                 for result_item in result_items:
-                    if '_ansible_notify' in result_item:
+                    if '_assible_notify' in result_item:
                         if task_result.is_changed():
                             # The shared dictionary for notified handlers is a proxy, which
                             # does not detect when sub-objects within the proxy are modified.
                             # So, per the docs, we reassign the list so the proxy picks up and
                             # notifies all other threads
-                            for handler_name in result_item['_ansible_notify']:
+                            for handler_name in result_item['_assible_notify']:
                                 found = False
                                 # Find the handler using the above helper.  First we look up the
                                 # dependency chain of the current task (if it's from a role), otherwise
@@ -650,7 +650,7 @@ class StrategyBase:
                                     msg = ("The requested handler '%s' was not found in either the main handlers list nor in the listening "
                                            "handlers list" % handler_name)
                                     if C.ERROR_ON_MISSING_HANDLER:
-                                        raise AnsibleError(msg)
+                                        raise AssibleError(msg)
                                     else:
                                         display.warning(msg)
 
@@ -665,7 +665,7 @@ class StrategyBase:
                         self._add_group(original_host, result_item)
                         post_process_whens(result_item, original_task, handler_templar)
 
-                    if 'ansible_facts' in result_item:
+                    if 'assible_facts' in result_item:
                         # if delegated fact and we are delegating facts, we need to change target host for them
                         if original_task.delegate_to is not None and original_task.delegate_facts:
                             host_list = self.get_delegated_hosts(result_item, original_task)
@@ -676,13 +676,13 @@ class StrategyBase:
                             host_list = self.get_task_hosts(iterator, original_host, original_task)
 
                         if original_task.action == 'include_vars':
-                            for (var_name, var_value) in iteritems(result_item['ansible_facts']):
+                            for (var_name, var_value) in iteritems(result_item['assible_facts']):
                                 # find the host we're actually referring too here, which may
                                 # be a host that is not really in inventory at all
                                 for target_host in host_list:
                                     self._variable_manager.set_host_variable(target_host, var_name, var_value)
                         else:
-                            cacheable = result_item.pop('_ansible_facts_cacheable', False)
+                            cacheable = result_item.pop('_assible_facts_cacheable', False)
                             for target_host in host_list:
                                 # so set_fact is a misnomer but 'cacheable = true' was meant to create an 'actual fact'
                                 # to avoid issues with precedence and confusion with set_fact normal operation,
@@ -690,19 +690,19 @@ class StrategyBase:
                                 # when fact is retrieved from cache in subsequent operations it will have the lower precedence,
                                 # but for playbook setting it the 'higher' precedence is kept
                                 if original_task.action != 'set_fact' or cacheable:
-                                    self._variable_manager.set_host_facts(target_host, result_item['ansible_facts'].copy())
+                                    self._variable_manager.set_host_facts(target_host, result_item['assible_facts'].copy())
                                 if original_task.action == 'set_fact':
-                                    self._variable_manager.set_nonpersistent_facts(target_host, result_item['ansible_facts'].copy())
+                                    self._variable_manager.set_nonpersistent_facts(target_host, result_item['assible_facts'].copy())
 
-                    if 'ansible_stats' in result_item and 'data' in result_item['ansible_stats'] and result_item['ansible_stats']['data']:
+                    if 'assible_stats' in result_item and 'data' in result_item['assible_stats'] and result_item['assible_stats']['data']:
 
-                        if 'per_host' not in result_item['ansible_stats'] or result_item['ansible_stats']['per_host']:
+                        if 'per_host' not in result_item['assible_stats'] or result_item['assible_stats']['per_host']:
                             host_list = self.get_task_hosts(iterator, original_host, original_task)
                         else:
                             host_list = [None]
 
-                        data = result_item['ansible_stats']['data']
-                        aggregate = 'aggregate' in result_item['ansible_stats'] and result_item['ansible_stats']['aggregate']
+                        data = result_item['assible_stats']['data']
+                        aggregate = 'aggregate' in result_item['assible_stats'] and result_item['assible_stats']['aggregate']
                         for myhost in host_list:
                             for k in data.keys():
                                 if aggregate:
@@ -773,7 +773,7 @@ class StrategyBase:
                not self._tqm._terminated):
 
             if self._tqm.has_dead_workers():
-                raise AnsibleError("A worker was found in a dead state")
+                raise AssibleError("A worker was found in a dead state")
 
             results = self._process_pending_results(iterator, do_handlers=True)
             ret_results.extend(results)
@@ -799,7 +799,7 @@ class StrategyBase:
         while self._pending_results > 0 and not self._tqm._terminated:
 
             if self._tqm.has_dead_workers():
-                raise AnsibleError("A worker was found in a dead state")
+                raise AssibleError("A worker was found in a dead state")
 
             results = self._process_pending_results(iterator)
             ret_results.extend(results)
@@ -865,7 +865,7 @@ class StrategyBase:
             if host.name == self._inventory.localhost.name:
                 real_host = self._inventory.localhost
             else:
-                raise AnsibleError('%s cannot be matched in inventory' % host.name)
+                raise AssibleError('%s cannot be matched in inventory' % host.name)
         group_name = result_item.get('add_group')
         parent_group_names = result_item.get('parent_groups', [])
 
@@ -921,7 +921,7 @@ class StrategyBase:
             if data is None:
                 return []
             elif not isinstance(data, list):
-                raise AnsibleError("included task files must contain a list of tasks")
+                raise AssibleError("included task files must contain a list of tasks")
 
             ti_copy = self._copy_included_file(included_file)
             # pop tags out of the include args, if they were specified there, and assign
@@ -932,11 +932,11 @@ class StrategyBase:
                 tags = tags.split(',')
             if len(tags) > 0:
                 if len(included_file._task.tags) > 0:
-                    raise AnsibleParserError("Include tasks should not specify tags in more than one way (both via args and directly on the task). "
+                    raise AssibleParserError("Include tasks should not specify tags in more than one way (both via args and directly on the task). "
                                              "Mixing tag specify styles is prohibited for whole import hierarchy, not only for single import statement",
                                              obj=included_file._task._ds)
                 display.deprecated("You should not specify tags in the include parameters. All tags should be specified using the task-level option",
-                                   version='2.12', collection_name='ansible.builtin')
+                                   version='2.12', collection_name='assible.builtin')
                 included_file._task.tags = tags
 
             block_list = load_list_of_blocks(
@@ -954,9 +954,9 @@ class StrategyBase:
             for host in included_file._hosts:
                 self._tqm._stats.increment('ok', host.name)
 
-        except AnsibleError as e:
-            if isinstance(e, AnsibleFileNotFound):
-                reason = "Could not find or access '%s' on the Ansible Controller." % to_text(e.file_name)
+        except AssibleError as e:
+            if isinstance(e, AssibleFileNotFound):
+                reason = "Could not find or access '%s' on the Assible Controller." % to_text(e.file_name)
             else:
                 reason = to_text(e)
 
@@ -1072,7 +1072,7 @@ class StrategyBase:
                             )
                             if not result:
                                 break
-                except AnsibleError as e:
+                except AssibleError as e:
                     for host in included_file._hosts:
                         iterator.mark_host_failed(host)
                         self._tqm._failed_hosts[host.name] = True
@@ -1234,7 +1234,7 @@ class StrategyBase:
             else:
                 msg = 'no connection, nothing to reset'
         else:
-            raise AnsibleError("invalid meta action requested: %s" % meta_action, obj=task._ds)
+            raise AssibleError("invalid meta action requested: %s" % meta_action, obj=task._ds)
 
         result = {'msg': msg}
         if skipped:
@@ -1266,7 +1266,7 @@ class StrategyBase:
         ''' updates the current active persistent connections '''
         for r in results:
             if 'args' in r._task_fields:
-                socket_path = r._task_fields['args'].get('_ansible_socket')
+                socket_path = r._task_fields['args'].get('_assible_socket')
                 if socket_path:
                     if r._host not in self._active_connections:
                         self._active_connections[r._host] = socket_path

@@ -3,7 +3,7 @@
         ".py"
     ],
     "prefixes": [
-        "lib/ansible/",
+        "lib/assible/",
         "plugins/"
     ],
     "output": "path-line-column-message"

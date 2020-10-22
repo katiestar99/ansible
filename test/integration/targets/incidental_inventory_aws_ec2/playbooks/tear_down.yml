@@ -10,7 +10,7 @@
 - name: remove setup security group
   ec2_group:
     name: '{{ resource_prefix }}_setup'
-    description: 'created by Ansible integration tests'
+    description: 'created by Assible integration tests'
     state: absent
     vpc_id: '{{ vpc_id }}'
     <<: *aws_connection_info

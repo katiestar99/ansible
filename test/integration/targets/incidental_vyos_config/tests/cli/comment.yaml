@@ -1,5 +1,5 @@
 ---
-- debug: msg="START cli/comment.yaml on connection={{ ansible_connection }}"
+- debug: msg="START cli/comment.yaml on connection={{ assible_connection }}"
 
 - name: setup
   vyos.vyos.vyos_config:
@@ -31,4 +31,4 @@
     lines: set system host-name {{ inventory_hostname_short }}
     match: none
 
-- debug: msg="END cli/comment.yaml on connection={{ ansible_connection }}"
+- debug: msg="END cli/comment.yaml on connection={{ assible_connection }}"

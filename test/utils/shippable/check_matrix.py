@@ -17,7 +17,7 @@ except ImportError:
 
 try:
     # noinspection PyCompatibility
-    from urllib2 import urlopen  # pylint: disable=ansible-bad-import-from
+    from urllib2 import urlopen  # pylint: disable=assible-bad-import-from
 except ImportError:
     # noinspection PyCompatibility
     from urllib.request import urlopen
@@ -26,7 +26,7 @@ except ImportError:
 def main():  # type: () -> None
     """Main entry point."""
     repo_full_name = os.environ['REPO_FULL_NAME']
-    required_repo_full_name = 'ansible/ansible'
+    required_repo_full_name = 'assible/assible'
 
     if repo_full_name != required_repo_full_name:
         sys.stderr.write('Skipping matrix check on repo "%s" which is not "%s".\n' % (repo_full_name, required_repo_full_name))
@@ -93,7 +93,7 @@ def fail(message, output):  # type: (str, str) -> NoReturn
     xml = '''
 <?xml version="1.0" encoding="utf-8"?>
 <testsuites disabled="0" errors="1" failures="0" tests="1" time="0.0">
-\t<testsuite disabled="0" errors="1" failures="0" file="None" log="None" name="ansible-test" skipped="0" tests="1" time="0" timestamp="%s" url="None">
+\t<testsuite disabled="0" errors="1" failures="0" file="None" log="None" name="assible-test" skipped="0" tests="1" time="0" timestamp="%s" url="None">
 \t\t<testcase classname="timeout" name="timeout">
 \t\t\t<error message="%s" type="error">%s</error>
 \t\t</testcase>

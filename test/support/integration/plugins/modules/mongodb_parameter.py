@@ -11,7 +11,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -117,9 +117,9 @@ except ImportError:
 else:
     pymongo_found = True
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.six.moves import configparser
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils.six.moves import configparser
+from assible.module_utils._text import to_native
 
 
 # =========================================
@@ -147,7 +147,7 @@ def load_mongocnf():
 #
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             login_user=dict(default=None),
             login_password=dict(default=None, no_log=True),

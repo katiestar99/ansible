@@ -27,9 +27,9 @@ options:
 notes:
     - This module is also supported for Windows targets.
 seealso:
-- module: ansible.builtin.assert
-- module: ansible.builtin.debug
-- module: ansible.builtin.meta
+- module: assible.builtin.assert
+- module: assible.builtin.debug
+- module: assible.builtin.meta
 author:
 - Dag Wieers (@dagwieers)
 '''

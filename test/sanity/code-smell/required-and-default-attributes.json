@@ -1,6 +1,6 @@
 {
     "prefixes": [
-        "lib/ansible/"
+        "lib/assible/"
     ],
     "extensions": [
         ".py"

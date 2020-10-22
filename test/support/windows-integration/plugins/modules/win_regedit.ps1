@@ -5,21 +5,21 @@
 # Copyright: (c) 2017, Jordan Borean <jborean93@gmail.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.PrivilegeUtil
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.PrivilegeUtil
 
 $params = Parse-Args -arguments $args -supports_check_mode $true
-$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
-$diff_mode = Get-AnsibleParam -obj $params -name "_ansible_diff" -type "bool" -default $false
-$_remote_tmp = Get-AnsibleParam $params "_ansible_remote_tmp" -type "path" -default $env:TMP
+$check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -type "bool" -default $false
+$diff_mode = Get-AssibleParam -obj $params -name "_assible_diff" -type "bool" -default $false
+$_remote_tmp = Get-AssibleParam $params "_assible_remote_tmp" -type "path" -default $env:TMP
 
-$path = Get-AnsibleParam -obj $params -name "path" -type "str" -failifempty $true -aliases "key"
-$name = Get-AnsibleParam -obj $params -name "name" -type "str" -aliases "entry","value"
-$data = Get-AnsibleParam -obj $params -name "data"
-$type = Get-AnsibleParam -obj $params -name "type" -type "str" -default "string" -validateset "none","binary","dword","expandstring","multistring","string","qword" -aliases "datatype"
-$state = Get-AnsibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent"
-$delete_key = Get-AnsibleParam -obj $params -name "delete_key" -type "bool" -default $true
-$hive = Get-AnsibleParam -obj $params -name "hive" -type "path"
+$path = Get-AssibleParam -obj $params -name "path" -type "str" -failifempty $true -aliases "key"
+$name = Get-AssibleParam -obj $params -name "name" -type "str" -aliases "entry","value"
+$data = Get-AssibleParam -obj $params -name "data"
+$type = Get-AssibleParam -obj $params -name "type" -type "str" -default "string" -validateset "none","binary","dword","expandstring","multistring","string","qword" -aliases "datatype"
+$state = Get-AssibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent"
+$delete_key = Get-AssibleParam -obj $params -name "delete_key" -type "bool" -default $true
+$hive = Get-AssibleParam -obj $params -name "hive" -type "path"
 
 $result = @{
     changed = $false
@@ -39,7 +39,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace Ansible.WinRegedit
+namespace Assible.WinRegedit
 {
     internal class NativeMethods
     {
@@ -122,7 +122,7 @@ if ($path -notmatch "^HK(CC|CR|CU|LM|U):\\") {
 $registry_path = (Split-Path -Path $path -NoQualifier).Substring(1)  # removes the hive: and leading \
 $registry_leaf = Split-Path -Path $path -Leaf
 if ($registry_path -ne $registry_leaf -and -not $registry_path.Contains('\')) {
-    $msg = "path is not using '\' as a separator, support for '/' as a separator will be removed in a future Ansible version"
+    $msg = "path is not using '\' as a separator, support for '/' as a separator will be removed in a future Assible version"
     Add-DeprecationWarning -obj $result -message $msg -version 2.12
     $registry_path = $registry_path.Replace('/', '\')
 }
@@ -193,7 +193,7 @@ Function Get-DiffValue {
 
 Function Set-StateAbsent {
     param(
-        # Used for diffs and exception messages to match up against Ansible input
+        # Used for diffs and exception messages to match up against Assible input
         [Parameter(Mandatory=$true)][String]$PrintPath,
         [Parameter(Mandatory=$true)][Microsoft.Win32.RegistryKey]$Hive,
         [Parameter(Mandatory=$true)][String]$Path,
@@ -387,7 +387,7 @@ if ($type -in @("binary", "none")) {
 
     if ($data -is [String]) {
         # if the data is a string we need to convert it to an unsigned int64
-        # it needs to be unsigned as Ansible passes in an unsigned value while
+        # it needs to be unsigned as Assible passes in an unsigned value while
         # powershell uses a signed data type. The value will then be converted
         # below
         $data = [UInt64]$data
@@ -457,25 +457,25 @@ try {
         $env:TMP = $original_tmp
 
         try {
-            Set-AnsiblePrivilege -Name SeBackupPrivilege -Value $true
-            Set-AnsiblePrivilege -Name SeRestorePrivilege -Value $true
+            Set-AssiblePrivilege -Name SeBackupPrivilege -Value $true
+            Set-AssiblePrivilege -Name SeRestorePrivilege -Value $true
         } catch [System.ComponentModel.Win32Exception] {
             Fail-Json -obj $result -message "failed to enable SeBackupPrivilege and SeRestorePrivilege for the current process: $($_.Exception.Message)"
         }
 
-        if (Test-Path -Path HKLM:\ANSIBLE) {
-            Add-Warning -obj $result -message "hive already loaded at HKLM:\ANSIBLE, had to unload hive for win_regedit to continue"
+        if (Test-Path -Path HKLM:\ASSIBLE) {
+            Add-Warning -obj $result -message "hive already loaded at HKLM:\ASSIBLE, had to unload hive for win_regedit to continue"
             try {
-                [Ansible.WinRegedit.Hive]::UnloadHive("ANSIBLE")
+                [Assible.WinRegedit.Hive]::UnloadHive("ASSIBLE")
             } catch [System.ComponentModel.Win32Exception] {
-                Fail-Json -obj $result -message "failed to unload registry hive HKLM:\ANSIBLE from $($hive): $($_.Exception.Message)"
+                Fail-Json -obj $result -message "failed to unload registry hive HKLM:\ASSIBLE from $($hive): $($_.Exception.Message)"
             }
         }
 
         try {
-            $loaded_hive = New-Object -TypeName Ansible.WinRegedit.Hive -ArgumentList "ANSIBLE", $hive
+            $loaded_hive = New-Object -TypeName Assible.WinRegedit.Hive -ArgumentList "ASSIBLE", $hive
         } catch [System.ComponentModel.Win32Exception] {
-            Fail-Json -obj $result -message "failed to load registry hive from '$hive' to HKLM:\ANSIBLE: $($_.Exception.Message)"
+            Fail-Json -obj $result -message "failed to load registry hive from '$hive' to HKLM:\ASSIBLE: $($_.Exception.Message)"
         }
     }
 

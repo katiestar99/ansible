@@ -8,7 +8,7 @@ The module file for vyos_facts
 """
 
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": [u"preview"],
     "supported_by": "network",
@@ -85,60 +85,60 @@ EXAMPLES = """
 """
 
 RETURN = """
-ansible_net_config:
+assible_net_config:
   description: The running-config from the device
   returned: when config is configured
   type: str
-ansible_net_commits:
+assible_net_commits:
   description: The set of available configuration revisions
   returned: when present
   type: list
-ansible_net_hostname:
+assible_net_hostname:
   description: The configured system hostname
   returned: always
   type: str
-ansible_net_model:
+assible_net_model:
   description: The device model string
   returned: always
   type: str
-ansible_net_serialnum:
+assible_net_serialnum:
   description: The serial number of the device
   returned: always
   type: str
-ansible_net_version:
+assible_net_version:
   description: The version of the software running
   returned: always
   type: str
-ansible_net_neighbors:
+assible_net_neighbors:
   description: The set of LLDP neighbors
   returned: when interface is configured
   type: list
-ansible_net_gather_subset:
+assible_net_gather_subset:
   description: The list of subsets gathered by the module
   returned: always
   type: list
-ansible_net_api:
+assible_net_api:
   description: The name of the transport
   returned: always
   type: str
-ansible_net_python_version:
-  description: The Python version Ansible controller is using
+assible_net_python_version:
+  description: The Python version Assible controller is using
   returned: always
   type: str
-ansible_net_gather_network_resources:
+assible_net_gather_network_resources:
   description: The list of fact resource subsets collected from the device
   returned: always
   type: list
 """
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.facts.facts import (
+from assible.module_utils.basic import AssibleModule
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.facts.facts import (
     FactsArgs,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.facts import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.facts import (
     Facts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
     vyos_argument_spec,
 )
 
@@ -147,12 +147,12 @@ def main():
     """
     Main entry point for module execution
 
-    :returns: ansible_facts
+    :returns: assible_facts
     """
     argument_spec = FactsArgs.argument_spec
     argument_spec.update(vyos_argument_spec)
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec, supports_check_mode=True
     )
 
@@ -164,10 +164,10 @@ def main():
 
     result = Facts(module).get_facts()
 
-    ansible_facts, additional_warnings = result
+    assible_facts, additional_warnings = result
     warnings.extend(additional_warnings)
 
-    module.exit_json(ansible_facts=ansible_facts, warnings=warnings)
+    module.exit_json(assible_facts=assible_facts, warnings=warnings)
 
 
 if __name__ == "__main__":

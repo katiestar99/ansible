@@ -1,5 +1,5 @@
 # (c) 2017, Peter Sprygada <psprygad@redhat.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -7,11 +7,11 @@ __metaclass__ = type
 import json
 import traceback
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.connection import ConnectionError
-from ansible.module_utils.six import binary_type, text_type
-from ansible.module_utils.six.moves import cPickle
-from ansible.utils.display import Display
+from assible.module_utils._text import to_text
+from assible.module_utils.connection import ConnectionError
+from assible.module_utils.six import binary_type, text_type
+from assible.module_utils.six.moves import cPickle
+from assible.utils.display import Display
 
 display = Display()
 

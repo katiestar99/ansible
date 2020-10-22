@@ -6,11 +6,11 @@ __metaclass__ = type
 
 import sys
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    module = AnsibleModule(argument_spec={})
+    module = AssibleModule(argument_spec={})
     module.exit_json(**dict(found=sys.executable))
 
 

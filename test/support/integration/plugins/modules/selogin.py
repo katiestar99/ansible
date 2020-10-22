@@ -19,7 +19,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -114,15 +114,15 @@ except ImportError:
     HAVE_SEOBJECT = False
 
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils._text import to_native
 
 
 def semanage_login_add(module, login, seuser, do_reload, serange='s0', sestore=''):
     """ Add linux user to SELinux user mapping
 
-    :type module: AnsibleModule
-    :param module: Ansible module
+    :type module: AssibleModule
+    :param module: Assible module
 
     :type login: str
     :param login: a Linux User or a Linux group if it begins with %
@@ -168,8 +168,8 @@ def semanage_login_add(module, login, seuser, do_reload, serange='s0', sestore='
 def semanage_login_del(module, login, seuser, do_reload, sestore=''):
     """ Delete linux user to SELinux user mapping
 
-    :type module: AnsibleModule
-    :param module: Ansible module
+    :type module: AssibleModule
+    :param module: Assible module
 
     :type login: str
     :param login: a Linux User or a Linux group if it begins with %
@@ -208,7 +208,7 @@ def get_runtime_status(ignore_selinux_state=False):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             ignore_selinux_state=dict(type='bool', default=False),
             login=dict(type='str', required=True),

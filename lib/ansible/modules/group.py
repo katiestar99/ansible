@@ -19,7 +19,7 @@ requirements:
 - groupmod
 description:
     - Manage presence of groups on a host.
-    - For Windows targets, use the M(ansible.windows.win_group) module instead.
+    - For Windows targets, use the M(assible.windows.win_group) module instead.
 options:
     name:
         description:
@@ -58,8 +58,8 @@ options:
         default: no
         version_added: "2.8"
 seealso:
-- module: ansible.builtin.user
-- module: ansible.windows.win_group
+- module: assible.builtin.user
+- module: assible.windows.win_group
 author:
 - Stephen Fromm (@sfromm)
 '''
@@ -104,9 +104,9 @@ system:
 import grp
 import os
 
-from ansible.module_utils._text import to_bytes
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.sys_info import get_platform_subclass
+from assible.module_utils._text import to_bytes
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.sys_info import get_platform_subclass
 
 
 class Group(object):
@@ -586,7 +586,7 @@ class AlpineGroup(BusyBoxGroup):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(type='str', default='present', choices=['absent', 'present']),
             name=dict(type='str', required=True),

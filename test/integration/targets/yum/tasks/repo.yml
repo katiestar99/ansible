@@ -47,7 +47,7 @@
     # ============================================================================
     - name: Install dinginessentail-1:1.0-2
       yum:
-        name: "dinginessentail-1:1.0-2.{{ ansible_architecture }}"
+        name: "dinginessentail-1:1.0-2.{{ assible_architecture }}"
         state: present
       register: yum_result
 
@@ -122,7 +122,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-1 from a file (higher version is already installed)
       yum:
-        name: "{{ repodir }}/dinginessentail-1.0-1.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-1.{{ assible_architecture }}.rpm"
         state: present
       register: yum_result
 
@@ -150,7 +150,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-1 from a file
       yum:
-        name: "{{ repodir }}/dinginessentail-1.0-1.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-1.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: true
       register: yum_result
@@ -174,7 +174,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-1 from a file again
       yum:
-        name: "{{ repodir }}/dinginessentail-1.0-1.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-1.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: true
       register: yum_result
@@ -198,7 +198,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-2 from a file
       yum:
-        name: "{{ repodir }}/dinginessentail-1.0-2.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-2.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: true
       register: yum_result
@@ -222,7 +222,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-2 from a file again
       yum:
-        name: "{{ repodir }}/dinginessentail-1.0-2.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-2.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: true
       register: yum_result
@@ -359,7 +359,7 @@
 
     - name: Downgrade dinginessentail using rpm file
       yum:
-        name: "{{ repodir }}/dinginessentail-1.0-1.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-1.{{ assible_architecture }}.rpm"
         state: present
         allow_downgrade: yes
         disable_gpg_check: yes
@@ -421,7 +421,7 @@
               - "'msg' in yum_result"
               - "'rc' in yum_result"
               - "'results' in yum_result"
-      when: ansible_architecture == "x86_64"
+      when: assible_architecture == "x86_64"
     # ============================================================================
     - block:
       - name: make sure dinginessentail is not installed
@@ -463,7 +463,7 @@
               - "'msg' in yum_result"
               - "'rc' in yum_result"
               - "'results' in yum_result"
-      when: ansible_architecture == "x86_64"
+      when: assible_architecture == "x86_64"
     # ============================================================================
   always:
     - name: Clean up
@@ -477,7 +477,7 @@
 - block:
     - name: Install 1:dinginessentail-1.0-2
       yum:
-        name: "1:dinginessentail-1.0-2.{{ ansible_architecture }}"
+        name: "1:dinginessentail-1.0-2.{{ assible_architecture }}"
         state: present
         disable_gpg_check: true
       register: yum_result
@@ -504,7 +504,7 @@
         name: dinginessentail
         state: absent
 
-  when: ansible_pkg_mgr == 'yum'
+  when: assible_pkg_mgr == 'yum'
 
 # DNF1 (Fedora < 26) had some issues:
 # - did not accept architecture tag as valid component of a package spec unless
@@ -518,7 +518,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-2
       yum:
-        name: "dinginessentail-1.0-2.{{ ansible_architecture }}"
+        name: "dinginessentail-1.0-2.{{ assible_architecture }}"
         state: present
         disable_gpg_check: true
       register: yum_result
@@ -567,9 +567,9 @@
       yum:
         name: dinginessentail
         state: absent
-  when: not (ansible_distribution == "Fedora" and ansible_distribution_major_version|int < 26)
+  when: not (assible_distribution == "Fedora" and assible_distribution_major_version|int < 26)
 
-# https://github.com/ansible/ansible/issues/47689
+# https://github.com/assible/assible/issues/47689
 - block:
     - name: Install dinginessentail == 1.0
       yum:
@@ -599,10 +599,10 @@
         name: dinginessentail
         state: absent
 
-  when: ansible_pkg_mgr == 'yum'
+  when: assible_pkg_mgr == 'yum'
 
 
-# https://github.com/ansible/ansible/pull/54603
+# https://github.com/assible/assible/pull/54603
 - block:
     - name: Install dinginessentail < 1.1
       yum:
@@ -649,9 +649,9 @@
         name: dinginessentail
         state: absent
 
-  when: ansible_pkg_mgr == 'yum'
+  when: assible_pkg_mgr == 'yum'
 
-# https://github.com/ansible/ansible/issues/45250
+# https://github.com/assible/assible/issues/45250
 - block:
     - name: Install dinginessentail-1.0, dinginessentail-olive-1.0, landsidescalping-1.0
       yum:

@@ -1,25 +1,25 @@
 #!powershell
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.FileUtil
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.FileUtil
 
 $ErrorActionPreference = "Stop"
 
 $params = Parse-Args -arguments $args -supports_check_mode $true
 
-$connect_timeout = Get-AnsibleParam -obj $params -name "connect_timeout" -type "int" -default 5
-$delay = Get-AnsibleParam -obj $params -name "delay" -type "int"
-$exclude_hosts = Get-AnsibleParam -obj $params -name "exclude_hosts" -type "list"
-$hostname = Get-AnsibleParam -obj $params -name "host" -type "str" -default "127.0.0.1"
-$path = Get-AnsibleParam -obj $params -name "path" -type "path"
-$port = Get-AnsibleParam -obj $params -name "port" -type "int"
-$regex = Get-AnsibleParam -obj $params -name "regex" -type "str" -aliases "search_regex","regexp"
-$sleep = Get-AnsibleParam -obj $params -name "sleep" -type "int" -default 1
-$state = Get-AnsibleParam -obj $params -name "state" -type "str" -default "started" -validateset "present","started","stopped","absent","drained"
-$timeout = Get-AnsibleParam -obj $params -name "timeout" -type "int" -default 300
+$connect_timeout = Get-AssibleParam -obj $params -name "connect_timeout" -type "int" -default 5
+$delay = Get-AssibleParam -obj $params -name "delay" -type "int"
+$exclude_hosts = Get-AssibleParam -obj $params -name "exclude_hosts" -type "list"
+$hostname = Get-AssibleParam -obj $params -name "host" -type "str" -default "127.0.0.1"
+$path = Get-AssibleParam -obj $params -name "path" -type "path"
+$port = Get-AssibleParam -obj $params -name "port" -type "int"
+$regex = Get-AssibleParam -obj $params -name "regex" -type "str" -aliases "search_regex","regexp"
+$sleep = Get-AssibleParam -obj $params -name "sleep" -type "int" -default 1
+$state = Get-AssibleParam -obj $params -name "state" -type "str" -default "started" -validateset "present","started","stopped","absent","drained"
+$timeout = Get-AssibleParam -obj $params -name "timeout" -type "int" -default 300
 
 $result = @{
     changed = $false
@@ -111,7 +111,7 @@ if ($null -eq $path -and $null -eq $port -and $state -ne "drained") {
         $complete = $false
         while (((Get-Date) - $start_time).TotalSeconds -lt $timeout) {
             $attempts += 1
-            if (Test-AnsiblePath -Path $path) {
+            if (Test-AssiblePath -Path $path) {
                 if ($null -eq $regex) {
                     $complete = $true
                     break
@@ -141,7 +141,7 @@ if ($null -eq $path -and $null -eq $port -and $state -ne "drained") {
         $complete = $false
         while (((Get-Date) - $start_time).TotalSeconds -lt $timeout) {
             $attempts += 1
-            if (Test-AnsiblePath -Path $path) {
+            if (Test-AssiblePath -Path $path) {
                 if ($null -ne $regex) {
                     $file_contents = Get-Content -Path $path -Raw
                     if ($file_contents -notmatch $regex) {

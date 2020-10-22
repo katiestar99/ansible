@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -37,8 +37,8 @@ DOCUMENTATION = '''
 
 EXAMPLES = '''
     # inventory.config file in YAML format
-    # remember to enable this inventory plugin in the ansible.cfg before using
-    # View the output using `ansible-inventory -i inventory.config --list`
+    # remember to enable this inventory plugin in the assible.cfg before using
+    # View the output using `assible-inventory -i inventory.config --list`
     plugin: generator
     hosts:
         name: "{{ operation }}_{{ application }}_{{ environment }}_runner"
@@ -75,9 +75,9 @@ import os
 
 from itertools import product
 
-from ansible import constants as C
-from ansible.errors import AnsibleParserError
-from ansible.plugins.inventory import BaseInventoryPlugin
+from assible import constants as C
+from assible.errors import AssibleParserError
+from assible.plugins.inventory import BaseInventoryPlugin
 
 
 class InventoryModule(BaseInventoryPlugin):
@@ -109,7 +109,7 @@ class InventoryModule(BaseInventoryPlugin):
             try:
                 groupname = self.template(parent['name'], template_vars)
             except (AttributeError, ValueError):
-                raise AnsibleParserError("Element %s has a parent with no name element" % child['name'])
+                raise AssibleParserError("Element %s has a parent with no name element" % child['name'])
             if groupname not in inventory.groups:
                 inventory.add_group(groupname)
             group = inventory.groups[groupname]

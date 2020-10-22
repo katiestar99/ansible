@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -7,14 +7,14 @@ __metaclass__ = type
 
 import os
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.inventory.host import Host
-from ansible.module_utils._text import to_bytes
-from ansible.plugins.loader import vars_loader
-from ansible.utils.collection_loader import AnsibleCollectionRef
-from ansible.utils.display import Display
-from ansible.utils.vars import combine_vars
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.inventory.host import Host
+from assible.module_utils._text import to_bytes
+from assible.plugins.loader import vars_loader
+from assible.utils.collection_loader import AssibleCollectionRef
+from assible.utils.display import Display
+from assible.utils.vars import combine_vars
 
 display = Display()
 
@@ -33,9 +33,9 @@ def get_plugin_vars(loader, plugin, path, entities):
                     data.update(plugin.get_group_vars(entity.name))
         except AttributeError:
             if hasattr(plugin, 'run'):
-                raise AnsibleError("Cannot use v1 type vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
+                raise AssibleError("Cannot use v1 type vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
             else:
-                raise AnsibleError("Invalid vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
+                raise AssibleError("Invalid vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
     return data
 
 
@@ -45,7 +45,7 @@ def get_vars_from_path(loader, path, entities, stage):
 
     vars_plugin_list = list(vars_loader.all())
     for plugin_name in C.VARIABLE_PLUGINS_ENABLED:
-        if AnsibleCollectionRef.is_valid_fqcr(plugin_name):
+        if AssibleCollectionRef.is_valid_fqcr(plugin_name):
             vars_plugin = vars_loader.get(plugin_name)
             if vars_plugin is None:
                 # Error if there's no play directory or the name is wrong?
@@ -55,7 +55,7 @@ def get_vars_from_path(loader, path, entities, stage):
 
     for plugin in vars_plugin_list:
         if plugin._load_name not in C.VARIABLE_PLUGINS_ENABLED and getattr(plugin, 'REQUIRES_WHITELIST', False):
-            # 2.x plugins shipped with ansible should require whitelisting, older or non shipped should load automatically
+            # 2.x plugins shipped with assible should require whitelisting, older or non shipped should load automatically
             continue
 
         has_stage = hasattr(plugin, 'get_option') and plugin.has_option('stage')

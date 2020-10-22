@@ -46,14 +46,14 @@ DOCUMENTATION = '''
 '''
 
 EXAMPLES = '''
-# Example command line: ansible-inventory --list -i test_inventory.yml
+# Example command line: assible-inventory --list -i test_inventory.yml
 
 plugin: test_inventory
 departments:
   - paris
 '''
 
-from ansible.plugins.inventory import BaseInventoryPlugin
+from assible.plugins.inventory import BaseInventoryPlugin
 
 
 class InventoryModule(BaseInventoryPlugin):

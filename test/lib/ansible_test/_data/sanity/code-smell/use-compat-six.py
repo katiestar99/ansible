@@ -13,7 +13,7 @@ def main():
                 match = re.search(r'((^\s*import\s+six\b)|(^\s*from\s+six\b))', text)
 
                 if match:
-                    print('%s:%d:%d: use `ansible.module_utils.six` instead of `six`' % (
+                    print('%s:%d:%d: use `assible.module_utils.six` instead of `six`' % (
                         path, line + 1, match.start(1) + 1))
 
 

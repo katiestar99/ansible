@@ -5,7 +5,7 @@
 
 # this is a virtual module that is entirely implemented server side
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 

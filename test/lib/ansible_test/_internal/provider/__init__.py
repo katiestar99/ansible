@@ -1,4 +1,4 @@
-"""Provider (plugin) infrastructure for ansible-test."""
+"""Provider (plugin) infrastructure for assible-test."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 

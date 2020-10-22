@@ -4,7 +4,7 @@
 YAML Syntax
 ===========
 
-This page provides a basic overview of correct YAML syntax, which is how Ansible
+This page provides a basic overview of correct YAML syntax, which is how Assible
 playbooks (our configuration management language) are expressed.
 
 We use YAML because it is easier for humans to read and write than other common
@@ -18,12 +18,12 @@ is used in practice.
 YAML Basics
 -----------
 
-For Ansible, nearly every YAML file starts with a list.
+For Assible, nearly every YAML file starts with a list.
 Each item in the list is a list of key/value pairs, commonly
 called a "hash" or a "dictionary".  So, we need to know how
 to write lists and dictionaries in YAML.
 
-There's another small quirk to YAML.  All YAML files (regardless of their association with Ansible or not) can optionally
+There's another small quirk to YAML.  All YAML files (regardless of their association with Assible or not) can optionally
 begin with ``---`` and end with ``...``.  This is part of the YAML format and indicates the start and end of a document.
 
 All members of a list are lines beginning at the same indentation level starting with a ``"- "`` (a dash and a space)::
@@ -72,7 +72,7 @@ These are called "Flow collections".
 
 .. _truthiness:
 
-Ansible doesn't really use these too much, but you can also specify a boolean value (true/false) in several forms::
+Assible doesn't really use these too much, but you can also specify a boolean value (true/false) in several forms::
 
     create_key: yes
     needs_agent: no
@@ -110,7 +110,7 @@ While in the above ``>`` example all newlines are folded into spaces, there are 
     same_as: "a b\nc d\n  e\nf\n"
 
 Let's combine what we learned so far in an arbitrary YAML example.
-This really has nothing to do with Ansible, but will give you a feel for the format::
+This really has nothing to do with Assible, but will give you a feel for the format::
 
     ---
     # An employee record
@@ -132,7 +132,7 @@ This really has nothing to do with Ansible, but will give you a feel for the for
       3 A-Levels
       BSc in the Internet of Things
 
-That's all you really need to know about YAML to start writing `Ansible` playbooks.
+That's all you really need to know about YAML to start writing `Assible` playbooks.
 
 Gotchas
 -------
@@ -179,7 +179,7 @@ The following is invalid YAML:
     foo: "an escaped \' single quote"
 
 
-Further, Ansible uses "{{ var }}" for variables.  If a value after a colon starts
+Further, Assible uses "{{ var }}" for variables.  If a value after a colon starts
 with a "{", YAML will think it is a dictionary, so you must quote it, like so::
 
     foo: "{{ variable }}"
@@ -227,14 +227,14 @@ value::
        Learn what playbooks can do and how to write/run them.
    `YAMLLint <http://yamllint.com/>`_
        YAML Lint (online) helps you debug YAML syntax if you are having problems
-   `GitHub examples directory <https://github.com/ansible/ansible-examples>`_
+   `GitHub examples directory <https://github.com/assible/assible-examples>`_
        Complete playbook files from the github project source
    `Wikipedia YAML syntax reference <https://en.wikipedia.org/wiki/YAML>`_
        A good guide to YAML syntax
-   `Mailing List <https://groups.google.com/group/ansible-project>`_
+   `Mailing List <https://groups.google.com/group/assible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel and #yaml for YAML specific questions
+       #assible IRC chat channel and #yaml for YAML specific questions
    `YAML 1.1 Specification <https://yaml.org/spec/1.1/>`_
        The Specification for YAML 1.1, which PyYAML and libyaml are currently
        implementing

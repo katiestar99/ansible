@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 
-namespace Ansible.Privilege
+namespace Assible.Privilege
 {
     internal class NativeHelpers
     {

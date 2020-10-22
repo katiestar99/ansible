@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'community'}
 
@@ -64,12 +64,12 @@ options:
     - The database state.
     - C(present) implies that the database should be created if necessary.
     - C(absent) implies that the database should be removed if present.
-    - C(dump) requires a target definition to which the database will be backed up. (Added in Ansible 2.4)
+    - C(dump) requires a target definition to which the database will be backed up. (Added in Assible 2.4)
       Note that in some PostgreSQL versions of pg_dump, which is an embedded PostgreSQL utility and is used by the module,
       returns rc 0 even when errors occurred (e.g. the connection is forbidden by pg_hba.conf, etc.),
       so the module returns changed=True but the dump has not actually been done. Please, be sure that your version of
       pg_dump returns rc 1 in this case.
-    - C(restore) also requires a target definition from which the database will be restored. (Added in Ansible 2.4)
+    - C(restore) also requires a target definition from which the database will be restored. (Added in Assible 2.4)
     - The format of the backup will be detected based on the target name.
     - Supported compression formats for dump and restore include C(.pgc), C(.bz2), C(.gz) and C(.xz)
     - Supported formats for dump and restore include C(.sql) and C(.tar)
@@ -90,7 +90,7 @@ options:
     version_added: '2.4'
   maintenance_db:
     description:
-      - The value specifies the initial database (which is also called as maintenance DB) that Ansible connects to.
+      - The value specifies the initial database (which is also called as maintenance DB) that Assible connects to.
     type: str
     default: postgres
     version_added: '2.5'
@@ -131,7 +131,7 @@ seealso:
 - module: postgresql_ping
 notes:
 - State C(dump) and C(restore) don't require I(psycopg2) since version 2.8.
-author: "Ansible Core Team"
+author: "Assible Core Team"
 extends_documentation_fragment:
 - postgres
 '''
@@ -213,12 +213,12 @@ except ImportError:
 else:
     HAS_PSYCOPG2 = True
 
-import ansible.module_utils.postgres as pgutils
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.database import SQLParseError, pg_quote_identifier
-from ansible.module_utils.six import iteritems
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.module_utils._text import to_native
+import assible.module_utils.postgres as pgutils
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.database import SQLParseError, pg_quote_identifier
+from assible.module_utils.six import iteritems
+from assible.module_utils.six.moves import shlex_quote
+from assible.module_utils._text import to_native
 
 executed_commands = []
 
@@ -530,7 +530,7 @@ def main():
         dump_extra_args=dict(type='str', default=None),
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True
     )

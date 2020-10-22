@@ -2,7 +2,7 @@ using System;
 
 //TypeAccelerator -Name CSRel4 -TypeName TestClass
 
-namespace ansible_collections.my_ns.my_col.plugins.module_utils.sub_pkg.CSRel4
+namespace assible_collections.my_ns.my_col.plugins.module_utils.sub_pkg.CSRel4
 {
     public class TestClass
     {

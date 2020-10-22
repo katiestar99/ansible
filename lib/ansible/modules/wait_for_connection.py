@@ -16,7 +16,7 @@ description:
 - Waits for a total of C(timeout) seconds.
 - Retries the transport connection after a timeout of C(connect_timeout).
 - Tests the transport connection every C(sleep) seconds.
-- This module makes use of internal ansible transport (and configuration) and the ping/win_ping module to guarantee correct end-to-end functioning.
+- This module makes use of internal assible transport (and configuration) and the ping/win_ping module to guarantee correct end-to-end functioning.
 - This module is also supported for Windows targets.
 version_added: '2.3'
 options:
@@ -43,8 +43,8 @@ options:
 notes:
 - This module is also supported for Windows targets.
 seealso:
-- module: ansible.builtin.wait_for
-- module: ansible.windows.win_wait_for
+- module: assible.builtin.wait_for
+- module: assible.windows.win_wait_for
 - module: community.windows.win_wait_for_process
 author:
 - Dag Wieers (@dagwieers)
@@ -87,7 +87,7 @@ EXAMPLES = r'''
       customization:
         hostname: '{{ vm_shortname }}'
         runonce:
-        - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+        - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAssible.ps1 -ForceNewSSLCert -EnableCredSSP
     delegate_to: localhost
 
   - name: Wait for system to become reachable over WinRM

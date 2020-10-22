@@ -5,7 +5,7 @@
     - namespace_2
 
 - name: Add a couple collections to the repository
-  command: 'ansible-galaxy collection init {{ item }}'
+  command: 'assible-galaxy collection init {{ item }}'
   args:
     chdir: '{{ galaxy_dir }}/development'
   loop:

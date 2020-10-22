@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -12,9 +12,9 @@ from io import BytesIO
 
 import pytest
 
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import PY2
-from ansible.module_utils.compat import selectors
+from assible.module_utils._text import to_native
+from assible.module_utils.six import PY2
+from assible.module_utils.compat import selectors
 
 
 class OpenBytesIO(BytesIO):
@@ -39,7 +39,7 @@ def mock_os(mocker):
         else:
             return os.getcwd.return_value + '/' + path
 
-    os = mocker.patch('ansible.module_utils.basic.os')
+    os = mocker.patch('assible.module_utils.basic.os')
 
     os.path.expandvars.side_effect = lambda x: x
     os.path.expanduser.side_effect = lambda x: x
@@ -111,7 +111,7 @@ def mock_subprocess(mocker):
 
     selectors.DefaultSelector = MockSelector
 
-    subprocess = mocker.patch('ansible.module_utils.basic.subprocess')
+    subprocess = mocker.patch('assible.module_utils.basic.subprocess')
     subprocess._output = {mocker.sentinel.stdout: SpecialBytesIO(b'', fh=mocker.sentinel.stdout),
                           mocker.sentinel.stderr: SpecialBytesIO(b'', fh=mocker.sentinel.stderr)}
 
@@ -258,7 +258,7 @@ class TestRunCommandOutput:
 
 @pytest.mark.parametrize('stdin', [{}], indirect=['stdin'])
 def test_run_command_fds(mocker, rc_am):
-    subprocess_mock = mocker.patch('ansible.module_utils.basic.subprocess')
+    subprocess_mock = mocker.patch('assible.module_utils.basic.subprocess')
     subprocess_mock.Popen.side_effect = AssertionError
 
     try:

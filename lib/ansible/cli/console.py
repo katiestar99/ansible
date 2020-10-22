@@ -1,13 +1,13 @@
 # Copyright: (c) 2014, Nandor Sivok <dominis@haxor.hu>
 # Copyright: (c) 2016, Redhat Inc
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 ########################################################
-# ansible-console is an interactive REPL shell for ansible
+# assible-console is an interactive REPL shell for assible
 # with built-in tab completion for all the documented modules
 #
 # Available commands:
@@ -15,7 +15,7 @@ __metaclass__ = type
 #  list - list available hosts in the current path
 #  forks - change fork
 #  become - become
-#  ! - forces shell module instead of the ansible module (!yum update -y)
+#  ! - forces shell module instead of the assible module (!yum update -y)
 
 import atexit
 import cmd
@@ -24,25 +24,25 @@ import readline
 import os
 import sys
 
-from ansible import constants as C
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.executor.task_queue_manager import TaskQueueManager
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.parsing.splitter import parse_kv
-from ansible.playbook.play import Play
-from ansible.plugins.loader import module_loader, fragment_loader
-from ansible.utils import plugin_docs
-from ansible.utils.color import stringc
-from ansible.utils.display import Display
+from assible import constants as C
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.executor.task_queue_manager import TaskQueueManager
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.parsing.splitter import parse_kv
+from assible.playbook.play import Play
+from assible.plugins.loader import module_loader, fragment_loader
+from assible.utils import plugin_docs
+from assible.utils.color import stringc
+from assible.utils.display import Display
 
 display = Display()
 
 
 class ConsoleCLI(CLI, cmd.Cmd):
-    ''' a REPL that allows for running ad-hoc tasks against a chosen inventory (based on dominis' ansible-shell).'''
+    ''' a REPL that allows for running ad-hoc tasks against a chosen inventory (based on dominis' assible-shell).'''
 
     modules = []
     ARGUMENTS = {'host-pattern': 'A name of a group in the inventory, a shell-like glob '
@@ -55,7 +55,7 @@ class ConsoleCLI(CLI, cmd.Cmd):
 
         super(ConsoleCLI, self).__init__(args)
 
-        self.intro = 'Welcome to the ansible console.\nType help or ? to list commands.\n'
+        self.intro = 'Welcome to the assible console.\nType help or ? to list commands.\n'
 
         self.groups = []
         self.hosts = []
@@ -80,7 +80,7 @@ class ConsoleCLI(CLI, cmd.Cmd):
 
     def init_parser(self):
         super(ConsoleCLI, self).init_parser(
-            desc="REPL console for executing Ansible tasks.",
+            desc="REPL console for executing Assible tasks.",
             epilog="This is not a live session/connection, each task executes in the background and returns it's results."
         )
         opt_help.add_runas_options(self.parser)
@@ -184,7 +184,7 @@ class ConsoleCLI(CLI, cmd.Cmd):
         try:
             check_raw = module in ('command', 'shell', 'script', 'raw')
             play_ds = dict(
-                name="Ansible Shell",
+                name="Assible Shell",
                 hosts=self.cwd,
                 gather_facts='no',
                 tasks=[dict(action=dict(module=module, args=parse_kv(module_args, check_raw=check_raw)))],
@@ -443,7 +443,7 @@ class ConsoleCLI(CLI, cmd.Cmd):
         else:
             readline.parse_and_bind("tab: complete")
 
-        histfile = os.path.join(os.path.expanduser("~"), ".ansible-console_history")
+        histfile = os.path.join(os.path.expanduser("~"), ".assible-console_history")
         try:
             readline.read_history_file(histfile)
         except IOError:

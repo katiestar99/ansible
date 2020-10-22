@@ -8,7 +8,7 @@ Integration tests
 
 .. contents:: Topics
 
-The Ansible integration Test system.
+The Assible integration Test system.
 
 Tests for playbooks, by playbooks.
 
@@ -17,30 +17,30 @@ Some tests may require credentials.  Credentials may be specified with `credenti
 Some tests may require root.
 
 .. note::
-  Every new module and plugin should have integration tests, even if the tests cannot be run on Ansible CI infrastructure.
-  In this case, the tests should be marked with the ``unsupported`` alias in `aliases file <https://docs.ansible.com/ansible/latest/dev_guide/testing/sanity/integration-aliases.html>`_.
+  Every new module and plugin should have integration tests, even if the tests cannot be run on Assible CI infrastructure.
+  In this case, the tests should be marked with the ``unsupported`` alias in `aliases file <https://docs.assible.com/assible/latest/dev_guide/testing/sanity/integration-aliases.html>`_.
 
 Quick Start
 ===========
 
 It is highly recommended that you install and activate the ``argcomplete`` python package.
-It provides tab completion in ``bash`` for the ``ansible-test`` test runner.
+It provides tab completion in ``bash`` for the ``assible-test`` test runner.
 
 Configuration
 =============
 
-ansible-test command
+assible-test command
 --------------------
 
 The example below assumes ``bin/`` is in your ``$PATH``. An easy way to achieve that
 is to initialize your environment with the ``env-setup`` command::
 
     source hacking/env-setup
-    ansible-test --help
+    assible-test --help
 
-You can also call ``ansible-test`` with the full path::
+You can also call ``assible-test`` with the full path::
 
-    bin/ansible-test --help
+    bin/assible-test --help
 
 integration_config.yml
 ----------------------
@@ -68,7 +68,7 @@ outside of those test subdirectories.  They will also not reconfigure or bounce 
 
 .. note:: Running integration tests within Docker
 
-   To protect your system from any potential changes caused by integration tests, and to ensure a sensible set of dependencies are available we recommend that you always run integration tests with the ``--docker`` option, for example ``--docker centos8``. See the `list of supported docker images <https://github.com/ansible/ansible/blob/devel/test/lib/ansible_test/_data/completion/docker.txt>`_ for options (the ``default`` image is used for sanity and unit tests, as well as for platform independent integration tests such as those for cloud modules).
+   To protect your system from any potential changes caused by integration tests, and to ensure a sensible set of dependencies are available we recommend that you always run integration tests with the ``--docker`` option, for example ``--docker centos8``. See the `list of supported docker images <https://github.com/assible/assible/blob/devel/test/lib/assible_test/_data/completion/docker.txt>`_ for options (the ``default`` image is used for sanity and unit tests, as well as for platform independent integration tests such as those for cloud modules).
 
 .. note:: Avoiding pulling new Docker images
 
@@ -76,23 +76,23 @@ outside of those test subdirectories.  They will also not reconfigure or bounce 
 
 Run as follows for all POSIX platform tests executed by our CI system in a fedora32 docker container::
 
-    ansible-test integration shippable/ --docker fedora32
+    assible-test integration shippable/ --docker fedora32
 
 You can target a specific tests as well, such as for individual modules::
 
-    ansible-test integration ping
+    assible-test integration ping
 
 You can use the ``-v`` option to make the output more verbose::
 
-    ansible-test integration lineinfile -vvv
+    assible-test integration lineinfile -vvv
 
 Use the following command to list all the available targets::
 
-    ansible-test integration --list-targets
+    assible-test integration --list-targets
 
 .. note:: Bash users
 
-   If you use ``bash`` with ``argcomplete``, obtain a full list by doing: ``ansible-test integration <tab><tab>``
+   If you use ``bash`` with ``argcomplete``, obtain a full list by doing: ``assible-test integration <tab><tab>``
 
 Destructive Tests
 =================
@@ -100,7 +100,7 @@ Destructive Tests
 These tests are allowed to install and remove some trivial packages.  You will likely want to devote these
 to a virtual environment, such as Docker.  They won't reformat your filesystem::
 
-    ansible-test integration destructive/ --docker fedora32
+    assible-test integration destructive/ --docker fedora32
 
 Windows Tests
 =============
@@ -123,13 +123,13 @@ Define Windows inventory::
 
 Run the Windows tests executed by our CI system::
 
-    ansible-test windows-integration -v shippable/
+    assible-test windows-integration -v shippable/
 
 Tests in Docker containers
 ==========================
 
 If you have a Linux system with Docker installed, running integration tests using the same Docker containers used by
-the Ansible continuous integration (CI) system is recommended.
+the Assible continuous integration (CI) system is recommended.
 
 .. note:: Docker on non-Linux
 
@@ -142,12 +142,12 @@ Running Integration Tests
 
 To run all CI integration test targets for POSIX platforms in a Ubuntu 18.04 container::
 
-    ansible-test integration shippable/ --docker ubuntu1804
+    assible-test integration shippable/ --docker ubuntu1804
 
 You can also run specific tests or select a different Linux distribution.
 For example, to run tests for the ``ping`` module on a Ubuntu 18.04 container::
 
-    ansible-test integration ping --docker ubuntu1804
+    assible-test integration ping --docker ubuntu1804
 
 Container Images
 ----------------
@@ -193,7 +193,7 @@ tests now use the file test/integration/cloud-config-aws.yml
 IAM policies for AWS
 ====================
 
-Ansible needs fairly wide ranging powers to run the tests in an AWS account.  This rights can be provided to a dedicated user. These need to be configured before running the test.
+Assible needs fairly wide ranging powers to run the tests in an AWS account.  This rights can be provided to a dedicated user. These need to be configured before running the test.
 
 testing-policies
 ----------------
@@ -202,10 +202,10 @@ The GitHub repository `mattclay/aws-terminator <https://github.com/mattclay/aws-
 contains two sets of policies used for all existing AWS module integratoin tests.
 The `hacking/aws_config/setup_iam.yml` playbook can be used to setup two groups:
 
-  - `ansible-integration-ci` will have the policies applied necessary to run any
+  - `assible-integration-ci` will have the policies applied necessary to run any
     integration tests not marked as `unsupported` and are designed to mirror those
-    used by Ansible's CI.
-  - `ansible-integration-unsupported` will have the additional policies applied
+    used by Assible's CI.
+  - `assible-integration-unsupported` will have the additional policies applied
     necessary to run the integration tests marked as `unsupported` including tests
     for managing IAM roles, users and groups.
 
@@ -220,7 +220,7 @@ Other Definitions required
 --------------------------
 
 Apart from installing the policy and giving it to the user identity running the tests, a
-lambda role `ansible_integration_tests` has to be created which has lambda basic execution
+lambda role `assible_integration_tests` has to be created which has lambda basic execution
 privileges.
 
 
@@ -233,4 +233,4 @@ For guidance on writing network test see :ref:`testing_resource_modules`.
 Where to find out more
 ======================
 
-If you'd like to know more about the plans for improving testing Ansible, join the `Testing Working Group <https://github.com/ansible/community/blob/master/meetings/README.md>`_.
+If you'd like to know more about the plans for improving testing Assible, join the `Testing Working Group <https://github.com/assible/community/blob/master/meetings/README.md>`_.

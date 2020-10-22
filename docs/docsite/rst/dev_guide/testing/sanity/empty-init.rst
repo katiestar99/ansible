@@ -5,6 +5,6 @@ The ``__init__.py`` files under the following directories must be empty.  For so
 and tests), ``__init__.py`` files with code won't be used.  For others (module_utils), we want the
 possibility of using Python namespaces which an empty ``__init__.py`` will allow for.
 
-- ``lib/ansible/modules/``
-- ``lib/ansible/module_utils/``
+- ``lib/assible/modules/``
+- ``lib/assible/module_utils/``
 - ``test/units/``

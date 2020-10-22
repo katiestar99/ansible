@@ -25,8 +25,8 @@ The content on this page has been moved to :ref:`playbooks_reuse`.
    :ref:`list_of_collections`
        Browse existing collections, modules, and plugins
    :ref:`developing_modules`
-       Learn how to extend Ansible by writing your own modules
-   `GitHub Ansible examples <https://github.com/ansible/ansible-examples>`_
+       Learn how to extend Assible by writing your own modules
+   `GitHub Assible examples <https://github.com/assible/assible-examples>`_
        Complete playbook files from the GitHub project source
-   `Mailing List <https://groups.google.com/group/ansible-project>`_
+   `Mailing List <https://groups.google.com/group/assible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups

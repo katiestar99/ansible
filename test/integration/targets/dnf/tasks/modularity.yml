@@ -1,6 +1,6 @@
 # FUTURE - look at including AppStream support in our local repo
 - name: Include distribution specific variables
-  include_vars: "{{ ansible_facts.distribution }}.yml"
+  include_vars: "{{ assible_facts.distribution }}.yml"
 
 - name: install "{{ astream_name }}" module
   dnf:

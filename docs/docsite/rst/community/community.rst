@@ -3,4 +3,4 @@
 Community Information & Contributing
 ````````````````````````````````````
 
-This page is deprecated. Please see the updated :ref:`Ansible Community Guide <ansible_community_guide>`.
+This page is deprecated. Please see the updated :ref:`Assible Community Guide <assible_community_guide>`.

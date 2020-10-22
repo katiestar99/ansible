@@ -6,8 +6,8 @@ Alibaba Cloud Compute Services Guide
 Introduction
 ````````````
 
-Ansible contains several modules for controlling and managing Alibaba Cloud Compute Services (Alicloud).  This guide
-explains how to use the Alicloud Ansible modules together.
+Assible contains several modules for controlling and managing Alibaba Cloud Compute Services (Alicloud).  This guide
+explains how to use the Alicloud Assible modules together.
 
 All Alicloud modules require ``footmark`` - install it on your control machine with ``pip install footmark``.
 
@@ -35,7 +35,7 @@ To pass authentication credentials as environment variables::
     export ALICLOUD_ACCESS_KEY='Alicloud123'
     export ALICLOUD_SECRET_KEY='AlicloudSecret123'
 
-To store authentication credentials in a vars_file, encrypt them with :ref:`Ansible Vault<vault>` to keep them secure, then list them::
+To store authentication credentials in a vars_file, encrypt them with :ref:`Assible Vault<vault>` to keep them secure, then list them::
 
     ---
     alicloud_access_key: "--REMOVED--"

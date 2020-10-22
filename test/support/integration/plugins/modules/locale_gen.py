@@ -6,7 +6,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -42,8 +42,8 @@ import os
 import re
 from subprocess import Popen, PIPE, call
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native
 
 LOCALE_NORMALIZATION = {
     ".utf8": ".UTF-8",
@@ -187,7 +187,7 @@ def apply_change_ubuntu(targetState, name):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(type='str', required=True),
             state=dict(type='str', default='present', choices=['absent', 'present']),

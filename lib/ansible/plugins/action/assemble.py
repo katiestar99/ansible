@@ -1,16 +1,16 @@
 # (c) 2013-2016, Michael DeHaan <michael.dehaan@gmail.com>
 #           Stephen Fromm <sfromm@gmail.com>
 #           Brian Coca  <briancoca+dev@gmail.com>
-#           Toshio Kuratomi  <tkuratomi@ansible.com>
+#           Toshio Kuratomi  <tkuratomi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -25,12 +25,12 @@ import os.path
 import re
 import tempfile
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleAction, _AnsibleActionDone, AnsibleActionFail
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.action import ActionBase
-from ansible.utils.hashing import checksum_s
+from assible import constants as C
+from assible.errors import AssibleError, AssibleAction, _AssibleActionDone, AssibleActionFail
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.action import ActionBase
+from assible.utils.hashing import checksum_s
 
 
 class ActionModule(ActionBase):
@@ -101,20 +101,20 @@ class ActionModule(ActionBase):
 
         try:
             if src is None or dest is None:
-                raise AnsibleActionFail("src and dest are required")
+                raise AssibleActionFail("src and dest are required")
 
             if boolean(remote_src, strict=False):
-                # call assemble via ansible.legacy to allow library/ overrides of the module without collection search
-                result.update(self._execute_module(module_name='ansible.legacy.assemble', task_vars=task_vars))
-                raise _AnsibleActionDone()
+                # call assemble via assible.legacy to allow library/ overrides of the module without collection search
+                result.update(self._execute_module(module_name='assible.legacy.assemble', task_vars=task_vars))
+                raise _AssibleActionDone()
             else:
                 try:
                     src = self._find_needle('files', src)
-                except AnsibleError as e:
-                    raise AnsibleActionFail(to_native(e))
+                except AssibleError as e:
+                    raise AssibleActionFail(to_native(e))
 
             if not os.path.isdir(src):
-                raise AnsibleActionFail(u"Source (%s) is not a directory" % src)
+                raise AssibleActionFail(u"Source (%s) is not a directory" % src)
 
             _re = None
             if regexp is not None:
@@ -151,14 +151,14 @@ class ActionModule(ActionBase):
 
                 new_module_args.update(dict(src=xfered,))
 
-                res = self._execute_module(module_name='ansible.legacy.copy', module_args=new_module_args, task_vars=task_vars)
+                res = self._execute_module(module_name='assible.legacy.copy', module_args=new_module_args, task_vars=task_vars)
                 if diff:
                     res['diff'] = diff
                 result.update(res)
             else:
-                result.update(self._execute_module(module_name='ansible.legacy.file', module_args=new_module_args, task_vars=task_vars))
+                result.update(self._execute_module(module_name='assible.legacy.file', module_args=new_module_args, task_vars=task_vars))
 
-        except AnsibleAction as e:
+        except AssibleAction as e:
             result.update(e.result)
         finally:
             self._remove_tmp_path(self._connection._shell.tmpdir)

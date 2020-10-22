@@ -6,7 +6,7 @@ source virtualenv.sh
 
 pip install -U -r requirements.txt
 
-ANSIBLE_ROLES_PATH=../
-export ANSIBLE_ROLES_PATH
+ASSIBLE_ROLES_PATH=../
+export ASSIBLE_ROLES_PATH
 
-ansible-playbook -i ../../inventory main.yml -v "$@"
+assible-playbook -i ../../inventory main.yml -v "$@"

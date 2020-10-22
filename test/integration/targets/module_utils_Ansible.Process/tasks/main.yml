@@ -1,9 +1,9 @@
 ---
-- name: test Ansible.Process.cs
-  ansible_process_tests:
-  register: ansible_process_tests
+- name: test Assible.Process.cs
+  assible_process_tests:
+  register: assible_process_tests
 
-- name: assert test Ansible.Process.cs
+- name: assert test Assible.Process.cs
   assert:
     that:
-    - ansible_process_tests.data == "success"
+    - assible_process_tests.data == "success"

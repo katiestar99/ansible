@@ -5,7 +5,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-DOCUMENTATION = """author: Ansible Networking Team
+DOCUMENTATION = """author: Assible Networking Team
 connection: httpapi
 short_description: Use httpapi to run command on network appliances
 description:
@@ -18,7 +18,7 @@ options:
       to.
     default: inventory_hostname
     vars:
-    - name: ansible_host
+    - name: assible_host
   port:
     type: int
     description:
@@ -29,15 +29,15 @@ options:
     - section: defaults
       key: remote_port
     env:
-    - name: ANSIBLE_REMOTE_PORT
+    - name: ASSIBLE_REMOTE_PORT
     vars:
-    - name: ansible_httpapi_port
+    - name: assible_httpapi_port
   network_os:
     description:
     - Configures the device platform network operating system.  This value is used
       to load the correct httpapi plugin to communicate with the remote device
     vars:
-    - name: ansible_network_os
+    - name: assible_network_os
   remote_user:
     description:
     - The username used to authenticate to the remote device when the API connection
@@ -48,38 +48,38 @@ options:
     - section: defaults
       key: remote_user
     env:
-    - name: ANSIBLE_REMOTE_USER
+    - name: ASSIBLE_REMOTE_USER
     vars:
-    - name: ansible_user
+    - name: assible_user
   password:
     description:
     - Configures the user password used to authenticate to the remote device when
       needed for the device API.
     vars:
-    - name: ansible_password
-    - name: ansible_httpapi_pass
-    - name: ansible_httpapi_password
+    - name: assible_password
+    - name: assible_httpapi_pass
+    - name: assible_httpapi_password
   use_ssl:
     type: boolean
     description:
     - Whether to connect using SSL (HTTPS) or not (HTTP).
     default: false
     vars:
-    - name: ansible_httpapi_use_ssl
+    - name: assible_httpapi_use_ssl
   validate_certs:
     type: boolean
     description:
     - Whether to validate SSL certificates
     default: true
     vars:
-    - name: ansible_httpapi_validate_certs
+    - name: assible_httpapi_validate_certs
   use_proxy:
     type: boolean
     description:
     - Whether to use https_proxy for requests.
     default: true
     vars:
-    - name: ansible_httpapi_use_proxy
+    - name: assible_httpapi_use_proxy
   become:
     type: boolean
     description:
@@ -94,9 +94,9 @@ options:
     - section: privilege_escalation
       key: become
     env:
-    - name: ANSIBLE_BECOME
+    - name: ASSIBLE_BECOME
     vars:
-    - name: ansible_become
+    - name: assible_become
   become_method:
     description:
     - This option allows the become method to be specified in for handling privilege
@@ -107,9 +107,9 @@ options:
     - section: privilege_escalation
       key: become_method
     env:
-    - name: ANSIBLE_BECOME_METHOD
+    - name: ASSIBLE_BECOME_METHOD
     vars:
-    - name: ansible_become_method
+    - name: assible_become_method
   persistent_connect_timeout:
     type: int
     description:
@@ -121,9 +121,9 @@ options:
     - section: persistent_connection
       key: connect_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_CONNECT_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_CONNECT_TIMEOUT
     vars:
-    - name: ansible_connect_timeout
+    - name: assible_connect_timeout
   persistent_command_timeout:
     type: int
     description:
@@ -135,14 +135,14 @@ options:
     - section: persistent_connection
       key: command_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_COMMAND_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_COMMAND_TIMEOUT
     vars:
-    - name: ansible_command_timeout
+    - name: assible_command_timeout
   persistent_log_messages:
     type: boolean
     description:
     - This flag will enable logging the command executed and response received from
-      target device in the ansible log file. For this option to work 'log_path' ansible
+      target device in the assible log file. For this option to work 'log_path' assible
       configuration option is required to be set to a file path with write access.
     - Be sure to fully understand the security implications of enabling this option
       as it could create a security vulnerability by logging sensitive information
@@ -152,28 +152,28 @@ options:
     - section: persistent_connection
       key: log_messages
     env:
-    - name: ANSIBLE_PERSISTENT_LOG_MESSAGES
+    - name: ASSIBLE_PERSISTENT_LOG_MESSAGES
     vars:
-    - name: ansible_persistent_log_messages
+    - name: assible_persistent_log_messages
 """
 
 from io import BytesIO
 
-from ansible.errors import AnsibleConnectionFailure
-from ansible.module_utils._text import to_bytes
-from ansible.module_utils.six import PY3
-from ansible.module_utils.six.moves import cPickle
-from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
-from ansible.module_utils.urls import open_url
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.loader import httpapi_loader
-from ansible.plugins.connection import NetworkConnectionBase, ensure_connect
+from assible.errors import AssibleConnectionFailure
+from assible.module_utils._text import to_bytes
+from assible.module_utils.six import PY3
+from assible.module_utils.six.moves import cPickle
+from assible.module_utils.six.moves.urllib.error import HTTPError, URLError
+from assible.module_utils.urls import open_url
+from assible.playbook.play_context import PlayContext
+from assible.plugins.loader import httpapi_loader
+from assible.plugins.connection import NetworkConnectionBase, ensure_connect
 
 
 class Connection(NetworkConnectionBase):
     """Network API connection"""
 
-    transport = "ansible.netcommon.httpapi"
+    transport = "assible.netcommon.httpapi"
     has_pipelining = True
 
     def __init__(self, play_context, new_stdin, *args, **kwargs):
@@ -203,15 +203,15 @@ class Connection(NetworkConnectionBase):
                     ),
                 )
             else:
-                raise AnsibleConnectionFailure(
+                raise AssibleConnectionFailure(
                     "unable to load API plugin for network_os %s"
                     % self._network_os
                 )
 
         else:
-            raise AnsibleConnectionFailure(
+            raise AssibleConnectionFailure(
                 "Unable to automatically determine host network os. Please "
-                "manually configure ansible_network_os value for this host"
+                "manually configure assible_network_os value for this host"
             )
         self.queue_message("log", "network_os is set to %s" % self._network_os)
 
@@ -305,7 +305,7 @@ class Connection(NetworkConnectionBase):
             else:
                 response = is_handled
         except URLError as exc:
-            raise AnsibleConnectionFailure(
+            raise AssibleConnectionFailure(
                 "Could not connect to {0}: {1}".format(
                     self._url + path, exc.reason
                 )

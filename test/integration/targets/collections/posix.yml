@@ -22,14 +22,14 @@
       name: testns.testcoll.maskedmodule
     register: maskedmodule_out
 
-  # ensure the ansible ns can have real collections added to it
-  - name: call an external module in the ansible namespace
-    ansible.bullcoll.bullmodule:
+  # ensure the assible ns can have real collections added to it
+  - name: call an external module in the assible namespace
+    assible.bullcoll.bullmodule:
     register: bullmodule_out
 
-  # ensure the ansible ns cannot override ansible.builtin externally
-  - name: call an external module in the ansible.builtin collection (should use the built in module)
-    ansible.builtin.ping:
+  # ensure the assible ns cannot override assible.builtin externally
+  - name: call an external module in the assible.builtin collection (should use the built in module)
+    assible.builtin.ping:
     register: builtin_ping_out
 
   # action in a collection subdir
@@ -102,7 +102,7 @@
       - systestmodule_out.source == 'sys'
       - contentadjmodule_out.source == 'content_adj'
       - not maskedmodule_out.plugin_path
-      - bullmodule_out.source == 'user_ansible_bullcoll'
+      - bullmodule_out.source == 'user_assible_bullcoll'
       - builtin_ping_out.source is not defined
       - builtin_ping_out.ping == 'pong'
       - subdir_ping_action_out is not changed
@@ -118,7 +118,7 @@
       - from_out.mu6_result == 'thingtocall in subpkg.submod'
       - from_nested_func.mu_result == 'hello from nested_same'
       - from_nested_module.mu_result == 'hello from nested_same'
-      - from_redirected_mu.mu_result == 'hello from ansible_collections.testns.content_adj.plugins.module_utils.sub1.foomodule'
+      - from_redirected_mu.mu_result == 'hello from assible_collections.testns.content_adj.plugins.module_utils.sub1.foomodule'
       - from_redirected_mu.mu_result2 == 'hello from testns.othercoll.formerly_testcoll_pkg.thing'
       - from_redirected_mu.mu_result3 == 'hello from formerly_testcoll_pkg.submod.thing'
       - from_missing_mu is failed
@@ -126,7 +126,7 @@
       - from_missing_redir_collection is failed
       - "'unable to locate collection bogusns.boguscoll' in from_missing_redir_collection.msg"
       - from_missing_redir_module is failed
-      - "'Could not find imported module support code for ansible_collections.testns.testcoll.plugins.modules.uses_mu_missing_redirect_module' in from_missing_redir_module.msg"
+      - "'Could not find imported module support code for assible_collections.testns.testcoll.plugins.modules.uses_mu_missing_redirect_module' in from_missing_redir_module.msg"
 
 
 - hosts: testhost
@@ -163,7 +163,7 @@
       that:
         - result is failed
 
-# ensure that the synthetic ansible.builtin collection limits to builtin plugins, that ansible.legacy loads overrides
+# ensure that the synthetic assible.builtin collection limits to builtin plugins, that assible.legacy loads overrides
 # from legacy plugin dirs, and that a same-named plugin loaded from a real collection is not masked by the others
 - hosts: testhost
   tasks:
@@ -172,11 +172,11 @@
     register: unqualified_ping_out
 
   - name: test legacy-qualified ping from library dir
-    ansible.legacy.ping:
+    assible.legacy.ping:
     register: legacy_ping_out
 
   - name: test builtin ping
-    ansible.builtin.ping:
+    assible.builtin.ping:
     register: builtin_ping_out
 
   - name: test collection-based ping
@@ -199,7 +199,7 @@
 
   - assert:
       that:
-      # in original release, collections defaults to empty, which is mostly equivalent to ansible.legacy
+      # in original release, collections defaults to empty, which is mostly equivalent to assible.legacy
       - not coll_default_out.collection_list
 
 
@@ -230,14 +230,14 @@
 
     - name: sample task with explicit core
       collections:
-      - ansible.builtin
+      - assible.builtin
       - bogus.fromtaskexplicitcore
       testns.testcoll.plugin_lookup:
       register: coll_task_core
 
     - name: sample task with explicit legacy
       collections:
-      - ansible.legacy
+      - assible.legacy
       - bogus.fromtaskexplicitlegacy
       testns.testcoll.plugin_lookup:
       register: coll_task_legacy
@@ -245,11 +245,11 @@
   - assert:
       that:
       # ensure that parent value inheritance is masked properly by explicit setting
-      - coll_play_out.collection_list == ['bogus.fromplay', 'ansible.legacy']
-      - coll_block_out.collection_list == ['bogus.fromblock', 'ansible.legacy']
-      - coll_task_out.collection_list == ['bogus.fromtask', 'ansible.legacy']
-      - coll_task_core.collection_list == ['ansible.builtin', 'bogus.fromtaskexplicitcore']
-      - coll_task_legacy.collection_list == ['ansible.legacy', 'bogus.fromtaskexplicitlegacy']
+      - coll_play_out.collection_list == ['bogus.fromplay', 'assible.legacy']
+      - coll_block_out.collection_list == ['bogus.fromblock', 'assible.legacy']
+      - coll_task_out.collection_list == ['bogus.fromtask', 'assible.legacy']
+      - coll_task_core.collection_list == ['assible.builtin', 'bogus.fromtaskexplicitcore']
+      - coll_task_legacy.collection_list == ['assible.legacy', 'bogus.fromtaskexplicitlegacy']
 
 - name: verify unqualified plugin resolution behavior
   hosts: testhost
@@ -278,8 +278,8 @@
 - name: verify collection-backed role execution (keyword static)
   hosts: testhost
   collections:
-  # set to ansible.builtin only to ensure that roles function properly without inheriting the play's collections config
-  - ansible.builtin
+  # set to assible.builtin only to ensure that roles function properly without inheriting the play's collections config
+  - assible.builtin
   vars:
     test_role_input: keyword static
   roles:
@@ -296,8 +296,8 @@
 - name: verify collection-backed role execution (dynamic)
   hosts: testhost
   collections:
-  # set to ansible.builtin only to ensure that roles function properly without inheriting the play's collections config
-  - ansible.builtin
+  # set to assible.builtin only to ensure that roles function properly without inheriting the play's collections config
+  - assible.builtin
   vars:
     test_role_input: dynamic
   tasks:
@@ -313,7 +313,7 @@
 - name: verify collection-backed role execution (task static)
   hosts: testhost
   collections:
-  - ansible.builtin
+  - assible.builtin
   vars:
     test_role_input: task static
   tasks:
@@ -336,7 +336,7 @@
   roles:
   - testrole
 # FIXME: this should technically work to look up a playbook-adjacent role
-#  - ansible.legacy.testrole
+#  - assible.legacy.testrole
   tasks:
   - name: ensure role executed
     assert:
@@ -435,7 +435,7 @@
   roles:
     - testns.testcoll.call_standalone
 
-# Issue https://github.com/ansible/ansible/issues/69054
+# Issue https://github.com/assible/assible/issues/69054
 - name: Test collection as string
   hosts: testhost
   collections: foo

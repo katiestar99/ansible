@@ -8,8 +8,8 @@ What is Desired State Configuration?
 ````````````````````````````````````
 Desired State Configuration, or DSC, is a tool built into PowerShell that can
 be used to define a Windows host setup through code. The overall purpose of DSC
-is the same as Ansible, it is just executed in a different manner. Since
-Ansible 2.4, the ``win_dsc`` module has been added and can be used to leverage
+is the same as Assible, it is just executed in a different manner. Since
+Assible 2.4, the ``win_dsc`` module has been added and can be used to leverage
 existing DSC resources when interacting with a Windows host.
 
 More details on DSC can be viewed at `DSC Overview <https://docs.microsoft.com/en-us/powershell/scripting/dsc/overview/overview>`_.
@@ -25,34 +25,34 @@ creating a task with the ``win_dsc`` module.
 
 Why Use DSC?
 ````````````
-DSC and Ansible modules have a common goal which is to define and ensure the state of a
+DSC and Assible modules have a common goal which is to define and ensure the state of a
 resource. Because of
 this, resources like the DSC `File resource <https://docs.microsoft.com/en-us/powershell/scripting/dsc/reference/resources/windows/fileresource>`_
-and Ansible ``win_file`` can be used to achieve the same result. Deciding which to use depends
+and Assible ``win_file`` can be used to achieve the same result. Deciding which to use depends
 on the scenario.
 
-Reasons for using an Ansible module over a DSC resource:
+Reasons for using an Assible module over a DSC resource:
 
 * The host does not support PowerShell v5.0, or it cannot easily be upgraded
-* The DSC resource does not offer a feature present in an Ansible module. For example
+* The DSC resource does not offer a feature present in an Assible module. For example
   win_regedit can manage the ``REG_NONE`` property type, while the DSC
   ``Registry`` resource cannot
-* DSC resources have limited check mode support, while some Ansible modules have
+* DSC resources have limited check mode support, while some Assible modules have
   better checks
-* DSC resources do not support diff mode, while some Ansible modules do
+* DSC resources do not support diff mode, while some Assible modules do
 * Custom resources require further installation steps to be run on the host
-  beforehand, while Ansible modules are built-in to Ansible
-* There are bugs in a DSC resource where an Ansible module works
+  beforehand, while Assible modules are built-in to Assible
+* There are bugs in a DSC resource where an Assible module works
 
-Reasons for using a DSC resource over an Ansible module:
+Reasons for using a DSC resource over an Assible module:
 
-* The Ansible module does not support a feature present in a DSC resource
-* There is no Ansible module available
-* There are bugs in an existing Ansible module
+* The Assible module does not support a feature present in a DSC resource
+* There is no Assible module available
+* There are bugs in an existing Assible module
 
 In the end, it doesn't matter whether the task is performed with DSC or an
-Ansible module; what matters is that the task is performed correctly and the
-playbooks are still readable. If you have more experience with DSC over Ansible
+Assible module; what matters is that the task is performed correctly and the
+playbooks are still readable. If you have more experience with DSC over Assible
 and it does the job, just use DSC for that task.
 
 How to Use DSC?
@@ -85,9 +85,9 @@ installed; if left blank it will default to the latest version. The other
 options are parameters that are used to define the resource, such as ``Key`` and
 ``ValueName``. While the options in the task are not case sensitive,
 keeping the case as-is is recommended because it makes it easier to distinguish DSC
-resource options from Ansible's ``win_dsc`` options.
+resource options from Assible's ``win_dsc`` options.
 
-This is what the Ansible task version of the above DSC Registry resource would look like:
+This is what the Assible task version of the above DSC Registry resource would look like:
 
 .. code-block:: yaml+jinja
 
@@ -99,15 +99,15 @@ This is what the Ansible task version of the above DSC Registry resource would l
         ValueName: TestValue
         ValueData: TestData
 
-Starting in Ansible 2.8, the ``win_dsc`` module automatically validates the
-input options from Ansible with the DSC definition. This means Ansible will
+Starting in Assible 2.8, the ``win_dsc`` module automatically validates the
+input options from Assible with the DSC definition. This means Assible will
 fail if the option name is incorrect, a mandatory option is not set, or the
-value is not a valid choice. When running Ansible with a verbosity level of 3
+value is not a valid choice. When running Assible with a verbosity level of 3
 or more (``-vvv``), the return value will contain the possible invocation
 options based on the ``resource_name`` specified. Here is an example of the
 invocation output for the above ``Registry`` task:
 
-.. code-block:: ansible-output
+.. code-block:: assible-output
 
     changed: [2016] => {
         "changed": true,
@@ -156,7 +156,7 @@ invocation output for the above ``Registry`` task:
 
 The ``invocation.module_args`` key shows the actual values that were set as
 well as other possible values that were not set. Unfortunately this will not
-show the default value for a DSC property, only what was set from the Ansible
+show the default value for a DSC property, only what was set from the Assible
 task. Any ``*_password`` option will be masked in the output for security
 reasons, if there are any other sensitive module options, set ``no_log: True``
 on the task to stop all task output from being logged.
@@ -164,7 +164,7 @@ on the task to stop all task output from being logged.
 
 Property Types
 --------------
-Each DSC resource property has a type that is associated with it. Ansible
+Each DSC resource property has a type that is associated with it. Assible
 will try to convert the defined options to the correct type during execution.
 For simple types like ``[string]`` and ``[bool]`` this is a simple operation,
 but complex types like ``[PSCredential]`` or arrays (like ``[string[]]``) this
@@ -173,21 +173,21 @@ require certain rules.
 PSCredential
 ++++++++++++
 A ``[PSCredential]`` object is used to store credentials in a secure way, but
-Ansible has no way to serialize this over JSON. To set a DSC PSCredential property,
+Assible has no way to serialize this over JSON. To set a DSC PSCredential property,
 the definition of that parameter should have two entries that are suffixed with
 ``_username`` and ``_password`` for the username and password respectively.
 For example:
 
 .. code-block:: yaml+jinja
 
-    PsDscRunAsCredential_username: '{{ ansible_user }}'
-    PsDscRunAsCredential_password: '{{ ansible_password }}'
+    PsDscRunAsCredential_username: '{{ assible_user }}'
+    PsDscRunAsCredential_password: '{{ assible_password }}'
 
     SourceCredential_username: AdminUser
     SourceCredential_password: PasswordForAdminUser
 
-.. Note:: On versions of Ansible older than 2.8, you should set ``no_log: yes``
-    on the task definition in Ansible to ensure any credentials used are not
+.. Note:: On versions of Assible older than 2.8, you should set ``no_log: yes``
+    on the task definition in Assible to ensure any credentials used are not
     stored in any log file or console output.
 
 A ``[PSCredential]`` is defined with ``EmbeddedInstance("MSFT_Credential")`` in
@@ -198,7 +198,7 @@ CimInstance Type
 A ``[CimInstance]`` object is used by DSC to store a dictionary object based on
 a custom class defined by that resource. Defining a value that takes in a
 ``[CimInstance]`` in YAML is the same as defining a dictionary in YAML.
-For example, to define a ``[CimInstance]`` value in Ansible:
+For example, to define a ``[CimInstance]`` value in Assible:
 
 .. code-block:: yaml+jinja
 
@@ -230,7 +230,7 @@ Simple type arrays like ``[string[]]`` or ``[UInt32[]]`` are defined as a list
 or as a comma separated string which are then cast to their type. Using a list
 is recommended because the values are not manually parsed by the ``win_dsc``
 module before being passed to the DSC engine. For example, to define a simple
-type array in Ansible:
+type array in Assible:
 
 .. code-block:: yaml+jinja
 
@@ -275,7 +275,7 @@ A ``[DateTime]`` object is a DateTime string representing the date and time in
 the `ISO 8601 <https://www.w3.org/TR/NOTE-datetime>`_ date time format. The
 value for a ``[DateTime]`` field should be quoted in YAML to ensure the string
 is properly serialized to the Windows host. Here is an example of how to define
-a ``[DateTime]`` value in Ansible:
+a ``[DateTime]`` value in Assible:
 
 .. code-block:: yaml+jinja
 
@@ -294,7 +294,7 @@ All the values above are equal to a UTC date time of February 22nd 2019 at
 Run As Another User
 -------------------
 By default, DSC runs each resource as the SYSTEM account and not the account
-that Ansible use to run the module. This means that resources that are dynamically
+that Assible use to run the module. This means that resources that are dynamically
 loaded based on a user profile, like the ``HKEY_CURRENT_USER`` registry hive,
 will be loaded under the ``SYSTEM`` profile. The parameter
 ``PsDscRunAsCredential`` is a parameter that can be set for every DSC resource
@@ -303,7 +303,7 @@ force the DSC engine to run under a different account. As
 ``_username`` and ``_password`` suffix.
 
 Using the Registry resource type as an example, this is how to define a task
-to access the ``HKEY_CURRENT_USER`` hive of the Ansible user:
+to access the ``HKEY_CURRENT_USER`` hive of the Assible user:
 
 .. code-block:: yaml+jinja
 
@@ -314,8 +314,8 @@ to access the ``HKEY_CURRENT_USER`` hive of the Ansible user:
         Key: HKEY_CURRENT_USER\ExampleKey
         ValueName: TestValue
         ValueData: TestData
-        PsDscRunAsCredential_username: '{{ ansible_user }}'
-        PsDscRunAsCredential_password: '{{ ansible_password }}'
+        PsDscRunAsCredential_username: '{{ assible_user }}'
+        PsDscRunAsCredential_password: '{{ assible_password }}'
       no_log: yes
 
 Custom DSC Resources
@@ -346,7 +346,7 @@ Installing a Custom Resource
 There are three ways that a DSC resource can be installed on a host:
 
 * Manually with the ``Install-Module`` cmdlet
-* Using the ``win_psmodule`` Ansible module
+* Using the ``win_psmodule`` Assible module
 * Saving the module manually and copying it another host
 
 This is an example of installing the ``xWebAdministration`` resources using
@@ -434,8 +434,8 @@ Interact with Azure
         InstanceSize: Medium
         Windows: yes
         Ensure: Present
-        Credential_username: '{{ ansible_user }}'
-        Credential_password: '{{ ansible_password }}'
+        Credential_username: '{{ assible_user }}'
+        Credential_password: '{{ assible_password }}'
 
 Setup IIS Website
 -----------------
@@ -499,7 +499,7 @@ Setup IIS Website
        Tips and tricks for playbooks
    :ref:`List of Windows Modules <windows_modules>`
        Windows specific module list, all implemented in PowerShell
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

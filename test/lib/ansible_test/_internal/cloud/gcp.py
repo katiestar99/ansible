@@ -51,12 +51,12 @@ class GcpCloudEnvironment(CloudEnvironment):
         parser = ConfigParser()
         parser.read(self.config_path)
 
-        ansible_vars = dict(
+        assible_vars = dict(
             resource_prefix=self.resource_prefix,
         )
 
-        ansible_vars.update(dict(parser.items('default')))
+        assible_vars.update(dict(parser.items('default')))
 
         return CloudEnvironmentConfig(
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )

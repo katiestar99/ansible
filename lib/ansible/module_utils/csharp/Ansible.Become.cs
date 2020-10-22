@@ -9,10 +9,10 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
-using Ansible.AccessToken;
-using Ansible.Process;
+using Assible.AccessToken;
+using Assible.Process;
 
-namespace Ansible.Become
+namespace Assible.Become
 {
     internal class NativeHelpers
     {
@@ -259,7 +259,7 @@ namespace Ansible.Become
         /// <param name="lpCurrentDirectory">The full path to the current directory for the process, null will have the same cwd as the calling process</param>
         /// <param name="environment">A dictionary of key/value pairs to define the new process environment</param>
         /// <param name="stdin">Bytes sent to the stdin pipe</param>
-        /// <returns>Ansible.Process.Result object that contains the command output and return code</returns>
+        /// <returns>Assible.Process.Result object that contains the command output and return code</returns>
         public static Result CreateProcessAsUser(string username, string password, LogonFlags logonFlags, LogonType logonType,
             string lpApplicationName, string lpCommandLine, string lpCurrentDirectory, IDictionary environment, byte[] stdin)
         {
@@ -340,7 +340,7 @@ namespace Ansible.Become
                 // Try and impersonate a SYSTEM token, we need a SYSTEM token to either become a well known service
                 // account or have administrative rights on the become access token.
                 // If we ultimately are becoming the SYSTEM account we want the token with the most privileges available.
-                // https://github.com/ansible/ansible/issues/71453
+                // https://github.com/assible/assible/issues/71453
                 bool mostPrivileges = becomeSid == "S-1-5-18";
                 systemToken = GetPrimaryTokenForUser(new SecurityIdentifier("S-1-5-18"),
                     new List<string>() { "SeTcbPrivilege" }, mostPrivileges);
@@ -494,7 +494,7 @@ namespace Ansible.Become
             string username = userSplit[1];
             bool domainUser = domainName.ToLowerInvariant() != Environment.MachineName.ToLowerInvariant();
 
-            NativeHelpers.LSA_STRING logonProcessName = "ansible";
+            NativeHelpers.LSA_STRING logonProcessName = "assible";
             SafeLsaHandle lsaHandle;
             IntPtr securityMode;
             UInt32 res = NativeMethods.LsaRegisterLogonProcess(logonProcessName, out lsaHandle, out securityMode);
@@ -547,7 +547,7 @@ namespace Ansible.Become
 
                     NativeHelpers.TOKEN_SOURCE tokenSource = new NativeHelpers.TOKEN_SOURCE
                     {
-                        SourceName = "ansible\0".ToCharArray(),
+                        SourceName = "assible\0".ToCharArray(),
                         SourceIdentifier = sourceLuid,
                     };
 

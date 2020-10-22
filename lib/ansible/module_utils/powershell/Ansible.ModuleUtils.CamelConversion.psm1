@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 # used by Convert-DictToSnakeCase to convert a string in camelCase
@@ -40,7 +40,7 @@ Function Convert-ListToSnakeCase($list) {
 }
 
 # converts a dict/hashtable keys from camelCase to snake_case
-# this is to keep the return values consistent with the Ansible
+# this is to keep the return values consistent with the Assible
 # way of working.
 Function Convert-DictToSnakeCase($dict) {
     $snake_dict = @{}

@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -33,7 +33,7 @@ from collections import defaultdict
 
 import platform
 
-from ansible.module_utils.facts import timeout
+from assible.module_utils.facts import timeout
 
 
 class CycleFoundInFactDeps(Exception):
@@ -182,7 +182,7 @@ def get_collector_names(valid_subsets=None,
             # NOTE: this only considers adding an unknown gather subsetup an error. Asking to
             #       exclude an unknown gather subset is ignored.
             if subset_id not in valid_subsets:
-                raise TypeError("Bad subset '%s' given to Ansible. gather_subset options allowed: all, %s" %
+                raise TypeError("Bad subset '%s' given to Assible. gather_subset options allowed: all, %s" %
                                 (subset, ", ".join(sorted(valid_subsets))))
 
             explicitly_added.add(subset)

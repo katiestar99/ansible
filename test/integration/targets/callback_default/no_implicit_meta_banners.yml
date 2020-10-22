@@ -1,4 +1,4 @@
-# This playbooks generates a noop task in the linear strategy, the output is tested that the banner for noop task is not printed https://github.com/ansible/ansible/pull/71344
+# This playbooks generates a noop task in the linear strategy, the output is tested that the banner for noop task is not printed https://github.com/assible/assible/pull/71344
 - hosts: all
   gather_facts: no
   tasks:

@@ -3,16 +3,16 @@
 Windows Frequently Asked Questions
 ==================================
 
-Here are some commonly asked questions in regards to Ansible and Windows and
+Here are some commonly asked questions in regards to Assible and Windows and
 their answers.
 
-.. note:: This document covers questions about managing Microsoft Windows servers with Ansible.
-    For questions about Ansible Core, please see the
-    :ref:`general FAQ page <ansible_faq>`.
+.. note:: This document covers questions about managing Microsoft Windows servers with Assible.
+    For questions about Assible Core, please see the
+    :ref:`general FAQ page <assible_faq>`.
 
-Does Ansible work with Windows XP or Server 2003?
+Does Assible work with Windows XP or Server 2003?
 ``````````````````````````````````````````````````
-Ansible does not work with Windows XP or Server 2003 hosts. Ansible does work with these Windows operating system versions:
+Assible does not work with Windows XP or Server 2003 hosts. Assible does work with these Windows operating system versions:
 
 * Windows Server 2008 :sup:`1`
 * Windows Server 2008 R2 :sup:`1`
@@ -26,49 +26,49 @@ Ansible does not work with Windows XP or Server 2003 hosts. Ansible does work wi
 
 1 - See the :ref:`Server 2008 FAQ <windows_faq_server2008>` entry for more details.
 
-Ansible also has minimum PowerShell version requirements - please see
+Assible also has minimum PowerShell version requirements - please see
 :ref:`windows_setup` for the latest information.
 
 .. _windows_faq_server2008:
 
 Are Server 2008, 2008 R2 and Windows 7 supported?
 `````````````````````````````````````````````````
-Microsoft ended Extended Support for these versions of Windows on January 14th, 2020, and Ansible deprecated official support in the 2.10 release. No new feature development will occur targeting these operating systems, and automated testing has ceased. However, existing modules and features will likely continue to work, and simple pull requests to resolve issues with these Windows versions may be accepted.
+Microsoft ended Extended Support for these versions of Windows on January 14th, 2020, and Assible deprecated official support in the 2.10 release. No new feature development will occur targeting these operating systems, and automated testing has ceased. However, existing modules and features will likely continue to work, and simple pull requests to resolve issues with these Windows versions may be accepted.
 
-Can I manage Windows Nano Server with Ansible?
+Can I manage Windows Nano Server with Assible?
 ``````````````````````````````````````````````
-Ansible does not currently work with Windows Nano Server, since it does
+Assible does not currently work with Windows Nano Server, since it does
 not have access to the full .NET Framework that is used by the majority of the
 modules and internal components.
 
-Can Ansible run on Windows?
+Can Assible run on Windows?
 ```````````````````````````
-No, Ansible can only manage Windows hosts. Ansible cannot run on a Windows host
+No, Assible can only manage Windows hosts. Assible cannot run on a Windows host
 natively, though it can run under the Windows Subsystem for Linux (WSL).
 
-.. note:: The Windows Subsystem for Linux is not supported by Ansible and
+.. note:: The Windows Subsystem for Linux is not supported by Assible and
     should not be used for production systems.
 
-To install Ansible on WSL, the following commands
+To install Assible on WSL, the following commands
 can be run in the bash terminal:
 
 .. code-block:: shell
 
     sudo apt-get update
     sudo apt-get install python-pip git libffi-dev libssl-dev -y
-    pip install --user ansible pywinrm
+    pip install --user assible pywinrm
 
-To run Ansible from source instead of a release on the WSL, simply uninstall the pip
+To run Assible from source instead of a release on the WSL, simply uninstall the pip
 installed version and then clone the git repo.
 
 .. code-block:: shell
 
-    pip uninstall ansible -y
-    git clone https://github.com/ansible/ansible.git
-    source ansible/hacking/env-setup
+    pip uninstall assible -y
+    git clone https://github.com/assible/assible.git
+    source assible/hacking/env-setup
 
-    # To enable Ansible on login, run the following
-    echo ". ~/ansible/hacking/env-setup -q' >> ~/.bashrc
+    # To enable Assible on login, run the following
+    echo ". ~/assible/hacking/env-setup -q' >> ~/.bashrc
 
 Can I use SSH keys to authenticate to Windows hosts?
 ````````````````````````````````````````````````````
@@ -80,15 +80,15 @@ The way X509 certificates are generated and mapped to a user is different
 from the SSH implementation; consult the :ref:`windows_winrm` documentation for
 more information.
 
-Ansible 2.8 has added an experimental option to use the SSH connection plugin,
+Assible 2.8 has added an experimental option to use the SSH connection plugin,
 which uses SSH keys for authentication, for Windows servers. See :ref:`this question <windows_faq_ssh>`
 for more information.
 
 .. _windows_faq_winrm:
 
-Why can I run a command locally that does not work under Ansible?
+Why can I run a command locally that does not work under Assible?
 `````````````````````````````````````````````````````````````````
-Ansible executes commands through WinRM. These processes are different from
+Assible executes commands through WinRM. These processes are different from
 running a command locally in these ways:
 
 * Unless using an authentication option like CredSSP or Kerberos with
@@ -123,13 +123,13 @@ Some ways to bypass these restrictions are to:
 See :ref:`become` more info on how to use become. The limitations section at
 :ref:`windows_winrm` has more details around WinRM limitations.
 
-This program won't install on Windows with Ansible
+This program won't install on Windows with Assible
 ``````````````````````````````````````````````````
 See :ref:`this question <windows_faq_winrm>` for more information about WinRM limitations.
 
 What Windows modules are available?
 ```````````````````````````````````
-Most of the Ansible modules in Ansible Core are written for a combination of
+Most of the Assible modules in Assible Core are written for a combination of
 Linux/Unix machines and arbitrary web services. These modules are written in
 Python and most of them do not work on Windows.
 
@@ -137,7 +137,7 @@ Because of this, there are dedicated Windows modules that are written in
 PowerShell and are meant to be run on Windows hosts. A list of these modules
 can be found :ref:`here <windows_modules>`.
 
-In addition, the following Ansible Core modules/action-plugins work with Windows:
+In addition, the following Assible Core modules/action-plugins work with Windows:
 
 * add_host
 * assert
@@ -164,7 +164,7 @@ Can I run Python modules on Windows hosts?
 ``````````````````````````````````````````
 No, the WinRM connection protocol is set to use PowerShell modules, so Python
 modules will not work. A way to bypass this issue to use
-``delegate_to: localhost`` to run a Python module on the Ansible controller.
+``delegate_to: localhost`` to run a Python module on the Assible controller.
 This is useful if during a playbook, an external service needs to be contacted
 and there is no equivalent Windows module available.
 
@@ -172,35 +172,35 @@ and there is no equivalent Windows module available.
 
 Can I connect to Windows hosts over SSH?
 ````````````````````````````````````````
-Ansible 2.8 has added an experimental option to use the SSH connection plugin
+Assible 2.8 has added an experimental option to use the SSH connection plugin
 to manage Windows hosts. To connect to Windows hosts over SSH, you must install and configure the `Win32-OpenSSH <https://github.com/PowerShell/Win32-OpenSSH>`_
 fork that is in development with Microsoft on
 the Windows host(s). While most of the basics should work with SSH,
 ``Win32-OpenSSH`` is rapidly changing, with new features added and bugs
 fixed in every release. It is highly recommend you `install <https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH>`_ the latest release
-of ``Win32-OpenSSH`` from the GitHub Releases page when using it with Ansible
+of ``Win32-OpenSSH`` from the GitHub Releases page when using it with Assible
 on Windows hosts.
 
 To use SSH as the connection to a Windows host, set the following variables in
 the inventory::
 
-    ansible_connection=ssh
+    assible_connection=ssh
 
     # Set either cmd or powershell not both
-    ansible_shell_type=cmd
-    # ansible_shell_type=powershell
+    assible_shell_type=cmd
+    # assible_shell_type=powershell
 
-The value for ``ansible_shell_type`` should either be ``cmd`` or ``powershell``.
+The value for ``assible_shell_type`` should either be ``cmd`` or ``powershell``.
 Use ``cmd`` if the ``DefaultShell`` has not been configured on the SSH service
 and ``powershell`` if that has been set as the ``DefaultShell``.
 
 Why is connecting to a Windows host via SSH failing?
 ````````````````````````````````````````````````````
 Unless you are using ``Win32-OpenSSH`` as described above, you must connect to
-Windows hosts using :ref:`windows_winrm`. If your Ansible output indicates that
+Windows hosts using :ref:`windows_winrm`. If your Assible output indicates that
 SSH was used, either you did not set the connection vars properly or the host is not inheriting them correctly.
 
-Make sure ``ansible_connection: winrm`` is set in the inventory for the Windows
+Make sure ``assible_connection: winrm`` is set in the inventory for the Windows
 host(s).
 
 Why are my credentials being rejected?
@@ -212,14 +212,14 @@ guide of this could mean.
 
 Why am I getting an error SSL CERTIFICATE_VERIFY_FAILED?
 ````````````````````````````````````````````````````````
-When the Ansible controller is running on Python 2.7.9+ or an older version of Python that
+When the Assible controller is running on Python 2.7.9+ or an older version of Python that
 has backported SSLContext (like Python 2.7.5 on RHEL 7), the controller will attempt to
 validate the certificate WinRM is using for an HTTPS connection. If the
 certificate cannot be validated (such as in the case of a self signed cert), it will
 fail the verification process.
 
 To ignore certificate validation, add
-``ansible_winrm_server_cert_validation: ignore`` to inventory for the Windows
+``assible_winrm_server_cert_validation: ignore`` to inventory for the Windows
 host.
 
 .. seealso::
@@ -230,7 +230,7 @@ host.
        An introduction to playbooks
    :ref:`playbooks_best_practices`
        Tips and tricks for playbooks
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

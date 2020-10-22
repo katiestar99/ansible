@@ -1,7 +1,7 @@
-galaxy_verbosity: "{{ '' if not ansible_verbosity else '-' ~ ('v' * ansible_verbosity) }}"
+galaxy_verbosity: "{{ '' if not assible_verbosity else '-' ~ ('v' * assible_verbosity) }}"
 
 publish_namespaces:
-  - ansible_test
+  - assible_test
 
 collection_list:
   # Scenario to test out pre-release being ignored unless explicitly set and version pagination.

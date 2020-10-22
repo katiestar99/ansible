@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2020, Ansible Project
+# Copyright: (c) 2020, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -14,7 +14,7 @@ from tempfile import TemporaryDirectory
 
 import yaml
 
-from ansible.release import __version__ as ansible_base__version__
+from assible.release import __version__ as assible_base__version__
 
 # Pylint doesn't understand Python3 namespace modules.
 # pylint: disable=relative-beyond-top-level
@@ -40,20 +40,20 @@ def generate_base_docs(args):
 
     with TemporaryDirectory() as tmp_dir:
         #
-        # Construct a deps file with our version of ansible_base in it
+        # Construct a deps file with our version of assible_base in it
         #
-        modified_deps_file = os.path.join(tmp_dir, 'ansible.deps')
+        modified_deps_file = os.path.join(tmp_dir, 'assible.deps')
 
-        # The _ansible_version doesn't matter since we're only building docs for base
-        deps_file_contents = {'_ansible_version': ansible_base__version__,
-                              '_ansible_base_version': ansible_base__version__}
+        # The _assible_version doesn't matter since we're only building docs for base
+        deps_file_contents = {'_assible_version': assible_base__version__,
+                              '_assible_base_version': assible_base__version__}
 
         with open(modified_deps_file, 'w') as f:
             f.write(yaml.dump(deps_file_contents))
 
         # Generate the plugin rst
         return antsibull_docs.run(['antsibull-docs', 'stable', '--deps-file', modified_deps_file,
-                                   '--ansible-base-source', str(args.top_dir),
+                                   '--assible-base-source', str(args.top_dir),
                                    '--dest-dir', args.output_dir])
 
         # If we make this more than just a driver for antsibull:
@@ -72,19 +72,19 @@ def generate_full_docs(args):
     from antsibull.cli import antsibull_docs
     from packaging.version import Version
 
-    ansible_base_ver = Version(ansible_base__version__)
-    ansible_base_major_ver = '{0}.{1}'.format(ansible_base_ver.major, ansible_base_ver.minor)
+    assible_base_ver = Version(assible_base__version__)
+    assible_base_major_ver = '{0}.{1}'.format(assible_base_ver.major, assible_base_ver.minor)
 
     with TemporaryDirectory() as tmp_dir:
-        sh.git(['clone', 'https://github.com/ansible-community/ansible-build-data'], _cwd=tmp_dir)
-        # This is wrong.  Once ansible and ansible-base major.minor versions get out of sync this
+        sh.git(['clone', 'https://github.com/assible-community/assible-build-data'], _cwd=tmp_dir)
+        # This is wrong.  Once assible and assible-base major.minor versions get out of sync this
         # will stop working.  We probably need to walk all subdirectories in reverse version order
-        # looking for the latest ansible version which uses something compatible with
-        # ansible_base_major_ver.
-        deps_files = glob.glob(os.path.join(tmp_dir, 'ansible-build-data',
-                                            ansible_base_major_ver, '*.deps'))
+        # looking for the latest assible version which uses something compatible with
+        # assible_base_major_ver.
+        deps_files = glob.glob(os.path.join(tmp_dir, 'assible-build-data',
+                                            assible_base_major_ver, '*.deps'))
         if not deps_files:
-            raise Exception('No deps files exist for version {0}'.format(ansible_base_major_ver))
+            raise Exception('No deps files exist for version {0}'.format(assible_base_major_ver))
 
         # Find the latest version of the deps file for this version
         latest = None
@@ -92,27 +92,27 @@ def generate_full_docs(args):
         for filename in deps_files:
             with open(filename, 'r') as f:
                 deps_data = yaml.safe_load(f.read())
-            new_version = Version(deps_data['_ansible_version'])
+            new_version = Version(deps_data['_assible_version'])
             if new_version > latest_ver:
                 latest_ver = new_version
                 latest = filename
 
-        # Make a copy of the deps file so that we can set the ansible-base version to use
-        modified_deps_file = os.path.join(tmp_dir, 'ansible.deps')
+        # Make a copy of the deps file so that we can set the assible-base version to use
+        modified_deps_file = os.path.join(tmp_dir, 'assible.deps')
         shutil.copyfile(latest, modified_deps_file)
 
-        # Put our version of ansible-base into the deps file
+        # Put our version of assible-base into the deps file
         with open(modified_deps_file, 'r') as f:
             deps_data = yaml.safe_load(f.read())
 
-        deps_data['_ansible_base_version'] = ansible_base__version__
+        deps_data['_assible_base_version'] = assible_base__version__
 
         with open(modified_deps_file, 'w') as f:
             f.write(yaml.dump(deps_data))
 
         # Generate the plugin rst
         return antsibull_docs.run(['antsibull-docs', 'stable', '--deps-file', modified_deps_file,
-                                   '--ansible-base-source', str(args.top_dir),
+                                   '--assible-base-source', str(args.top_dir),
                                    '--dest-dir', args.output_dir])
 
         # If we make this more than just a driver for antsibull:
@@ -123,8 +123,8 @@ def generate_full_docs(args):
 class CollectionPluginDocs(Command):
     name = 'docs-build'
     _ACTION_HELP = """Action to perform.
-        full: Regenerate the rst for the full ansible website.
-        base: Regenerate the rst for plugins in ansible-base and then build the website.
+        full: Regenerate the rst for the full assible website.
+        base: Regenerate the rst for plugins in assible-base and then build the website.
         named: Regenerate the rst for the named plugins and then build the website.
     """
 
@@ -143,7 +143,7 @@ class CollectionPluginDocs(Command):
                             help="Output directory for generated doc files")
         parser.add_argument("-t", "--top-dir", action="store", dest="top_dir",
                             default=DEFAULT_TOP_DIR,
-                            help="Toplevel directory of this ansible-base checkout or expanded"
+                            help="Toplevel directory of this assible-base checkout or expanded"
                             " tarball.")
         parser.add_argument("-l", "--limit-to-modules", '--limit-to', action="store",
                             dest="limit_to", default=None,

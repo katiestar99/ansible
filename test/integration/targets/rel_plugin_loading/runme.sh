@@ -2,4 +2,4 @@
 
 set -eux
 
-ANSIBLE_INVENTORY_ENABLED=notyaml ansible-playbook subdir/play.yml -i notyaml.yml "$@"
+ASSIBLE_INVENTORY_ENABLED=notyaml assible-playbook subdir/play.yml -i notyaml.yml "$@"

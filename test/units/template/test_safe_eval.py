@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -23,7 +23,7 @@ import sys
 from collections import defaultdict
 
 from units.compat import unittest
-from ansible.template.safe_eval import safe_eval
+from assible.template.safe_eval import safe_eval
 
 
 class TestSafeEval(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestSafeEval(unittest.TestCase):
     def test_safe_eval_usage(self):
         # test safe eval calls with different possible types for the
         # locals dictionary, to ensure we don't run into problems like
-        # ansible/ansible/issues/12206 again
+        # assible/assible/issues/12206 again
         for locals_vars in (dict(), defaultdict(dict)):
             self.assertEqual(safe_eval('True', locals=locals_vars), True)
             self.assertEqual(safe_eval('False', locals=locals_vars), False)

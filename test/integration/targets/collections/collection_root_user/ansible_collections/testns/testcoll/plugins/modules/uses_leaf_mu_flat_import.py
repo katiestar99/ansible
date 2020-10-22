@@ -5,11 +5,11 @@ __metaclass__ = type
 import json
 import sys
 
-import ansible_collections.testns.testcoll.plugins.module_utils.leaf
+import assible_collections.testns.testcoll.plugins.module_utils.leaf
 
 
 def main():
-    mu_result = ansible_collections.testns.testcoll.plugins.module_utils.leaf.thingtocall()
+    mu_result = assible_collections.testns.testcoll.plugins.module_utils.leaf.thingtocall()
     print(json.dumps(dict(changed=False, source='user', mu_result=mu_result)))
 
     sys.exit()

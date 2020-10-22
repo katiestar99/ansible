@@ -4,7 +4,7 @@
 Network Resource Modules
 ************************
 
-Ansible network resource modules simplify and standardize how you manage different network devices. Network devices separate configuration into sections (such as interfaces and VLANs) that apply to a network service. Ansible network resource modules take advantage of this to allow you to configure subsections or *resources* within the network device configuration. Network resource modules provide a consistent experience across different network devices.
+Assible network resource modules simplify and standardize how you manage different network devices. Network devices separate configuration into sections (such as interfaces and VLANs) that apply to a network service. Assible network resource modules take advantage of this to allow you to configure subsections or *resources* within the network device configuration. Network resource modules provide a consistent experience across different network devices.
 
 
 .. contents::
@@ -16,25 +16,25 @@ Network resource module states
 You use the network resource modules by assigning a state to what you want the module to do. The resource modules support the following states:
 
 merged
-  Ansible merges the on-device configuration with the provided configuration in the task.
+  Assible merges the on-device configuration with the provided configuration in the task.
 
 replaced
-  Ansible replaces the on-device configuration subsection with the provided configuration subsection in the task.
+  Assible replaces the on-device configuration subsection with the provided configuration subsection in the task.
 
 overridden
-  Ansible overrides the on-device configuration for the resource with the provided configuration in the task. Use caution with this state as you could remove your access to the device (for example, by overriding the management interface configuration).
+  Assible overrides the on-device configuration for the resource with the provided configuration in the task. Use caution with this state as you could remove your access to the device (for example, by overriding the management interface configuration).
 
 deleted
-  Ansible deletes the on-device configuration subsection and restores any default settings.
+  Assible deletes the on-device configuration subsection and restores any default settings.
 
 gathered
-  Ansible displays the resource details gathered from the network device and accessed with the ``gathered`` key in the result.
+  Assible displays the resource details gathered from the network device and accessed with the ``gathered`` key in the result.
 
 rendered
-  Ansible renders the provided configuration in the task in the device-native format (for example, Cisco IOS CLI). Ansible returns this rendered configuration in the ``rendered`` key in the result. Note this state does not communicate with the network device and can be used offline.
+  Assible renders the provided configuration in the task in the device-native format (for example, Cisco IOS CLI). Assible returns this rendered configuration in the ``rendered`` key in the result. Note this state does not communicate with the network device and can be used offline.
 
 parsed
-  Ansible parses the configuration from the ``running_configuration`` option into Ansible structured data in the ``parsed`` key in the result. Note this does not gather the configuration from the network device so this state can be used offline.
+  Assible parses the configuration from the ``running_configuration`` option into Assible structured data in the ``parsed`` key in the result. Note this does not gather the configuration from the network device so this state can be used offline.
 
 Using network resource modules
 ==============================
@@ -121,7 +121,7 @@ Network resource modules return the following details:
 Example: Verifying the network device configuration has not changed
 ====================================================================
 
-The following playbook uses the :ref:`arista.eos.eos_l3_interfaces <ansible_collections.arista.eos.eos_l3_interfaces_module>` module to gather a subset of the network device configuration (Layer 3 interfaces only) and verifies the information is accurate and has not changed. This playbook passes the results of :ref:`arista.eos.eos_facts <ansible_collections.arista.eos.eos_facts_module>` directly to the ``arista.eos.eos_l3_interfaces`` module.
+The following playbook uses the :ref:`arista.eos.eos_l3_interfaces <assible_collections.arista.eos.eos_l3_interfaces_module>` module to gather a subset of the network device configuration (Layer 3 interfaces only) and verifies the information is accurate and has not changed. This playbook passes the results of :ref:`arista.eos.eos_facts <assible_collections.arista.eos.eos_facts_module>` directly to the ``arista.eos.eos_l3_interfaces`` module.
 
 
 .. code-block:: yaml
@@ -137,7 +137,7 @@ The following playbook uses the :ref:`arista.eos.eos_l3_interfaces <ansible_coll
 
   - name: Ensure that the IP address information is accurate.
     arista.eos.eos_l3_interfaces:
-      config: "{{ ansible_network_resources['l3_interfaces'] }}"
+      config: "{{ assible_network_resources['l3_interfaces'] }}"
       register: result
 
   - name: Ensure config did not change.
@@ -173,7 +173,7 @@ This example uses the ``cisco.ios.ios_vlans`` resource module to retrieve and up
 
   - name: Store VLAN facts to host_vars
     copy:
-      content: "{{ ansible_network_resources | to_nice_yaml }}"
+      content: "{{ assible_network_resources | to_nice_yaml }}"
       dest: "{{ playbook_dir }}/host_vars/{{ inventory_hostname }}"
 
 3. Modify the stored file to update the VLAN configuration locally.
@@ -190,7 +190,7 @@ This example uses the ``cisco.ios.ios_vlans`` resource module to retrieve and up
 
 .. seealso::
 
-  `Network Features in Ansible 2.9 <https://www.ansible.com/blog/network-features-coming-soon-in-ansible-engine-2.9>`_
+  `Network Features in Assible 2.9 <https://www.assible.com/blog/network-features-coming-soon-in-assible-engine-2.9>`_
     A introductory blog post on network resource modules.
-  `Deep Dive into Network Resource Modules <https://www.ansible.com/deep-dive-into-ansible-network-resource-module>`_
+  `Deep Dive into Network Resource Modules <https://www.assible.com/deep-dive-into-assible-network-resource-module>`_
     A deeper dive presentation into network resource modules.

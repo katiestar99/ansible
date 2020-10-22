@@ -133,7 +133,7 @@
     that:
     - create_file_check.verbose_test is defined
     - not create_file_check.verbose_set is defined
-  when: ansible_verbosity >= 3
+  when: assible_verbosity >= 3
 
 - name: create test file
   win_dsc:
@@ -157,7 +157,7 @@
     that:
     - create_file.verbose_test is defined
     - create_file.verbose_set is defined
-  when: ansible_verbosity >= 3
+  when: assible_verbosity >= 3
 
 - name: assert create test file
   assert:
@@ -188,7 +188,7 @@
     - create_file.module_version == None
     - not create_file.reboot_required
 
-- name: get SID of the current Ansible user
+- name: get SID of the current Assible user
   win_shell: |
     Add-Type -AssemblyName System.DirectoryServices.AccountManagement
     [System.DirectoryServices.AccountManagement.UserPrincipal]::Current.Sid.Value
@@ -203,8 +203,8 @@
       $sid = [System.DirectoryServices.AccountManagement.UserPrincipal]::Current.Sid.Value
       Set-Content -Path "{{ remote_tmp_dir }}\runas.txt" -Value $sid
     TestScript: $false
-    PsDscRunAsCredential_username: '{{ ansible_user }}'
-    PsDscRunAsCredential_password: '{{ ansible_password }}'
+    PsDscRunAsCredential_username: '{{ assible_user }}'
+    PsDscRunAsCredential_password: '{{ assible_password }}'
   register: runas_user
 
 - name: get result of run DSC process as another user
@@ -459,7 +459,7 @@
     - dsc_types_actual.CimInstanceParam.Value.KeyValue == 'a'
     - dsc_types_actual.CimInstanceParam.Value.StringArrayValue == None
     - dsc_types_actual.CimInstanceParam.Value.StringValue == None
-    - dsc_types_actual.CimInstanceParam.Value._cim_instance == "ANSIBLE_xTestClass"
+    - dsc_types_actual.CimInstanceParam.Value._cim_instance == "ASSIBLE_xTestClass"
     - dsc_types_actual.CimInstanceArrayParam.Type == 'Microsoft.Management.Infrastructure.CimInstance[]'
     - dsc_types_actual.CimInstanceArrayParam.Value|length == 2
     - dsc_types_actual.CimInstanceArrayParam.Value[0].Choice == 'Choice1'
@@ -467,13 +467,13 @@
     - dsc_types_actual.CimInstanceArrayParam.Value[0].KeyValue == 'b'
     - dsc_types_actual.CimInstanceArrayParam.Value[0].StringArrayValue == ['abc', 'def']
     - dsc_types_actual.CimInstanceArrayParam.Value[0].StringValue == 'string 1'
-    - dsc_types_actual.CimInstanceArrayParam.Value[0]._cim_instance == 'ANSIBLE_xTestClass'
+    - dsc_types_actual.CimInstanceArrayParam.Value[0]._cim_instance == 'ASSIBLE_xTestClass'
     - dsc_types_actual.CimInstanceArrayParam.Value[1].Choice == 'Choice2'
     - dsc_types_actual.CimInstanceArrayParam.Value[1].IntValue == 2
     - dsc_types_actual.CimInstanceArrayParam.Value[1].KeyValue == 'c'
     - dsc_types_actual.CimInstanceArrayParam.Value[1].StringArrayValue == ['ghi', 'jkl']
     - dsc_types_actual.CimInstanceArrayParam.Value[1].StringValue == 'string 2'
-    - dsc_types_actual.CimInstanceArrayParam.Value[1]._cim_instance == 'ANSIBLE_xTestClass'
+    - dsc_types_actual.CimInstanceArrayParam.Value[1]._cim_instance == 'ASSIBLE_xTestClass'
     - dsc_types_actual.NestedCimInstanceParam.Type == 'Microsoft.Management.Infrastructure.CimInstance'
     - dsc_types_actual.NestedCimInstanceParam.Value.CimArrayValue|length == 1
     - dsc_types_actual.NestedCimInstanceParam.Value.CimArrayValue[0].Choice == 'Choice2'
@@ -481,20 +481,20 @@
     - dsc_types_actual.NestedCimInstanceParam.Value.CimArrayValue[0].KeyValue == 'e'
     - dsc_types_actual.NestedCimInstanceParam.Value.CimArrayValue[0].StringArrayValue == None
     - dsc_types_actual.NestedCimInstanceParam.Value.CimArrayValue[0].StringValue == None
-    - dsc_types_actual.NestedCimInstanceParam.Value.CimArrayValue[0]._cim_instance == 'ANSIBLE_xTestClass'
+    - dsc_types_actual.NestedCimInstanceParam.Value.CimArrayValue[0]._cim_instance == 'ASSIBLE_xTestClass'
     - dsc_types_actual.NestedCimInstanceParam.Value.CimValue.Choice == None
     - dsc_types_actual.NestedCimInstanceParam.Value.CimValue.IntValue == None
     - dsc_types_actual.NestedCimInstanceParam.Value.CimValue.KeyValue == 'd'
     - dsc_types_actual.NestedCimInstanceParam.Value.CimValue.StringArrayValue == None
     - dsc_types_actual.NestedCimInstanceParam.Value.CimValue.StringValue == None
-    - dsc_types_actual.NestedCimInstanceParam.Value.CimValue._cim_instance == 'ANSIBLE_xTestClass'
+    - dsc_types_actual.NestedCimInstanceParam.Value.CimValue._cim_instance == 'ASSIBLE_xTestClass'
     - dsc_types_actual.NestedCimInstanceParam.Value.HashValue|length == 1
     - dsc_types_actual.NestedCimInstanceParam.Value.HashValue[0].Key == 'a'
     - dsc_types_actual.NestedCimInstanceParam.Value.HashValue[0].Value == 'a'
     - dsc_types_actual.NestedCimInstanceParam.Value.HashValue[0]._cim_instance == 'MSFT_KeyValuePair'
     - dsc_types_actual.NestedCimInstanceParam.Value.IntValue == 300
     - dsc_types_actual.NestedCimInstanceParam.Value.KeyValue == 'key value'
-    - dsc_types_actual.NestedCimInstanceParam.Value._cim_instance == 'ANSIBLE_xNestedClass'
+    - dsc_types_actual.NestedCimInstanceParam.Value._cim_instance == 'ASSIBLE_xNestedClass'
 
 - name: test DSC with all types older version
   win_dsc:
@@ -541,4 +541,4 @@
     - dsc_types_old_actual.CimInstanceArrayParam.Value[0].Key == 'old key'
     - dsc_types_old_actual.CimInstanceArrayParam.Value[0].StringArrayValue == ['zyx', 'wvu']
     - dsc_types_old_actual.CimInstanceArrayParam.Value[0].StringValue == 'string old 1'
-    - dsc_types_old_actual.CimInstanceArrayParam.Value[0]._cim_instance == 'ANSIBLE_xTestClass'
+    - dsc_types_old_actual.CimInstanceArrayParam.Value[0]._cim_instance == 'ASSIBLE_xTestClass'

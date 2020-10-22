@@ -35,7 +35,7 @@ OPTIONS (= is mandatory):
             type: str
 
 
-AUTHOR: Ansible Core Team
+AUTHOR: Assible Core Team
 
 EXAMPLES:
 

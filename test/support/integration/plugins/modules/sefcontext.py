@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -107,8 +107,8 @@ RETURN = r'''
 
 import traceback
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils._text import to_native
 
 SELINUX_IMP_ERR = None
 try:
@@ -252,7 +252,7 @@ def semanage_fcontext_delete(module, result, target, ftype, do_reload, sestore='
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             ignore_selinux_state=dict(type='bool', default=False),
             target=dict(type='str', required=True, aliases=['path']),

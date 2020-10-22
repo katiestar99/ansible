@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,12 +21,12 @@ __metaclass__ = type
 
 import os
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_text
-from ansible.playbook.task_include import TaskInclude
-from ansible.playbook.role_include import IncludeRole
-from ansible.template import Templar
-from ansible.utils.display import Display
+from assible.errors import AssibleError
+from assible.module_utils._text import to_text
+from assible.playbook.task_include import TaskInclude
+from assible.playbook.role_include import IncludeRole
+from assible.template import Templar
+from assible.utils.display import Display
 
 display = Display()
 
@@ -88,26 +88,26 @@ class IncludedFile:
 
                     include_args = include_result.get('include_args', dict())
                     special_vars = {}
-                    loop_var = include_result.get('ansible_loop_var', 'item')
-                    index_var = include_result.get('ansible_index_var')
+                    loop_var = include_result.get('assible_loop_var', 'item')
+                    index_var = include_result.get('assible_index_var')
                     if loop_var in include_result:
                         task_vars[loop_var] = special_vars[loop_var] = include_result[loop_var]
                     if index_var and index_var in include_result:
                         task_vars[index_var] = special_vars[index_var] = include_result[index_var]
-                    if '_ansible_item_label' in include_result:
-                        task_vars['_ansible_item_label'] = special_vars['_ansible_item_label'] = include_result['_ansible_item_label']
-                    if 'ansible_loop' in include_result:
-                        task_vars['ansible_loop'] = special_vars['ansible_loop'] = include_result['ansible_loop']
-                    if original_task.no_log and '_ansible_no_log' not in include_args:
-                        task_vars['_ansible_no_log'] = special_vars['_ansible_no_log'] = original_task.no_log
+                    if '_assible_item_label' in include_result:
+                        task_vars['_assible_item_label'] = special_vars['_assible_item_label'] = include_result['_assible_item_label']
+                    if 'assible_loop' in include_result:
+                        task_vars['assible_loop'] = special_vars['assible_loop'] = include_result['assible_loop']
+                    if original_task.no_log and '_assible_no_log' not in include_args:
+                        task_vars['_assible_no_log'] = special_vars['_assible_no_log'] = original_task.no_log
 
                     # get search path for this task to pass to lookup plugins that may be used in pathing to
                     # the included file
-                    task_vars['ansible_search_path'] = original_task.get_search_path()
+                    task_vars['assible_search_path'] = original_task.get_search_path()
 
                     # ensure basedir is always in (dwim already searches here but we need to display it)
-                    if loader.get_basedir() not in task_vars['ansible_search_path']:
-                        task_vars['ansible_search_path'].append(loader.get_basedir())
+                    if loader.get_basedir() not in task_vars['assible_search_path']:
+                        task_vars['assible_search_path'].append(loader.get_basedir())
 
                     templar = Templar(loader=loader, variables=task_vars)
 
@@ -131,7 +131,7 @@ class IncludedFile:
                                     else:
                                         try:
                                             parent_include_dir = os.path.dirname(templar.template(parent_include.args.get('_raw_params')))
-                                        except AnsibleError as e:
+                                        except AssibleError as e:
                                             parent_include_dir = ''
                                             display.warning(
                                                 'Templating the path of the parent %s failed. The path to the '

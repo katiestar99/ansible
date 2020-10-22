@@ -1,17 +1,17 @@
-# (c) 2018 Ansible Project
+# (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 param(
     [Parameter(Mandatory=$true)][System.Collections.IDictionary]$Payload
 )
 
-#Requires -Module Ansible.ModuleUtils.AddType
-#AnsibleRequires -CSharpUtil Ansible.AccessToken
-#AnsibleRequires -CSharpUtil Ansible.Become
+#Requires -Module Assible.ModuleUtils.AddType
+#AssibleRequires -CSharpUtil Assible.AccessToken
+#AssibleRequires -CSharpUtil Assible.Become
 
 $ErrorActionPreference = "Stop"
 
-Write-AnsibleLog "INFO - starting become_wrapper" "become_wrapper"
+Write-AssibleLog "INFO - starting become_wrapper" "become_wrapper"
 
 Function Get-EnumValue($enum, $flag_type, $value) {
     $raw_enum_value = $value.Replace('_', '')
@@ -27,8 +27,8 @@ Function Get-EnumValue($enum, $flag_type, $value) {
 }
 
 Function Get-BecomeFlags($flags) {
-    $logon_type = [Ansible.AccessToken.LogonType]::Interactive
-    $logon_flags = [Ansible.Become.LogonFlags]::WithProfile
+    $logon_type = [Assible.AccessToken.LogonType]::Interactive
+    $logon_flags = [Assible.Become.LogonFlags]::WithProfile
 
     if ($null -eq $flags -or $flags -eq "") {
         $flag_split = @()
@@ -47,20 +47,20 @@ Function Get-BecomeFlags($flags) {
         $flag_value = $split[1]
         if ($flag_key -eq "logon_type") {
             $enum_details = @{
-                enum = [Ansible.AccessToken.LogonType]
+                enum = [Assible.AccessToken.LogonType]
                 flag_type = $flag_key
                 value = $flag_value
             }
             $logon_type = Get-EnumValue @enum_details
         } elseif ($flag_key -eq "logon_flags") {
             $logon_flag_values = $flag_value.Split(",")
-            $logon_flags = 0 -as [Ansible.Become.LogonFlags]
+            $logon_flags = 0 -as [Assible.Become.LogonFlags]
             foreach ($logon_flag_value in $logon_flag_values) {
                 if ($logon_flag_value -eq "") {
                     continue
                 }
                 $enum_details = @{
-                    enum = [Ansible.Become.LogonFlags]
+                    enum = [Assible.Become.LogonFlags]
                     flag_type = $flag_key
                     value = $logon_flag_value
                 }
@@ -72,18 +72,18 @@ Function Get-BecomeFlags($flags) {
         }
     }
 
-    return $logon_type, [Ansible.Become.LogonFlags]$logon_flags
+    return $logon_type, [Assible.Become.LogonFlags]$logon_flags
 }
 
-Write-AnsibleLog "INFO - loading C# become code" "become_wrapper"
-$add_type_b64 = $Payload.powershell_modules["Ansible.ModuleUtils.AddType"]
+Write-AssibleLog "INFO - loading C# become code" "become_wrapper"
+$add_type_b64 = $Payload.powershell_modules["Assible.ModuleUtils.AddType"]
 $add_type = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($add_type_b64))
-New-Module -Name Ansible.ModuleUtils.AddType -ScriptBlock ([ScriptBlock]::Create($add_type)) | Import-Module > $null
+New-Module -Name Assible.ModuleUtils.AddType -ScriptBlock ([ScriptBlock]::Create($add_type)) | Import-Module > $null
 
-$new_tmp = [System.Environment]::ExpandEnvironmentVariables($Payload.module_args["_ansible_remote_tmp"])
-$access_def = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Payload.csharp_utils["Ansible.AccessToken"]))
-$become_def = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Payload.csharp_utils["Ansible.Become"]))
-$process_def = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Payload.csharp_utils["Ansible.Process"]))
+$new_tmp = [System.Environment]::ExpandEnvironmentVariables($Payload.module_args["_assible_remote_tmp"])
+$access_def = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Payload.csharp_utils["Assible.AccessToken"]))
+$become_def = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Payload.csharp_utils["Assible.Become"]))
+$process_def = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Payload.csharp_utils["Assible.Process"]))
 Add-CSharpType -References $access_def, $become_def, $process_def -TempPath $new_tmp -IncludeDebugInfo
 
 $username = $Payload.become_user
@@ -98,11 +98,11 @@ if ($null -eq $password) {
 try {
     $logon_type, $logon_flags = Get-BecomeFlags -flags $Payload.become_flags
 } catch {
-    Write-AnsibleError -Message "internal error: failed to parse become_flags '$($Payload.become_flags)'" -ErrorRecord $_
+    Write-AssibleError -Message "internal error: failed to parse become_flags '$($Payload.become_flags)'" -ErrorRecord $_
     $host.SetShouldExit(1)
     return
 }
-Write-AnsibleLog "INFO - parsed become input, user: '$username', type: '$logon_type', flags: '$logon_flags'" "become_wrapper"
+Write-AssibleLog "INFO - parsed become input, user: '$username', type: '$logon_type', flags: '$logon_flags'" "become_wrapper"
 
 # NB: CreateProcessWithTokenW commandline maxes out at 1024 chars, must
 # bootstrap via small wrapper which contains the exec_wrapper passed through the
@@ -132,24 +132,24 @@ $exec_wrapper = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBas
 $exec_wrapper += "`0`0`0`0" + $payload_json
 
 try {
-    Write-AnsibleLog "INFO - starting become process '$lp_command_line'" "become_wrapper"
-    $result = [Ansible.Become.BecomeUtil]::CreateProcessAsUser($username, $password, $logon_flags, $logon_type,
+    Write-AssibleLog "INFO - starting become process '$lp_command_line'" "become_wrapper"
+    $result = [Assible.Become.BecomeUtil]::CreateProcessAsUser($username, $password, $logon_flags, $logon_type,
         $null, $lp_command_line,  $lp_current_directory, $null, $exec_wrapper)
-    Write-AnsibleLog "INFO - become process complete with rc: $($result.ExitCode)" "become_wrapper"
+    Write-AssibleLog "INFO - become process complete with rc: $($result.ExitCode)" "become_wrapper"
     $stdout = $result.StandardOut
     try {
         $stdout = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($stdout))
     } catch [FormatException] {
-        # output wasn't Base64, ignore as it may contain an error message we want to pass to Ansible
-        Write-AnsibleLog "WARN - become process stdout was not base64 encoded as expected: $stdout"
+        # output wasn't Base64, ignore as it may contain an error message we want to pass to Assible
+        Write-AssibleLog "WARN - become process stdout was not base64 encoded as expected: $stdout"
     }
 
     $host.UI.WriteLine($stdout)
     $host.UI.WriteErrorLine($result.StandardError.Trim())
     $host.SetShouldExit($result.ExitCode)
 } catch {
-    Write-AnsibleError -Message "internal error: failed to become user '$username'" -ErrorRecord $_
+    Write-AssibleError -Message "internal error: failed to become user '$username'" -ErrorRecord $_
     $host.SetShouldExit(1)
 }
 
-Write-AnsibleLog "INFO - ending become_wrapper" "become_wrapper"
+Write-AssibleLog "INFO - ending become_wrapper" "become_wrapper"

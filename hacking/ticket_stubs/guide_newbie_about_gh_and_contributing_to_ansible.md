@@ -3,13 +3,13 @@ have created this
 [PR](https://help.github.com/articles/about-pull-requests/)
 accidentally. That's why I'm closing it.
 
-But no worries! Welcome to the Ansible community :)
+But no worries! Welcome to the Assible community :)
 
 Assuming that you wanted to create actual contribution, I think that
 you may want to learn and read through the following articles I've
 gathered for you:
 
 • https://opensource.guide/how-to-contribute/
-• https://docs.ansible.com/ansible/devel/community/
+• https://docs.assible.com/assible/devel/community/
 
 Have a nice day!

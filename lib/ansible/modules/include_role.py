@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -10,14 +10,14 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-author: Ansible Core Team (@ansible)
+author: Assible Core Team (@assible)
 module: include_role
 short_description: Load and execute a role
 description:
   - Dynamically loads and executes a specified role as a task.
-  - May be used only where Ansible tasks are allowed - inside C(pre_tasks), C(tasks), or C(post_tasks) playbook objects, or as a task inside a role.
+  - May be used only where Assible tasks are allowed - inside C(pre_tasks), C(tasks), or C(post_tasks) playbook objects, or as a task inside a role.
   - Task-level keywords, loops, and conditionals apply only to the C(include_role) statement itself.
-  - To apply keywords to the tasks within the role, pass them using the C(apply) option or use M(ansible.builtin.import_role) instead.
+  - To apply keywords to the tasks within the role, pass them using the C(apply) option or use M(assible.builtin.import_role) instead.
   - Ignores some keywords, like C(until) and C(retries).
   - This module is also supported for Windows targets.
 version_added: "2.2"
@@ -68,15 +68,15 @@ options:
     version_added: '2.8'
 notes:
   - Handlers are made available to the whole play.
-  - Before Ansible 2.4, as with C(include), this task could be static or dynamic, If static, it implied that it won't
-    need templating, loops or conditionals and will show included tasks in the C(--list) options. Ansible would try to
+  - Before Assible 2.4, as with C(include), this task could be static or dynamic, If static, it implied that it won't
+    need templating, loops or conditionals and will show included tasks in the C(--list) options. Assible would try to
     autodetect what is needed, but you can set C(static) to C(yes) or C(no) at task level to control this.
-  - After Ansible 2.4, you can use M(ansible.builtin.import_role) for C(static) behaviour and this action for C(dynamic) one.
+  - After Assible 2.4, you can use M(assible.builtin.import_role) for C(static) behaviour and this action for C(dynamic) one.
 seealso:
-- module: ansible.builtin.import_playbook
-- module: ansible.builtin.import_role
-- module: ansible.builtin.import_tasks
-- module: ansible.builtin.include_tasks
+- module: assible.builtin.import_playbook
+- module: assible.builtin.import_role
+- module: assible.builtin.import_tasks
+- module: assible.builtin.include_tasks
 - ref: playbooks_reuse_includes
   description: More information related to including and importing playbooks, roles and tasks.
 '''

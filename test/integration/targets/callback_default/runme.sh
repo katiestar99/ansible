@@ -17,11 +17,11 @@ run_test() {
 	local testname=$1
 
 	# outout was recorded w/o cowsay, ensure we reproduce the same
-	export ANSIBLE_NOCOWS=1
+	export ASSIBLE_NOCOWS=1
 
 	# The shenanigans with redirection and 'tee' are to capture STDOUT and
 	# STDERR separately while still displaying both to the console
-	{ ansible-playbook -i inventory test.yml \
+	{ assible-playbook -i inventory test.yml \
 		> >(set +x; tee "${OUTFILE}.${testname}.stdout"); } \
 		2> >(set +x; tee "${OUTFILE}.${testname}.stderr" >&2)
 	# Scrub deprication warning that shows up in Python 2.6 on CentOS 6
@@ -40,10 +40,10 @@ run_test_dryrun() {
 	local chk=${2:-}
 
 	# outout was recorded w/o cowsay, ensure we reproduce the same
-	export ANSIBLE_NOCOWS=1
+	export ASSIBLE_NOCOWS=1
 
 	# This needed to satisfy shellcheck that can not accept unquoted variable
-	cmd="ansible-playbook -i inventory ${chk} test_dryrun.yml"
+	cmd="assible-playbook -i inventory ${chk} test_dryrun.yml"
 
 	# The shenanigans with redirection and 'tee' are to capture STDOUT and
 	# STDERR separately while still displaying both to the console
@@ -87,7 +87,7 @@ adjust_tty_cols() {
 	if [[ -t 1 ]]; then
 		# Preserve existing TTY cols
 		TTY_COLS=$( stty -a | grep -Eo '; columns [0-9]+;' | cut -d';' -f2 | cut -d' ' -f3 )
-		# Override TTY cols to make comparing ansible-playbook output easier
+		# Override TTY cols to make comparing assible-playbook output easier
 		# This value matches the default in the code when there is no TTY
 		stty cols 79
 	fi
@@ -111,52 +111,52 @@ fi
 adjust_tty_cols
 
 # Force the 'default' callback plugin, since that's what we're testing
-export ANSIBLE_STDOUT_CALLBACK=default
+export ASSIBLE_STDOUT_CALLBACK=default
 # Disable color in output for consistency
-export ANSIBLE_FORCE_COLOR=0
-export ANSIBLE_NOCOLOR=1
+export ASSIBLE_FORCE_COLOR=0
+export ASSIBLE_NOCOLOR=1
 
 # Default settings
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=1
-export ANSIBLE_DISPLAY_OK_HOSTS=1
-export ANSIBLE_DISPLAY_FAILED_STDERR=0
-export ANSIBLE_CHECK_MODE_MARKERS=0
+export ASSIBLE_DISPLAY_SKIPPED_HOSTS=1
+export ASSIBLE_DISPLAY_OK_HOSTS=1
+export ASSIBLE_DISPLAY_FAILED_STDERR=0
+export ASSIBLE_CHECK_MODE_MARKERS=0
 
 run_test default
 
 # Hide skipped
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=0
+export ASSIBLE_DISPLAY_SKIPPED_HOSTS=0
 
 run_test hide_skipped
 
 # Hide skipped/ok
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=0
-export ANSIBLE_DISPLAY_OK_HOSTS=0
+export ASSIBLE_DISPLAY_SKIPPED_HOSTS=0
+export ASSIBLE_DISPLAY_OK_HOSTS=0
 
 run_test hide_skipped_ok
 
 # Hide ok
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=1
-export ANSIBLE_DISPLAY_OK_HOSTS=0
+export ASSIBLE_DISPLAY_SKIPPED_HOSTS=1
+export ASSIBLE_DISPLAY_OK_HOSTS=0
 
 run_test hide_ok
 
 # Failed to stderr
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=1
-export ANSIBLE_DISPLAY_OK_HOSTS=1
-export ANSIBLE_DISPLAY_FAILED_STDERR=1
+export ASSIBLE_DISPLAY_SKIPPED_HOSTS=1
+export ASSIBLE_DISPLAY_OK_HOSTS=1
+export ASSIBLE_DISPLAY_FAILED_STDERR=1
 
 run_test failed_to_stderr
 
 # Default settings with unreachable tasks
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=1
-export ANSIBLE_DISPLAY_OK_HOSTS=1
-export ANSIBLE_DISPLAY_FAILED_STDERR=1
-export ANSIBLE_TIMEOUT=1
+export ASSIBLE_DISPLAY_SKIPPED_HOSTS=1
+export ASSIBLE_DISPLAY_OK_HOSTS=1
+export ASSIBLE_DISPLAY_FAILED_STDERR=1
+export ASSIBLE_TIMEOUT=1
 
 # Check if UNREACHBLE is available in stderr
 set +e
-ansible-playbook -i inventory test_2.yml > >(set +x; tee "${BASEFILE}.unreachable.stdout";) 2> >(set +x; tee "${BASEFILE}.unreachable.stderr" >&2) || true
+assible-playbook -i inventory test_2.yml > >(set +x; tee "${BASEFILE}.unreachable.stdout";) 2> >(set +x; tee "${BASEFILE}.unreachable.stderr" >&2) || true
 set -e
 if test "$(grep -c 'UNREACHABLE' "${BASEFILE}.unreachable.stderr")" -ne 1; then
 	echo "Test failed"
@@ -166,11 +166,11 @@ fi
 ## DRY RUN tests
 #
 # Default settings with dry run tasks
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=1
-export ANSIBLE_DISPLAY_OK_HOSTS=1
-export ANSIBLE_DISPLAY_FAILED_STDERR=1
+export ASSIBLE_DISPLAY_SKIPPED_HOSTS=1
+export ASSIBLE_DISPLAY_OK_HOSTS=1
+export ASSIBLE_DISPLAY_FAILED_STDERR=1
 # Enable Check mode markers
-export ANSIBLE_CHECK_MODE_MARKERS=1
+export ASSIBLE_CHECK_MODE_MARKERS=1
 
 # Test the wet run with check markers
 run_test_dryrun check_markers_wet
@@ -179,7 +179,7 @@ run_test_dryrun check_markers_wet
 run_test_dryrun check_markers_dry --check
 
 # Disable Check mode markers
-export ANSIBLE_CHECK_MODE_MARKERS=0
+export ASSIBLE_CHECK_MODE_MARKERS=0
 
 # Test the wet run without check markers
 run_test_dryrun check_nomarkers_wet
@@ -188,7 +188,7 @@ run_test_dryrun check_nomarkers_wet
 run_test_dryrun check_nomarkers_dry --check
 
 # Make sure implicit meta tasks are not printed
-ansible-playbook -i host1,host2 no_implicit_meta_banners.yml > meta_test.out
+assible-playbook -i host1,host2 no_implicit_meta_banners.yml > meta_test.out
 cat meta_test.out
 [ "$(grep -c 'TASK \[meta\]' meta_test.out)" -eq 0 ]
 rm -f meta_test.out

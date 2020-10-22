@@ -10,10 +10,10 @@ import sys
 
 import pexpect
 
-os.environ['ANSIBLE_NOCOLOR'] = '1'
+os.environ['ASSIBLE_NOCOLOR'] = '1'
 
 out = pexpect.run(
-    'ansible -c ssh -i localhost, -u cliuser1 -e ansible_python_interpreter={0} '
+    'assible -c ssh -i localhost, -u cliuser1 -e assible_python_interpreter={0} '
     '-m command -a whoami -Kkb --become-user cliuser2 localhost'.format(sys.argv[1]),
     events={
         'SSH password:': 'secretpassword\n',

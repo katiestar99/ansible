@@ -6,7 +6,7 @@
   when: not docker_skip_cleanup | bool
 
 - name: remove docker packages
-  action: "{{ ansible_facts.pkg_mgr }}"
+  action: "{{ assible_facts.pkg_mgr }}"
   args:
     name: "{{ docker_cleanup_packages }}"
     state: absent

@@ -2,8 +2,8 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.Backup
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Backup
 
 function WriteLines($outlines, $path, $linesep, $encodingobj, $validate, $check_mode) {
 	Try {
@@ -64,7 +64,7 @@ function WriteLines($outlines, $path, $linesep, $encodingobj, $validate, $check_
 # Implement the functionality for state == 'present'
 function Present($path, $regex, $line, $insertafter, $insertbefore, $create, $backup, $backrefs, $validate, $encodingobj, $linesep, $check_mode, $diff_support) {
 
-	# Note that we have to clean up the path because ansible wants to treat / and \ as
+	# Note that we have to clean up the path because assible wants to treat / and \ as
 	# interchangeable in windows pathnames, but .NET framework internals do not support that.
 	$cleanpath = $path.Replace("/", "\");
 
@@ -228,7 +228,7 @@ function Absent($path, $regex, $line, $backup, $validate, $encodingobj, $linesep
 	}
 
 	# Read the dest file lines using the indicated encoding into a mutable ArrayList. Note
-	# that we have to clean up the path because ansible wants to treat / and \ as
+	# that we have to clean up the path because assible wants to treat / and \ as
 	# interchangeable in windows pathnames, but .NET framework internals do not support that.
 	$cleanpath = $path.Replace("/", "\");
 	$before = [System.IO.File]::ReadAllLines($cleanpath, $encodingobj);
@@ -304,24 +304,24 @@ function Absent($path, $regex, $line, $backup, $validate, $encodingobj, $linesep
 }
 
 
-# Parse the parameters file dropped by the Ansible machinery
+# Parse the parameters file dropped by the Assible machinery
 $params = Parse-Args $args -supports_check_mode $true;
-$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false;
-$diff_support = Get-AnsibleParam -obj $params -name "_ansible_diff" -type "bool" -default $false;
+$check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -type "bool" -default $false;
+$diff_support = Get-AssibleParam -obj $params -name "_assible_diff" -type "bool" -default $false;
 
 # Initialize defaults for input parameters.
-$path = Get-AnsibleParam -obj $params -name "path" -type "path" -failifempty $true -aliases "dest","destfile","name";
-$regex = Get-AnsibleParam -obj $params -name "regex" -type "str" -aliases "regexp";
-$state = Get-AnsibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent";
-$line = Get-AnsibleParam -obj $params -name "line" -type "str";
-$backrefs = Get-AnsibleParam -obj $params -name "backrefs" -type "bool" -default $false;
-$insertafter = Get-AnsibleParam -obj $params -name "insertafter" -type "str";
-$insertbefore = Get-AnsibleParam -obj $params -name "insertbefore" -type "str";
-$create = Get-AnsibleParam -obj $params -name "create" -type "bool" -default $false;
-$backup = Get-AnsibleParam -obj $params -name "backup" -type "bool" -default $false;
-$validate = Get-AnsibleParam -obj $params -name "validate" -type "str";
-$encoding = Get-AnsibleParam -obj $params -name "encoding" -type "str" -default "auto";
-$newline = Get-AnsibleParam -obj $params -name "newline" -type "str" -default "windows" -validateset "unix","windows";
+$path = Get-AssibleParam -obj $params -name "path" -type "path" -failifempty $true -aliases "dest","destfile","name";
+$regex = Get-AssibleParam -obj $params -name "regex" -type "str" -aliases "regexp";
+$state = Get-AssibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent";
+$line = Get-AssibleParam -obj $params -name "line" -type "str";
+$backrefs = Get-AssibleParam -obj $params -name "backrefs" -type "bool" -default $false;
+$insertafter = Get-AssibleParam -obj $params -name "insertafter" -type "str";
+$insertbefore = Get-AssibleParam -obj $params -name "insertbefore" -type "str";
+$create = Get-AssibleParam -obj $params -name "create" -type "bool" -default $false;
+$backup = Get-AssibleParam -obj $params -name "backup" -type "bool" -default $false;
+$validate = Get-AssibleParam -obj $params -name "validate" -type "str";
+$encoding = Get-AssibleParam -obj $params -name "encoding" -type "str" -default "auto";
+$newline = Get-AssibleParam -obj $params -name "newline" -type "str" -default "windows" -validateset "unix","windows";
 
 # Fail if the path is not a file
 If (Test-Path -LiteralPath $path -PathType "container") {

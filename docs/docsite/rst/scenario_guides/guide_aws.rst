@@ -6,14 +6,14 @@ Amazon Web Services Guide
 Introduction
 ````````````
 
-Ansible contains a number of modules for controlling Amazon Web Services (AWS).  The purpose of this
-section is to explain how to put Ansible modules together (and use inventory scripts) to use Ansible in AWS context.
+Assible contains a number of modules for controlling Amazon Web Services (AWS).  The purpose of this
+section is to explain how to put Assible modules together (and use inventory scripts) to use Assible in AWS context.
 
 Requirements for the AWS modules are minimal.
 
 All of the modules require and are tested against recent versions of boto, usually boto3. Check the module documentation for the minimum required version for each module. You must have the boto3 Python module installed on your control machine. You may also need the original boto package. You can install these modules from your OS distribution or using the python package installer: ``pip install boto3``.
 
-Whereas classically Ansible will execute tasks in its host loop against multiple remote machines, most cloud-control steps occur on your local machine with reference to the regions to control.
+Whereas classically Assible will execute tasks in its host loop against multiple remote machines, most cloud-control steps occur on your local machine with reference to the regions to control.
 
 In your playbook steps we'll typically be using the following pattern for provisioning steps::
 
@@ -35,7 +35,7 @@ For environment variables::
     export AWS_ACCESS_KEY_ID='AK123'
     export AWS_SECRET_ACCESS_KEY='abc123'
 
-For storing these in a vars_file, ideally encrypted with ansible-vault::
+For storing these in a vars_file, ideally encrypted with assible-vault::
 
     ---
     ec2_access_key: "--REMOVED--"
@@ -171,7 +171,7 @@ Host Inventory
 Once your nodes are spun up, you'll probably want to talk to them again.  With a cloud setup, it's best to not maintain a static list of cloud hostnames
 in text files.  Rather, the best way to handle this is to use the aws_ec2 inventory plugin. See :ref:`dynamic_inventory`.
 
-The plugin will also return instances that were created outside of Ansible and allow Ansible to manage them.
+The plugin will also return instances that were created outside of Assible and allow Assible to manage them.
 
 .. _aws_tags_and_groups:
 
@@ -198,27 +198,27 @@ You can also use these groups with 'group_vars' to set variables that are automa
 
 .. _aws_pull:
 
-Autoscaling with Ansible Pull
+Autoscaling with Assible Pull
 `````````````````````````````
 
-Amazon Autoscaling features automatically increase or decrease capacity based on load.  There are also Ansible modules shown in the cloud documentation that
+Amazon Autoscaling features automatically increase or decrease capacity based on load.  There are also Assible modules shown in the cloud documentation that
 can configure autoscaling policy.
 
-When nodes come online, it may not be sufficient to wait for the next cycle of an ansible command to come along and configure that node.
+When nodes come online, it may not be sufficient to wait for the next cycle of an assible command to come along and configure that node.
 
-To do this, pre-bake machine images which contain the necessary ansible-pull invocation.  Ansible-pull is a command line tool that fetches a playbook from a git server and runs it locally.
+To do this, pre-bake machine images which contain the necessary assible-pull invocation.  Assible-pull is a command line tool that fetches a playbook from a git server and runs it locally.
 
 One of the challenges of this approach is that there needs to be a centralized way to store data about the results of pull commands in an autoscaling context.
 For this reason, the autoscaling solution provided below in the next section can be a better approach.
 
-Read :ref:`ansible-pull` for more information on pull-mode playbooks.
+Read :ref:`assible-pull` for more information on pull-mode playbooks.
 
 .. _aws_autoscale:
 
-Autoscaling with Ansible Tower
+Autoscaling with Assible Tower
 ``````````````````````````````
 
-:ref:`ansible_tower` also contains a very nice feature for auto-scaling use cases.  In this mode, a simple curl script can call
+:ref:`assible_tower` also contains a very nice feature for auto-scaling use cases.  In this mode, a simple curl script can call
 a defined URL and the server will "dial out" to the requester and configure an instance that is spinning up.  This can be a great way
 to reconfigure ephemeral nodes.  See the Tower install and product documentation for more details.
 
@@ -227,44 +227,44 @@ with remote hosts.
 
 .. _aws_cloudformation_example:
 
-Ansible With (And Versus) CloudFormation
+Assible With (And Versus) CloudFormation
 ````````````````````````````````````````
 
 CloudFormation is a Amazon technology for defining a cloud stack as a JSON or YAML document.
 
-Ansible modules provide an easier to use interface than CloudFormation in many examples, without defining a complex JSON/YAML document.
+Assible modules provide an easier to use interface than CloudFormation in many examples, without defining a complex JSON/YAML document.
 This is recommended for most users.
 
-However, for users that have decided to use CloudFormation, there is an Ansible module that can be used to apply a CloudFormation template
+However, for users that have decided to use CloudFormation, there is an Assible module that can be used to apply a CloudFormation template
 to Amazon.
 
-When using Ansible with CloudFormation, typically Ansible will be used with a tool like Packer to build images, and CloudFormation will launch
-those images, or ansible will be invoked through user data once the image comes online, or a combination of the two.
+When using Assible with CloudFormation, typically Assible will be used with a tool like Packer to build images, and CloudFormation will launch
+those images, or assible will be invoked through user data once the image comes online, or a combination of the two.
 
-Please see the examples in the Ansible CloudFormation module for more details.
+Please see the examples in the Assible CloudFormation module for more details.
 
 .. _aws_image_build:
 
-AWS Image Building With Ansible
+AWS Image Building With Assible
 ```````````````````````````````
 
 Many users may want to have images boot to a more complete configuration rather than configuring them entirely after instantiation.  To do this,
-one of many programs can be used with Ansible playbooks to define and upload a base image, which will then get its own AMI ID for usage with
-the ec2 module or other Ansible AWS modules such as ec2_asg or the cloudformation module.   Possible tools include Packer, aminator, and Ansible's
+one of many programs can be used with Assible playbooks to define and upload a base image, which will then get its own AMI ID for usage with
+the ec2 module or other Assible AWS modules such as ec2_asg or the cloudformation module.   Possible tools include Packer, aminator, and Assible's
 ec2_ami module.
 
 Generally speaking, we find most users using Packer.
 
-See the Packer documentation of the `Ansible local Packer provisioner <https://www.packer.io/docs/provisioners/ansible-local.html>`_ and `Ansible remote Packer provisioner <https://www.packer.io/docs/provisioners/ansible.html>`_.
+See the Packer documentation of the `Assible local Packer provisioner <https://www.packer.io/docs/provisioners/assible-local.html>`_ and `Assible remote Packer provisioner <https://www.packer.io/docs/provisioners/assible.html>`_.
 
-If you do not want to adopt Packer at this time, configuring a base-image with Ansible after provisioning (as shown above) is acceptable.
+If you do not want to adopt Packer at this time, configuring a base-image with Assible after provisioning (as shown above) is acceptable.
 
 .. _aws_next_steps:
 
 Next Steps: Explore Modules
 ```````````````````````````
 
-Ansible ships with lots of modules for configuring a wide array of EC2 services.  Browse the "Cloud" category of the module
+Assible ships with lots of modules for configuring a wide array of EC2 services.  Browse the "Cloud" category of the module
 documentation for a full list with examples.
 
 .. seealso::
@@ -275,7 +275,7 @@ documentation for a full list with examples.
        An introduction to playbooks
    :ref:`playbooks_delegation`
        Delegation, useful for working with loud balancers, clouds, and locally executed steps.
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

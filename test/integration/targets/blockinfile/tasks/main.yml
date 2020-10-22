@@ -1,20 +1,20 @@
 # Test code for the blockinfile module.
 # (c) 2017, James Tanner <tanner.jc@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 - set_fact:
     output_dir_test: "{{ output_dir }}/test_blockinfile"
@@ -42,12 +42,12 @@
   blockinfile:
     path: "{{ output_dir_test }}/sshd_config"
     block: |
-      Match User ansible-agent
+      Match User assible-agent
       PasswordAuthentication no
   register: blockinfile_test0
 
 - name: check content
-  shell: 'grep -c -e "Match User ansible-agent" -e "PasswordAuthentication no" {{ output_dir_test }}/sshd_config'
+  shell: 'grep -c -e "Match User assible-agent" -e "PasswordAuthentication no" {{ output_dir_test }}/sshd_config'
   register: blockinfile_test0_grep
 
 - debug:
@@ -71,7 +71,7 @@
   blockinfile:
     path: "{{ output_dir_test }}/sshd_config"
     block: |
-      Match User ansible-agent
+      Match User assible-agent
       PasswordAuthentication no
   register: blockinfile_test1
 
@@ -118,7 +118,7 @@
     dest: "{{ output_dir_test }}/line_endings_test.txt"
     # generating the content like this instead of copying a fixture file
     # prevents sanity checks from warning about mixed line endings
-    content: "unix\nunix\nunix\n\ndos\r\ndos\r\ndos\r\n\nunix\nunix\n# BEGIN ANSIBLE MANAGED BLOCK\ndos\r\n# END ANSIBLE MANAGED BLOCK\nunix\nunix\nunix\nunix\n"
+    content: "unix\nunix\nunix\n\ndos\r\ndos\r\ndos\r\n\nunix\nunix\n# BEGIN ASSIBLE MANAGED BLOCK\ndos\r\n# END ASSIBLE MANAGED BLOCK\nunix\nunix\nunix\nunix\n"
 
 - name: insert/update "dos" configuration block in line_endings_test.txt
   blockinfile:

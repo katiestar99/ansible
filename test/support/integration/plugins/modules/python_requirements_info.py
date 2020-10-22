@@ -1,11 +1,11 @@
 #!/usr/bin/python
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
     'supported_by': 'community'
@@ -16,14 +16,14 @@ module: python_requirements_info
 short_description: Show python path and assert dependency versions
 description:
     - Get info about available Python requirements on the target host, including listing required libraries and gathering versions.
-    - This module was called C(python_requirements_facts) before Ansible 2.9. The usage did not change.
+    - This module was called C(python_requirements_facts) before Assible 2.9. The usage did not change.
 version_added: "2.7"
 options:
   dependencies:
     description: >
       A list of version-likes or module names to check for installation.
       Supported operators: <, >, <=, >=, or ==. The bare module name like
-      I(ansible), the module with a specific version like I(boto3==1.6.1), or a
+      I(assible), the module with a specific version like I(boto3==1.6.1), or a
       partial version like I(requests>2) are all valid specifications.
 author:
 - Will Thames (@willthames)
@@ -99,7 +99,7 @@ try:
 except ImportError:
     pass
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 operations = {
     '<=': operator.le,
@@ -111,7 +111,7 @@ operations = {
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             dependencies=dict(type='list')
         ),
@@ -119,7 +119,7 @@ def main():
     )
     if module._name == 'python_requirements_facts':
         module.deprecate("The 'python_requirements_facts' module has been renamed to 'python_requirements_info'",
-                         version='2.13', collection_name='ansible.builtin')
+                         version='2.13', collection_name='assible.builtin')
     if not HAS_DISTUTILS:
         module.fail_json(
             msg='Could not import "distutils" and "pkg_resources" libraries to introspect python environment.',
@@ -138,7 +138,7 @@ def main():
     for dep in (module.params.get('dependencies') or []):
         match = pkg_dep_re.match(dep)
         if match is None:
-            module.fail_json(msg="Failed to parse version requirement '{0}'. Must be formatted like 'ansible>2.6'".format(dep))
+            module.fail_json(msg="Failed to parse version requirement '{0}'. Must be formatted like 'assible>2.6'".format(dep))
         pkg, op, version = match.groups()
         if op is not None and op not in operations:
             module.fail_json(msg="Failed to parse version requirement '{0}'. Operator must be one of >, <, <=, >=, or ==".format(dep))

@@ -1,11 +1,11 @@
 #!powershell
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.CommandUtil
-#Requires -Module Ansible.ModuleUtils.FileUtil
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.CommandUtil
+#Requires -Module Assible.ModuleUtils.FileUtil
 
 # TODO: add check mode support
 
@@ -14,12 +14,12 @@ $ErrorActionPreference = 'Stop'
 
 $params = Parse-Args $args -supports_check_mode $false
 
-$raw_command_line = Get-AnsibleParam -obj $params -name "_raw_params" -type "str" -failifempty $true
-$chdir = Get-AnsibleParam -obj $params -name "chdir" -type "path"
-$creates = Get-AnsibleParam -obj $params -name "creates" -type "path"
-$removes = Get-AnsibleParam -obj $params -name "removes" -type "path"
-$stdin = Get-AnsibleParam -obj $params -name "stdin" -type "str"
-$output_encoding_override = Get-AnsibleParam -obj $params -name "output_encoding_override" -type "str"
+$raw_command_line = Get-AssibleParam -obj $params -name "_raw_params" -type "str" -failifempty $true
+$chdir = Get-AssibleParam -obj $params -name "chdir" -type "path"
+$creates = Get-AssibleParam -obj $params -name "creates" -type "path"
+$removes = Get-AssibleParam -obj $params -name "removes" -type "path"
+$stdin = Get-AssibleParam -obj $params -name "stdin" -type "str"
+$output_encoding_override = Get-AssibleParam -obj $params -name "output_encoding_override" -type "str"
 
 $raw_command_line = $raw_command_line.Trim()
 
@@ -28,11 +28,11 @@ $result = @{
     cmd = $raw_command_line
 }
 
-if ($creates -and $(Test-AnsiblePath -Path $creates)) {
+if ($creates -and $(Test-AssiblePath -Path $creates)) {
     Exit-Json @{msg="skipped, since $creates exists";cmd=$raw_command_line;changed=$false;skipped=$true;rc=0}
 }
 
-if ($removes -and -not $(Test-AnsiblePath -Path $removes)) {
+if ($removes -and -not $(Test-AssiblePath -Path $removes)) {
     Exit-Json @{msg="skipped, since $removes does not exist";cmd=$raw_command_line;changed=$false;skipped=$true;rc=0}
 }
 

@@ -4,7 +4,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'status': ['preview'],
+ASSIBLE_METADATA = {'status': ['preview'],
                     'supported_by': 'community',
                     'version': '1.0'}
 
@@ -14,7 +14,7 @@ import sys
 # TODO: could read these from the files I suppose...
 secrets = {'vault-password': 'test-vault-password',
            'vault-password-wrong': 'hunter42',
-           'vault-password-ansible': 'ansible',
+           'vault-password-assible': 'assible',
            'password': 'password',
            'vault-client-password-1': 'password-1',
            'vault-client-password-2': 'password-2'}
@@ -45,7 +45,7 @@ def main():
     args = arg_parser.parse_args()
     # print('args: %s' % args)
 
-    keyname = args.vault_id or 'ansible'
+    keyname = args.vault_id or 'assible'
 
     if args.set_password:
         print('--set is not supported yet')

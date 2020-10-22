@@ -2,8 +2,8 @@
   hosts: dynamic_host_a, dynamic_host_redirected
   gather_facts: no
   vars:
-    ansible_connection: testns.testcoll.localconn
-    ansible_localconn_connectionvar: from_play
+    assible_connection: testns.testcoll.localconn
+    assible_localconn_connectionvar: from_play
   tasks:
   - raw: echo 'hello world'
     register: connection_out

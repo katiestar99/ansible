@@ -1,4 +1,4 @@
-# (c) 2019 Ansible Project
+# (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -8,10 +8,10 @@ import os
 
 from collections import defaultdict
 
-from ansible.collections import is_collection_path
-from ansible.module_utils._text import to_bytes
-from ansible.utils.collection_loader import AnsibleCollectionConfig
-from ansible.utils.display import Display
+from assible.collections import is_collection_path
+from assible.module_utils._text import to_bytes
+from assible.utils.collection_loader import AssibleCollectionConfig
+from assible.utils.display import Display
 
 display = Display()
 
@@ -27,7 +27,7 @@ def list_valid_collection_paths(search_paths=None, warn=False):
     if search_paths is None:
         search_paths = []
 
-    search_paths.extend(AnsibleCollectionConfig.collection_paths)
+    search_paths.extend(AssibleCollectionConfig.collection_paths)
 
     for path in search_paths:
 
@@ -59,7 +59,7 @@ def list_collection_dirs(search_paths=None, coll_filter=None):
 
         b_path = to_bytes(path)
         if os.path.isdir(b_path):
-            b_coll_root = to_bytes(os.path.join(path, 'ansible_collections'))
+            b_coll_root = to_bytes(os.path.join(path, 'assible_collections'))
 
             if os.path.exists(b_coll_root) and os.path.isdir(b_coll_root):
                 coll = None

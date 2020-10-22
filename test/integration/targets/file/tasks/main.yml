@@ -1,20 +1,20 @@
 # Test code for the file module.
 # (c) 2014, Richard Isaacson <richard.c.isaacson@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 - set_fact: output_file={{output_dir}}/foo.txt
 
@@ -590,7 +590,7 @@
     that:
     - result.mode == '0444'
 
-# https://github.com/ansible/ansible/issues/67307
+# https://github.com/assible/assible/issues/67307
 # Test the module fails in check_mode when directory and owner/group do not exist
 # I don't use state=touch here intentionally to fail and catch warnings
 - name: owner does not exist in check_mode
@@ -694,10 +694,10 @@
     - group_exists.warnings is not defined
     - group_gid_exists.warnings is not defined
 
-# https://github.com/ansible/ansible/issues/50943
+# https://github.com/assible/assible/issues/50943
 # Need to use /tmp as nobody can't access output_dir at all
 - name: create file as root with all write permissions
-  file: dest=/tmp/write_utime state=touch mode=0666 owner={{ansible_user_id}}
+  file: dest=/tmp/write_utime state=touch mode=0666 owner={{assible_user_id}}
 
 - name: Pause to ensure stat times are not the exact same
   pause:
@@ -798,7 +798,7 @@
     - dir_result.stat.mode == '0600'
     - file_in_dir_result.stat.mode == '0600'
 
-# https://github.com/ansible/ansible/issues/55971
+# https://github.com/assible/assible/issues/55971
 - name: Test missing src and path
   file:
     state: hard

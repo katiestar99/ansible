@@ -1,19 +1,19 @@
 # (c) 2019,  Rhys Campbell <rhys.james.campbell@googlemail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # ============================================================
 
@@ -21,11 +21,11 @@
 # Support for Ubuntu 14.04 has been removed from MongoDB 4.0.10+, 3.6.13+, and 3.4.21+.
 # CentOS6 has python version issues
 - meta: end_play
-  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version == '14.04')
-    or (ansible_os_family == "RedHat" and ansible_distribution_major_version == '6')
-    or ansible_os_family == "Suse"
-    or ansible_distribution == 'Fedora'
-    or (ansible_facts['distribution'] == "CentOS")
+  when: (assible_distribution == 'Ubuntu' and assible_distribution_version == '14.04')
+    or (assible_os_family == "RedHat" and assible_distribution_major_version == '6')
+    or assible_os_family == "Suse"
+    or assible_distribution == 'Fedora'
+    or (assible_facts['distribution'] == "CentOS")
 
 # Ubuntu
 - name: Import MongoDB public GPG Key
@@ -33,8 +33,8 @@
     keyserver: "{{ apt.keyserver }}"
     id: "{{ apt.keyserver_id }}"
   when:
-    - ansible_distribution_version in ["16.04", "18.04"]
-    - ansible_distribution == 'Ubuntu'
+    - assible_distribution_version in ["16.04", "18.04"]
+    - assible_distribution == 'Ubuntu'
 
 - name: Add MongoDB repository into sources list
   apt_repository:
@@ -42,8 +42,8 @@
     state: present
     update_cache: yes
   when:
-    - ansible_distribution_version in ["16.04", "18.04"]
-    - ansible_distribution == 'Ubuntu'
+    - assible_distribution_version in ["16.04", "18.04"]
+    - assible_distribution == 'Ubuntu'
 
 # Need to handle various platforms here. Package name will not always be the same
 - name: Ensure mongod package is installed
@@ -52,7 +52,7 @@
     state: present
     force: yes
   when:
-    - ansible_distribution == 'Ubuntu'
+    - assible_distribution == 'Ubuntu'
 
 - name: Ensure mongos package is installed
   apt:
@@ -60,7 +60,7 @@
     state: present
     force: yes
   when:
-    - ansible_distribution == 'Ubuntu'
+    - assible_distribution == 'Ubuntu'
 
 - name: Ensure mongo client is installed
   apt:
@@ -68,7 +68,7 @@
     state: present
     force: yes
   when:
-    - ansible_distribution == 'Ubuntu'
+    - assible_distribution == 'Ubuntu'
 # EOF Ubuntu
 
 # Redhat
@@ -80,9 +80,9 @@
     gpgcheck: "{{ yum.gpgcheck }}"
     gpgkey: "{{ yum.gpgkey }}"
   when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_version.split('.')[0]|int <= 7
-    - not ansible_distribution == "Fedora"
+    - assible_os_family == "RedHat"
+    - assible_distribution_version.split('.')[0]|int <= 7
+    - not assible_distribution == "Fedora"
 
 
 - name: RedHat 8 repo not yet available so use 7 url
@@ -93,9 +93,9 @@
     gpgcheck: "{{ yum.gpgcheck }}"
     gpgkey: "{{ yum.gpgkey }}"
   when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_version.split('.')[0]|int == 8
-    - not ansible_distribution == "Fedora"
+    - assible_os_family == "RedHat"
+    - assible_distribution_version.split('.')[0]|int == 8
+    - not assible_distribution == "Fedora"
 
 - name: Another url for Fedora based systems
   yum_repository:
@@ -105,58 +105,58 @@
     gpgcheck: "{{ yum.gpgcheck }}"
     gpgkey: "{{ yum.gpgkey }}"
   when:
-    - ansible_distribution == "Fedora"
+    - assible_distribution == "Fedora"
 
 - name: Ensure mongod package is installed
   yum:
     name: "{{ mongodb_packages.mongod }}"
     state: present
-  when: ansible_os_family == "RedHat"
+  when: assible_os_family == "RedHat"
 
 - name: Ensure mongos package is installed
   yum:
     name: "{{ mongodb_packages.mongos }}"
     state: present
-  when: ansible_os_family == "RedHat"
+  when: assible_os_family == "RedHat"
 
 - name: Ensure mongo client is installed
   yum:
     name: "{{ mongodb_packages.mongo }}"
     state: present
-  when: ansible_os_family == "RedHat"
+  when: assible_os_family == "RedHat"
 # EOF Redhat
 
 - name: Install debian_packages
   apt:
     name: "{{ debian_packages_py2 }}"
   when:
-    - ansible_os_family == "Debian"
-    - ansible_distribution_version == "16.04"
+    - assible_os_family == "Debian"
+    - assible_distribution_version == "16.04"
   notify: Remove debian_packages_py2
 
 - name: Install debian_packages
   apt:
     name: "{{ debian_packages_py36 }}"
   when:
-    - ansible_os_family == "Debian"
-    - ansible_distribution_version == "18.04"
+    - assible_os_family == "Debian"
+    - assible_distribution_version == "18.04"
   notify: Remove debian_packages_py36
 
 - name: Install redhat_packages_py2
   yum:
     name: "{{ redhat_packages_py2 }}"
   when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_version|float < 8
-    - not (ansible_os_family == "RedHat" and ansible_distribution_version|float < 8)
+    - assible_os_family == "RedHat"
+    - assible_distribution_version|float < 8
+    - not (assible_os_family == "RedHat" and assible_distribution_version|float < 8)
   notify: Remove redhat_packages_py2
 
 - name: Install redhat_packages_py3
   yum:
     name: "{{ redhat_packages_py3 }}"
   when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_version|float >= 8
+    - assible_os_family == "RedHat"
+    - assible_distribution_version|float >= 8
   notify: Remove redhat_packages_py3
 
 - name: Install pip packages

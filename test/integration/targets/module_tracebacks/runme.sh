@@ -2,4 +2,4 @@
 
 set -eux
 
-ansible-playbook traceback.yml -i inventory "$@"
+assible-playbook traceback.yml -i inventory "$@"

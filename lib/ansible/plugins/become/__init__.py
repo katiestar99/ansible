@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -9,10 +9,10 @@ from random import choice
 from string import ascii_lowercase
 from gettext import dgettext
 
-from ansible.errors import AnsibleError
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.module_utils._text import to_bytes
-from ansible.plugins import AnsiblePlugin
+from assible.errors import AssibleError
+from assible.module_utils.six.moves import shlex_quote
+from assible.module_utils._text import to_bytes
+from assible.plugins import AssiblePlugin
 
 
 def _gen_id(length=32):
@@ -20,7 +20,7 @@ def _gen_id(length=32):
     return ''.join(choice(ascii_lowercase) for x in range(length))
 
 
-class BecomeBase(AnsiblePlugin):
+class BecomeBase(AssiblePlugin):
 
     name = None
 
@@ -42,7 +42,7 @@ class BecomeBase(AnsiblePlugin):
 
     def get_option(self, option, hostvars=None, playcontext=None):
         """ Overrides the base get_option to provide a fallback to playcontext vars in case a 3rd party plugin did not
-        implement the base become options required in Ansible. """
+        implement the base become options required in Assible. """
         # TODO: add deprecation warning for ValueError in devel that removes the playcontext fallback
         try:
             return super(BecomeBase, self).get_option(option, hostvars=hostvars)
@@ -67,7 +67,7 @@ class BecomeBase(AnsiblePlugin):
             cmd = shlex_quote('%s %s %s %s' % (shell.ECHO, self.success, shell.COMMAND_SEP, cmd))
         except AttributeError:
             # TODO: This should probably become some more robust functionlity used to detect incompat
-            raise AnsibleError('The %s shell family is incompatible with the %s become plugin' % (shell.SHELL_FAMILY, self.name))
+            raise AssibleError('The %s shell family is incompatible with the %s become plugin' % (shell.SHELL_FAMILY, self.name))
         exe = getattr(shell, 'executable', None)
         if exe and not noexe:
             cmd = '%s -c %s' % (exe, cmd)

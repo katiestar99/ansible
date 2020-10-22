@@ -13,7 +13,7 @@ from email.message import Message
 
 import pytest
 
-from ansible.module_utils.urls import prepare_multipart
+from assible.module_utils.urls import prepare_multipart
 
 
 def test_prepare_multipart():

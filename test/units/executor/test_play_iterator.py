@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -22,9 +22,9 @@ __metaclass__ = type
 from units.compat import unittest
 from units.compat.mock import patch, MagicMock
 
-from ansible.executor.play_iterator import HostState, PlayIterator
-from ansible.playbook import Playbook
-from ansible.playbook.play_context import PlayContext
+from assible.executor.play_iterator import HostState, PlayIterator
+from assible.playbook import Playbook
+from assible.playbook.play_context import PlayContext
 
 from units.mock.loader import DictDataLoader
 from units.mock.path import mock_unfrackpath_noop
@@ -49,7 +49,7 @@ class TestPlayIterator(unittest.TestCase):
 
         new_hs = hs.copy()
 
-    @patch('ansible.playbook.role.definition.unfrackpath', mock_unfrackpath_noop)
+    @patch('assible.playbook.role.definition.unfrackpath', mock_unfrackpath_noop)
     def test_play_iterator(self):
         # import epdb; epdb.st()
         fake_loader = DictDataLoader({
@@ -77,7 +77,7 @@ class TestPlayIterator(unittest.TestCase):
               post_tasks:
               - debug: msg="this is a post_task"
             """,
-            '/etc/ansible/roles/test_role/tasks/main.yml': """
+            '/etc/assible/roles/test_role/tasks/main.yml': """
             - name: role task
               debug: msg="this is a role task"
             - block:
@@ -113,7 +113,7 @@ class TestPlayIterator(unittest.TestCase):
               - name: end of role nested block 2
                 debug:
             """,
-            '/etc/ansible/roles/test_role/tasks/foo.yml': """
+            '/etc/assible/roles/test_role/tasks/foo.yml': """
             - name: role included task
               debug: msg="this is task in an include from a role"
             """

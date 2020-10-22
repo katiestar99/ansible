@@ -11,7 +11,7 @@
 
     - assert:
         that:
-          - '"127.0.0.3" in setup_results.ansible_facts.ansible_env["SSH_CONNECTION"]'
+          - '"127.0.0.3" in setup_results.assible_facts.assible_env["SSH_CONNECTION"]'
 
     - name: Test delegate_to with host in inventory
       setup:
@@ -22,7 +22,7 @@
 
     - assert:
         that:
-          - '"127.0.0.4" in setup_results.ansible_facts.ansible_env["SSH_CONNECTION"]'
+          - '"127.0.0.4" in setup_results.assible_facts.assible_env["SSH_CONNECTION"]'
 
     - name: Test delegate_to with host not in inventory
       setup:
@@ -31,7 +31,7 @@
 
     - assert:
         that:
-          - '"127.0.0.254" in setup_results.ansible_facts.ansible_env["SSH_CONNECTION"]'
+          - '"127.0.0.254" in setup_results.assible_facts.assible_env["SSH_CONNECTION"]'
 #
 # Smoketest some other modules do not error as a canary
 #

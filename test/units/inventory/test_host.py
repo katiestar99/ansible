@@ -1,19 +1,19 @@
 # Copyright 2015 Marius Gedminas <marius@gedmin.as>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # for __setstate__/__getstate__ tests
 
@@ -24,13 +24,13 @@ import pickle
 
 from units.compat import unittest
 
-from ansible.inventory.group import Group
-from ansible.inventory.host import Host
-from ansible.module_utils.six import string_types
+from assible.inventory.group import Group
+from assible.inventory.host import Host
+from assible.module_utils.six import string_types
 
 
 class TestHost(unittest.TestCase):
-    ansible_port = 22
+    assible_port = 22
 
     def setUp(self):
         self.hostA = Host('a')
@@ -101,12 +101,12 @@ class TestHost(unittest.TestCase):
 
 
 class TestHostWithPort(TestHost):
-    ansible_port = 8822
+    assible_port = 8822
 
     def setUp(self):
-        self.hostA = Host(name='a', port=self.ansible_port)
-        self.hostB = Host(name='b', port=self.ansible_port)
+        self.hostA = Host(name='a', port=self.assible_port)
+        self.hostB = Host(name='b', port=self.assible_port)
 
-    def test_get_vars_ansible_port(self):
+    def test_get_vars_assible_port(self):
         host_vars = self.hostA.get_vars()
-        self.assertEqual(host_vars['ansible_port'], self.ansible_port)
+        self.assertEqual(host_vars['assible_port'], self.assible_port)

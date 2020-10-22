@@ -40,7 +40,7 @@ def createDaemon():
             os.chdir(WORKDIR)
             os.umask(UMASK)
         else:
-            f = open('/var/run/ansible_test_service.pid', 'w')
+            f = open('/var/run/assible_test_service.pid', 'w')
             f.write("%d\n" % pid)
             f.close()
             os._exit(0)

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2016, Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2016, Toshio Kuratomi <tkuratomi@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -17,10 +17,10 @@ short_description: Try to connect to host, verify a usable python and return C(p
 description:
    - A trivial test module, this module always returns C(pong) on successful
      contact. It does not make sense in playbooks, but it is useful from
-     C(/usr/bin/ansible) to verify the ability to login and that a usable Python is configured.
+     C(/usr/bin/assible) to verify the ability to login and that a usable Python is configured.
    - This is NOT ICMP ping, this is just a trivial test module that requires Python on the remote-node.
-   - For Windows targets, use the M(ansible.windows.win_ping) module instead.
-   - For Network targets, use the M(ansible.netcommon.net_ping) module instead.
+   - For Windows targets, use the M(assible.windows.win_ping) module instead.
+   - For Network targets, use the M(assible.netcommon.net_ping) module instead.
 options:
   data:
     description:
@@ -29,18 +29,18 @@ options:
     type: str
     default: pong
 seealso:
-- module: ansible.netcommon.net_ping
-- module: ansible.windows.win_ping
+- module: assible.netcommon.net_ping
+- module: assible.windows.win_ping
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Michael DeHaan
 '''
 
 EXAMPLES = '''
 # Test we can logon to 'webservers' and execute python with json lib.
-# ansible webservers -m ping
+# assible webservers -m ping
 
-- name: Example from an Ansible Playbook
+- name: Example from an Assible Playbook
   ping:
 
 - name: Induce an exception to see what happens
@@ -56,11 +56,11 @@ ping:
     sample: pong
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             data=dict(type='str', default='pong'),
         ),

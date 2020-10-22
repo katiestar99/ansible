@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -16,10 +16,10 @@ version_added: historical
 short_description: Copy files to remote locations
 description:
     - The C(copy) module copies a file from the local or remote machine to a location on the remote machine.
-    - Use the M(ansible.builtin.fetch) module to copy files from remote locations to the local box.
-    - If you need variable interpolation in copied files, use the M(ansible.builtin.template) module.
+    - Use the M(assible.builtin.fetch) module to copy files from remote locations to the local box.
+    - If you need variable interpolation in copied files, use the M(assible.builtin.template) module.
       Using a variable in the C(content) field will result in unpredictable output.
-    - For Windows targets, use the M(ansible.windows.win_copy) module instead.
+    - For Windows targets, use the M(assible.windows.win_copy) module instead.
 options:
   src:
     description:
@@ -35,7 +35,7 @@ options:
     - When used instead of C(src), sets the contents of a file directly to the specified value.
     - Works only when C(dest) is a file. Creates the file if it does not exist.
     - For advanced formatting or if C(content) contains a variable, use the
-      M(ansible.builtin.template) module.
+      M(assible.builtin.template) module.
     type: str
     version_added: '1.1'
   dest:
@@ -67,12 +67,12 @@ options:
     description:
     - The permissions of the destination file or directory.
     - For those used to C(/usr/bin/chmod) remember that modes are actually octal numbers.
-      You must either add a leading zero so that Ansible's YAML parser knows it is an octal number
-      (like C(0644) or C(01777))or quote it (like C('644') or C('1777')) so Ansible receives a string
-      and can do its own conversion from string into number. Giving Ansible a number without following
+      You must either add a leading zero so that Assible's YAML parser knows it is an octal number
+      (like C(0644) or C(01777))or quote it (like C('644') or C('1777')) so Assible receives a string
+      and can do its own conversion from string into number. Giving Assible a number without following
       one of these rules will end up with a decimal number which will have unexpected results.
-    - As of Ansible 1.8, the mode may be specified as a symbolic mode (for example, C(u+rwx) or C(u=rw,g=r,o=r)).
-    - As of Ansible 2.3, the mode may also be the special string C(preserve).
+    - As of Assible 1.8, the mode may be specified as a symbolic mode (for example, C(u+rwx) or C(u=rw,g=r,o=r)).
+    - As of Assible 2.3, the mode may also be the special string C(preserve).
     - C(preserve) means that the file will be given the same permissions as the source file.
     - When doing a recursive copy, see also C(directory_mode).
     type: path
@@ -109,7 +109,7 @@ options:
     description:
     - SHA1 checksum of the file being transferred.
     - Used to validate that the copy of the file was successful.
-    - If this is not provided, ansible will use the local calculated checksum of the src file.
+    - If this is not provided, assible will use the local calculated checksum of the src file.
     type: str
     version_added: '2.5'
 extends_documentation_fragment:
@@ -117,16 +117,16 @@ extends_documentation_fragment:
 - files
 - validate
 notes:
-- The M(ansible.builtin.copy) module recursively copy facility does not scale to lots (>hundreds) of files.
+- The M(assible.builtin.copy) module recursively copy facility does not scale to lots (>hundreds) of files.
 seealso:
-- module: ansible.builtin.assemble
-- module: ansible.builtin.fetch
-- module: ansible.builtin.file
-- module: ansible.builtin.template
-- module: ansible.posix.synchronize
-- module: ansible.windows.win_copy
+- module: assible.builtin.assemble
+- module: assible.builtin.fetch
+- module: assible.builtin.file
+- module: assible.builtin.template
+- module: assible.posix.synchronize
+- module: assible.windows.win_copy
 author:
-- Ansible Core Team
+- Assible Core Team
 - Michael DeHaan
 '''
 
@@ -205,7 +205,7 @@ src:
     description: Source file used for the copy on the target machine
     returned: changed
     type: str
-    sample: /home/httpd/.ansible/tmp/ansible-tmp-1423796390.97-147729857856000/source
+    sample: /home/httpd/.assible/tmp/assible-tmp-1423796390.97-147729857856000/source
 md5sum:
     description: MD5 checksum of the file after running copy
     returned: when supported
@@ -270,24 +270,24 @@ import stat
 import tempfile
 import traceback
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.process import get_bin_path
-from ansible.module_utils._text import to_bytes, to_native
-from ansible.module_utils.six import PY3
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.process import get_bin_path
+from assible.module_utils._text import to_bytes, to_native
+from assible.module_utils.six import PY3
 
 
-# The AnsibleModule object
+# The AssibleModule object
 module = None
 
 
-class AnsibleModuleError(Exception):
+class AssibleModuleError(Exception):
     def __init__(self, results):
         self.results = results
 
 
 # Once we get run_command moved into common, we can move this into a common/files module.  We can't
 # until then because of the module.run_command() method.  We may need to move it into
-# basic::AnsibleModule() until then but if so, make it a private function so that we don't have to
+# basic::AssibleModule() until then but if so, make it a private function so that we don't have to
 # keep it for backwards compatibility later.
 def clear_facls(path):
     setfacl = get_bin_path('setfacl')
@@ -309,7 +309,7 @@ def split_pre_existing_dir(dirname):
         return ('.', [tail])
     if not os.path.exists(b_head):
         if head == '/':
-            raise AnsibleModuleError(results={'msg': "The '/' directory doesn't exist on this machine."})
+            raise AssibleModuleError(results={'msg': "The '/' directory doesn't exist on this machine."})
         (pre_existing_dir, new_directory_list) = split_pre_existing_dir(head)
     else:
         return (head, [tail])
@@ -501,7 +501,7 @@ def main():
 
     global module
 
-    module = AnsibleModule(
+    module = AssibleModule(
         # not checking because of daisy chain to file module
         argument_spec=dict(
             src=dict(type='path'),
@@ -523,7 +523,7 @@ def main():
 
     if module.params.get('thirsty'):
         module.deprecate('The alias "thirsty" has been deprecated and will be removed, use "force" instead',
-                         version='2.13', collection_name='ansible.builtin')
+                         version='2.13', collection_name='assible.builtin')
 
     src = module.params['src']
     b_src = to_bytes(src, errors='surrogate_or_strict')
@@ -590,7 +590,7 @@ def main():
         if not os.path.exists(b_dirname):
             try:
                 (pre_existing_dir, new_directory_list) = split_pre_existing_dir(dirname)
-            except AnsibleModuleError as e:
+            except AssibleModuleError as e:
                 e.result['msg'] += ' Could not copy to {0}'.format(dest)
                 module.fail_json(**e.results)
 

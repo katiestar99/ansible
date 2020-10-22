@@ -1,14 +1,14 @@
 .. _community_documentation_contributions:
 
 *****************************************
-Contributing to the Ansible Documentation
+Contributing to the Assible Documentation
 *****************************************
 
-Ansible has a lot of documentation and a small team of writers. Community support helps us keep up with new features, fixes, and changes.
+Assible has a lot of documentation and a small team of writers. Community support helps us keep up with new features, fixes, and changes.
 
-Improving the documentation is an easy way to make your first contribution to the Ansible project. You do not have to be a programmer, since most of our documentation is written in YAML (module documentation) or `reStructuredText <https://docutils.sourceforge.io/rst.html>`_ (rST). Some collection-level documentation is written in a subset of `Markdown <https://github.com/ansible/ansible/issues/68119#issuecomment-596723053>`_. If you are using Ansible, you already use YAML in your playbooks. rST and Markdown are mostly just text. You do not even need git experience, if you use the ``Edit on GitHub`` option.
+Improving the documentation is an easy way to make your first contribution to the Assible project. You do not have to be a programmer, since most of our documentation is written in YAML (module documentation) or `reStructuredText <https://docutils.sourceforge.io/rst.html>`_ (rST). Some collection-level documentation is written in a subset of `Markdown <https://github.com/assible/assible/issues/68119#issuecomment-596723053>`_. If you are using Assible, you already use YAML in your playbooks. rST and Markdown are mostly just text. You do not even need git experience, if you use the ``Edit on GitHub`` option.
 
-If you find a typo, a broken example, a missing topic, or any other error or omission on this documentation website, let us know. Here are some ways to support Ansible documentation:
+If you find a typo, a broken example, a missing topic, or any other error or omission on this documentation website, let us know. Here are some ways to support Assible documentation:
 
 .. contents::
    :local:
@@ -22,23 +22,23 @@ For typos and other quick fixes, you can edit most of the documentation right fr
 
 	The source files for individual collection plugins exist in their respective repositories. Follow the link to the collection on Galaxy to find where the repository is located and any guidelines on how to contribute to that collection.
 
-To submit a documentation PR from docs.ansible.com with ``Edit on GitHub``:
+To submit a documentation PR from docs.assible.com with ``Edit on GitHub``:
 
 #. Click on ``Edit on GitHub``.
-#. If you don't already have a fork of the ansible repo on your GitHub account, you'll be prompted to create one.
+#. If you don't already have a fork of the assible repo on your GitHub account, you'll be prompted to create one.
 #. Fix the typo, update the example, or make whatever other change you have in mind.
 #. Enter a commit message in the first rectangle under the heading ``Propose file change`` at the bottom of the GitHub page. The more specific, the better. For example, "fixes typo in my_module description". You can put more detail in the second rectangle if you like. Leave the ``+label: docsite_pr`` there.
 #. Submit the suggested change by clicking on the green "Propose file change" button. GitHub will handle branching and committing for you, and open a page with the heading "Comparing Changes".
 #. Click on ``Create pull request`` to open the PR template.
 #. Fill out the PR template, including as much detail as appropriate for your change. You can change the title of your PR if you like (by default it's the same as your commit message). In the ``Issue Type`` section, delete all lines except the ``Docs Pull Request`` line.
 #. Submit your change by clicking on ``Create pull request`` button.
-#. Be patient while Ansibot, our automated script, adds labels, pings the docs maintainers, and kicks off a CI testing run.
+#. Be patient while Assibot, our automated script, adds labels, pings the docs maintainers, and kicks off a CI testing run.
 #. Keep an eye on your PR - the docs team may ask you for changes.
 
 Reviewing open PRs and issues
 =============================
 
-You can also contribute by reviewing open documentation `issues <https://github.com/ansible/ansible/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Adocs>`_ and `PRs <https://github.com/ansible/ansible/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aopen+label%3Adocs>`_. To add a helpful review, please:
+You can also contribute by reviewing open documentation `issues <https://github.com/assible/assible/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Adocs>`_ and `PRs <https://github.com/assible/assible/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aopen+label%3Adocs>`_. To add a helpful review, please:
 
 - Include a comment - "looks good to me" only helps if we know why.
 - For issues, reproduce the problem.
@@ -47,19 +47,19 @@ You can also contribute by reviewing open documentation `issues <https://github.
 Opening a new issue and/or PR
 =============================
 
-If the problem you have noticed is too complex to fix with the ``Edit on GitHub`` option, and no open issue or PR already documents the problem, please open an issue and/or a PR on the correct underlying repo - ``ansible/ansible`` for most pages that are not plugin or module documentation. If the documentation page has no ``Edit on GitHub`` option, check if the page is for a module within a collection. If so, follow the link to the collection on Galaxy and select the ``repo`` button in the upper right corner to find the source repository for that collection and module. The Collection README file should contain information on how to contribute to that collection, or report issues.
+If the problem you have noticed is too complex to fix with the ``Edit on GitHub`` option, and no open issue or PR already documents the problem, please open an issue and/or a PR on the correct underlying repo - ``assible/assible`` for most pages that are not plugin or module documentation. If the documentation page has no ``Edit on GitHub`` option, check if the page is for a module within a collection. If so, follow the link to the collection on Galaxy and select the ``repo`` button in the upper right corner to find the source repository for that collection and module. The Collection README file should contain information on how to contribute to that collection, or report issues.
 
 A great documentation GitHub issue or PR includes:
 
 - a specific title
 - a detailed description of the problem (even for a PR - it's hard to evaluate a suggested change unless we know what problem it's meant to solve)
-- links to other information (related issues/PRs, external documentation, pages on docs.ansible.com, and so on)
+- links to other information (related issues/PRs, external documentation, pages on docs.assible.com, and so on)
 
 
 Verifying your documentation PR
 ================================
 
-If you make multiple changes to the documentation on ``ansible/ansible``, or add more than a line to it, before you open a pull request, please:
+If you make multiple changes to the documentation on ``assible/assible``, or add more than a line to it, before you open a pull request, please:
 
 #. Check that your text follows our :ref:`style_guide`.
 #. Test your changes for rST errors.
@@ -67,7 +67,7 @@ If you make multiple changes to the documentation on ``ansible/ansible``, or add
 
 .. note::
 
-	The following sections apply to documentation sourced from the ``ansible/ansible`` repo and does not apply to documentation from an individual collection. See the collection README file for details on how to contribute to that collection.
+	The following sections apply to documentation sourced from the ``assible/assible`` repo and does not apply to documentation from an individual collection. See the collection README file for details on how to contribute to that collection.
 
 Setting up your environment to build documentation locally
 ----------------------------------------------------------
@@ -104,7 +104,7 @@ You can drop ``--user`` if you have set up a virtual environment (venv/virtenv).
 
 .. note::
 
-  	After checking out ``ansible/ansible``, make sure the ``docs/docsite/rst`` directory has strict enough permissions. It should only be writable by the owner's account. If your default ``umask`` is not 022, you can use ``chmod go-w docs/docsite/rst`` to set the permissions correctly in your new branch.  Optionally, you can set your ``umask`` to 022 to make all newly created files on your system (including those created by ``git clone``) have the correct permissions.
+  	After checking out ``assible/assible``, make sure the ``docs/docsite/rst`` directory has strict enough permissions. It should only be writable by the owner's account. If your default ``umask`` is not 022, you can use ``chmod go-w docs/docsite/rst`` to set the permissions correctly in your new branch.  Optionally, you can set your ``umask`` to 022 to make all newly created files on your system (including those created by ``git clone``) have the correct permissions.
 
 .. _testing_documentation_locally:
 
@@ -120,7 +120,7 @@ To test an individual file for rST errors:
 Building the documentation locally
 ----------------------------------
 
-Building the documentation is the best way to check for errors and review your changes. Once `rstcheck` runs with no errors, navigate to ``ansible/docs/docsite`` and then build the page(s) you want to review.
+Building the documentation is the best way to check for errors and review your changes. Once `rstcheck` runs with no errors, navigate to ``assible/docs/docsite`` and then build the page(s) you want to review.
 
 Building a single rST page
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -159,7 +159,7 @@ To build all the rST files without any module documentation:
 Building module docs and rST pages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To build documentation for a few modules included in ``ansible/ansible`` plus all the rST files, use a comma-separated list:
+To build documentation for a few modules included in ``assible/assible`` plus all the rST files, use a comma-separated list:
 
 .. code-block:: bash
 
@@ -198,15 +198,15 @@ When you submit a documentation pull request, automated tests are run. Those sam
 .. code-block:: bash
 
   make clean &&
-  bin/ansible-test sanity --test docs-build &&
-  bin/ansible-test sanity --test rstcheck
+  bin/assible-test sanity --test docs-build &&
+  bin/assible-test sanity --test rstcheck
 
 Unfortunately, leftover rST-files from previous document-generating can occasionally confuse these tests. It is therefore safest to run them on a clean copy of the repository, which is the purpose of ``make clean``. If you type these three lines one at a time and manually check the success of each, you do not need the ``&&``.
 
 Joining the documentation working group
 =======================================
 
-The Documentation Working Group (DaWGs) meets weekly on Tuesdays on the #ansible-docs channel on freenode IRC. For more information, including links to our agenda and a calendar invite, please visit the `working group page in the community repo <https://github.com/ansible/community/wiki/Docs>`_.
+The Documentation Working Group (DaWGs) meets weekly on Tuesdays on the #assible-docs channel on freenode IRC. For more information, including links to our agenda and a calendar invite, please visit the `working group page in the community repo <https://github.com/assible/community/wiki/Docs>`_.
 
 .. seealso::
    :ref:`More about testing module documentation <testing_module_documentation>`

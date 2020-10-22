@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # PYTHON_ARGCOMPLETE_OK
 
-# (c) 2020 Ansible Project
+# (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """
@@ -142,7 +142,7 @@ def rebalance(args):
     if args.target_path:
         target_path = os.path.expanduser(os.path.expandvars(args.target_path))
 
-        for test_root in ['test', 'tests']:  # ansible/ansible uses 'test' but collections use 'tests'.
+        for test_root in ['test', 'tests']:  # assible/assible uses 'test' but collections use 'tests'.
             integration_root = os.path.join(target_path, test_root, 'integration', 'targets')
             if os.path.isdir(integration_root):
                 if args.verbose:

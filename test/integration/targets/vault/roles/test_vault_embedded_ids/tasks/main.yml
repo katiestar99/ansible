@@ -8,7 +8,7 @@
     that:
       - "vault_encrypted_example1_releases is defined"
       - "example1_releases is defined"
-      - "example1_releases.startswith('Ansible Releases')"
+      - "example1_releases.startswith('Assible Releases')"
       # - '"{{ vault_encrypted_example1_releases }}" == "Setec Astronomy"'
 
 - name: Assert that a embedded vault with a different vault id works

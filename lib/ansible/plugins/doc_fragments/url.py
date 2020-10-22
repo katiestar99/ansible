@@ -26,7 +26,7 @@ options:
     description:
       - Header to identify as, generally appears in web server logs.
     type: str
-    default: ansible-httpget
+    default: assible-httpget
   use_proxy:
     description:
       - If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.

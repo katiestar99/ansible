@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -27,30 +27,30 @@
 #
 import json
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import env_fallback
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible.module_utils._text import to_text
+from assible.module_utils.basic import env_fallback
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
-from ansible.module_utils.connection import Connection, ConnectionError
+from assible.module_utils.connection import Connection, ConnectionError
 
 _DEVICE_CONFIGS = {}
 
 ios_provider_spec = {
     "host": dict(),
     "port": dict(type="int"),
-    "username": dict(fallback=(env_fallback, ["ANSIBLE_NET_USERNAME"])),
+    "username": dict(fallback=(env_fallback, ["ASSIBLE_NET_USERNAME"])),
     "password": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_PASSWORD"]), no_log=True
+        fallback=(env_fallback, ["ASSIBLE_NET_PASSWORD"]), no_log=True
     ),
     "ssh_keyfile": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_SSH_KEYFILE"]), type="path"
+        fallback=(env_fallback, ["ASSIBLE_NET_SSH_KEYFILE"]), type="path"
     ),
     "authorize": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_AUTHORIZE"]), type="bool"
+        fallback=(env_fallback, ["ASSIBLE_NET_AUTHORIZE"]), type="bool"
     ),
     "auth_pass": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_AUTH_PASS"]), no_log=True
+        fallback=(env_fallback, ["ASSIBLE_NET_AUTH_PASS"]), no_log=True
     ),
     "timeout": dict(type="int"),
 }

@@ -1,4 +1,4 @@
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -9,16 +9,16 @@ import shlex
 import subprocess
 import yaml
 
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.config.manager import ConfigManager, Setting, find_ini_config_file
-from ansible.errors import AnsibleError, AnsibleOptionsError
-from ansible.module_utils._text import to_native, to_text, to_bytes
-from ansible.parsing.yaml.dumper import AnsibleDumper
-from ansible.utils.color import stringc
-from ansible.utils.display import Display
-from ansible.utils.path import unfrackpath
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.config.manager import ConfigManager, Setting, find_ini_config_file
+from assible.errors import AssibleError, AssibleOptionsError
+from assible.module_utils._text import to_native, to_text, to_bytes
+from assible.parsing.yaml.dumper import AssibleDumper
+from assible.utils.color import stringc
+from assible.utils.display import Display
+from assible.utils.path import unfrackpath
 
 display = Display()
 
@@ -35,7 +35,7 @@ class ConfigCLI(CLI):
     def init_parser(self):
 
         super(ConfigCLI, self).init_parser(
-            desc="View ansible configuration.",
+            desc="View assible configuration.",
         )
 
         common = opt_help.argparse.ArgumentParser(add_help=False)
@@ -83,7 +83,7 @@ class ConfigCLI(CLI):
             if os.path.exists(b_config) and os.access(b_config, os.R_OK):
                 self.config = ConfigManager(self.config_file)
             else:
-                raise AnsibleOptionsError('The provided configuration file is missing or not accessible: %s' % to_native(self.config_file))
+                raise AssibleOptionsError('The provided configuration file is missing or not accessible: %s' % to_native(self.config_file))
         else:
             self.config = ConfigManager()
             self.config_file = find_ini_config_file()
@@ -91,11 +91,11 @@ class ConfigCLI(CLI):
         if self.config_file:
             try:
                 if not os.path.exists(self.config_file):
-                    raise AnsibleOptionsError("%s does not exist or is not accessible" % (self.config_file))
+                    raise AssibleOptionsError("%s does not exist or is not accessible" % (self.config_file))
                 elif not os.path.isfile(self.config_file):
-                    raise AnsibleOptionsError("%s is not a valid file" % (self.config_file))
+                    raise AssibleOptionsError("%s is not a valid file" % (self.config_file))
 
-                os.environ['ANSIBLE_CONFIG'] = to_native(self.config_file)
+                os.environ['ASSIBLE_CONFIG'] = to_native(self.config_file)
             except Exception:
                 if context.CLIARGS['action'] in ['view']:
                     raise
@@ -103,19 +103,19 @@ class ConfigCLI(CLI):
                     display.warning("File does not exist, used empty file: %s" % self.config_file)
 
         elif context.CLIARGS['action'] == 'view':
-            raise AnsibleError('Invalid or no config file was supplied')
+            raise AssibleError('Invalid or no config file was supplied')
 
         context.CLIARGS['func']()
 
     def execute_update(self):
         '''
-        Updates a single setting in the specified ansible.cfg
+        Updates a single setting in the specified assible.cfg
         '''
-        raise AnsibleError("Option not implemented yet")
+        raise AssibleError("Option not implemented yet")
 
         # pylint: disable=unreachable
         if context.CLIARGS['setting'] is None:
-            raise AnsibleOptionsError("update option requires a setting to update")
+            raise AssibleOptionsError("update option requires a setting to update")
 
         (entry, value) = context.CLIARGS['setting'].split('=')
         if '.' in entry:
@@ -124,7 +124,7 @@ class ConfigCLI(CLI):
             section = 'defaults'
             option = entry
         subprocess.call([
-            'ansible',
+            'assible',
             '-m', 'ini_file',
             'localhost',
             '-c', 'local',
@@ -139,13 +139,13 @@ class ConfigCLI(CLI):
             with open(self.config_file, 'rb') as f:
                 self.pager(to_text(f.read(), errors='surrogate_or_strict'))
         except Exception as e:
-            raise AnsibleError("Failed to open config file: %s" % to_native(e))
+            raise AssibleError("Failed to open config file: %s" % to_native(e))
 
     def execute_edit(self):
         '''
-        Opens ansible.cfg in the default EDITOR
+        Opens assible.cfg in the default EDITOR
         '''
-        raise AnsibleError("Option not implemented yet")
+        raise AssibleError("Option not implemented yet")
 
         # pylint: disable=unreachable
         try:
@@ -153,17 +153,17 @@ class ConfigCLI(CLI):
             editor.append(self.config_file)
             subprocess.call(editor)
         except Exception as e:
-            raise AnsibleError("Failed to open editor: %s" % to_native(e))
+            raise AssibleError("Failed to open editor: %s" % to_native(e))
 
     def execute_list(self):
         '''
         list all current configs reading lib/constants.py and shows env and config file setting names
         '''
-        self.pager(to_text(yaml.dump(self.config.get_configuration_definitions(), Dumper=AnsibleDumper), errors='surrogate_or_strict'))
+        self.pager(to_text(yaml.dump(self.config.get_configuration_definitions(), Dumper=AssibleDumper), errors='surrogate_or_strict'))
 
     def execute_dump(self):
         '''
-        Shows the current settings, merges ansible.cfg if specified
+        Shows the current settings, merges assible.cfg if specified
         '''
         # FIXME: deal with plugins, not just base config
         text = []

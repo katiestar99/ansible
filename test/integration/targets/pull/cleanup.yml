@@ -13,4 +13,4 @@
         name: git
         state: absent
         autoremove: yes
-      when: git_install.changed and ansible_distribution == "FreeBSD"
+      when: git_install.changed and assible_distribution == "FreeBSD"

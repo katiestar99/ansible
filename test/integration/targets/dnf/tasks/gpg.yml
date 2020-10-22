@@ -19,7 +19,7 @@
 
     - name: Download an RPM
       get_url:
-        url: https://s3.amazonaws.com/ansible-ci-files/test/integration/targets/dnf/fpaste-0.3.9.1-1.fc27.noarch.rpm
+        url: https://s3.amazonaws.com/assible-ci-files/test/integration/targets/dnf/fpaste-0.3.9.1-1.fc27.noarch.rpm
         dest: "{{ remote_tmp_dir }}/unsigned/fpaste-0.3.9.1-1.fc27.noarch.rpm"
         mode: 0644
 

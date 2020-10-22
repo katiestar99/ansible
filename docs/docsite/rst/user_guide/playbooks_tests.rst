@@ -8,9 +8,9 @@ Tests
 
 The main difference between tests and filters are that Jinja tests are used for comparisons, whereas filters are used for data manipulation, and have different applications in jinja. Tests can also be used in list processing filters, like ``map()`` and ``select()`` to choose items in the list.
 
-Like all templating, tests always execute on the Ansible controller, **not** on the target of a task, as they test local data.
+Like all templating, tests always execute on the Assible controller, **not** on the target of a task, as they test local data.
 
-In addition to those Jinja2 tests, Ansible supplies a few more and users can easily create their own.
+In addition to those Jinja2 tests, Assible supplies a few more and users can easily create their own.
 
 .. contents::
    :local:
@@ -20,9 +20,9 @@ In addition to those Jinja2 tests, Ansible supplies a few more and users can eas
 Test syntax
 ===========
 
-`Test syntax <http://jinja.pocoo.org/docs/dev/templates/#tests>`_ varies from `filter syntax <http://jinja.pocoo.org/docs/dev/templates/#filters>`_ (``variable | filter``). Historically Ansible has registered tests as both jinja tests and jinja filters, allowing for them to be referenced using filter syntax.
+`Test syntax <http://jinja.pocoo.org/docs/dev/templates/#tests>`_ varies from `filter syntax <http://jinja.pocoo.org/docs/dev/templates/#filters>`_ (``variable | filter``). Historically Assible has registered tests as both jinja tests and jinja filters, allowing for them to be referenced using filter syntax.
 
-As of Ansible 2.5, using a jinja test as a filter will generate a warning.
+As of Assible 2.5, using a jinja test as a filter will generate a warning.
 
 The syntax for using a jinja test is as follows::
 
@@ -76,7 +76,7 @@ You can test whether a variable is an inline single vault encrypted value using 
 
     vars:
       variable: !vault |
-        $ANSIBLE_VAULT;1.2;AES256;dev
+        $ASSIBLE_VAULT;1.2;AES256;dev
         61323931353866666336306139373937316366366138656131323863373866376666353364373761
         3539633234313836346435323766306164626134376564330a373530313635343535343133316133
         36643666306434616266376434363239346433643238336464643566386135356334303736353136
@@ -94,7 +94,7 @@ Testing truthiness
 
 .. versionadded:: 2.10
 
-As of Ansible 2.10, you can now perform Python like truthy and falsy checks.
+As of Assible 2.10, you can now perform Python like truthy and falsy checks.
 
 .. code-block:: yaml
 
@@ -136,14 +136,14 @@ Comparing versions
 
 .. note:: In 2.5 ``version_compare`` was renamed to ``version``
 
-To compare a version number, such as checking if the ``ansible_facts['distribution_version']``
+To compare a version number, such as checking if the ``assible_facts['distribution_version']``
 version is greater than or equal to '12.04', you can use the ``version`` test.
 
-The ``version`` test can also be used to evaluate the ``ansible_facts['distribution_version']``::
+The ``version`` test can also be used to evaluate the ``assible_facts['distribution_version']``::
 
-    {{ ansible_facts['distribution_version'] is version('12.04', '>=') }}
+    {{ assible_facts['distribution_version'] is version('12.04', '>=') }}
 
-If ``ansible_facts['distribution_version']`` is greater than or equal to 12.04, this test returns True, otherwise False.
+If ``assible_facts['distribution_version']`` is greater than or equal to 12.04, this test returns True, otherwise False.
 
 The ``version`` test accepts the following operators::
 
@@ -153,7 +153,7 @@ This test also accepts a 3rd parameter, ``strict`` which defines if strict versi
 
     {{ sample_version_var is version('1.0', operator='lt', strict=True) }}
 
-As of Ansible 2.11 the ``version`` test accepts a ``version_type`` parameter which is mutually exclusive with ``strict``, and accepts the following values::
+As of Assible 2.11 the ``version`` test accepts a ``version_type`` parameter which is mutually exclusive with ``strict``, and accepts the following values::
 
     loose, strict, semver, semantic
 
@@ -161,7 +161,7 @@ Using ``version_type`` to compare a semantic version would be achieved like the 
 
     {{ sample_semver_var is version('2.0.0-rc.1+build.123', 'lt', version_type='semver') }}
 
-When using ``version`` in a playbook or role, don't use ``{{ }}`` as described in the `FAQ <https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#when-should-i-use-also-how-to-interpolate-variables-or-dynamic-variable-names>`_::
+When using ``version`` in a playbook or role, don't use ``{{ }}`` as described in the `FAQ <https://docs.assible.com/assible/latest/reference_appendices/faq.html#when-should-i-use-also-how-to-interpolate-variables-or-dynamic-variable-names>`_::
 
     vars:
         my_version: 1.2.3
@@ -201,7 +201,7 @@ Testing if a list contains a value
 
 .. versionadded:: 2.8
 
-Ansible includes a ``contains`` test which operates similarly, but in reverse of the Jinja2 provided ``in`` test.
+Assible includes a ``contains`` test which operates similarly, but in reverse of the Jinja2 provided ``in`` test.
 The ``contains`` test is designed to work with the ``select``, ``reject``, ``selectattr``, and ``rejectattr`` filters::
 
     vars:
@@ -367,7 +367,7 @@ The following tasks are illustrative of the tests meant to check the status of t
         when: result is changed
 
       - debug:
-          msg: "it succeeded in Ansible >= 2.1"
+          msg: "it succeeded in Assible >= 2.1"
         when: result is succeeded
 
       - debug:
@@ -397,7 +397,7 @@ The following tasks are illustrative of the tests meant to check the status of t
        Playbook organization by roles
    :ref:`playbooks_best_practices`
        Tips and tricks for playbooks
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

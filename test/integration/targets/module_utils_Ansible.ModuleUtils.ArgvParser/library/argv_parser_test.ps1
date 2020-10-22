@@ -1,18 +1,18 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.ArgvParser
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.ArgvParser
 
 $ErrorActionPreference = 'Continue'
 
 $params = Parse-Args $args
-$exe = Get-AnsibleParam -obj $params -name "exe" -type "path" -failifempty $true
+$exe = Get-AssibleParam -obj $params -name "exe" -type "path" -failifempty $true
 
 Add-Type -TypeDefinition @'
 using System.IO;
 using System.Threading;
 
-namespace Ansible.Command
+namespace Assible.Command
 {
     public static class NativeUtil
     {
@@ -52,7 +52,7 @@ Function Invoke-Process($executable, $arguments) {
     $proc.Start() > $null # will always return $true for non shell-exec cases
     $stdout = $stderr = [string] $null
 
-    [Ansible.Command.NativeUtil]::GetProcessOutput($proc.StandardOutput, $proc.StandardError, [ref] $stdout, [ref] $stderr) > $null
+    [Assible.Command.NativeUtil]::GetProcessOutput($proc.StandardOutput, $proc.StandardError, [ref] $stdout, [ref] $stderr) > $null
     $proc.WaitForExit() > $null
     $actual_args = $stdout.Substring(0, $stdout.Length - 2) -split "`r`n"
 

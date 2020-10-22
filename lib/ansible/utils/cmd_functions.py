@@ -1,19 +1,19 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -24,8 +24,8 @@ import shlex
 import subprocess
 import sys
 
-from ansible.module_utils.six import PY2, PY3
-from ansible.module_utils._text import to_bytes
+from assible.module_utils.six import PY2, PY3
+from assible.module_utils._text import to_bytes
 
 
 def run_cmd(cmd, live=False, readsize=10):

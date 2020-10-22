@@ -6,11 +6,11 @@ Conditionals
 
 In a playbook, you may want to execute different tasks, or have different goals, depending on the value of a fact (data about the remote system), a variable, or the result of a previous task. You may want the value of some variables to depend on the value of other variables. Or you may want to create additional groups of hosts based on whether the hosts match other criteria. You can do all of these things with conditionals.
 
-Ansible uses Jinja2 :ref:`tests <playbooks_tests>` and :ref:`filters <playbooks_filters>` in conditionals. Ansible supports all the standard tests and filters, and adds some unique ones as well.
+Assible uses Jinja2 :ref:`tests <playbooks_tests>` and :ref:`filters <playbooks_filters>` in conditionals. Assible supports all the standard tests and filters, and adds some unique ones as well.
 
 .. note::
 
-  There are many options to control execution flow in Ansible. You can find more examples of supported conditionals at `<https://jinja.palletsprojects.com/en/master/templates/#comparisons>`_.
+  There are many options to control execution flow in Assible. You can find more examples of supported conditionals at `<https://jinja.palletsprojects.com/en/master/templates/#comparisons>`_.
 
 .. contents::
    :local:
@@ -20,20 +20,20 @@ Ansible uses Jinja2 :ref:`tests <playbooks_tests>` and :ref:`filters <playbooks_
 Basic conditionals with ``when``
 ================================
 
-The simplest conditional statement applies to a single task. Create the task, then add a ``when`` statement that applies a test. The ``when`` clause is a raw Jinja2 expression without double curly braces (see :ref:`group_by_module`). When you run the task or playbook, Ansible evaluates the test for all hosts. On any host where the test passes (returns a value of True), Ansible runs that task. For example, if you are installing mysql on multiple machines, some of which have SELinux enabled, you might have a task to configure SELinux to allow mysql to run. You would only want that task to run on machines that have SELinux enabled:
+The simplest conditional statement applies to a single task. Create the task, then add a ``when`` statement that applies a test. The ``when`` clause is a raw Jinja2 expression without double curly braces (see :ref:`group_by_module`). When you run the task or playbook, Assible evaluates the test for all hosts. On any host where the test passes (returns a value of True), Assible runs that task. For example, if you are installing mysql on multiple machines, some of which have SELinux enabled, you might have a task to configure SELinux to allow mysql to run. You would only want that task to run on machines that have SELinux enabled:
 
 .. code-block:: yaml
 
     tasks:
       - name: Configure SELinux to start mysql on any port
-        ansible.posix.seboolean:
+        assible.posix.seboolean:
           name: mysql_connect_any
           state: true
           persistent: yes
-        when: ansible_selinux.status == "enabled"
+        when: assible_selinux.status == "enabled"
         # all variables can be used directly in conditionals without double curly braces
 
-Conditionals based on ansible_facts
+Conditionals based on assible_facts
 -----------------------------------
 
 Often you want to execute or skip a task based on facts. Facts are attributes of individual hosts, including IP address, operating system, the status of a filesystem, and many more. With conditionals based on facts:
@@ -45,8 +45,8 @@ Often you want to execute or skip a task based on facts. Facts are attributes of
 See :ref:`commonly_used_facts` for a list of facts that frequently appear in conditional statements. Not all facts exist for all hosts. For example, the 'lsb_major_release' fact used in an example below only exists when the lsb_release package is installed on the target host. To see what facts are available on your systems, add a debug task to your playbook::
 
     - name: Show facts available on the system
-      ansible.builtin.debug:
-        var: ansible_facts
+      assible.builtin.debug:
+        var: assible_facts
 
 Here is a sample conditional based on a fact:
 
@@ -54,8 +54,8 @@ Here is a sample conditional based on a fact:
 
     tasks:
       - name: Shut down Debian flavored systems
-        ansible.builtin.command: /sbin/shutdown -t now
-        when: ansible_facts['os_family'] == "Debian"
+        assible.builtin.command: /sbin/shutdown -t now
+        when: assible_facts['os_family'] == "Debian"
 
 If you have multiple conditions, you can group them with parentheses:
 
@@ -63,24 +63,24 @@ If you have multiple conditions, you can group them with parentheses:
 
     tasks:
       - name: Shut down CentOS 6 and Debian 7 systems
-        ansible.builtin.command: /sbin/shutdown -t now
-        when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "6") or
-              (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "7")
+        assible.builtin.command: /sbin/shutdown -t now
+        when: (assible_facts['distribution'] == "CentOS" and assible_facts['distribution_major_version'] == "6") or
+              (assible_facts['distribution'] == "Debian" and assible_facts['distribution_major_version'] == "7")
 
 You can use `logical operators <https://jinja.palletsprojects.com/en/master/templates/#logic>`_ to combine conditions. When you have multiple conditions that all need to be true (that is, a logical ``and``), you can specify them as a list::
 
     tasks:
       - name: Shut down CentOS 6 systems
-        ansible.builtin.command: /sbin/shutdown -t now
+        assible.builtin.command: /sbin/shutdown -t now
         when:
-          - ansible_facts['distribution'] == "CentOS"
-          - ansible_facts['distribution_major_version'] == "6"
+          - assible_facts['distribution'] == "CentOS"
+          - assible_facts['distribution_major_version'] == "6"
 
-If a fact or variable is a string, and you need to run a mathematical comparison on it, use a filter to ensure that Ansible reads the value as an integer::
+If a fact or variable is a string, and you need to run a mathematical comparison on it, use a filter to ensure that Assible reads the value as an integer::
 
     tasks:
-      - ansible.builtin.shell: echo "only on Red Hat 6, derivatives, and later"
-        when: ansible_facts['os_family'] == "RedHat" and ansible_facts['lsb']['major_release'] | int >= 6
+      - assible.builtin.shell: echo "only on Red Hat 6, derivatives, and later"
+        when: assible_facts['os_family'] == "RedHat" and assible_facts['lsb']['major_release'] | int >= 6
 
 .. _conditionals_registered_vars:
 
@@ -100,11 +100,11 @@ You create the name of the registered variable using the ``register`` keyword. A
       tasks:
 
           - name: Register a variable
-            ansible.builtin.shell: cat /etc/motd
+            assible.builtin.shell: cat /etc/motd
             register: motd_contents
 
           - name: Use the variable in conditional statement
-            ansible.builtin.shell: echo "motd contains the word hi"
+            assible.builtin.shell: echo "motd contains the word hi"
             when: motd_contents.stdout.find('hi') != -1
 
 You can use registered results in the loop of a task if the variable is a list. If the variable is not a list, you can convert it into a list, with either ``stdout_lines`` or with ``variable.stdout.split()``. You can also split the lines by other fields::
@@ -114,11 +114,11 @@ You can use registered results in the loop of a task if the variable is a list. 
       tasks:
 
         - name: Retrieve the list of home directories
-          ansible.builtin.command: ls /home
+          assible.builtin.command: ls /home
           register: home_dirs
 
         - name: Add home dirs to the backup spooler
-          ansible.builtin.file:
+          assible.builtin.file:
             path: /mnt/bkspool/{{ item }}
             src: /home/{{ item }}
             state: link
@@ -135,37 +135,37 @@ The string content of a registered variable can be empty. If you want to run ano
       tasks:
 
           - name: List contents of directory
-            ansible.builtin.command: ls mydir
+            assible.builtin.command: ls mydir
             register: contents
 
           - name: Check contents for emptiness
-            ansible.builtin.debug:
+            assible.builtin.debug:
               msg: "Directory is empty"
             when: contents.stdout == ""
 
-Ansible always registers something in a registered variable for every host, even on hosts where a task fails or Ansible skips a task because a condition is not met. To run a follow-up task on these hosts, query the registered variable for ``is skipped`` (not for "undefined" or "default"). See :ref:`registered_variables` for more information. Here are sample conditionals based on the success or failure of a task. Remember to ignore errors if you want Ansible to continue executing on a host when a failure occurs:
+Assible always registers something in a registered variable for every host, even on hosts where a task fails or Assible skips a task because a condition is not met. To run a follow-up task on these hosts, query the registered variable for ``is skipped`` (not for "undefined" or "default"). See :ref:`registered_variables` for more information. Here are sample conditionals based on the success or failure of a task. Remember to ignore errors if you want Assible to continue executing on a host when a failure occurs:
 
 .. code-block:: yaml
 
     tasks:
       - name: Register a variable, ignore errors and continue
-        ansible.builtin.command: /bin/false
+        assible.builtin.command: /bin/false
         register: result
         ignore_errors: true
 
       - name: Run only if the task that registered the "result" variable fails
-        ansible.builtin.command: /bin/something
+        assible.builtin.command: /bin/something
         when: result is failed
 
       - name: Run only if the task that registered the "result" variable succeeds
-        ansible.builtin.command: /bin/something_else
+        assible.builtin.command: /bin/something_else
         when: result is succeeded
 
       - name: Run only if the task that registered the "result" variable is skipped
-        ansible.builtin.command: /bin/still/something_else
+        assible.builtin.command: /bin/still/something_else
         when: result is skipped
 
-.. note:: Older versions of Ansible used ``success`` and ``fail``, but ``succeeded`` and ``failed`` use the correct tense. All of these options are now valid.
+.. note:: Older versions of Assible used ``success`` and ``fail``, but ``succeeded`` and ``failed`` use the correct tense. All of these options are now valid.
 
 
 Conditionals based on variables
@@ -179,17 +179,17 @@ You can also create conditionals based on variables defined in the playbooks or 
       epic: true
       monumental: "yes"
 
-With the variables above, Ansible would run one of these tasks and skip the other:
+With the variables above, Assible would run one of these tasks and skip the other:
 
 .. code-block:: yaml
 
     tasks:
         - name: Run the command if "epic" or "monumental" is true
-          ansible.builtin.shell: echo "This certainly is epic!"
+          assible.builtin.shell: echo "This certainly is epic!"
           when: epic or monumental | bool
 
         - name: Run the command if "epic" is false
-          ansible.builtin.shell: echo "This certainly isn't epic!"
+          assible.builtin.shell: echo "This certainly isn't epic!"
           when: not epic
 
 If a required variable has not been set, you can skip or fail using Jinja2's `defined` test. For example:
@@ -198,11 +198,11 @@ If a required variable has not been set, you can skip or fail using Jinja2's `de
 
     tasks:
         - name: Run the command if "foo" is defined
-          ansible.builtin.shell: echo "I've got '{{ foo }}' and am not afraid to use it!"
+          assible.builtin.shell: echo "I've got '{{ foo }}' and am not afraid to use it!"
           when: foo is defined
 
         - name: Fail if "bar" is undefined
-          ansible.builtin.fail: msg="Bailing out. This play requires 'bar'"
+          assible.builtin.fail: msg="Bailing out. This play requires 'bar'"
           when: bar is undefined
 
 This is especially useful in combination with the conditional import of vars files (see below).
@@ -213,13 +213,13 @@ As the examples show, you do not need to use `{{ }}` to use variables inside con
 Using conditionals in loops
 ---------------------------
 
-If you combine a ``when`` statement with a :ref:`loop <playbooks_loops>`, Ansible processes the condition separately for each item. This is by design, so you can execute the task on some items in the loop and skip it on other items. For example:
+If you combine a ``when`` statement with a :ref:`loop <playbooks_loops>`, Assible processes the condition separately for each item. This is by design, so you can execute the task on some items in the loop and skip it on other items. For example:
 
 .. code-block:: yaml
 
     tasks:
         - name: Run with items greater than 5
-          ansible.builtin.command: echo {{ item }}
+          assible.builtin.command: echo {{ item }}
           loop: [ 0, 2, 4, 6, 8, 10 ]
           when: item > 5
 
@@ -228,7 +228,7 @@ If you need to skip the whole task when the loop variable is undefined, use the 
 .. code-block:: yaml
 
         - name: Skip the whole task when a loop variable is undefined
-          ansible.builtin.command: echo {{ item }}
+          assible.builtin.command: echo {{ item }}
           loop: "{{ mylist|default([]) }}"
           when: item > 5
 
@@ -237,7 +237,7 @@ You can do the same thing when looping over a dict:
 .. code-block:: yaml
 
         - name: The same as above using a dict
-          ansible.builtin.command: echo {{ item.key }}
+          assible.builtin.command: echo {{ item.key }}
           loop: "{{ query('dict', mydict|default({})) }}"
           when: item.value > 5
 
@@ -255,7 +255,7 @@ You can provide your own facts, as described in :ref:`developing_modules`.  To r
           action: site_facts
 
         - name: Use a custom fact
-          ansible.builtin.command: /usr/bin/thingy
+          assible.builtin.command: /usr/bin/thingy
           when: my_custom_fact_just_retrieved_from_the_remote_system == '1234'
 
 .. _when_with_reuse:
@@ -263,14 +263,14 @@ You can provide your own facts, as described in :ref:`developing_modules`.  To r
 Conditionals with re-use
 ------------------------
 
-You can use conditionals with re-usable tasks files, playbooks, or roles. Ansible executes these conditional statements differently for dynamic re-use (includes) and for static re-use (imports). See :ref:`playbooks_reuse` for more information on re-use in Ansible.
+You can use conditionals with re-usable tasks files, playbooks, or roles. Assible executes these conditional statements differently for dynamic re-use (includes) and for static re-use (imports). See :ref:`playbooks_reuse` for more information on re-use in Assible.
 
 .. _conditional_imports:
 
 Conditionals with imports
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you add a conditional to an import statement, Ansible applies the condition to all tasks within the imported file. This behavior is the equivalent of :ref:`tag_inheritance`. Ansible applies the condition to every task, and evaluates each task separately. For example, you might have a playbook called ``main.yml`` and a tasks file called ``other_tasks.yml``::
+When you add a conditional to an import statement, Assible applies the condition to all tasks within the imported file. This behavior is the equivalent of :ref:`tag_inheritance`. Assible applies the condition to every task, and evaluates each task separately. For example, you might have a playbook called ``main.yml`` and a tasks file called ``other_tasks.yml``::
 
     # all tasks within an imported file inherit the condition from the import statement
     # main.yml
@@ -279,30 +279,30 @@ When you add a conditional to an import statement, Ansible applies the condition
 
     # other_tasks.yml
     - name: Set a variable
-      ansible.builtin.set_fact:
+      assible.builtin.set_fact:
         x: foo
 
     - name: Print a variable
-      ansible.builtin.debug:
+      assible.builtin.debug:
         var: x
 
-Ansible expands this at execution time to the equivalent of::
+Assible expands this at execution time to the equivalent of::
 
     - name: Set a variable if not defined
-      ansible.builtin.set_fact:
+      assible.builtin.set_fact:
         x: foo
       when: x is not defined
       # this task sets a value for x
 
     - name: Do the task if "x" is not defined
-      ansible.builin.debug:
+      assible.builin.debug:
         var: x
       when: x is not defined
-      # Ansible skips this task, because x is now defined
+      # Assible skips this task, because x is now defined
 
 Thus if ``x`` is initially undefined, the ``debug`` task will be skipped. If this is not the behavior you want, use an ``include_*`` statement to apply a condition only to that statement itself.
 
-You can apply conditions to ``import_playbook`` as well as to the other ``import_*`` statements. When you use this approach, Ansible returns a 'skipped' message for every task on every host that does not match the criteria, creating repetitive output. In many cases the :ref:`group_by module <group_by_module>` can be a more streamlined way to accomplish the same objective; see :ref:`os_variance`.
+You can apply conditions to ``import_playbook`` as well as to the other ``import_*`` statements. When you use this approach, Assible returns a 'skipped' message for every task on every host that does not match the criteria, creating repetitive output. In many cases the :ref:`group_by module <group_by_module>` can be a more streamlined way to accomplish the same objective; see :ref:`os_variance`.
 
 .. _conditional_includes:
 
@@ -319,30 +319,30 @@ When you use a conditional on an ``include_*`` statement, the condition is appli
 
     # other_tasks.yml
     - name: Set a variable
-      ansible.builtin.set_fact:
+      assible.builtin.set_fact:
         x: foo
 
     - name: Print a variable
-      ansible.builtin.debug:
+      assible.builtin.debug:
         var: x
 
-Ansible expands this at execution time to the equivalent of::
+Assible expands this at execution time to the equivalent of::
 
     # main.yml
     - include_tasks: other_tasks.yml
       when: x is not defined
-      # if condition is met, Ansible includes other_tasks.yml
+      # if condition is met, Assible includes other_tasks.yml
 
     # other_tasks.yml
     - name: Set a variable
-      ansible.builtin.set_fact:
+      assible.builtin.set_fact:
         x: foo
-      # no condition applied to this task, Ansible sets the value of x to foo
+      # no condition applied to this task, Assible sets the value of x to foo
 
     - name: Print a variable
-      ansible.builtin.debug:
+      assible.builtin.debug:
         var: x
-      # no condition applied to this task, Ansible prints the debug statement
+      # no condition applied to this task, Assible prints the debug statement
 
 By using ``include_tasks`` instead of ``import_tasks``, both tasks from ``other_tasks.yml`` will be executed as expected. For more information on the differences between ``include`` v ``import`` see :ref:`playbooks_reuse`.
 
@@ -353,16 +353,16 @@ There are three ways to apply conditions to roles:
 
   - Add the same condition or conditions to all tasks in the role by placing your ``when`` statement under the ``roles`` keyword. See the example in this section.
   - Add the same condition or conditions to all tasks in the role by placing your ``when`` statement on a static ``import_role`` in your playbook.
-  - Add a condition or conditions to individual tasks or blocks within the role itself. This is the only approach that allows you to select or skip some tasks within the role based on your ``when`` statement. To select or skip tasks within the role, you must have conditions set on individual tasks or blocks, use the dynamic ``include_role`` in your playbook, and add the condition or conditions to the include. When you use this approach, Ansible applies the condition to the include itself plus any tasks in the role that also have that ``when`` statement.
+  - Add a condition or conditions to individual tasks or blocks within the role itself. This is the only approach that allows you to select or skip some tasks within the role based on your ``when`` statement. To select or skip tasks within the role, you must have conditions set on individual tasks or blocks, use the dynamic ``include_role`` in your playbook, and add the condition or conditions to the include. When you use this approach, Assible applies the condition to the include itself plus any tasks in the role that also have that ``when`` statement.
 
-When you incorporate a role in your playbook statically with the ``roles`` keyword, Ansible adds the conditions you define to all the tasks in the role. For example:
+When you incorporate a role in your playbook statically with the ``roles`` keyword, Assible adds the conditions you define to all the tasks in the role. For example:
 
 .. code-block:: yaml
 
    - hosts: webservers
      roles:
         - role: debian_stock_config
-          when: ansible_facts['os_family'] == 'Debian'
+          when: assible_facts['os_family'] == 'Debian'
 
 .. _conditional_variable_and_files:
 
@@ -371,11 +371,11 @@ Selecting variables, files, or templates based on facts
 
 Sometimes the facts about a host determine the values you want to use for certain variables or even the file or template you want to select for that host. For example, the names of packages are different on CentOS and on Debian. The configuration files for common services are also different on different OS flavors and versions. To load different variables file, templates, or other files based on a fact about the hosts:
 
-  1) name your vars files, templates, or files to match the Ansible fact that differentiates them
+  1) name your vars files, templates, or files to match the Assible fact that differentiates them
 
-  2) select the correct vars file, template, or file for each host with a variable based on that Ansible fact
+  2) select the correct vars file, template, or file for each host with a variable based on that Assible fact
 
-Ansible separates variables from tasks, keeping your playbooks from turning into arbitrary code with nested conditionals. This approach results in more streamlined and auditable configuration rules because there are fewer decision points to track.
+Assible separates variables from tasks, keeping your playbooks from turning into arbitrary code with nested conditionals. This approach results in more streamlined and auditable configuration rules because there are fewer decision points to track.
 
 Selecting variables files based on facts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -394,14 +394,14 @@ Then import those variables files based on the facts you gather on the hosts in 
       remote_user: root
       vars_files:
         - "vars/common.yml"
-        - [ "vars/{{ ansible_facts['os_family'] }}.yml", "vars/os_defaults.yml" ]
+        - [ "vars/{{ assible_facts['os_family'] }}.yml", "vars/os_defaults.yml" ]
       tasks:
       - name: Make sure apache is started
-        ansible.builtin.service:
+        assible.builtin.service:
           name: '{{ apache }}'
           state: started
 
-Ansible gathers facts on the hosts in the webservers group, then interpolates the variable "ansible_facts['os_family']" into a list of filenames. If you have hosts with Red Hat operating systems (CentOS, for example), Ansible looks for 'vars/RedHat.yml'. If that file does not exist, Ansible attempts to load 'vars/os_defaults.yml'. For Debian hosts, Ansible first looks for 'vars/Debian.yml', before falling back on 'vars/os_defaults.yml'. If no files in the list are found, Ansible raises an error.
+Assible gathers facts on the hosts in the webservers group, then interpolates the variable "assible_facts['os_family']" into a list of filenames. If you have hosts with Red Hat operating systems (CentOS, for example), Assible looks for 'vars/RedHat.yml'. If that file does not exist, Assible attempts to load 'vars/os_defaults.yml'. For Debian hosts, Assible first looks for 'vars/Debian.yml', before falling back on 'vars/os_defaults.yml'. If no files in the list are found, Assible raises an error.
 
 Selecting files and templates based on facts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -411,13 +411,13 @@ You can use the same approach when different OS flavors or versions require diff
 For example, you can template out a configuration file that is very different between, say, CentOS and Debian::
 
     - name: Template a file
-      ansible.builtin.template:
+      assible.builtin.template:
         src: "{{ item }}"
         dest: /etc/myapp/foo.conf
       loop: "{{ query('first_found', { 'files': myfiles, 'paths': mypaths}) }}"
       vars:
         myfiles:
-          - "{{ ansible_facts['distribution'] }}.conf"
+          - "{{ assible_facts['distribution'] }}.conf"
           -  default.conf
         mypaths: ['search_location_one/somedir/', '/opt/other_location/somedir/']
 
@@ -426,11 +426,11 @@ For example, you can template out a configuration file that is very different be
 Commonly-used facts
 ===================
 
-The following Ansible facts are frequently used in conditionals.
+The following Assible facts are frequently used in conditionals.
 
-.. _ansible_distribution:
+.. _assible_distribution:
 
-ansible_facts['distribution']
+assible_facts['distribution']
 -----------------------------
 
 Possible values (sample, not complete list)::
@@ -459,16 +459,16 @@ Possible values (sample, not complete list)::
 
 .. See `OSDIST_LIST`
 
-.. _ansible_distribution_major_version:
+.. _assible_distribution_major_version:
 
-ansible_facts['distribution_major_version']
+assible_facts['distribution_major_version']
 -------------------------------------------
 
 The major version of the operating system. For example, the value is `16` for Ubuntu 16.04.
 
-.. _ansible_os_family:
+.. _assible_os_family:
 
-ansible_facts['os_family']
+assible_facts['os_family']
 --------------------------
 
 Possible values (sample, not complete list)::
@@ -490,7 +490,7 @@ Possible values (sample, not complete list)::
     Suse
     Windows
 
-.. Ansible checks `OS_FAMILY_MAP`; if there's no match, it returns the value of `platform.system()`.
+.. Assible checks `OS_FAMILY_MAP`; if there's no match, it returns the value of `platform.system()`.
 
 .. seealso::
 
@@ -502,7 +502,7 @@ Possible values (sample, not complete list)::
        Tips and tricks for playbooks
    :ref:`playbooks_variables`
        All about variables
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

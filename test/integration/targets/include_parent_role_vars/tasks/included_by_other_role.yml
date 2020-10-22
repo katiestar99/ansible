@@ -1,15 +1,15 @@
-# Copyright 2019 Ansible Project
+# Copyright 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 - name: ensure our parent role tree to contain only our direct parent item
   assert:
     that:
-      - "ansible_parent_role_names == ['special_vars']"
+      - "assible_parent_role_names == ['special_vars']"
 
-- name: ensure that ansible_parent_role_paths has the same length as ansible_parent_role_names
+- name: ensure that assible_parent_role_paths has the same length as assible_parent_role_names
   assert:
     that:
-      - "ansible_parent_role_names|length == ansible_parent_role_paths|length"
+      - "assible_parent_role_names|length == assible_parent_role_paths|length"
 
 - name: attempt to import ourselves
   import_role:
@@ -19,7 +19,7 @@
 - name: ensure our parent role tree to contain only our direct parent item after importing
   assert:
     that:
-      - "ansible_parent_role_names == ['special_vars']"
+      - "assible_parent_role_names == ['special_vars']"
 
 - name: attempt to include ourselves
   include_role:
@@ -29,9 +29,9 @@
 - name: ensure our parent role tree to contain only our direct parent item after including
   assert:
     that:
-      - "ansible_parent_role_names == ['special_vars']"
+      - "assible_parent_role_names == ['special_vars']"
 
-- name: ensure that ansible_parent_role_paths has the same length as ansible_parent_role_names
+- name: ensure that assible_parent_role_paths has the same length as assible_parent_role_names
   assert:
     that:
-      - "ansible_parent_role_names|length == ansible_parent_role_paths|length"
+      - "assible_parent_role_names|length == assible_parent_role_paths|length"

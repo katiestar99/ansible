@@ -13,7 +13,7 @@ options:
     description: Name to say hello to.
     type: str
 author:
-  - Ansible Core Team
+  - Assible Core Team
 '''
 
 EXAMPLES = '''
@@ -22,12 +22,12 @@ EXAMPLES = '''
 
 RETURN = ''''''
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 from ..module_utils.my_util import hello
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(type='str'),
         ),

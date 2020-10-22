@@ -1,22 +1,22 @@
 #!/usr/bin/python
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": ["preview"],
     "supported_by": "network",
@@ -134,19 +134,19 @@ failed_conditions:
 """
 import time
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.parsing import (
+from assible.module_utils._text import to_text
+from assible.module_utils.basic import AssibleModule
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.parsing import (
     Conditional,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     transform_commands,
     to_lines,
 )
-from ansible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
+from assible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
     run_commands,
 )
-from ansible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
+from assible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
     ios_argument_spec,
 )
 
@@ -179,7 +179,7 @@ def main():
 
     argument_spec.update(ios_argument_spec)
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec, supports_check_mode=True
     )
 

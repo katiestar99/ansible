@@ -47,14 +47,14 @@ import platform
 import socket
 import traceback
 
-from ansible.module_utils.basic import (
-    AnsibleModule,
+from assible.module_utils.basic import (
+    AssibleModule,
     get_distribution,
     get_distribution_version,
 )
-from ansible.module_utils.common.sys_info import get_platform_subclass
-from ansible.module_utils.facts.system.service_mgr import ServiceMgrFactCollector
-from ansible.module_utils._text import to_native
+from assible.module_utils.common.sys_info import get_platform_subclass
+from assible.module_utils.facts.system.service_mgr import ServiceMgrFactCollector
+from assible.module_utils._text import to_native
 
 STRATS = {'generic': 'Generic', 'debian': 'Debian', 'sles': 'SLES', 'redhat': 'RedHat', 'alpine': 'Alpine',
           'systemd': 'Systemd', 'openrc': 'OpenRC', 'openbsd': 'OpenBSD', 'solaris': 'Solaris', 'freebsd': 'FreeBSD'}
@@ -847,7 +847,7 @@ class PopHostname(Hostname):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(type='str', required=True),
             use=dict(type='str', choices=STRATS.keys())
@@ -869,10 +869,10 @@ def main():
         name_before = permanent_hostname
 
     kw = dict(changed=changed, name=name,
-              ansible_facts=dict(ansible_hostname=name.split('.')[0],
-                                 ansible_nodename=name,
-                                 ansible_fqdn=socket.getfqdn(),
-                                 ansible_domain='.'.join(socket.getfqdn().split('.')[1:])))
+              assible_facts=dict(assible_hostname=name.split('.')[0],
+                                 assible_nodename=name,
+                                 assible_fqdn=socket.getfqdn(),
+                                 assible_domain='.'.join(socket.getfqdn().split('.')[1:])))
 
     if changed:
         kw['diff'] = {'after': 'hostname = ' + name + '\n',

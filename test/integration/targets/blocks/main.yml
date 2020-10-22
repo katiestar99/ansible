@@ -47,7 +47,7 @@
     #      always_run_after_failure: true
     - meta: clear_host_errors
 
-  # https://github.com/ansible/ansible/issues/35148
+  # https://github.com/assible/assible/issues/35148
   - block:
     - block:
       - name: EXPECTED FAILURE test triggering always by failing in nested block with run_once set

@@ -1,4 +1,4 @@
-# https://github.com/ansible/ansible/issues/24408
+# https://github.com/assible/assible/issues/24408
 
 - set_fact:
     t_username: templateuser1

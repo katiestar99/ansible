@@ -1,10 +1,10 @@
 .. _general_precedence_rules:
 
-Controlling how Ansible behaves: precedence rules
+Controlling how Assible behaves: precedence rules
 =================================================
 
-To give you maximum flexibility in managing your environments, Ansible offers many ways to control how Ansible behaves: how it connects to managed nodes, how it works once it has connected.
-If you use Ansible to manage a large number of servers, network devices, and cloud resources, you may define Ansible behavior in several different places and pass that information to Ansible in several different ways.
+To give you maximum flexibility in managing your environments, Assible offers many ways to control how Assible behaves: how it connects to managed nodes, how it works once it has connected.
+If you use Assible to manage a large number of servers, network devices, and cloud resources, you may define Assible behavior in several different places and pass that information to Assible in several different ways.
 This flexibility is convenient, but it can backfire if you do not understand the precedence rules.
 
 These precedence rules apply to any setting that can be defined in multiple ways (by configuration settings, command-line options, playbook keywords, variables).
@@ -15,7 +15,7 @@ These precedence rules apply to any setting that can be defined in multiple ways
 Precedence categories
 ---------------------
 
-Ansible offers four sources for controlling its behavior. In order of precedence from lowest (most easily overridden) to highest (overrides all others), the categories are:
+Assible offers four sources for controlling its behavior. In order of precedence from lowest (most easily overridden) to highest (overrides all others), the categories are:
 
  * Configuration settings
  * Command-line options
@@ -29,31 +29,31 @@ Within each precedence category, specific rules apply. However, generally speaki
 Configuration settings
 ^^^^^^^^^^^^^^^^^^^^^^
 
-:ref:`Configuration settings<ansible_configuration_settings>` include both values from the ``ansible.cfg`` file and environment variables. Within this category, values set in configuration files have lower precedence. Ansible uses the first ``ansible.cfg`` file it finds, ignoring all others. Ansible searches for ``ansible.cfg`` in these locations in order:
+:ref:`Configuration settings<assible_configuration_settings>` include both values from the ``assible.cfg`` file and environment variables. Within this category, values set in configuration files have lower precedence. Assible uses the first ``assible.cfg`` file it finds, ignoring all others. Assible searches for ``assible.cfg`` in these locations in order:
 
- * ``ANSIBLE_CONFIG`` (environment variable if set)
- * ``ansible.cfg`` (in the current directory)
- * ``~/.ansible.cfg`` (in the home directory)
- * ``/etc/ansible/ansible.cfg``
+ * ``ASSIBLE_CONFIG`` (environment variable if set)
+ * ``assible.cfg`` (in the current directory)
+ * ``~/.assible.cfg`` (in the home directory)
+ * ``/etc/assible/assible.cfg``
 
-Environment variables have a higher precedence than entries in ``ansible.cfg``. If you have environment variables set on your control node, they override the settings in whichever ``ansible.cfg`` file Ansible loads. The value of any given environment variable follows normal shell precedence: the last value defined overwrites previous values.
+Environment variables have a higher precedence than entries in ``assible.cfg``. If you have environment variables set on your control node, they override the settings in whichever ``assible.cfg`` file Assible loads. The value of any given environment variable follows normal shell precedence: the last value defined overwrites previous values.
 
 Command-line options
 ^^^^^^^^^^^^^^^^^^^^
 
 Any command-line option will override any configuration setting.
 
-When you type something directly at the command line, you may feel that your hand-crafted values should override all others, but Ansible does not work that way. Command-line options have low precedence - they override configuration only. They do not override playbook keywords, variables from inventory or variables from playbooks.
+When you type something directly at the command line, you may feel that your hand-crafted values should override all others, but Assible does not work that way. Command-line options have low precedence - they override configuration only. They do not override playbook keywords, variables from inventory or variables from playbooks.
 
 You can override all other settings from all other sources in all other precedence categories at the command line by  :ref:`general_precedence_extra_vars`, but that is not a command-line option, it is a way of passing a :ref:`variable<general_precedence_variables>`.
 
 At the command line, if you pass multiple values for a parameter that accepts only a single value, the last defined value wins. For example, this :ref:`ad-hoc task<intro_adhoc>` will connect as ``carol``, not as ``mike``::
 
-      ansible -u mike -m ping myhost -u carol
+      assible -u mike -m ping myhost -u carol
 
-Some parameters allow multiple values. In this case, Ansible will append all values from the hosts listed in inventory files inventory1 and inventory2::
+Some parameters allow multiple values. In this case, Assible will append all values from the hosts listed in inventory files inventory1 and inventory2::
 
-   ansible -i /path/inventory1 -i /path/inventory2 -m ping all
+   assible -i /path/inventory1 -i /path/inventory2 -m ping all
 
 The help for each :ref:`command-line tool<command_line_tools>` lists available options for that tool.
 
@@ -84,7 +84,7 @@ In this example, the ``connection`` keyword is set to ``ssh`` at the play level.
 The same logic applies to blocks and roles as well. All tasks, blocks, and roles within a play inherit play-level keywords; any task, block, or role can override any keyword by defining a different value for that keyword within the task, block, or role.
 
 Remember that these are KEYWORDS, not variables. Both playbooks and variable files are defined in YAML but they have different significance.
-Playbooks are the command or 'state description' structure for Ansible, variables are data we use to help make playbooks more dynamic.
+Playbooks are the command or 'state description' structure for Assible, variables are data we use to help make playbooks more dynamic.
 
 .. _general_precedence_variables:
 
@@ -95,7 +95,7 @@ Any variable will override any playbook keyword, any command-line option, and an
 
 Variables that have equivalent playbook keywords, command-line options, and configuration settings are known as :ref:`connection_variables`. Originally designed for connection parameters, this category has expanded to include other core variables like the temporary directory and the python interpreter.
 
-Connection variables, like all variables, can be set in multiple ways and places. You can define variables for hosts and groups in :ref:`inventory<intro_inventory>`. You can define variables for tasks and plays in ``vars:`` blocks in :ref:`playbooks<about_playbooks>`. However, they are still variables - they are data, not keywords or configuration settings. Variables that override playbook keywords, command-line options, and configuration settings follow the same rules of :ref:`variable precedence <ansible_variable_precedence>` as any other variables.
+Connection variables, like all variables, can be set in multiple ways and places. You can define variables for hosts and groups in :ref:`inventory<intro_inventory>`. You can define variables for tasks and plays in ``vars:`` blocks in :ref:`playbooks<about_playbooks>`. However, they are still variables - they are data, not keywords or configuration settings. Variables that override playbook keywords, command-line options, and configuration settings follow the same rules of :ref:`variable precedence <assible_variable_precedence>` as any other variables.
 
 When set in a playbook, variables follow the same inheritance rules as playbook keywords. You can set a value for the play, then override it in a task, block, or role::
 
@@ -103,7 +103,7 @@ When set in a playbook, variables follow the same inheritance rules as playbook 
      gather_facts: false
      become: yes
      vars:
-       ansible_become_user: admin
+       assible_become_user: admin
      tasks:
        - name: This task uses admin as the become user.
          dnf:
@@ -115,7 +115,7 @@ When set in a playbook, variables follow the same inheritance rules as playbook 
            - name: This task also uses service-admin as the become user, defined in the block.
              # second task to configure the service
          vars:
-           ansible_become_user: service-admin
+           assible_become_user: service-admin
        - name: This task (outside of the block) uses admin as the become user again.
          service:
            name: some-service
@@ -135,6 +135,6 @@ Using ``-e`` extra variables at the command line
 
 To override all other settings in all other categories, you can use extra variables: ``--extra-vars`` or ``-e`` at the command line. Values passed with ``-e`` are variables, not command-line options, and they will override configuration settings, command-line options, and playbook keywords as well as variables set elsewhere. For example, this task will connect as ``brian`` not as ``carol``::
 
-   ansible -u carol -e 'ansible_user=brian' -a whoami all
+   assible -u carol -e 'assible_user=brian' -a whoami all
 
 You must specify both the variable name and the value with ``--extra-vars``.

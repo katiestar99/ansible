@@ -23,7 +23,7 @@
     that: 'checkout_early.rc != 0'
   when: git_version.stdout is version(git_version_supporting_depth, '>=')
 
-# tests https://github.com/ansible/ansible/issues/14954
+# tests https://github.com/assible/assible/issues/14954
 - name: DEPTH | fetch repo again with depth=1
   git:
     repo: 'file://{{ repo_dir|expanduser }}/shallow'
@@ -69,7 +69,7 @@
     state: absent
     path: "{{ checkout_dir }}"
 
-# Test for https://github.com/ansible/ansible/issues/21316
+# Test for https://github.com/assible/assible/issues/21316
 - name: DEPTH | Shallow clone with tag
   git:
     repo: 'file://{{ repo_dir|expanduser }}/shallow'
@@ -87,7 +87,7 @@
     path: "{{ checkout_dir }}"
 
 
-  # Test for https://github.com/ansible/ansible-modules-core/issues/3456
+  # Test for https://github.com/assible/assible-modules-core/issues/3456
   # clone a repo with depth and version specified
 
 - name: DEPTH | clone repo with both version and depth specified
@@ -139,7 +139,7 @@
     state: absent
     path: "{{ checkout_dir }}"
 
-# test for https://github.com/ansible/ansible-modules-core/issues/3782
+# test for https://github.com/assible/assible-modules-core/issues/3782
 # make sure shallow fetch works when no version is specified
 
 - name: DEPTH | checkout old repo

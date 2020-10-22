@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.module_utils._text import to_native
-from ansible.plugins.connection import ConnectionBase
+from assible.module_utils._text import to_native
+from assible.plugins.connection import ConnectionBase
 
 DOCUMENTATION = """
     connection: localconn
@@ -15,7 +15,7 @@ DOCUMENTATION = """
             - something we set
         default: the_default
         vars:
-            - name: ansible_localconn_connectionvar
+            - name: assible_localconn_connectionvar
 """
 
 

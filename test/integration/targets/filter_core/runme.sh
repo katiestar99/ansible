@@ -2,5 +2,5 @@
 
 set -eux
 
-ANSIBLE_ROLES_PATH=../ ansible-playbook runme.yml "$@"
-ANSIBLE_ROLES_PATH=../ ansible-playbook handle_undefined_type_errors.yml "$@"
+ASSIBLE_ROLES_PATH=../ assible-playbook runme.yml "$@"
+ASSIBLE_ROLES_PATH=../ assible-playbook handle_undefined_type_errors.yml "$@"

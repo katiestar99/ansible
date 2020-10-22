@@ -7,24 +7,24 @@ Cache Plugins
    :local:
    :depth: 2
 
-Cache plugins allow Ansible to store gathered facts or inventory source data without the performance hit of retrieving them from source.
+Cache plugins allow Assible to store gathered facts or inventory source data without the performance hit of retrieving them from source.
 
-The default cache plugin is the :ref:`memory <memory_cache>` plugin, which only caches the data for the current execution of Ansible. Other plugins with persistent storage are available to allow caching the data across runs. Some of these cache plugins write to files, others write to databases.
+The default cache plugin is the :ref:`memory <memory_cache>` plugin, which only caches the data for the current execution of Assible. Other plugins with persistent storage are available to allow caching the data across runs. Some of these cache plugins write to files, others write to databases.
 
-You can use different cache plugins for inventory and facts. If you enable inventory caching without setting an inventory-specific cache plugin, Ansible uses the fact cache plugin for both facts and inventory.
+You can use different cache plugins for inventory and facts. If you enable inventory caching without setting an inventory-specific cache plugin, Assible uses the fact cache plugin for both facts and inventory.
 
 .. _enabling_cache:
 
 Enabling Fact Cache Plugins
 ---------------------------
 
-Fact caching is always enabled. However, only one fact cache plugin can be active at a time. You can select the cache plugin to use for fact caching in the Ansible configuration, either with an environment variable:
+Fact caching is always enabled. However, only one fact cache plugin can be active at a time. You can select the cache plugin to use for fact caching in the Assible configuration, either with an environment variable:
 
 .. code-block:: shell
 
-    export ANSIBLE_CACHE_PLUGIN=jsonfile
+    export ASSIBLE_CACHE_PLUGIN=jsonfile
 
-or in the ``ansible.cfg`` file:
+or in the ``assible.cfg`` file:
 
 .. code-block:: ini
 
@@ -38,9 +38,9 @@ If the cache plugin is in a collection use the fully qualified name:
     [defaults]
     fact_caching = namespace.collection_name.cache_plugin_name
 
-To enable a custom cache plugin, save it in a ``cache_plugins`` directory adjacent to your play, inside a role, or in one of the directory sources configured in :ref:`ansible.cfg <ansible_configuration_settings>`.
+To enable a custom cache plugin, save it in a ``cache_plugins`` directory adjacent to your play, inside a role, or in one of the directory sources configured in :ref:`assible.cfg <assible_configuration_settings>`.
 
-You also need to configure other settings specific to each plugin. Consult the individual plugin documentation or the Ansible :ref:`configuration <ansible_configuration_settings>` for more details.
+You also need to configure other settings specific to each plugin. Consult the individual plugin documentation or the Assible :ref:`configuration <assible_configuration_settings>` for more details.
 
 
 Enabling Inventory Cache Plugins
@@ -50,9 +50,9 @@ Inventory caching is disabled by default. To cache inventory data, you must enab
 
 .. code-block:: shell
 
-    export ANSIBLE_INVENTORY_CACHE=True
+    export ASSIBLE_INVENTORY_CACHE=True
 
-or in the ``ansible.cfg`` file:
+or in the ``assible.cfg`` file:
 
 .. code-block:: ini
 
@@ -71,9 +71,9 @@ Only one inventory cache plugin can be active at a time. You can set it with an 
 
 .. code-block:: shell
 
-    export ANSIBLE_INVENTORY_CACHE_PLUGIN=jsonfile
+    export ASSIBLE_INVENTORY_CACHE_PLUGIN=jsonfile
 
-or in the ansible.cfg file:
+or in the assible.cfg file:
 
 .. code-block:: ini
 
@@ -97,9 +97,9 @@ To cache inventory with a cache plugin in a collection, use the FQCN:
    [inventory]
    cache_plugin=collection_namespace.collection_name.cache_plugin
 
-If you enable caching for inventory plugins without selecting an inventory-specific cache plugin, Ansible falls back to caching inventory with the fact cache plugin you configured. Consult the individual inventory plugin documentation or the Ansible :ref:`configuration <ansible_configuration_settings>` for more details.
+If you enable caching for inventory plugins without selecting an inventory-specific cache plugin, Assible falls back to caching inventory with the fact cache plugin you configured. Consult the individual inventory plugin documentation or the Assible :ref:`configuration <assible_configuration_settings>` for more details.
 
-.. Note: In Ansible 2.7 and earlier, inventory plugins can only use file-based cache plugins, such as jsonfile, pickle, and yaml.
+.. Note: In Assible 2.7 and earlier, inventory plugins can only use file-based cache plugins, such as jsonfile, pickle, and yaml.
 
 
 .. _using_cache:
@@ -115,26 +115,26 @@ Cache plugins are used automatically once they are enabled.
 Plugin List
 -----------
 
-You can use ``ansible-doc -t cache -l`` to see the list of available plugins.
-Use ``ansible-doc -t cache <plugin name>`` to see specific documentation and examples.
+You can use ``assible-doc -t cache -l`` to see the list of available plugins.
+Use ``assible-doc -t cache <plugin name>`` to see specific documentation and examples.
 
 .. seealso::
 
    :ref:`action_plugins`
-       Ansible Action plugins
+       Assible Action plugins
    :ref:`callback_plugins`
-       Ansible callback plugins
+       Assible callback plugins
    :ref:`connection_plugins`
-       Ansible connection plugins
+       Assible connection plugins
    :ref:`inventory_plugins`
-       Ansible inventory plugins
+       Assible inventory plugins
    :ref:`shell_plugins`
-       Ansible Shell plugins
+       Assible Shell plugins
    :ref:`strategy_plugins`
-       Ansible Strategy plugins
+       Assible Strategy plugins
    :ref:`vars_plugins`
-       Ansible Vars plugins
-   `User Mailing List <https://groups.google.com/forum/#!forum/ansible-devel>`_
+       Assible Vars plugins
+   `User Mailing List <https://groups.google.com/forum/#!forum/assible-devel>`_
        Have a question?  Stop by the google group!
    `webchat.freenode.net <https://webchat.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

@@ -1,4 +1,4 @@
-# test for  https://github.com/ansible/ansible-modules-core/issues/527
+# test for  https://github.com/assible/assible-modules-core/issues/527
 # clone a repo, add a tag to the same commit and try to checkout the new commit
 
 

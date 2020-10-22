@@ -39,7 +39,7 @@ def assemble_files_to_ship(complete_file_list):
         # Developer-only tools
         'changelogs/config.yaml',
         'hacking/README.md',
-        'hacking/ansible-profile',
+        'hacking/assible-profile',
         'hacking/cgroup_perf_recap_graph.py',
         'hacking/create_deprecated_issues.py',
         'hacking/deprecated_issue_template.md',
@@ -72,12 +72,12 @@ def assemble_files_to_ship(complete_file_list):
     # These files are generated and then intentionally added to the sdist
 
     # Manpages
-    manpages = ['docs/man/man1/ansible.1']
+    manpages = ['docs/man/man1/assible.1']
     for dirname, dummy, files in os.walk('bin'):
         for filename in files:
             path = os.path.join(dirname, filename)
             if os.path.islink(path):
-                if os.readlink(path) == 'ansible':
+                if os.readlink(path) == 'assible':
                     manpages.append('docs/man/man1/%s.1' % filename)
 
     # Misc
@@ -101,16 +101,16 @@ def assemble_files_to_ship(complete_file_list):
 
 def assemble_files_to_install(complete_file_list):
     """
-    This looks for all of the files which should show up in an installation of ansible
+    This looks for all of the files which should show up in an installation of assible
     """
     ignore_patterns = tuple()
 
     pkg_data_files = []
     for path in complete_file_list:
 
-        if path.startswith("lib/ansible"):
+        if path.startswith("lib/assible"):
             prefix = 'lib'
-        elif path.startswith("test/lib/ansible_test"):
+        elif path.startswith("test/lib/assible_test"):
             prefix = 'test/lib'
         else:
             continue
@@ -216,7 +216,7 @@ def install_sdist(tmp_dir, sdist_dir):
         raise Exception('sdist install failed:\n%s' % stderr)
 
     # Determine the prefix for the installed files
-    match = re.search('^creating (%s/.*?/(?:site|dist)-packages)/ansible$' %
+    match = re.search('^creating (%s/.*?/(?:site|dist)-packages)/assible$' %
                       tmp_dir, stdout, flags=re.M)
     return match.group(1)
 
@@ -255,7 +255,7 @@ def check_sdist_files_are_wanted(sdist_dir, to_ship_files):
                     # changelog files are expected
                     continue
 
-                # FIXME: ansible-test doesn't pass the paths of symlinks to us so we aren't
+                # FIXME: assible-test doesn't pass the paths of symlinks to us so we aren't
                 # checking those
                 if not os.path.islink(os.path.join(sdist_dir, path)):
                     results.append('%s: File in sdist was not in the repository' % path)
@@ -274,7 +274,7 @@ def check_installed_contains_expected(install_dir, to_install_files):
     return results
 
 
-EGG_RE = re.compile('ansible[^/]+\\.egg-info/(PKG-INFO|SOURCES.txt|'
+EGG_RE = re.compile('assible[^/]+\\.egg-info/(PKG-INFO|SOURCES.txt|'
                     'dependency_links.txt|not-zip-safe|requires.txt|top_level.txt)$')
 
 
@@ -306,7 +306,7 @@ def check_installed_files_are_wanted(install_dir, to_install_files):
 
             # Test that the file was listed for installation
             if path not in to_install_files:
-                # FIXME: ansible-test doesn't pass the paths of symlinks to us so we
+                # FIXME: assible-test doesn't pass the paths of symlinks to us so we
                 # aren't checking those
                 if not os.path.islink(os.path.join(install_dir, path)):
                     if not EGG_RE.match(path):
@@ -334,10 +334,10 @@ def main():
     for path in sys.argv[1:] or sys.stdin.read().splitlines():
         complete_file_list.append(path)
 
-    # ansible-test isn't currently passing symlinks to us so construct those ourselves for now
+    # assible-test isn't currently passing symlinks to us so construct those ourselves for now
     for filename in _find_symlinks():
         if filename not in complete_file_list:
-            # For some reason ansible-test is passing us lib/ansible/module_utils/ansible_release.py
+            # For some reason assible-test is passing us lib/assible/module_utils/assible_release.py
             # which is a symlink even though it doesn't pass any others
             complete_file_list.append(filename)
 

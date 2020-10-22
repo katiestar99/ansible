@@ -1,12 +1,12 @@
 #!/usr/bin/env fish
 # usage: . ./hacking/env-setup [-q]
-#    modifies environment for running Ansible from checkout
+#    modifies environment for running Assible from checkout
 set HACKING_DIR (dirname (status -f))
 set FULL_PATH (python -c "import os; print(os.path.realpath('$HACKING_DIR'))")
-set ANSIBLE_HOME (dirname $FULL_PATH)
-set PREFIX_PYTHONPATH $ANSIBLE_HOME/lib
-set PREFIX_PATH $ANSIBLE_HOME/bin
-set PREFIX_MANPATH $ANSIBLE_HOME/docs/man
+set ASSIBLE_HOME (dirname $FULL_PATH)
+set PREFIX_PYTHONPATH $ASSIBLE_HOME/lib
+set PREFIX_PATH $ASSIBLE_HOME/bin
+set PREFIX_MANPATH $ASSIBLE_HOME/docs/man
 
 # set quiet flag
 if test (count $argv) -ge 1
@@ -65,8 +65,8 @@ end
 function gen_egg_info
     # Cannot use `test` on wildcards.
     # @see https://github.com/fish-shell/fish-shell/issues/5960
-    if count $PREFIX_PYTHONPATH/ansible*.egg-info > /dev/null
-        rm -rf $PREFIX_PYTHONPATH/ansible*.egg-info
+    if count $PREFIX_PYTHONPATH/assible*.egg-info > /dev/null
+        rm -rf $PREFIX_PYTHONPATH/assible*.egg-info
     end
 
     if [ $QUIET ]
@@ -78,7 +78,7 @@ function gen_egg_info
 end
 
 
-pushd $ANSIBLE_HOME
+pushd $ASSIBLE_HOME
 
 if [ $QUIET ]
     gen_egg_info ^ /dev/null
@@ -92,12 +92,12 @@ popd
 
 if not [ $QUIET ]
     echo ""
-    echo "Setting up Ansible to run out of checkout..."
+    echo "Setting up Assible to run out of checkout..."
     echo ""
     echo "PATH=$PATH"
     echo "PYTHONPATH=$PYTHONPATH"
     echo "PYTHON_BIN=$PYTHON_BIN"
-    echo "ANSIBLE_LIBRARY=$ANSIBLE_LIBRARY"
+    echo "ASSIBLE_LIBRARY=$ASSIBLE_LIBRARY"
     echo "MANPATH=$MANPATH"
     echo ""
     echo "Remember, you may wish to specify your host file with -i"

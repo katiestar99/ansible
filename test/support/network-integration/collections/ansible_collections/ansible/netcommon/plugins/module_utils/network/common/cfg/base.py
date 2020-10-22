@@ -7,7 +7,7 @@
 The base class for all resource modules
 """
 
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.network import (
     get_resource_connection,
 )
 

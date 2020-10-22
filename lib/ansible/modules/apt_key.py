@@ -95,7 +95,7 @@ EXAMPLES = '''
     state: absent
 
 # Use armored file since utf-8 string is expected. Must be of "PGP PUBLIC KEY BLOCK" type.
-- name: Add a key from a file on the Ansible server.
+- name: Add a key from a file on the Assible server.
   apt_key:
     data: "{{ lookup('file', 'apt.asc') }}"
     state: present
@@ -117,9 +117,9 @@ EXAMPLES = '''
 # FIXME: standardize into module_common
 from traceback import format_exc
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native
-from ansible.module_utils.urls import fetch_url
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native
+from assible.module_utils.urls import fetch_url
 
 
 apt_key_bin = None
@@ -268,13 +268,13 @@ def remove_key(module, key_id, keyring):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             id=dict(type='str'),
             url=dict(type='str'),
             data=dict(type='str'),
             file=dict(type='path'),
-            key=dict(type='str', removed_in_version='2.14', removed_from_collection='ansible.builtin'),
+            key=dict(type='str', removed_in_version='2.14', removed_from_collection='assible.builtin'),
             keyring=dict(type='path'),
             validate_certs=dict(type='bool', default=True),
             keyserver=dict(type='str'),

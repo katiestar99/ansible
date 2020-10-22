@@ -6,7 +6,7 @@ import os
 import sys
 
 from ..util import (
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
     display,
     get_available_python_versions,
     is_subdir,
@@ -20,8 +20,8 @@ from ..util_common import (
     handle_layout_messages,
 )
 
-from ..ansible_util import (
-    ansible_environment,
+from ..assible_util import (
+    assible_environment,
     check_pyyaml,
 )
 
@@ -91,7 +91,7 @@ def command_units(args):
         if args.requirements_mode != 'skip':
             install_command_requirements(args, version)
 
-        env = ansible_environment(args)
+        env = assible_environment(args)
 
         cmd = [
             'pytest',
@@ -101,7 +101,7 @@ def command_units(args):
             '--color',
             'yes' if args.color else 'no',
             '-p', 'no:cacheprovider',
-            '-c', os.path.join(ANSIBLE_TEST_DATA_ROOT, 'pytest.ini'),
+            '-c', os.path.join(ASSIBLE_TEST_DATA_ROOT, 'pytest.ini'),
             '--junit-xml', os.path.join(ResultType.JUNIT.path, 'python%s-units.xml' % version),
         ]
 
@@ -115,13 +115,13 @@ def command_units(args):
         plugins = []
 
         if args.coverage:
-            plugins.append('ansible_pytest_coverage')
+            plugins.append('assible_pytest_coverage')
 
         if data_context().content.collection:
-            plugins.append('ansible_pytest_collections')
+            plugins.append('assible_pytest_collections')
 
         if plugins:
-            env['PYTHONPATH'] += ':%s' % os.path.join(ANSIBLE_TEST_DATA_ROOT, 'pytest/plugins')
+            env['PYTHONPATH'] += ':%s' % os.path.join(ASSIBLE_TEST_DATA_ROOT, 'pytest/plugins')
             env['PYTEST_PLUGINS'] = ','.join(plugins)
 
         if args.collect_only:

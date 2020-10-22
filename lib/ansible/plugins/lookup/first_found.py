@@ -1,5 +1,5 @@
 # (c) 2013, seth vidal <skvidal@fedoraproject.org> red hat, inc
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -74,13 +74,13 @@ EXAMPLES = """
         - /tmp/production
         - /tmp/staging
 
-- name: INTERFACES | Create Ansible header for /etc/network/interfaces
+- name: INTERFACES | Create Assible header for /etc/network/interfaces
   template:
     src: "{{ lookup('first_found', findme)}}"
     dest: "/etc/foo.conf"
   vars:
     findme:
-      - "{{ ansible_virtualization_type }}_foo.conf"
+      - "{{ assible_virtualization_type }}_foo.conf"
       - "default_foo.conf"
 
 - name: read vars from first file found, use 'vars/' relative subdir
@@ -88,8 +88,8 @@ EXAMPLES = """
   vars:
     params:
       files:
-        - '{{ansible_distribution}}.yml'
-        - '{{ansible_os_family}}.yml'
+        - '{{assible_distribution}}.yml'
+        - '{{assible_os_family}}.yml'
         - default.yml
       paths:
         - 'vars'
@@ -106,10 +106,10 @@ import os
 
 from jinja2.exceptions import UndefinedError
 
-from ansible.errors import AnsibleFileNotFound, AnsibleLookupError, AnsibleUndefinedVariable
-from ansible.module_utils.six import string_types
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleFileNotFound, AssibleLookupError, AssibleUndefinedVariable
+from assible.module_utils.six import string_types
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):
@@ -161,7 +161,7 @@ class LookupModule(LookupBase):
         for fn in total_search:
             try:
                 fn = self._templar.template(fn)
-            except (AnsibleUndefinedVariable, UndefinedError):
+            except (AssibleUndefinedVariable, UndefinedError):
                 continue
 
             # get subdir if set by task executor, default to files otherwise
@@ -172,5 +172,5 @@ class LookupModule(LookupBase):
                 return [path]
         if skip:
             return []
-        raise AnsibleLookupError("No file was found when using first_found. Use errors='ignore' to allow this task to be skipped if no "
+        raise AssibleLookupError("No file was found when using first_found. Use errors='ignore' to allow this task to be skipped if no "
                                  "files are found")

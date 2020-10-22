@@ -87,7 +87,7 @@
   ignore_errors: yes
   register: misuse_of_changed
 
-# providing artificial task results since there are no modules in ansible-base that provide a 'results' list instead of 'changed'
+# providing artificial task results since there are no modules in assible-base that provide a 'results' list instead of 'changed'
 - name: Prepare artificial task results
   set_fact:
     results_all_changed:
@@ -201,9 +201,9 @@
     that:
       - "'hello' is regex('.l')"
       - "'hello' is regex('.L', ignorecase=true)"
-      - "'hello\nAnsible' is regex('^Ansible', multiline=true)"
+      - "'hello\nAssible' is regex('^Assible', multiline=true)"
       - "'hello' is not regex('.L')"
-      - "'hello\nAnsible' is not regex('^Ansible')"
+      - "'hello\nAssible' is not regex('^Assible')"
 
 - name: Try version tests with bad operator
   set_fact:
@@ -311,7 +311,7 @@
 - name: Create vaulted variable for vault_encrypted test
   set_fact:
     vaulted_value: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
+          $ASSIBLE_VAULT;1.1;AES256
           35323961353038346165643738646465376139363061353835303739663538343266303232326635
           3365353662646236356665323135633630656238316530640a663362363763633436373439663031
           33663433383037396438656464636433653837376361313638366362333037323961316364363363

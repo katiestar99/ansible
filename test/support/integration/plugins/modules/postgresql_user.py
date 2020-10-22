@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['stableinterface'],
     'supported_by': 'community'
@@ -106,7 +106,7 @@ options:
     - Passwords can be passed already hashed or unhashed, and postgresql
       ensures the stored password is hashed when C(encrypted) is set.
     - "Note: Postgresql 10 and newer doesn't support unhashed passwords."
-    - Previous to Ansible 2.6, this was C(no) by default.
+    - Previous to Assible 2.6, this was C(no) by default.
     default: 'yes'
     type: bool
     version_added: '1.4'
@@ -170,7 +170,7 @@ seealso:
   description: Complete reference of the PostgreSQL database roles documentation.
   link: https://www.postgresql.org/docs/current/user-manag.html
 author:
-- Ansible Core Team
+- Assible Core Team
 extends_documentation_fragment: postgres
 '''
 
@@ -256,19 +256,19 @@ try:
     from psycopg2.extras import DictCursor
 except ImportError:
     # psycopg2 is checked by connect_to_db()
-    # from ansible.module_utils.postgres
+    # from assible.module_utils.postgres
     pass
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.database import pg_quote_identifier, SQLParseError
-from ansible.module_utils.postgres import (
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.database import pg_quote_identifier, SQLParseError
+from assible.module_utils.postgres import (
     connect_to_db,
     get_conn_params,
     PgMembership,
     postgres_common_argument_spec,
 )
-from ansible.module_utils._text import to_bytes, to_native
-from ansible.module_utils.six import iteritems
+from assible.module_utils._text import to_bytes, to_native
+from assible.module_utils.six import iteritems
 
 
 FLAGS = ('SUPERUSER', 'CREATEROLE', 'CREATEDB', 'INHERIT', 'LOGIN', 'REPLICATION')
@@ -515,17 +515,17 @@ def user_alter(db_connection, module, user, password, role_attr_flags, encrypted
 
 def user_delete(cursor, user):
     """Try to remove a user. Returns True if successful otherwise False"""
-    cursor.execute("SAVEPOINT ansible_pgsql_user_delete")
+    cursor.execute("SAVEPOINT assible_pgsql_user_delete")
     try:
         query = 'DROP USER "%s"' % user
         executed_queries.append(query)
         cursor.execute(query)
     except Exception:
-        cursor.execute("ROLLBACK TO SAVEPOINT ansible_pgsql_user_delete")
-        cursor.execute("RELEASE SAVEPOINT ansible_pgsql_user_delete")
+        cursor.execute("ROLLBACK TO SAVEPOINT assible_pgsql_user_delete")
+        cursor.execute("RELEASE SAVEPOINT assible_pgsql_user_delete")
         return False
 
-    cursor.execute("RELEASE SAVEPOINT ansible_pgsql_user_delete")
+    cursor.execute("RELEASE SAVEPOINT assible_pgsql_user_delete")
     return True
 
 
@@ -821,7 +821,7 @@ def main():
         groups=dict(type='list', elements='str'),
         comment=dict(type='str', default=None),
     )
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True
     )

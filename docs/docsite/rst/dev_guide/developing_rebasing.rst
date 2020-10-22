@@ -14,23 +14,23 @@ Rebasing the branch used to create your PR will resolve both of these issues.
 Configuring your remotes
 ========================
 
-Before you can rebase your PR, you need to make sure you have the proper remotes configured. These instructions apply to any repository on GitHub, including collections repositories. On other platforms (bitbucket, gitlab), the same principles and commands apply but the syntax may be different. We use the ansible/ansible repository here as an example. In other repositories, the branch names may be different. Assuming you cloned your fork in the usual fashion, the ``origin`` remote will point to your fork::
+Before you can rebase your PR, you need to make sure you have the proper remotes configured. These instructions apply to any repository on GitHub, including collections repositories. On other platforms (bitbucket, gitlab), the same principles and commands apply but the syntax may be different. We use the assible/assible repository here as an example. In other repositories, the branch names may be different. Assuming you cloned your fork in the usual fashion, the ``origin`` remote will point to your fork::
 
    $ git remote -v
-   origin  git@github.com:YOUR_GITHUB_USERNAME/ansible.git (fetch)
-   origin  git@github.com:YOUR_GITHUB_USERNAME/ansible.git (push)
+   origin  git@github.com:YOUR_GITHUB_USERNAME/assible.git (fetch)
+   origin  git@github.com:YOUR_GITHUB_USERNAME/assible.git (push)
 
 However, you also need to add a remote which points to the upstream repository::
 
-   $ git remote add upstream https://github.com/ansible/ansible.git
+   $ git remote add upstream https://github.com/assible/assible.git
 
 Which should leave you with the following remotes::
 
    $ git remote -v
-   origin  git@github.com:YOUR_GITHUB_USERNAME/ansible.git (fetch)
-   origin  git@github.com:YOUR_GITHUB_USERNAME/ansible.git (push)
-   upstream        https://github.com/ansible/ansible.git (fetch)
-   upstream        https://github.com/ansible/ansible.git (push)
+   origin  git@github.com:YOUR_GITHUB_USERNAME/assible.git (fetch)
+   origin  git@github.com:YOUR_GITHUB_USERNAME/assible.git (push)
+   upstream        https://github.com/assible/assible.git (fetch)
+   upstream        https://github.com/assible/assible.git (push)
 
 Checking the status of your branch should show your fork is up-to-date with the ``origin`` remote::
 
@@ -75,9 +75,9 @@ You should check in on the status of your PR after tests have completed to see i
 Getting help rebasing
 =====================
 
-For help with rebasing your PR, or other development related questions, join us on our #ansible-devel IRC chat channel on `freenode.net <https://freenode.net>`_.
+For help with rebasing your PR, or other development related questions, join us on our #assible-devel IRC chat channel on `freenode.net <https://freenode.net>`_.
 
 .. seealso::
 
    :ref:`community_development_process`
-       Information on roadmaps, opening PRs, Ansibullbot, and more
+       Information on roadmaps, opening PRs, Assibullbot, and more

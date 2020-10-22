@@ -7,8 +7,8 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.executor.module_common import modify_module
-from ansible.module_utils.six import PY2
+from assible.executor.module_common import modify_module
+from assible.module_utils.six import PY2
 
 from test_module_common import templar
 
@@ -36,7 +36,7 @@ def fake_old_module_open(mocker):
 
 def test_shebang_task_vars(fake_old_module_open, templar):
     task_vars = {
-        'ansible_python_interpreter': '/usr/bin/python3'
+        'assible_python_interpreter': '/usr/bin/python3'
     }
 
     (data, style, shebang) = modify_module('fake_module', 'fake_path', {}, templar, task_vars=task_vars)

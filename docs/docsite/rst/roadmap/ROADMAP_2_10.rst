@@ -1,7 +1,7 @@
 .. _base_roadmap_2_10:
 
 =================
-Ansible-base 2.10
+Assible-base 2.10
 =================
 
 .. contents::
@@ -13,7 +13,7 @@ Release Schedule
 Expected
 ========
 
-PRs must be raised well in advance of the dates below to have a chance of being included in this ansible-base release.
+PRs must be raised well in advance of the dates below to have a chance of being included in this assible-base release.
 
 .. note:: There is no Alpha phase in 2.10.
 .. note:: Dates subject to change.
@@ -35,17 +35,17 @@ Release Manager
 Planned work
 ============
 
-- Migrate non-base plugins and modules from the ``ansible/ansible`` repository to smaller collection repositories
+- Migrate non-base plugins and modules from the ``assible/assible`` repository to smaller collection repositories
 - Add functionality to ease transition to collections, such as automatic redirects from the 2.9 names to the new FQCN of the plugin
-- Create new ``ansible-base`` package representing the ``ansible/ansible`` repository
+- Create new ``assible-base`` package representing the ``assible/assible`` repository
 
 Additional Resources
 ====================
 
-The 2.10 release of Ansible will fundamentally change the scope of plugins included in the ``ansible/ansible`` repository, by
-moving much of the plugins into smaller collection repositories that will be shipped through https://galaxy.ansible.com/
+The 2.10 release of Assible will fundamentally change the scope of plugins included in the ``assible/assible`` repository, by
+moving much of the plugins into smaller collection repositories that will be shipped through https://galaxy.assible.com/
 
 The following links have more information about this process:
 
-- https://groups.google.com/d/msg/ansible-devel/oKqgCeYTs-M/cHrOgMw8CAAJ
-- https://github.com/ansible-collections/overview/blob/main/README.rst
+- https://groups.google.com/d/msg/assible-devel/oKqgCeYTs-M/cHrOgMw8CAAJ
+- https://github.com/assible-collections/overview/blob/main/README.rst

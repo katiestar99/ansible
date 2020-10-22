@@ -1,18 +1,18 @@
-# base unit test classes for ansible/module_utils/facts/ tests
+# base unit test classes for assible/module_utils/facts/ tests
 # -*- coding: utf-8 -*-
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # Make coding more python3-ish
@@ -32,8 +32,8 @@ class BaseFactsTest(unittest.TestCase):
     fact_namespace = None
     collector_class = None
 
-    # a dict ansible_facts. Some fact collectors depend on facts gathered by
-    # other collectors (like 'ansible_architecture' or 'ansible_system') which
+    # a dict assible_facts. Some fact collectors depend on facts gathered by
+    # other collectors (like 'assible_architecture' or 'assible_system') which
     # can be passed via the collected_facts arg to collect()
     collected_facts = None
 
@@ -46,7 +46,7 @@ class BaseFactsTest(unittest.TestCase):
         return mock_module
 
     @patch('platform.system', return_value='Linux')
-    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value='systemd')
+    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value='systemd')
     def test_collect(self, mock_gfc, mock_ps):
         module = self._mock_module()
         fact_collector = self.collector_class()
@@ -55,7 +55,7 @@ class BaseFactsTest(unittest.TestCase):
         return facts_dict
 
     @patch('platform.system', return_value='Linux')
-    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value='systemd')
+    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value='systemd')
     def test_collect_with_namespace(self, mock_gfc, mock_ps):
         module = self._mock_module()
         fact_collector = self.collector_class()

@@ -1,6 +1,6 @@
-# This is the default ansible 'hosts' file.
+# This is the default assible 'hosts' file.
 #
-# It should live in /etc/ansible/hosts
+# It should live in /etc/assible/hosts
 #
 #   - Comments begin with the '#' character
 #   - Blank lines are ignored
@@ -8,7 +8,7 @@
 #   - Hosts must be specified in a group's hosts:
 #     and they must be a key (: terminated)
 #   - groups can have children, hosts and vars keys
-#   - groups are unique and global - if you define a group in multiple locations, Ansible aggregates all the data to the global name.
+#   - groups are unique and global - if you define a group in multiple locations, Assible aggregates all the data to the global name.
 #   - If you define a group as a child of 2 different groups, it will be the child of both, any hosts and variables assigned will not be dependent on the parents, they will all be associated with the group.
 #   - Anything defined under a host is assumed to be a var
 #   - You can enter hostnames or IP addresses
@@ -18,7 +18,7 @@
 ##all:
 ##  hosts:
 ##      green.example.com:
-##          ansible_ssh_host: 191.168.100.32
+##          assible_ssh_host: 191.168.100.32
 ##          anyvariable: value
 ##      blue.example.com:
 ##      192.168.100.1:

@@ -1,10 +1,10 @@
 .. _AWS_module_development:
 
 ****************************************************
-Guidelines for Ansible Amazon AWS module development
+Guidelines for Assible Amazon AWS module development
 ****************************************************
 
-The Ansible AWS collection (on `Galaxy <https://galaxy.ansible.com/community/aws>`_, source code `repository <https://github.com/ansible-collections/community.aws>`_) is maintained by the Ansible AWS Working Group.  For further information see the `AWS working group community page <https://github.com/ansible/community/wiki/aws>`_. If you are planning to contribute AWS modules to Ansible then getting in touch with the working group is a good way to start, especially because a similar module may already be under development.
+The Assible AWS collection (on `Galaxy <https://galaxy.assible.com/community/aws>`_, source code `repository <https://github.com/assible-collections/community.aws>`_) is maintained by the Assible AWS Working Group.  For further information see the `AWS working group community page <https://github.com/assible/community/wiki/aws>`_. If you are planning to contribute AWS modules to Assible then getting in touch with the working group is a good way to start, especially because a similar module may already be under development.
 
 .. contents::
    :local:
@@ -40,33 +40,33 @@ supports a feature rather than version checking. For example, from the ``ec2`` m
 Migrating to boto3
 ------------------
 
-Prior to Ansible 2.0, modules were written in either boto3 or boto. We are
+Prior to Assible 2.0, modules were written in either boto3 or boto. We are
 still porting some modules to boto3. Modules that still require boto should be ported to use boto3 rather than using both libraries (boto and boto3). We would like to remove the boto dependency from all modules.
 
-Porting code to AnsibleAWSModule
+Porting code to AssibleAWSModule
 ---------------------------------
 
-Some old AWS modules use the generic ``AnsibleModule`` as a base rather than the more efficient ``AnsibleAWSModule``. To port an old module to ``AnsibleAWSModule``, change:
+Some old AWS modules use the generic ``AssibleModule`` as a base rather than the more efficient ``AssibleAWSModule``. To port an old module to ``AssibleAWSModule``, change:
 
 .. code-block:: python
 
-   from ansible.module_utils.basic import AnsibleModule
+   from assible.module_utils.basic import AssibleModule
    ...
-   module = AnsibleModule(...)
+   module = AssibleModule(...)
 
 to:
 
 .. code-block:: python
 
-   from ansible.module_utils.aws.core import AnsibleAWSModule
+   from assible.module_utils.aws.core import AssibleAWSModule
    ...
-   module = AnsibleAWSModule(...)
+   module = AssibleAWSModule(...)
 
-Few other changes are required. AnsibleAWSModule
-does not inherit methods from AnsibleModule by default, but most useful methods
+Few other changes are required. AssibleAWSModule
+does not inherit methods from AssibleModule by default, but most useful methods
 are included. If you do find an issue, please raise a bug report.
 
-When porting, keep in mind that AnsibleAWSModule also will add the default ec2
+When porting, keep in mind that AssibleAWSModule also will add the default ec2
 argument spec by default. In pre-port modules, you should see common arguments
 specified with:
 
@@ -79,7 +79,7 @@ specified with:
            name=dict(default='default'),
            # ... and so on ...
        ))
-       module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True,)
+       module = AssibleModule(argument_spec=argument_spec, supports_check_mode=True,)
 
 These can be replaced with:
 
@@ -91,19 +91,19 @@ These can be replaced with:
            name=dict(default='default'),
            # ... and so on ...
        )
-       module = AnsibleAWSModule(argument_spec=argument_spec, supports_check_mode=True,)
+       module = AssibleAWSModule(argument_spec=argument_spec, supports_check_mode=True,)
 
 Creating new AWS modules
 ========================
 
-Use boto3 and AnsibleAWSModule
+Use boto3 and AssibleAWSModule
 -------------------------------
 
-All new AWS modules must use boto3 and ``AnsibleAWSModule``.
+All new AWS modules must use boto3 and ``AssibleAWSModule``.
 
-``AnsibleAWSModule`` greatly simplifies exception handling and library
+``AssibleAWSModule`` greatly simplifies exception handling and library
 management, reducing the amount of boilerplate code. If you cannot
-use ``AnsibleAWSModule`` as a base, you must document the reason and request an exception to this rule.
+use ``AssibleAWSModule`` as a base, you must document the reason and request an exception to this rule.
 
 Naming your module
 ------------------
@@ -118,26 +118,26 @@ Unless the name of your service is quite unique, please consider using ``aws_`` 
 Importing botocore and boto3
 ----------------------------
 
-The ``ansible.module_utils.ec2`` module and ``ansible.module_utils.core.aws`` modules both
+The ``assible.module_utils.ec2`` module and ``assible.module_utils.core.aws`` modules both
 automatically import boto3 and botocore.  If boto3 is missing from the system then the variable
 ``HAS_BOTO3`` will be set to false.  Normally, this means that modules don't need to import
-boto3 directly. There is no need to check ``HAS_BOTO3`` when using AnsibleAWSModule
+boto3 directly. There is no need to check ``HAS_BOTO3`` when using AssibleAWSModule
 as the module does that check:
 
 .. code-block:: python
 
-   from ansible.module_utils.aws.core import AnsibleAWSModule
+   from assible.module_utils.aws.core import AssibleAWSModule
    try:
        import botocore
    except ImportError:
-       pass  # handled by AnsibleAWSModule
+       pass  # handled by AssibleAWSModule
 
 or:
 
 .. code-block:: python
 
-   from ansible.module_utils.basic import AnsibleModule
-   from ansible.module_utils.ec2 import HAS_BOTO3
+   from assible.module_utils.basic import AssibleModule
+   from assible.module_utils.ec2 import HAS_BOTO3
    try:
        import botocore
    except ImportError:
@@ -153,7 +153,7 @@ Supporting Module Defaults
 
 The existing AWS modules support using :ref:`module_defaults <module_defaults>` for common
 authentication parameters.  To do the same for your new module, add an entry for it in
-``lib/ansible/config/module_defaults.yml``.  These entries take the form of:
+``lib/assible/config/module_defaults.yml``.  These entries take the form of:
 
 .. code-block:: yaml
 
@@ -163,10 +163,10 @@ authentication parameters.  To do the same for your new module, add an entry for
 Connecting to AWS
 =================
 
-AnsibleAWSModule provides the ``resource`` and ``client`` helper methods for obtaining boto3 connections.
+AssibleAWSModule provides the ``resource`` and ``client`` helper methods for obtaining boto3 connections.
 These handle some of the more esoteric connection options, such as security tokens and boto profiles.
 
-If using the basic AnsibleModule then you should use ``get_aws_connection_info`` and then ``boto3_conn``
+If using the basic AssibleModule then you should use ``get_aws_connection_info`` and then ``boto3_conn``
 to connect to AWS as these handle the same range of connection options.
 
 These helpers also for missing profiles or a region not set when it needs to be, so you don't have to.
@@ -188,7 +188,7 @@ or for the higher level ec2 resource:
    module.resource('ec2')
 
 
-An example of the older style connection used for modules based on AnsibleModule rather than AnsibleAWSModule:
+An example of the older style connection used for modules based on AssibleModule rather than AssibleAWSModule:
 
 .. code-block:: python
 
@@ -234,7 +234,7 @@ are a number of possibilities for handling it.
     ``is_boto3_error_code``.
 * Use ``aws_module.fail_json_aws()`` to report the module failure in a standard way
 * Retry using AWSRetry
-* Use ``fail_json()`` to report the failure without using ``ansible.module_utils.aws.core``
+* Use ``fail_json()`` to report the failure without using ``assible.module_utils.aws.core``
 * Do something custom in the case where you know how to handle the exception
 
 For more information on botocore exception handling see the `botocore error documentation <https://botocore.readthedocs.io/en/latest/client_upgrades.html#error-handling>`_.
@@ -242,7 +242,7 @@ For more information on botocore exception handling see the `botocore error docu
 Using is_boto3_error_code
 -------------------------
 
-To use ``ansible.module_utils.aws.core.is_boto3_error_code`` to catch a single
+To use ``assible.module_utils.aws.core.is_boto3_error_code`` to catch a single
 AWS error code, call it in place of ``ClientError`` in your except clauses. In
 this case, *only* the ``InvalidGroup.NotFound`` error code will be caught here,
 and any other error will be raised for handling elsewhere in the program.
@@ -258,17 +258,17 @@ and any other error will be raised for handling elsewhere in the program.
 Using fail_json_aws()
 ---------------------
 
-In the AnsibleAWSModule there is a special method, ``module.fail_json_aws()`` for nice reporting of
+In the AssibleAWSModule there is a special method, ``module.fail_json_aws()`` for nice reporting of
 exceptions.  Call this on your exception and it will report the error together with a traceback for
-use in Ansible verbose mode.
+use in Assible verbose mode.
 
-You should use the AnsibleAWSModule for all new modules, unless not possible. If adding significant
-amounts of exception handling to existing modules, we recommend migrating the module to use AnsibleAWSModule
+You should use the AssibleAWSModule for all new modules, unless not possible. If adding significant
+amounts of exception handling to existing modules, we recommend migrating the module to use AssibleAWSModule
 (there are very few changes required to do this)
 
 .. code-block:: python
 
-   from ansible.module_utils.aws.core import AnsibleAWSModule
+   from assible.module_utils.aws.core import AssibleAWSModule
 
    # Set up module parameters
    # module params code here
@@ -302,7 +302,7 @@ If you need to perform an action based on the error boto3 returned, use the erro
    except botocore.exceptions.BotoCoreError as e:
        module.fail_json_aws(e, msg="Couldn't obtain frooble %s" % name)
 
-using fail_json() and avoiding ansible.module_utils.aws.core
+using fail_json() and avoiding assible.module_utils.aws.core
 ------------------------------------------------------------
 
 Boto3 provides lots of useful information when an exception is thrown so pass this to the user
@@ -310,7 +310,7 @@ along with the message.
 
 .. code-block:: python
 
-   from ansible.module_utils.ec2 import HAS_BOTO3
+   from assible.module_utils.ec2 import HAS_BOTO3
    try:
        import botocore
    except ImportError:
@@ -367,7 +367,7 @@ catch throttling exceptions to work correctly), you'd need to provide a backoff 
 and then put exception handling around the backoff function.
 
 You can use ``exponential_backoff`` or ``jittered_backoff`` strategies - see
-the cloud ``module_utils`` ()/lib/ansible/module_utils/cloud.py)
+the cloud ``module_utils`` ()/lib/assible/module_utils/cloud.py)
 and `AWS Architecture blog <https://www.awsarchitectureblog.com/2015/03/backoff.html>`_ for more details.
 
 The combination of these two approaches is then:
@@ -380,7 +380,7 @@ The combination of these two approaches is then:
         return paginator.paginate(**kwargs).build_full_result()['SomeResource']
 
    def describe_some_resource(client, module):
-       filters = ansible_dict_to_boto3_filter_list(module.params['filters'])
+       filters = assible_dict_to_boto3_filter_list(module.params['filters'])
        try:
            return describe_some_resource_with_backoff(client, Filters=filters)
        except botocore.exceptions.ClientError as e:
@@ -418,7 +418,7 @@ the resource doesn't exist and not retry, we need:
 
 
 To make use of AWSRetry easier, it can now be wrapped around a client returned
-by ``AnsibleAWSModule``. any call from a client. To add retries to a client,
+by ``AssibleAWSModule``. any call from a client. To add retries to a client,
 create a client:
 
 .. code-block:: python
@@ -457,7 +457,7 @@ When you make a call using boto3, you will probably get back some useful informa
 should return in the module.  As well as information related to the call itself, you will also have
 some response metadata.  It is OK to return this to the user as well as they may find it useful.
 
-Boto3 returns all values CamelCased.  Ansible follows Python standards for variable names and uses
+Boto3 returns all values CamelCased.  Assible follows Python standards for variable names and uses
 snake_case. There is a helper function in module_utils/ec2.py called `camel_dict_to_snake_dict`
 that allows you to easily convert the boto3 response to snake_case.
 
@@ -494,7 +494,7 @@ and returns True if they are different.
 
 .. code-block:: python
 
-   from ansible.module_utils.ec2 import compare_policies
+   from assible.module_utils.ec2 import compare_policies
 
    import json
 
@@ -518,11 +518,11 @@ Dealing with tags
 AWS has a concept of resource tags. Usually the boto3 API has separate calls for tagging and
 untagging a resource.  For example, the ec2 API has a create_tags and delete_tags call.
 
-It is common practice in Ansible AWS modules to have a `purge_tags` parameter that defaults to
+It is common practice in Assible AWS modules to have a `purge_tags` parameter that defaults to
 true.
 
 The `purge_tags` parameter means that existing tags will be deleted if they are not specified by
-the Ansible task.
+the Assible task.
 
 There is a helper function `compare_aws_tags` to ease dealing with tags. It can compare two dicts
 and return the tags to set and the tags to delete.  See the Helper function section below for more
@@ -531,14 +531,14 @@ detail.
 Helper functions
 ================
 
-Along with the connection functions in Ansible ec2.py module_utils, there are some other useful
+Along with the connection functions in Assible ec2.py module_utils, there are some other useful
 functions detailed below.
 
 camel_dict_to_snake_dict
 ------------------------
 
 boto3 returns results in a dict.  The keys of the dict are in CamelCase format. In keeping with
-Ansible format, this function will convert the keys to snake_case.
+Assible format, this function will convert the keys to snake_case.
 
 ``camel_dict_to_snake_dict`` takes an optional parameter called ``ignore_list`` which is a list of
 keys not to convert (this is usually useful for the ``tags`` dict, whose child keys should remain with
@@ -555,10 +555,10 @@ snake_dict_to_camel_dict
 first introduced for ECS purposes, this converts to dromedaryCase. An optional
 parameter called `capitalize_first`, which defaults to `False`, can be used to convert to CamelCase.
 
-ansible_dict_to_boto3_filter_list
+assible_dict_to_boto3_filter_list
 ---------------------------------
 
-Converts a an Ansible list of filters to a boto3 friendly list of dicts.  This is useful for any
+Converts a an Assible list of filters to a boto3 friendly list of dicts.  This is useful for any
 boto3 `_facts` modules.
 
 boto_exception
@@ -566,13 +566,13 @@ boto_exception
 
 Pass an exception returned from boto or boto3, and this function will consistently get the message from the exception.
 
-Deprecated: use `AnsibleAWSModule`'s `fail_json_aws` instead.
+Deprecated: use `AssibleAWSModule`'s `fail_json_aws` instead.
 
 
-boto3_tag_list_to_ansible_dict
+boto3_tag_list_to_assible_dict
 ------------------------------
 
-Converts a boto3 tag list to an Ansible dict. Boto3 returns tags as a list of dicts containing keys
+Converts a boto3 tag list to an Assible dict. Boto3 returns tags as a list of dicts containing keys
 called 'Key' and 'Value' by default.  This key names can be overridden when calling the function.
 For example, if you have already camel_cased your list of tags you may want to pass lowercase key
 names instead, in other words, 'key' and 'value'.
@@ -580,10 +580,10 @@ names instead, in other words, 'key' and 'value'.
 This function converts the list in to a single dict where the dict key is the tag key and the dict
 value is the tag value.
 
-ansible_dict_to_boto3_tag_list
+assible_dict_to_boto3_tag_list
 ------------------------------
 
-Opposite of above. Converts an Ansible dict to a boto3 tag list of dicts. You can again override
+Opposite of above. Converts an Assible dict to a boto3 tag list of dicts. You can again override
 the key names used if 'Key' and 'Value' is not suitable.
 
 get_ec2_security_group_ids_from_names
@@ -610,7 +610,7 @@ containing key pairs you need to modify and a list of tag key names that you nee
 is True by default.  If purge is False then any existing tags will not be modified.
 
 This function is useful when using boto3 'add_tags' and 'remove_tags' functions. Be sure to use the
-other helper function `boto3_tag_list_to_ansible_dict` to get an appropriate tag dict before
+other helper function `boto3_tag_list_to_assible_dict` to get an appropriate tag dict before
 calling this function. Since the AWS APIs are not uniform (for example, EC2 is different from Lambda) this will work
 without modification for some (Lambda) and others may need modification before using these values
 (such as EC2, with requires the tags to unset to be in the form `[{'Key': key1}, {'Key': key2}]`).
@@ -633,7 +633,7 @@ available during the test run. Second putting the test in a test group causing i
 continuous integration build.
 
 Tests for new modules should be added to the same group as existing AWS tests. In general just copy
-an existing aliases file such as the `aws_s3 tests aliases file <https://github.com/ansible-collections/amazon.aws/blob/master/tests/integration/targets/aws_s3/aliases>`_.
+an existing aliases file such as the `aws_s3 tests aliases file <https://github.com/assible-collections/amazon.aws/blob/master/tests/integration/targets/aws_s3/aliases>`_.
 
 AWS Credentials for Integration Tests
 -------------------------------------
@@ -677,7 +677,7 @@ there are defined IAM policies in `mattclay/aws-terminator <https://github.com/m
 to run the AWS integration test.
 
 If your module interacts with a new service or otherwise requires new permissions, tests will fail when you submit a pull request and the
-`Ansibullbot <https://github.com/ansible/ansibullbot/blob/master/ISSUE_HELP.md>`_ will tag your PR as needing revision.
+`Assibullbot <https://github.com/assible/assibullbot/blob/master/ISSUE_HELP.md>`_ will tag your PR as needing revision.
 We do not automatically grant additional permissions to the roles used by the continuous integration builds.
 You will need to raise a Pull Request against `mattclay/aws-terminator <https://github.com/mattclay/aws-terminator>`_ to add them.
 
@@ -690,13 +690,13 @@ run the tests.
 
 There are two ways to figure out which IAM permissions you need for your PR to pass:
 
-* Start with the most permissive IAM policy, run the tests to collect information about which resources your tests actually use, then construct a policy based on that output. This approach only works on modules that use `AnsibleAWSModule`.
-* Start with the least permissive IAM policy, run the tests to discover a failure, add permissions for the resource that addresses that failure, then repeat. If your module uses `AnsibleModule` instead of `AnsibleAWSModule`, you must use this approach.
+* Start with the most permissive IAM policy, run the tests to collect information about which resources your tests actually use, then construct a policy based on that output. This approach only works on modules that use `AssibleAWSModule`.
+* Start with the least permissive IAM policy, run the tests to discover a failure, add permissions for the resource that addresses that failure, then repeat. If your module uses `AssibleModule` instead of `AssibleAWSModule`, you must use this approach.
 
 To start with the most permissive IAM policy:
 
 1) `Create an IAM policy <https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html#access_policies_create-start>`_ that allows all actions (set ``Action`` and ``Resource`` to ``*```).
-2) Run your tests locally with this policy. On AnsibleAWSModule-based modules, the ``debug_botocore_endpoint_logs`` option is automatically set to ``yes``, so you should see a list of AWS ACTIONS after the PLAY RECAP showing all the permissions used. If your tests use a boto/AnsibleModule module, you must start with the least permissive policy (see below).
+2) Run your tests locally with this policy. On AssibleAWSModule-based modules, the ``debug_botocore_endpoint_logs`` option is automatically set to ``yes``, so you should see a list of AWS ACTIONS after the PLAY RECAP showing all the permissions used. If your tests use a boto/AssibleModule module, you must start with the least permissive policy (see below).
 3) Modify your policy to allow only the actions your tests use. Restrict account, region, and prefix where possible. Wait a few minutes for your policy to update.
 4) Run the tests again with a user or role that allows only the new policy.
 5) If the tests fail, troubleshoot (see tips below), modify the policy, run the tests again, and repeat the process until the tests pass with a restrictive policy.
@@ -730,7 +730,7 @@ Troubleshooting IAM policies
 - Re-read the AWS documentation, especially the list of `Actions, Resources and Condition Keys <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_actions-resources-contextkeys.html>`_ for the various AWS services.
 - Look at the `cloudonaut <https://iam.cloudonaut.io>`_ documentation as a troubleshooting cross-reference.
 - Use a search engine.
-- Ask in the Ansible IRC channel #ansible-aws (on freenode IRC).
+- Ask in the Assible IRC channel #assible-aws (on freenode IRC).
 
 Unsupported Integration tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

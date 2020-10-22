@@ -1,18 +1,18 @@
 # coding: utf-8
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,17 +21,17 @@ __metaclass__ = type
 import io
 
 from units.compat import unittest
-from ansible.parsing import vault
-from ansible.parsing.yaml import dumper, objects
-from ansible.parsing.yaml.loader import AnsibleLoader
-from ansible.module_utils.six import PY2
-from ansible.utils.unsafe_proxy import AnsibleUnsafeText, AnsibleUnsafeBytes
+from assible.parsing import vault
+from assible.parsing.yaml import dumper, objects
+from assible.parsing.yaml.loader import AssibleLoader
+from assible.module_utils.six import PY2
+from assible.utils.unsafe_proxy import AssibleUnsafeText, AssibleUnsafeBytes
 
 from units.mock.yaml_helper import YamlTestUtils
 from units.mock.vault_helper import TextVaultSecret
 
 
-class TestAnsibleDumper(unittest.TestCase, YamlTestUtils):
+class TestAssibleDumper(unittest.TestCase, YamlTestUtils):
     def setUp(self):
         self.vault_password = "hunter42"
         vault_secret = TextVaultSecret(self.vault_password)
@@ -39,7 +39,7 @@ class TestAnsibleDumper(unittest.TestCase, YamlTestUtils):
         self.good_vault = vault.VaultLib(self.vault_secrets)
         self.vault = self.good_vault
         self.stream = self._build_stream()
-        self.dumper = dumper.AnsibleDumper
+        self.dumper = dumper.AssibleDumper
 
     def _build_stream(self, yaml_text=None):
         text = yaml_text or u''
@@ -47,11 +47,11 @@ class TestAnsibleDumper(unittest.TestCase, YamlTestUtils):
         return stream
 
     def _loader(self, stream):
-        return AnsibleLoader(stream, vault_secrets=self.vault.secrets)
+        return AssibleLoader(stream, vault_secrets=self.vault.secrets)
 
-    def test_ansible_vault_encrypted_unicode(self):
+    def test_assible_vault_encrypted_unicode(self):
         plaintext = 'This is a string we are going to encrypt.'
-        avu = objects.AnsibleVaultEncryptedUnicode.from_plaintext(plaintext, vault=self.vault,
+        avu = objects.AssibleVaultEncryptedUnicode.from_plaintext(plaintext, vault=self.vault,
                                                                   secret=vault.match_secrets(self.vault_secrets, ['vault_secret'])[0][1])
 
         yaml_out = self._dump_string(avu, dumper=self.dumper)
@@ -64,7 +64,7 @@ class TestAnsibleDumper(unittest.TestCase, YamlTestUtils):
 
     def test_bytes(self):
         b_text = u'tréma'.encode('utf-8')
-        unsafe_object = AnsibleUnsafeBytes(b_text)
+        unsafe_object = AssibleUnsafeBytes(b_text)
         yaml_out = self._dump_string(unsafe_object, dumper=self.dumper)
 
         stream = self._build_stream(yaml_out)
@@ -79,7 +79,7 @@ class TestAnsibleDumper(unittest.TestCase, YamlTestUtils):
             # We normalize that to always return unicode on Python2 as that's right most of the
             # time.  However, this means byte strings can round trip through yaml on Python3 but
             # not on Python2.  To make this code work the same on Python2 and Python3 (we want
-            # the Python3 behaviour) we need to change the methods in Ansible to:
+            # the Python3 behaviour) we need to change the methods in Assible to:
             # (1) Let byte strings pass through yaml without being converted on Python2
             # (2) Convert byte strings to text strings before being given to pyyaml  (Without this,
             #       strings would end up as byte strings most of the time which would mostly be wrong)
@@ -92,7 +92,7 @@ class TestAnsibleDumper(unittest.TestCase, YamlTestUtils):
 
     def test_unicode(self):
         u_text = u'nöel'
-        unsafe_object = AnsibleUnsafeText(u_text)
+        unsafe_object = AssibleUnsafeText(u_text)
         yaml_out = self._dump_string(unsafe_object, dumper=self.dumper)
 
         stream = self._build_stream(yaml_out)

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright:  Ansible Project
+# Copyright:  Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -10,7 +10,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-author: Ansible Core Team (@ansible)
+author: Assible Core Team (@assible)
 module: import_tasks
 short_description: Import a task list
 description:
@@ -21,14 +21,14 @@ options:
     description:
       - The name of the imported file is specified directly without any other option.
       - Most keywords, including loops and conditionals, only applied to the imported tasks, not to this statement itself.
-      - If you need any of those to apply, use M(ansible.builtin.include_tasks) instead.
+      - If you need any of those to apply, use M(assible.builtin.include_tasks) instead.
 notes:
-  - This is a core feature of Ansible, rather than a module, and cannot be overridden like a module.
+  - This is a core feature of Assible, rather than a module, and cannot be overridden like a module.
 seealso:
-- module: ansible.builtin.import_playbook
-- module: ansible.builtin.import_role
-- module: ansible.builtin.include_role
-- module: ansible.builtin.include_tasks
+- module: assible.builtin.import_playbook
+- module: assible.builtin.import_role
+- module: assible.builtin.include_role
+- module: assible.builtin.include_tasks
 - ref: playbooks_reuse_includes
   description: More information related to including and importing playbooks, roles and tasks.
 '''

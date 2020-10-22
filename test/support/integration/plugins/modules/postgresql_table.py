@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
     'supported_by': 'community'
@@ -240,12 +240,12 @@ try:
     from psycopg2.extras import DictCursor
 except ImportError:
     # psycopg2 is checked by connect_to_db()
-    # from ansible.module_utils.postgres
+    # from assible.module_utils.postgres
     pass
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.database import pg_quote_identifier
-from ansible.module_utils.postgres import (
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.database import pg_quote_identifier
+from assible.module_utils.postgres import (
     connect_to_db,
     exec_sql,
     get_conn_params,
@@ -478,7 +478,7 @@ def main():
         session_role=dict(type='str'),
         cascade=dict(type='bool', default=False),
     )
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
     )

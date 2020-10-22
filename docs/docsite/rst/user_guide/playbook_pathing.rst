@@ -1,10 +1,10 @@
 :orphan:
 
 ***********************
-Search paths in Ansible
+Search paths in Assible
 ***********************
 
-You can control the paths Ansible searches to find resources on your control node (including configuration, modules, roles, ssh keys, and more) as well as resources on the remote nodes you are managing. Use absolute paths to tell Ansible where to find resources whenever you can. However, absolute paths are not always practical. This page covers how Ansible interprets relative search paths, along with ways to troubleshoot when Ansible cannot find the resource you need.
+You can control the paths Assible searches to find resources on your control node (including configuration, modules, roles, ssh keys, and more) as well as resources on the remote nodes you are managing. Use absolute paths to tell Assible where to find resources whenever you can. However, absolute paths are not always practical. This page covers how Assible interprets relative search paths, along with ways to troubleshoot when Assible cannot find the resource you need.
 
 .. contents::
    :local:
@@ -33,10 +33,10 @@ i.e ::
     play search path is playdir/{files|vars|templates}/, playdir/.
 
 
-By default, Ansible does not search the current working directory unless it happens to coincide with one of the paths above. If you `include` a task file from a role, it  will NOT trigger role behavior, this only happens when running as a role, `include_role` will work. A new variable `ansible_search_path` var will have the search path used, in order (but without the appended subdirs). Using 5 "v"s (`-vvvvv`) should show the detail of the search as it happens.
+By default, Assible does not search the current working directory unless it happens to coincide with one of the paths above. If you `include` a task file from a role, it  will NOT trigger role behavior, this only happens when running as a role, `include_role` will work. A new variable `assible_search_path` var will have the search path used, in order (but without the appended subdirs). Using 5 "v"s (`-vvvvv`) should show the detail of the search as it happens.
 
 As for includes, they try the path of the included file first and fall back to the play/role that includes them.
 
 
 
-.. note:  The current working directory might vary depending on the connection plugin and if the action is local or remote. For the remote it is normally the directory on which the login shell puts the user. For local it is either the directory you executed ansible from or in some cases the playbook directory.
+.. note:  The current working directory might vary depending on the connection plugin and if the action is local or remote. For the remote it is normally the directory on which the login shell puts the user. For local it is either the directory you executed assible from or in some cases the playbook directory.

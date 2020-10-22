@@ -1,10 +1,10 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.SID
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.SID
 #Requires -Version 3.0
-#AnsibleRequires -OSVersion 6
-#AnsibleRequires -Become
+#AssibleRequires -OSVersion 6
+#AssibleRequires -Become
 
 $output = &whoami.exe
 $sid = Convert-ToSID -account_name $output.Trim()

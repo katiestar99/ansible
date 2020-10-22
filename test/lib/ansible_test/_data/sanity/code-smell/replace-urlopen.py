@@ -13,7 +13,7 @@ def main():
                 match = re.search(r'^(?:[^#]*?)(urlopen)', text)
 
                 if match:
-                    print('%s:%d:%d: use `ansible.module_utils.urls.open_url` instead of `urlopen`' % (
+                    print('%s:%d:%d: use `assible.module_utils.urls.open_url` instead of `urlopen`' % (
                         path, line + 1, match.start(1) + 1))
 
 

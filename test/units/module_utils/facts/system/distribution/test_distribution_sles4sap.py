@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2020 Ansible Project
+# Copyright: (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -7,7 +7,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.facts.system.distribution import DistributionFiles
+from assible.module_utils.facts.system.distribution import DistributionFiles
 
 
 @pytest.mark.parametrize('realpath', ('SUSE_SLES_SAP.prod', 'SLES_SAP.prod'))

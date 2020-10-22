@@ -24,7 +24,7 @@ from ..target import (
 from ..util import (
     SubprocessError,
     find_executable,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
 )
 
 from ..util_common import (
@@ -44,8 +44,8 @@ class PslintTest(SanityVersionNeutral):
     """Sanity test using PSScriptAnalyzer."""
     @property
     def error_code(self):  # type: () -> t.Optional[str]
-        """Error code for ansible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
-        return 'AnsibleTest'
+        """Error code for assible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
+        return 'AssibleTest'
 
     def filter_targets(self, targets):  # type: (t.List[TestTarget]) -> t.List[TestTarget]
         """Return the given list of test targets, filtered to include only those relevant for the test."""
@@ -67,7 +67,7 @@ class PslintTest(SanityVersionNeutral):
         cmds = []
 
         if args.requirements:
-            cmds.append([os.path.join(ANSIBLE_TEST_DATA_ROOT, 'requirements', 'sanity.ps1')])
+            cmds.append([os.path.join(ASSIBLE_TEST_DATA_ROOT, 'requirements', 'sanity.ps1')])
 
         cmds.append([os.path.join(SANITY_ROOT, 'pslint', 'pslint.ps1')] + paths)
 

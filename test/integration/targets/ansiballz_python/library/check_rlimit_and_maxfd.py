@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2018 Red Hat | Ansible
+# Copyright 2018 Red Hat | Assible
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -9,11 +9,11 @@ __metaclass__ = type
 import resource
 import subprocess
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict()
     )
 

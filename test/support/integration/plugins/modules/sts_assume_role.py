@@ -1,12 +1,12 @@
 #!/usr/bin/python
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'community'}
 
@@ -110,13 +110,13 @@ EXAMPLES = '''
 
 '''
 
-from ansible.module_utils.aws.core import AnsibleAWSModule
-from ansible.module_utils.ec2 import camel_dict_to_snake_dict
+from assible.module_utils.aws.core import AssibleAWSModule
+from assible.module_utils.ec2 import camel_dict_to_snake_dict
 
 try:
     from botocore.exceptions import ClientError, ParamValidationError
 except ImportError:
-    pass  # caught by AnsibleAWSModule
+    pass  # caught by AssibleAWSModule
 
 
 def _parse_response(response):
@@ -169,7 +169,7 @@ def main():
         mfa_token=dict(required=False, default=None)
     )
 
-    module = AnsibleAWSModule(argument_spec=argument_spec)
+    module = AssibleAWSModule(argument_spec=argument_spec)
 
     connection = module.client('sts')
 

@@ -4,7 +4,7 @@
 Advanced Syntax
 ***************
 
-The advanced YAML syntax examples on this page give you more control over the data placed in YAML files used by Ansible. You can find additional information about Python-specific YAML in the official `PyYAML Documentation <https://pyyaml.org/wiki/PyYAMLDocumentation#YAMLtagsandPythontypes>`_.
+The advanced YAML syntax examples on this page give you more control over the data placed in YAML files used by Assible. You can find additional information about Python-specific YAML in the official `PyYAML Documentation <https://pyyaml.org/wiki/PyYAMLDocumentation#YAMLtagsandPythontypes>`_.
 
 .. contents::
    :local:
@@ -14,7 +14,7 @@ The advanced YAML syntax examples on this page give you more control over the da
 Unsafe or raw strings
 =====================
 
-When handling values returned by lookup plugins, Ansible uses a data type called ``unsafe`` to block templating. Marking data as unsafe prevents malicious users from abusing Jinja2 templates to execute arbitrary code on target machines. The Ansible implementation ensures that unsafe values are never templated. It is more comprehensive than escaping Jinja2 with ``{% raw %} ... {% endraw %}`` tags.
+When handling values returned by lookup plugins, Assible uses a data type called ``unsafe`` to block templating. Marking data as unsafe prevents malicious users from abusing Jinja2 templates to execute arbitrary code on target machines. The Assible implementation ensures that unsafe values are never templated. It is more comprehensive than escaping Jinja2 with ``{% raw %} ... {% endraw %}`` tags.
 
 You can use the same ``unsafe`` data type in variables you define, to prevent templating errors and information disclosure. You can mark values supplied by :ref:`vars_prompts<unsafe_prompts>` as unsafe. You can also use ``unsafe`` in playbooks. The most common use cases include passwords that allow special characters like ``{`` or ``%``, and JSON arguments that look like templates but should not be templated. For example:
 
@@ -105,8 +105,8 @@ You've anchored the value of ``version`` with the ``&my_version`` anchor, and re
    :ref:`playbooks_variables`
        All about variables
    :doc:`complex_data_manipulation`
-       Doing complex data manipulation in Ansible
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+       Doing complex data manipulation in Assible
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

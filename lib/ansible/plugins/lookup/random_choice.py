@@ -1,5 +1,5 @@
 # (c) 2013, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -34,9 +34,9 @@ RETURN = """
 """
 import random
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_native
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleError
+from assible.module_utils._text import to_native
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):
@@ -48,6 +48,6 @@ class LookupModule(LookupBase):
             try:
                 ret = [random.choice(terms)]
             except Exception as e:
-                raise AnsibleError("Unable to choose random term: %s" % to_native(e))
+                raise AssibleError("Unable to choose random term: %s" % to_native(e))
 
         return ret

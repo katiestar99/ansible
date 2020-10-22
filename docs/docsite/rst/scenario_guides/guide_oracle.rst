@@ -6,12 +6,12 @@ Oracle Cloud Infrastructure Guide
 Introduction
 ************
 
-Oracle provides a number of Ansible modules to interact with Oracle Cloud Infrastructure (OCI). In this guide, we will explain how you can use these modules to orchestrate, provision and configure your infrastructure on OCI. 
+Oracle provides a number of Assible modules to interact with Oracle Cloud Infrastructure (OCI). In this guide, we will explain how you can use these modules to orchestrate, provision and configure your infrastructure on OCI. 
 
 ************
 Requirements
 ************
-To use the OCI Ansible modules, you must have the following prerequisites on your control node, the computer from which Ansible playbooks are executed.
+To use the OCI Assible modules, you must have the following prerequisites on your control node, the computer from which Assible playbooks are executed.
 
 1. `An Oracle Cloud Infrastructure account. <https://cloud.oracle.com/en_US/tryit>`_
 
@@ -28,34 +28,34 @@ Installation
 
         pip install oci
 
-2.  Install the Ansible OCI Modules in one of two ways:
+2.  Install the Assible OCI Modules in one of two ways:
 
 a.	From Galaxy: 
 
 .. code-block:: bash
 
- ansible-galaxy install oracle.oci_ansible_modules
+ assible-galaxy install oracle.oci_assible_modules
 
 b.	From GitHub:
 
 .. code-block:: bash
 
-     $ git clone https://github.com/oracle/oci-ansible-modules.git
+     $ git clone https://github.com/oracle/oci-assible-modules.git
 
 .. code-block:: bash
 
-    $ cd oci-ansible-modules
+    $ cd oci-assible-modules
 
 
 Run one of the following commands:
 
-- If Ansible is installed only for your user: 
+- If Assible is installed only for your user: 
 
 .. code-block:: bash
 
     $ ./install.py
 
-- If Ansible is installed as root: 
+- If Assible is installed as root: 
 
 .. code-block:: bash
 
@@ -65,7 +65,7 @@ Run one of the following commands:
 Configuration
 *************
 
-When creating and configuring Oracle Cloud Infrastructure resources, Ansible modules use the authentication information outlined `here <https://docs.cloud.oracle.com/iaas/Content/API/Concepts/sdkconfig.htm>`_.
+When creating and configuring Oracle Cloud Infrastructure resources, Assible modules use the authentication information outlined `here <https://docs.cloud.oracle.com/iaas/Content/API/Concepts/sdkconfig.htm>`_.
 .
  
 ********
@@ -73,8 +73,8 @@ Examples
 ********
 Launch a compute instance
 =========================
-This `sample launch playbook <https://github.com/oracle/oci-ansible-modules/tree/master/samples/compute/launch_compute_instance>`_
-launches a public Compute instance and then accesses the instance from an Ansible module over an SSH connection. The sample illustrates how to:
+This `sample launch playbook <https://github.com/oracle/oci-assible-modules/tree/master/samples/compute/launch_compute_instance>`_
+launches a public Compute instance and then accesses the instance from an Assible module over an SSH connection. The sample illustrates how to:
 
 - Generate a temporary, host-specific SSH key pair.
 - Specify the public key from the key pair for connecting to the instance, and then launch the instance.
@@ -82,7 +82,7 @@ launches a public Compute instance and then accesses the instance from an Ansibl
 
 Create and manage Autonomous Data Warehouses
 ============================================
-This `sample warehouse playbook <https://github.com/oracle/oci-ansible-modules/tree/master/samples/database/autonomous_data_warehouse>`_ creates an Autonomous Data Warehouse and manage its lifecycle. The sample shows how to:
+This `sample warehouse playbook <https://github.com/oracle/oci-assible-modules/tree/master/samples/database/autonomous_data_warehouse>`_ creates an Autonomous Data Warehouse and manage its lifecycle. The sample shows how to:
 
 - Set up an Autonomous Data Warehouse.
 - List all of the Autonomous Data Warehouse instances available in a compartment, filtered by the display name.
@@ -92,7 +92,7 @@ This `sample warehouse playbook <https://github.com/oracle/oci-ansible-modules/t
 
 Create and manage Autonomous Transaction Processing
 ===================================================
-This `sample playbook <https://github.com/oracle/oci-ansible-modules/tree/master/samples/database/autonomous_database>`_
+This `sample playbook <https://github.com/oracle/oci-assible-modules/tree/master/samples/database/autonomous_database>`_
 creates an Autonomous Transaction Processing database and manage its lifecycle. The sample shows how to:
 
 - Set up an Autonomous Transaction Processing database instance.
@@ -100,4 +100,4 @@ creates an Autonomous Transaction Processing database and manage its lifecycle. 
 - Get the "facts" for a specified Autonomous Transaction Processing instance.
 - Delete an Autonomous Transaction Processing database instance.
 
-You can find more examples here: `Sample Ansible Playbooks <https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/ansiblesamples.htm>`_.
+You can find more examples here: `Sample Assible Playbooks <https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/assiblesamples.htm>`_.

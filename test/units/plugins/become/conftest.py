@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -9,8 +9,8 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.utils import context_objects as co
+from assible.cli.arguments import option_helpers as opt_help
+from assible.utils import context_objects as co
 
 
 @pytest.fixture

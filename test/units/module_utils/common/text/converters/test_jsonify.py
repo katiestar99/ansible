@@ -7,7 +7,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.text.converters import jsonify
+from assible.module_utils.common.text.converters import jsonify
 
 
 @pytest.mark.parametrize(

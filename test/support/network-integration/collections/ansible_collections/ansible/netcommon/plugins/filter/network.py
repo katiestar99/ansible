@@ -1,20 +1,20 @@
 #
 # {c) 2017 Red Hat, Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
@@ -28,15 +28,15 @@ import string
 
 from xml.etree.ElementTree import fromstring
 
-from ansible.module_utils._text import to_native, to_text
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible.module_utils._text import to_native, to_text
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     Template,
 )
-from ansible.module_utils.six import iteritems, string_types
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.errors import AnsibleError, AnsibleFilterError
-from ansible.utils.display import Display
-from ansible.utils.encrypt import passlib_or_crypt, random_password
+from assible.module_utils.six import iteritems, string_types
+from assible.module_utils.common._collections_compat import Mapping
+from assible.errors import AssibleError, AssibleFilterError
+from assible.utils.display import Display
+from assible.utils.encrypt import passlib_or_crypt, random_password
 
 try:
     import yaml
@@ -82,18 +82,18 @@ def re_search(regex, value):
 
 def parse_cli(output, tmpl):
     if not isinstance(output, string_types):
-        raise AnsibleError(
+        raise AssibleError(
             "parse_cli input should be a string, but was given a input of %s"
             % (type(output))
         )
 
     if not os.path.exists(tmpl):
-        raise AnsibleError("unable to locate parse_cli template: %s" % tmpl)
+        raise AssibleError("unable to locate parse_cli template: %s" % tmpl)
 
     try:
         template = Template()
     except ImportError as exc:
-        raise AnsibleError(to_native(exc))
+        raise AssibleError(to_native(exc))
 
     with open(tmpl) as tmpl_fh:
         tmpl_content = tmpl_fh.read()
@@ -241,25 +241,25 @@ def parse_cli(output, tmpl):
 
 def parse_cli_textfsm(value, template):
     if not HAS_TEXTFSM:
-        raise AnsibleError(
+        raise AssibleError(
             "parse_cli_textfsm filter requires TextFSM library to be installed"
         )
 
     if not isinstance(value, string_types):
-        raise AnsibleError(
+        raise AssibleError(
             "parse_cli_textfsm input should be a string, but was given a input of %s"
             % (type(value))
         )
 
     if not os.path.exists(template):
-        raise AnsibleError(
+        raise AssibleError(
             "unable to locate parse_cli_textfsm template: %s" % template
         )
 
     try:
         template = open(template)
     except IOError as exc:
-        raise AnsibleError(to_native(exc))
+        raise AssibleError(to_native(exc))
 
     re_table = textfsm.TextFSM(template)
     fsm_results = re_table.ParseText(value)
@@ -348,10 +348,10 @@ def _extract_param(template, root, attrs, value):
 
 def parse_xml(output, tmpl):
     if not os.path.exists(tmpl):
-        raise AnsibleError("unable to locate parse_xml template: %s" % tmpl)
+        raise AssibleError("unable to locate parse_xml template: %s" % tmpl)
 
     if not isinstance(output, string_types):
-        raise AnsibleError(
+        raise AssibleError(
             "parse_xml works on string input, but given input of : %s"
             % type(output)
         )
@@ -360,7 +360,7 @@ def parse_xml(output, tmpl):
     try:
         template = Template()
     except ImportError as exc:
-        raise AnsibleError(to_native(exc))
+        raise AssibleError(to_native(exc))
 
     with open(tmpl) as tmpl_fh:
         tmpl_content = tmpl_fh.read()
@@ -387,7 +387,7 @@ def parse_xml(output, tmpl):
 
 def type5_pw(password, salt=None):
     if not isinstance(password, string_types):
-        raise AnsibleFilterError(
+        raise AssibleFilterError(
             "type5_pw password input should be a string, but was given a input of %s"
             % (type(password).__name__)
         )
@@ -396,14 +396,14 @@ def type5_pw(password, salt=None):
         (to_text(string.ascii_letters), to_text(string.digits), u"./")
     )
     if salt is not None and not isinstance(salt, string_types):
-        raise AnsibleFilterError(
+        raise AssibleFilterError(
             "type5_pw salt input should be a string, but was given a input of %s"
             % (type(salt).__name__)
         )
     elif not salt:
         salt = random_password(length=4, chars=salt_chars)
     elif not set(salt) <= set(salt_chars):
-        raise AnsibleFilterError(
+        raise AssibleFilterError(
             "type5_pw salt used inproper characters, must be one of %s"
             % (salt_chars)
         )
@@ -417,7 +417,7 @@ def hash_salt(password):
 
     split_password = password.split("$")
     if len(split_password) != 4:
-        raise AnsibleFilterError(
+        raise AssibleFilterError(
             "Could not parse salt out password correctly from {0}".format(
                 password
             )
@@ -455,7 +455,7 @@ def vlan_parser(vlan_list, first_line_len=48, other_line_len=44):
     sorted_list = sorted(set(vlan_list))
 
     if sorted_list[0] < 1 or sorted_list[-1] > 4094:
-        raise AnsibleFilterError("Valid VLAN range is 1-4094")
+        raise AssibleFilterError("Valid VLAN range is 1-4094")
 
     parse_list = []
     idx = 0

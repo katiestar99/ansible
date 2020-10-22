@@ -20,8 +20,8 @@ description:
   - Use this module to manage crontab and environment variables entries. This module allows
     you to create environment variables and named crontab entries, update, or delete them.
   - 'When crontab jobs are managed: the module includes one line with the description of the
-    crontab entry C("#Ansible: <name>") corresponding to the "name" passed to the module,
-    which is used by future ansible/module calls to find/check the state. The "name"
+    crontab entry C("#Assible: <name>") corresponding to the "name" passed to the module,
+    which is used by future assible/module calls to find/check the state. The "name"
     parameter should be unique, and changing the "name" value will result in a new cron
     task being created (or a different one being removed).'
   - When environment variables are managed, no comment line is added, but, when the module
@@ -155,7 +155,7 @@ EXAMPLES = r'''
     hour: "5,2"
     job: "ls -alh > /dev/null"
 
-- name: 'Ensure an old job is no longer present. Removes any job that is prefixed by "#Ansible: an old job" from the crontab'
+- name: 'Ensure an old job is no longer present. Removes any job that is prefixed by "#Assible: an old job" from the crontab'
   cron:
     name: "an old job"
     state: absent
@@ -187,12 +187,12 @@ EXAMPLES = r'''
     hour: "12"
     user: root
     job: "YUMINTERACTIVE=0 /usr/sbin/yum-autoupdate"
-    cron_file: ansible_yum-autoupdate
+    cron_file: assible_yum-autoupdate
 
 - name: Removes a cron file from under /etc/cron.d
   cron:
     name: "yum autoupdate"
-    cron_file: ansible_yum-autoupdate
+    cron_file: assible_yum-autoupdate
     state: absent
 
 - name: Removes "APP_HOME" environment variable from crontab
@@ -209,9 +209,9 @@ import re
 import sys
 import tempfile
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.text.converters import to_bytes, to_native
-from ansible.module_utils.six.moves import shlex_quote
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.text.converters import to_bytes, to_native
+from assible.module_utils.six.moves import shlex_quote
 
 
 class CronTabError(Exception):
@@ -231,7 +231,7 @@ class CronTab(object):
         self.user = user
         self.root = (os.getuid() == 0)
         self.lines = None
-        self.ansible = "#Ansible: "
+        self.assible = "#Assible: "
         self.n_existing = ''
         self.cron_cmd = self.module.get_bin_path('crontab', required=True)
 
@@ -323,7 +323,7 @@ class CronTab(object):
             self.module.set_default_selinux_context(self.cron_file, False)
 
     def do_comment(self, name):
-        return "%s%s" % (self.ansible, name)
+        return "%s%s" % (self.assible, name)
 
     def add_job(self, name, job):
         # Add the comment
@@ -389,7 +389,7 @@ class CronTab(object):
             raise CronTabError("Unexpected error:", sys.exc_info()[0])
 
     def find_job(self, name, job=None):
-        # attempt to find job by 'Ansible:' header comment
+        # attempt to find job by 'Assible:' header comment
         comment = None
         for l in self.lines:
             if comment is not None:
@@ -397,18 +397,18 @@ class CronTab(object):
                     return [comment, l]
                 else:
                     comment = None
-            elif re.match(r'%s' % self.ansible, l):
-                comment = re.sub(r'%s' % self.ansible, '', l)
+            elif re.match(r'%s' % self.assible, l):
+                comment = re.sub(r'%s' % self.assible, '', l)
 
         # failing that, attempt to find job by exact match
         if job:
             for i, l in enumerate(self.lines):
                 if l == job:
-                    # if no leading ansible header, insert one
-                    if not re.match(r'%s' % self.ansible, self.lines[i - 1]):
+                    # if no leading assible header, insert one
+                    if not re.match(r'%s' % self.assible, self.lines[i - 1]):
                         self.lines.insert(i, self.do_comment(name))
                         return [self.lines[i], l, True]
-                    # if a leading blank ansible header AND job has a name, update header
+                    # if a leading blank assible header AND job has a name, update header
                     elif name and self.lines[i - 1] == self.do_comment(None):
                         self.lines[i - 1] = self.do_comment(name)
                         return [self.lines[i - 1], l, True]
@@ -423,7 +423,7 @@ class CronTab(object):
         return []
 
     def get_cron_job(self, minute, hour, day, month, weekday, job, special, disabled):
-        # normalize any leading/trailing newlines (ansible/ansible-modules-core#3791)
+        # normalize any leading/trailing newlines (assible/assible-modules-core#3791)
         job = job.strip('\r\n')
 
         if disabled:
@@ -446,8 +446,8 @@ class CronTab(object):
         jobnames = []
 
         for l in self.lines:
-            if re.match(r'%s' % self.ansible, l):
-                jobnames.append(re.sub(r'%s' % self.ansible, '', l))
+            if re.match(r'%s' % self.assible, l):
+                jobnames.append(re.sub(r'%s' % self.assible, '', l))
 
         return jobnames
 
@@ -461,7 +461,7 @@ class CronTab(object):
         return envnames
 
     def _update_job(self, name, job, addlinesfunction):
-        ansiblename = self.do_comment(name)
+        assiblename = self.do_comment(name)
         newlines = []
         comment = None
 
@@ -469,7 +469,7 @@ class CronTab(object):
             if comment is not None:
                 addlinesfunction(newlines, comment, job)
                 comment = None
-            elif l == ansiblename:
+            elif l == assiblename:
                 comment = l
             else:
                 newlines.append(l)
@@ -551,12 +551,12 @@ def main():
     #
     # Would produce:
     # PATH=/bin:/usr/bin
-    # # Ansible: check dirs
+    # # Assible: check dirs
     # * * 5,2 * * ls -alh > /dev/null
-    # # Ansible: do the job
+    # # Assible: do the job
     # * * 5,2 * * /some/dir/job.sh
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(type='str'),
             user=dict(type='str'),
@@ -621,12 +621,12 @@ def main():
     if not name:
         module.deprecate(
             msg="The 'name' parameter will be required in future releases.",
-            version='2.12', collection_name='ansible.builtin'
+            version='2.12', collection_name='assible.builtin'
         )
     if reboot:
         module.deprecate(
             msg="The 'reboot' parameter will be removed in future releases. Use 'special_time' option instead.",
-            version='2.12', collection_name='ansible.builtin'
+            version='2.12', collection_name='assible.builtin'
         )
 
     if module._diff:

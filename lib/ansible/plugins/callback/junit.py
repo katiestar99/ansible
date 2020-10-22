@@ -1,5 +1,5 @@
 # (c) 2016 Matt Clay <matt@mystile.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -23,7 +23,7 @@ DOCUMENTATION = '''
     options:
       output_dir:
         name: JUnit output dir
-        default: ~/.ansible.log
+        default: ~/.assible.log
         description: Directory to write XML files to.
         env:
           - name: JUNIT_OUTPUT_DIR
@@ -81,8 +81,8 @@ import os
 import time
 import re
 
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.plugins.callback import CallbackBase
+from assible.module_utils._text import to_bytes, to_text
+from assible.plugins.callback import CallbackBase
 
 try:
     from junit_xml import TestSuite, TestCase
@@ -125,7 +125,7 @@ class CallbackModule(CallbackBase):
 
     This plugin makes use of the following environment variables:
         JUNIT_OUTPUT_DIR (optional): Directory to write XML files to.
-                                     Default: ~/.ansible.log
+                                     Default: ~/.assible.log
         JUNIT_TASK_CLASS (optional): Configure the output to be one class per yaml file
                                      Default: False
         JUNIT_TASK_RELATIVE_PATH (optional): Configure the output to use relative paths to given directory
@@ -155,7 +155,7 @@ class CallbackModule(CallbackBase):
     def __init__(self):
         super(CallbackModule, self).__init__()
 
-        self._output_dir = os.getenv('JUNIT_OUTPUT_DIR', os.path.expanduser('~/.ansible.log'))
+        self._output_dir = os.getenv('JUNIT_OUTPUT_DIR', os.path.expanduser('~/.assible.log'))
         self._task_class = os.getenv('JUNIT_TASK_CLASS', 'False').lower()
         self._task_relative_path = os.getenv('JUNIT_TASK_RELATIVE_PATH', '')
         self._fail_on_change = os.getenv('JUNIT_FAIL_ON_CHANGE', 'False').lower()

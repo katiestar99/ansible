@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2017 Ansible Project
+# Copyright: (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -11,10 +11,10 @@ import os
 import pytest
 from itertools import product
 
-from ansible.module_utils.six.moves import builtins
+from assible.module_utils.six.moves import builtins
 
 # the module we are actually testing (sort of)
-from ansible.module_utils.facts.system.distribution import DistributionFactCollector
+from assible.module_utils.facts.system.distribution import DistributionFactCollector
 
 # to generate the testcase data, you can use the script gen_distribution_version_testcase.py in hacking/tests
 TESTSETS = []
@@ -33,8 +33,8 @@ def test_distribution_version(am, mocker, testcase):
     * input files that are faked
       * those should be complete and also include "irrelevant" files that might be mistaken as coming from other distributions
       * all files that are not listed here are assumed to not exist at all
-    * the output of ansible.module_utils.distro.linux_distribution() [called platform.dist() for historical reasons]
-    * results for the ansible variables distribution* and os_family
+    * the output of assible.module_utils.distro.linux_distribution() [called platform.dist() for historical reasons]
+    * results for the assible variables distribution* and os_family
 
     """
 
@@ -114,24 +114,24 @@ def test_distribution_version(am, mocker, testcase):
             ret = (0, testcase['command_output'].get(command, ''), '')
         return ret
 
-    mocker.patch('ansible.module_utils.facts.system.distribution.get_file_content', mock_get_file_content)
-    mocker.patch('ansible.module_utils.facts.system.distribution.get_uname', mock_get_uname)
-    mocker.patch('ansible.module_utils.facts.system.distribution._file_exists', mock_file_exists)
-    mocker.patch('ansible.module_utils.distro.name', mock_distro_name)
-    mocker.patch('ansible.module_utils.distro.id', mock_distro_id)
-    mocker.patch('ansible.module_utils.distro.version', mock_distro_version)
-    mocker.patch('ansible.module_utils.distro.codename', mock_distro_codename)
+    mocker.patch('assible.module_utils.facts.system.distribution.get_file_content', mock_get_file_content)
+    mocker.patch('assible.module_utils.facts.system.distribution.get_uname', mock_get_uname)
+    mocker.patch('assible.module_utils.facts.system.distribution._file_exists', mock_file_exists)
+    mocker.patch('assible.module_utils.distro.name', mock_distro_name)
+    mocker.patch('assible.module_utils.distro.id', mock_distro_id)
+    mocker.patch('assible.module_utils.distro.version', mock_distro_version)
+    mocker.patch('assible.module_utils.distro.codename', mock_distro_codename)
     mocker.patch(
-        'ansible.module_utils.common.sys_info.distro.os_release_info',
+        'assible.module_utils.common.sys_info.distro.os_release_info',
         mock_distro_os_release_info)
     mocker.patch(
-        'ansible.module_utils.common.sys_info.distro.lsb_release_info',
+        'assible.module_utils.common.sys_info.distro.lsb_release_info',
         mock_distro_lsb_release_info)
     mocker.patch('os.path.isfile', mock_os_path_is_file)
     mocker.patch('platform.system', mock_platform_system)
     mocker.patch('platform.release', mock_platform_release)
     mocker.patch('platform.version', mock_platform_version)
-    mocker.patch('ansible.module_utils.basic.AnsibleModule.run_command', mock_run_command_output)
+    mocker.patch('assible.module_utils.basic.AssibleModule.run_command', mock_run_command_output)
 
     real_open = builtins.open
     mocker.patch.object(builtins, 'open', new=mock_open)

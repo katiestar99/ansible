@@ -1,5 +1,5 @@
 # Copyright: (c) 2018, Sviatoslav Sydorenko <ssydoren@redhat.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 """Collection of low-level utility functions."""
 
@@ -7,8 +7,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible.module_utils.six import binary_type, text_type
-from ansible.module_utils.common._collections_compat import Hashable, Mapping, Sequence
+from assible.module_utils.six import binary_type, text_type
+from assible.module_utils.common._collections_compat import Hashable, Mapping, Sequence
 
 
 class ImmutableDict(Hashable, Mapping):
@@ -67,7 +67,7 @@ class ImmutableDict(Hashable, Mapping):
 
 def is_string(seq):
     """Identify whether the input has a string-like type (inclding bytes)."""
-    # AnsibleVaultEncryptedUnicode inherits from Sequence, but is expected to be a string like object
+    # AssibleVaultEncryptedUnicode inherits from Sequence, but is expected to be a string like object
     return isinstance(seq, (text_type, binary_type)) or getattr(seq, '__ENCRYPTED__', False)
 
 

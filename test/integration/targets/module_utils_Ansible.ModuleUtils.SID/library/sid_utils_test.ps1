@@ -1,10 +1,10 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.SID
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.SID
 
 $params = Parse-Args $args
-$sid_account = Get-AnsibleParam -obj $params -name "sid_account" -type "str" -failifempty $true
+$sid_account = Get-AssibleParam -obj $params -name "sid_account" -type "str" -failifempty $true
 
 Function Assert-Equals($actual, $expected) {
     if ($actual -ne $expected) {

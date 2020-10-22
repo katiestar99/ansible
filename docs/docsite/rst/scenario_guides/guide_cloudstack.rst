@@ -5,15 +5,15 @@ CloudStack Cloud Guide
 
 Introduction
 ````````````
-The purpose of this section is to explain how to put Ansible modules together to use Ansible in a CloudStack context. You will find more usage examples in the details section of each module.
+The purpose of this section is to explain how to put Assible modules together to use Assible in a CloudStack context. You will find more usage examples in the details section of each module.
 
-Ansible contains a number of extra modules for interacting with CloudStack based clouds. All modules support check mode, are designed to be idempotent, have been created and tested, and are maintained by the community.
+Assible contains a number of extra modules for interacting with CloudStack based clouds. All modules support check mode, are designed to be idempotent, have been created and tested, and are maintained by the community.
 
 .. note:: Some of the modules will require domain admin or root admin privileges.
 
 Prerequisites
 `````````````
-Prerequisites for using the CloudStack modules are minimal. In addition to Ansible itself, all of the modules require the python library ``cs`` https://pypi.org/project/cs/
+Prerequisites for using the CloudStack modules are minimal. In addition to Assible itself, all of the modules require the python library ``cs`` https://pypi.org/project/cs/
 
 You'll need this Python module installed on the execution host, usually your workstation.
 
@@ -31,7 +31,7 @@ Or alternatively starting with Debian 9 and Ubuntu 16.04:
 
 Limitations and Known Issues
 ````````````````````````````
-VPC support has been improved since Ansible 2.3 but is still not yet fully implemented. The community is working on the VPC integration.
+VPC support has been improved since Assible 2.3 but is still not yet fully implemented. The community is working on the VPC integration.
 
 Credentials File
 ````````````````
@@ -58,7 +58,7 @@ The structure of the ini file must look like this:
 
 .. versionadded:: 2.4
 
-The ENV variables support ``CLOUDSTACK_*`` as written in the documentation of the library ``cs``, like ``CLOUDSTACK_TIMEOUT``, ``CLOUDSTACK_METHOD``, and so on. has been implemented into Ansible. It is even possible to have some incomplete config in your cloudstack.ini:
+The ENV variables support ``CLOUDSTACK_*`` as written in the documentation of the library ``cs``, like ``CLOUDSTACK_TIMEOUT``, ``CLOUDSTACK_METHOD``, and so on. has been implemented into Assible. It is even possible to have some incomplete config in your cloudstack.ini:
 
 .. code-block:: bash
 
@@ -135,9 +135,9 @@ Environment Variables
 `````````````````````
 .. versionadded:: 2.3
 
-Since Ansible 2.3 it is possible to use environment variables for domain (``CLOUDSTACK_DOMAIN``), account (``CLOUDSTACK_ACCOUNT``), project (``CLOUDSTACK_PROJECT``), VPC (``CLOUDSTACK_VPC``) and zone (``CLOUDSTACK_ZONE``). This simplifies the tasks by not repeating the arguments for every tasks.
+Since Assible 2.3 it is possible to use environment variables for domain (``CLOUDSTACK_DOMAIN``), account (``CLOUDSTACK_ACCOUNT``), project (``CLOUDSTACK_PROJECT``), VPC (``CLOUDSTACK_VPC``) and zone (``CLOUDSTACK_ZONE``). This simplifies the tasks by not repeating the arguments for every tasks.
 
-Below you see an example how it can be used in combination with Ansible's block feature:
+Below you see an example how it can be used in combination with Assible's block feature:
 
 .. code-block:: yaml
 
@@ -367,7 +367,7 @@ The playbook looks like the following:
           debug: msg="VM {{ inventory_hostname }} {{ vm.default_ip }}"
 
         - name: assign IP to the inventory
-          set_fact: ansible_ssh_host={{ vm.default_ip }}
+          set_fact: assible_ssh_host={{ vm.default_ip }}
 
         - name: waiting for SSH to come up
           wait_for: port=22 host={{ vm.default_ip }} delay=5

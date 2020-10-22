@@ -9,31 +9,31 @@ calls the appropriate facts gathering function
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.facts.facts import (
     FactsBase,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.interfaces.interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.interfaces.interfaces import (
     InterfacesFacts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.l3_interfaces.l3_interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.l3_interfaces.l3_interfaces import (
     L3_interfacesFacts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.lag_interfaces.lag_interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.lag_interfaces.lag_interfaces import (
     Lag_interfacesFacts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.lldp_global.lldp_global import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.lldp_global.lldp_global import (
     Lldp_globalFacts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.lldp_interfaces.lldp_interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.lldp_interfaces.lldp_interfaces import (
     Lldp_interfacesFacts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.firewall_rules.firewall_rules import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.firewall_rules.firewall_rules import (
     Firewall_rulesFacts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.static_routes.static_routes import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.static_routes.static_routes import (
     Static_routesFacts,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.legacy.base import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.legacy.base import (
     Default,
     Neighbors,
     Config,
@@ -80,4 +80,4 @@ class Facts(FactsBase):
             self.get_network_legacy_facts(
                 FACT_LEGACY_SUBSETS, legacy_facts_type
             )
-        return self.ansible_facts, self._warnings
+        return self.assible_facts, self._warnings

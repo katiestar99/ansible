@@ -2,20 +2,20 @@
 # -*- coding: utf-8 -*-
 # (c) 2018, Matt Martz <matt@sivel.net>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -29,14 +29,14 @@ from distutils.version import StrictVersion
 
 import yaml
 
-import ansible.config
+import assible.config
 
-from ansible.plugins.loader import fragment_loader
-from ansible.release import __version__ as ansible_version
-from ansible.utils.plugin_docs import get_docstring
+from assible.plugins.loader import fragment_loader
+from assible.release import __version__ as assible_version
+from assible.utils.plugin_docs import get_docstring
 
 DOC_RE = re.compile(b'^DOCUMENTATION', flags=re.M)
-ANSIBLE_MAJOR = StrictVersion('.'.join(ansible_version.split('.')[:2]))
+ASSIBLE_MAJOR = StrictVersion('.'.join(assible_version.split('.')[:2]))
 
 
 def find_deprecations(obj, path=None):
@@ -66,7 +66,7 @@ def find_deprecations(obj, path=None):
             except KeyError:
                 version = value['removed_in']
                 this_path.append('removed_in')
-            if StrictVersion(version) <= ANSIBLE_MAJOR:
+            if StrictVersion(version) <= ASSIBLE_MAJOR:
                 yield (this_path, version)
 
 
@@ -90,7 +90,7 @@ def main():
                 '%s: %s is scheduled for removal in %s' % (plugin, '.'.join(str(i) for i in result[0][:-2]), result[1])
             )
 
-    base = os.path.join(os.path.dirname(ansible.config.__file__), 'base.yml')
+    base = os.path.join(os.path.dirname(assible.config.__file__), 'base.yml')
     with open(base) as f:
         data = yaml.safe_load(f)
 

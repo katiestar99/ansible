@@ -10,7 +10,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -270,8 +270,8 @@ import shutil
 import time
 import traceback
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native
 
 
 class DeployHelper(object):
@@ -449,7 +449,7 @@ class DeployHelper(object):
 
 def main():
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             path=dict(aliases=['dest'], required=True, type='path'),
             release=dict(required=False, type='str', default=None),
@@ -475,7 +475,7 @@ def main():
     changes = 0
 
     if deploy_helper.state == 'query':
-        result['ansible_facts'] = {'deploy_helper': facts}
+        result['assible_facts'] = {'deploy_helper': facts}
 
     elif deploy_helper.state == 'present':
         deploy_helper.check_link(facts['current_path'])
@@ -484,7 +484,7 @@ def main():
         if deploy_helper.shared_path:
             changes += deploy_helper.create_path(facts['shared_path'])
 
-        result['ansible_facts'] = {'deploy_helper': facts}
+        result['assible_facts'] = {'deploy_helper': facts}
 
     elif deploy_helper.state == 'finalize':
         if not deploy_helper.release:
@@ -506,7 +506,7 @@ def main():
 
     elif deploy_helper.state == 'absent':
         # destroy the facts
-        result['ansible_facts'] = {'deploy_helper': []}
+        result['assible_facts'] = {'deploy_helper': []}
         changes += deploy_helper.delete_path(facts['project_path'])
 
     if changes > 0:

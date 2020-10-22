@@ -26,7 +26,7 @@ from ..util import (
     import_plugins,
     load_plugins,
     ABC,
-    ANSIBLE_TEST_CONFIG_ROOT,
+    ASSIBLE_TEST_CONFIG_ROOT,
 )
 
 from ..util_common import (
@@ -294,7 +294,7 @@ class CloudProvider(CloudBase):
         self.remove_config = False
         self.config_static_name = 'cloud-config-%s%s' % (self.platform, config_extension)
         self.config_static_path = os.path.join(data_context().content.integration_path, self.config_static_name)
-        self.config_template_path = os.path.join(ANSIBLE_TEST_CONFIG_ROOT, '%s.template' % self.config_static_name)
+        self.config_template_path = os.path.join(ASSIBLE_TEST_CONFIG_ROOT, '%s.template' % self.config_static_name)
         self.config_extension = config_extension
 
     def filter(self, targets, exclude):
@@ -416,14 +416,14 @@ class CloudEnvironment(CloudBase):
 
 class CloudEnvironmentConfig:
     """Configuration for the environment."""
-    def __init__(self, env_vars=None, ansible_vars=None, module_defaults=None, callback_plugins=None):
+    def __init__(self, env_vars=None, assible_vars=None, module_defaults=None, callback_plugins=None):
         """
         :type env_vars: dict[str, str] | None
-        :type ansible_vars: dict[str, any] | None
+        :type assible_vars: dict[str, any] | None
         :type module_defaults: dict[str, dict[str, any]] | None
         :type callback_plugins: list[str] | None
         """
         self.env_vars = env_vars
-        self.ansible_vars = ansible_vars
+        self.assible_vars = assible_vars
         self.module_defaults = module_defaults
         self.callback_plugins = callback_plugins

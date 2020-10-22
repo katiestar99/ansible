@@ -1,7 +1,7 @@
 - name: delete installed collections
   file:
     state: "{{ item }}"
-    path: "{{ galaxy_dir }}/ansible_collections"
+    path: "{{ galaxy_dir }}/assible_collections"
   loop:
     - absent
     - directory

@@ -4,7 +4,7 @@
     name:
       - zip
       - unzip
-  when: ansible_pkg_mgr in ('yum', 'dnf', 'apt', 'pkgng')
+  when: assible_pkg_mgr in ('yum', 'dnf', 'apt', 'pkgng')
 
 - name: prep our file
   copy:

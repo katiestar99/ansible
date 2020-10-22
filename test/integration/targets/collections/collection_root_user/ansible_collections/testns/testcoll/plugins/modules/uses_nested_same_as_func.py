@@ -5,7 +5,7 @@ __metaclass__ = type
 import json
 import sys
 
-from ansible_collections.testns.testcoll.plugins.module_utils.nested_same.nested_same.nested_same import nested_same
+from assible_collections.testns.testcoll.plugins.module_utils.nested_same.nested_same.nested_same import nested_same
 
 
 def main():

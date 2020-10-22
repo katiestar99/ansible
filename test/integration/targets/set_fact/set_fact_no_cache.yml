@@ -2,20 +2,20 @@
 - name: Running with fact caching enabled but with cache flushed
   hosts: localhost
   tasks:
-    - name: show ansible_foobar fact
+    - name: show assible_foobar fact
       debug:
-        var: ansible_foobar
+        var: assible_foobar
 
-    - name: assert ansible_foobar is correct value
+    - name: assert assible_foobar is correct value
       assert:
         that:
-          - ansible_foobar is undefined
+          - assible_foobar is undefined
 
-    - name: show ansible_foobar_not_cached fact
+    - name: show assible_foobar_not_cached fact
       debug:
-        var: ansible_foobar_not_cached
+        var: assible_foobar_not_cached
 
-    - name: assert ansible_foobar_not_cached is not cached
+    - name: assert assible_foobar_not_cached is not cached
       assert:
         that:
-          - ansible_foobar_not_cached is undefined
+          - assible_foobar_not_cached is undefined

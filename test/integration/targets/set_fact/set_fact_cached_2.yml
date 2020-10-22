@@ -2,23 +2,23 @@
 - name: A second playbook run with fact caching enabled
   hosts: localhost
   tasks:
-    - name: show ansible_foobar fact
+    - name: show assible_foobar fact
       debug:
-        var: ansible_foobar
+        var: assible_foobar
 
-    - name: assert ansible_foobar is correct value when read from cache
+    - name: assert assible_foobar is correct value when read from cache
       assert:
         that:
-          - ansible_foobar == 'foobar_from_set_fact_cacheable'
+          - assible_foobar == 'foobar_from_set_fact_cacheable'
 
-    - name: show ansible_foobar_not_cached fact
+    - name: show assible_foobar_not_cached fact
       debug:
-        var: ansible_foobar_not_cached
+        var: assible_foobar_not_cached
 
-    - name: assert ansible_foobar_not_cached is not cached
+    - name: assert assible_foobar_not_cached is not cached
       assert:
         that:
-          - ansible_foobar_not_cached is undefined
+          - assible_foobar_not_cached is undefined
 
     - name: show fact_not_cached fact
       debug:

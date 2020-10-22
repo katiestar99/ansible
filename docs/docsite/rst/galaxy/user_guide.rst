@@ -1,13 +1,13 @@
 .. _using_galaxy:
-.. _ansible_galaxy:
+.. _assible_galaxy:
 
 *****************
 Galaxy User Guide
 *****************
 
-:dfn:`Ansible Galaxy` refers to the `Galaxy <https://galaxy.ansible.com>`_  website, a free site for finding, downloading, and sharing community developed roles.
+:dfn:`Assible Galaxy` refers to the `Galaxy <https://galaxy.assible.com>`_  website, a free site for finding, downloading, and sharing community developed roles.
 
-Use Galaxy to jump-start your automation project with great content from the Ansible community. Galaxy provides pre-packaged units of work such as :ref:`roles <playbooks_reuse_roles>`, and new in Galaxy 3.2, :ref:`collections <collections>`
+Use Galaxy to jump-start your automation project with great content from the Assible community. Galaxy provides pre-packaged units of work such as :ref:`roles <playbooks_reuse_roles>`, and new in Galaxy 3.2, :ref:`collections <collections>`
 You can find roles for provisioning infrastructure, deploying applications, and all of the tasks you do everyday. The collection format provides a comprehensive package of automation that may include multiple playbooks, roles, modules, and plugins.
 
 .. contents::
@@ -43,10 +43,10 @@ Installing a collection from Galaxy
 Downloading a collection from Automation Hub
 ----------------------------------------------------
 
-You can download collections from Automation Hub at the command line. Automation Hub content is available to subscribers only, so you must download an API token and configure your local environment to provide it before you can you download collections. To download a collection from Automation Hub with the ``ansible-galaxy`` command:
+You can download collections from Automation Hub at the command line. Automation Hub content is available to subscribers only, so you must download an API token and configure your local environment to provide it before you can you download collections. To download a collection from Automation Hub with the ``assible-galaxy`` command:
 
-1. Get your Automation Hub API token. Go to https://cloud.redhat.com/ansible/automation-hub/token/ and click :guilabel:`Get API token` from the version dropdown to copy your API token.
-2. Configure Red Hat Automation Hub server in the ``server_list``  option under the ``[galaxy]`` section in your :file:`ansible.cfg` file.
+1. Get your Automation Hub API token. Go to https://cloud.redhat.com/assible/automation-hub/token/ and click :guilabel:`Get API token` from the version dropdown to copy your API token.
+2. Configure Red Hat Automation Hub server in the ``server_list``  option under the ``[galaxy]`` section in your :file:`assible.cfg` file.
 
   .. code-block:: ini
 
@@ -62,10 +62,10 @@ You can download collections from Automation Hub at the command line. Automation
 
   .. code-block:: bash
 
-     ansible-galaxy collection install my_namespace.my_collection
+     assible-galaxy collection install my_namespace.my_collection
 
 .. seealso::
-  `Getting started with Automation Hub <https://www.ansible.com/blog/getting-started-with-ansible-hub>`_
+  `Getting started with Automation Hub <https://www.assible.com/blog/getting-started-with-assible-hub>`_
     An introduction to Automation Hub
 
 Installing an older version of a collection
@@ -91,10 +91,10 @@ Installing a collection from a git repository
 Listing installed collections
 -----------------------------
 
-To list installed collections, run ``ansible-galaxy collection list``. See :ref:`collections_listing` for more details.
+To list installed collections, run ``assible-galaxy collection list``. See :ref:`collections_listing` for more details.
 
 
-Configuring the ``ansible-galaxy`` client
+Configuring the ``assible-galaxy`` client
 ------------------------------------------
 
 .. include:: ../shared_snippets/galaxy_server_list.txt
@@ -108,7 +108,7 @@ Search the Galaxy database by tags, platforms, author and multiple keywords. For
 
 .. code-block:: bash
 
-    $ ansible-galaxy search elasticsearch --author geerlingguy
+    $ assible-galaxy search elasticsearch --author geerlingguy
 
 The search command will return a list of the first 1000 results matching your search:
 
@@ -129,7 +129,7 @@ Use the ``info`` command to view more detail about a specific role:
 
 .. code-block:: bash
 
-    $ ansible-galaxy info username.role_name
+    $ assible-galaxy info username.role_name
 
 This returns everything found in Galaxy for the role:
 
@@ -152,7 +152,7 @@ This returns everything found in Galaxy for the role:
         is_valid: True
         issue_tracker_url:
         license: Apache
-        min_ansible_version: 1.4
+        min_assible_version: 1.4
         modified: 2015-12-08T18:43:49.085Z
         namespace: username
         open_issues_count: 0
@@ -170,39 +170,39 @@ This returns everything found in Galaxy for the role:
 Installing roles from Galaxy
 ============================
 
-The ``ansible-galaxy`` command comes bundled with Ansible, and you can use it to install roles from Galaxy or directly from a git based SCM. You can
+The ``assible-galaxy`` command comes bundled with Assible, and you can use it to install roles from Galaxy or directly from a git based SCM. You can
 also use it to create a new role, remove roles, or perform tasks on the Galaxy website.
 
-The command line tool by default communicates with the Galaxy website API using the server address *https://galaxy.ansible.com*. If you run your own internal Galaxy server
+The command line tool by default communicates with the Galaxy website API using the server address *https://galaxy.assible.com*. If you run your own internal Galaxy server
 and want to use it instead of the default one, pass the ``--server`` option following the address of this galaxy server. You can set permanently this option by setting
-the Galaxy server value in your ``ansible.cfg`` file to use it . For information on setting the value in *ansible.cfg* see :ref:`galaxy_server`.
+the Galaxy server value in your ``assible.cfg`` file to use it . For information on setting the value in *assible.cfg* see :ref:`galaxy_server`.
 
 
 Installing roles
 ----------------
 
-Use the ``ansible-galaxy`` command to download roles from the `Galaxy website <https://galaxy.ansible.com>`_
+Use the ``assible-galaxy`` command to download roles from the `Galaxy website <https://galaxy.assible.com>`_
 
 .. code-block:: bash
 
-  $ ansible-galaxy install namespace.role_name
+  $ assible-galaxy install namespace.role_name
 
 Setting where to install roles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default, Ansible downloads roles to the first writable directory in the default list of paths ``~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles``. This installs roles in the home directory of the user running ``ansible-galaxy``.
+By default, Assible downloads roles to the first writable directory in the default list of paths ``~/.assible/roles:/usr/share/assible/roles:/etc/assible/roles``. This installs roles in the home directory of the user running ``assible-galaxy``.
 
 You can override this with one of the following options:
 
-* Set the environment variable :envvar:`ANSIBLE_ROLES_PATH` in your session.
-* Use the ``--roles-path`` option for the ``ansible-galaxy`` command.
-* Define ``roles_path`` in an ``ansible.cfg`` file.
+* Set the environment variable :envvar:`ASSIBLE_ROLES_PATH` in your session.
+* Use the ``--roles-path`` option for the ``assible-galaxy`` command.
+* Define ``roles_path`` in an ``assible.cfg`` file.
 
 The following provides an example of using ``--roles-path`` to install the role into the current working directory:
 
 .. code-block:: bash
 
-    $ ansible-galaxy install --roles-path . geerlingguy.apache
+    $ assible-galaxy install --roles-path . geerlingguy.apache
 
 .. seealso::
 
@@ -220,20 +220,20 @@ To see the available versions for a role:
 #. Locate the role on the Galaxy search page.
 #. Click on the name to view more details, including the available versions.
 
-You can also navigate directly to the role using the /<namespace>/<role name>. For example, to view the role geerlingguy.apache, go to `<https://galaxy.ansible.com/geerlingguy/apache>`_.
+You can also navigate directly to the role using the /<namespace>/<role name>. For example, to view the role geerlingguy.apache, go to `<https://galaxy.assible.com/geerlingguy/apache>`_.
 
 To install a specific version of a role from Galaxy, append a comma and the value of a GitHub release tag. For example:
 
 .. code-block:: bash
 
-   $ ansible-galaxy install geerlingguy.apache,v1.0.0
+   $ assible-galaxy install geerlingguy.apache,v1.0.0
 
 It is also possible to point directly to the git repository and specify a branch name or commit hash as the version. For example, the following will
 install a specific commit:
 
 .. code-block:: bash
 
-   $ ansible-galaxy install git+https://github.com/geerlingguy/ansible-role-apache.git,0b7cd353c0250e87a26e0499e59e7fd265cc2f25
+   $ assible-galaxy install git+https://github.com/geerlingguy/assible-role-apache.git,0b7cd353c0250e87a26e0499e59e7fd265cc2f25
 
 Installing multiple roles from a file
 -------------------------------------
@@ -245,9 +245,9 @@ Use the following command to install roles included in :file:`requirements.yml:`
 
 .. code-block:: bash
 
-    $ ansible-galaxy install -r requirements.yml
+    $ assible-galaxy install -r requirements.yml
 
-Again, the extension is important. If the *.yml* extension is left off, the ``ansible-galaxy`` CLI assumes the file is in an older, now deprecated,
+Again, the extension is important. If the *.yml* extension is left off, the ``assible-galaxy`` CLI assumes the file is in an older, now deprecated,
 "basic" format.
 
 Each role in the file will have one or more of the following attributes:
@@ -298,15 +298,15 @@ Use the following example as a guide for specifying roles in *requirements.yml*:
       src: https://some.webserver.example.com/files/master.tar.xz
 
     # from Bitbucket
-    - src: git+https://bitbucket.org/willthames/git-ansible-galaxy
+    - src: git+https://bitbucket.org/willthames/git-assible-galaxy
       version: v1.4
 
     # from Bitbucket, alternative syntax and caveats
-    - src: https://bitbucket.org/willthames/hg-ansible-galaxy
+    - src: https://bitbucket.org/willthames/hg-assible-galaxy
       scm: hg
 
     # from GitLab or other git-based scm, using git+ssh
-    - src: git@gitlab.company.com:mygroup/ansible-base.git
+    - src: git@gitlab.company.com:mygroup/assible-base.git
       scm: git
       version: "0.1"  # quoted, so YAML doesn't parse this as a floating-point value
 
@@ -323,19 +323,19 @@ You can install roles and collections from the same requirements files, with som
 
     ---
     roles:
-      # Install a role from Ansible Galaxy.
+      # Install a role from Assible Galaxy.
       - name: geerlingguy.java
         version: 1.9.6
 
     collections:
-      # Install a collection from Ansible Galaxy.
+      # Install a collection from Assible Galaxy.
       - name: geerlingguy.php_roles
         version: 0.9.3
-        source: https://galaxy.ansible.com
+        source: https://galaxy.assible.com
 
 .. note::
    While both roles and collections can be specified in one requirements file, they need to be installed separately.
-   The ``ansible-galaxy role install -r requirements.yml`` will only install roles and  ``ansible-galaxy collection install -r requirements.yml -p ./`` will only install collections.
+   The ``assible-galaxy role install -r requirements.yml`` will only install roles and  ``assible-galaxy collection install -r requirements.yml -p ./`` will only install collections.
 
 Installing multiple roles from multiple files
 ---------------------------------------------
@@ -352,7 +352,7 @@ Below are the contents of the :file:`webserver.yml` file:
     - src: https://github.com/bennojoy/nginx
 
     # from Bitbucket
-    - src: git+http://bitbucket.org/willthames/git-ansible-galaxy
+    - src: git+http://bitbucket.org/willthames/git-assible-galaxy
       version: v1.4
 
 The following shows the contents of the :file:`requirements.yml` file that now includes the :file:`webserver.yml` file:
@@ -368,7 +368,7 @@ command line, as follows:
 
 .. code-block:: bash
 
-    $ ansible-galaxy install -r requirements.yml
+    $ assible-galaxy install -r requirements.yml
 
 .. _galaxy_dependencies:
 
@@ -413,7 +413,7 @@ The following shows an example ``meta/main.yml`` file with dependent roles:
       description: Elasticsearch for Linux.
       company: "Midwestern Mac, LLC"
       license: "license (BSD, MIT)"
-      min_ansible_version: 2.4
+      min_assible_version: 2.4
       platforms:
       - name: EL
         versions:
@@ -444,7 +444,7 @@ If the source of a role is Galaxy, specify the role in the format *namespace.rol
 
     dependencies:
       - geerlingguy.apache
-      - geerlingguy.ansible
+      - geerlingguy.assible
 
 
 Alternately, you can specify the role dependencies in the complex form used in  :file:`requirements.yml` as follows:
@@ -452,9 +452,9 @@ Alternately, you can specify the role dependencies in the complex form used in  
 .. code-block:: yaml
 
     dependencies:
-      - name: geerlingguy.ansible
+      - name: geerlingguy.assible
       - name: composer
-        src: git+https://github.com/geerlingguy/ansible-role-composer.git
+        src: git+https://github.com/geerlingguy/assible-role-composer.git
         version: 775396299f2da1f519f0d8885022ca2d6ee80ee8
 
 .. note::
@@ -469,12 +469,12 @@ Use ``list`` to show the name and version of each role installed in the *roles_p
 
 .. code-block:: bash
 
-    $ ansible-galaxy list
-      - ansible-network.network-engine, v2.7.2
-      - ansible-network.config_manager, v2.6.2
-      - ansible-network.cisco_nxos, v2.7.1
-      - ansible-network.vyos, v2.7.3
-      - ansible-network.cisco_ios, v2.7.0
+    $ assible-galaxy list
+      - assible-network.network-engine, v2.7.2
+      - assible-network.config_manager, v2.6.2
+      - assible-network.cisco_nxos, v2.7.1
+      - assible-network.vyos, v2.7.3
+      - assible-network.cisco_ios, v2.7.0
 
 Remove an installed role
 ------------------------
@@ -483,7 +483,7 @@ Use ``remove`` to delete a role from *roles_path*:
 
 .. code-block:: bash
 
-    $ ansible-galaxy remove namespace.role_name
+    $ assible-galaxy remove namespace.role_name
 
 
 .. seealso::

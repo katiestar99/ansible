@@ -15,10 +15,10 @@ __metaclass__ = type
 
 from re import findall, search, M
 from copy import deepcopy
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.firewall_rules.firewall_rules import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.firewall_rules.firewall_rules import (
     Firewall_rulesArgs,
 )
 
@@ -44,10 +44,10 @@ class Firewall_rulesFacts(object):
     def get_device_data(self, connection):
         return connection.get_config()
 
-    def populate_facts(self, connection, ansible_facts, data=None):
+    def populate_facts(self, connection, assible_facts, data=None):
         """ Populate the facts for firewall_rules
         :param connection: the device connection
-        :param ansible_facts: Facts dictionary
+        :param assible_facts: Facts dictionary
         :param data: previously collected conf
         :rtype: dictionary
         :returns: facts
@@ -74,7 +74,7 @@ class Firewall_rulesFacts(object):
                 config = utils.remove_empties(config)
                 objs.append(config)
 
-        ansible_facts["ansible_network_resources"].pop("firewall_rules", None)
+        assible_facts["assible_network_resources"].pop("firewall_rules", None)
         facts = {}
         if objs:
             facts["firewall_rules"] = []
@@ -84,8 +84,8 @@ class Firewall_rulesFacts(object):
             for cfg in params["config"]:
                 facts["firewall_rules"].append(utils.remove_empties(cfg))
 
-        ansible_facts["ansible_network_resources"].update(facts)
-        return ansible_facts
+        assible_facts["assible_network_resources"].update(facts)
+        return assible_facts
 
     def get_rules(self, data, rules, type):
         """

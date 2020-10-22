@@ -1,19 +1,19 @@
-# (c) 2017, Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2017, Toshio Kuratomi <tkuratomi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -23,11 +23,11 @@ import os.path
 
 import pytest
 
-import ansible.errors
+import assible.errors
 
-from ansible.executor import module_common as amc
-from ansible.executor.interpreter_discovery import InterpreterDiscoveryRequiredError
-from ansible.module_utils.six import PY2
+from assible.executor import module_common as amc
+from assible.executor.interpreter_discovery import InterpreterDiscoveryRequiredError
+from assible.module_utils.six import PY2
 
 
 class TestStripComments:
@@ -74,7 +74,7 @@ def test(arg):
 class TestSlurp:
     def test_slurp_nonexistent(self, mocker):
         mocker.patch('os.path.exists', side_effect=lambda x: False)
-        with pytest.raises(ansible.errors.AnsibleError):
+        with pytest.raises(assible.errors.AssibleError):
             amc._slurp('no_file')
 
     def test_slurp_file(self, mocker):
@@ -117,65 +117,65 @@ class TestGetShebang:
         assert amc._get_shebang(u'/usr/bin/ruby', {}, templar) == (None, u'/usr/bin/ruby')
 
     def test_interpreter_set_in_task_vars(self, templar):
-        assert amc._get_shebang(u'/usr/bin/python', {u'ansible_python_interpreter': u'/usr/bin/pypy'}, templar) == \
+        assert amc._get_shebang(u'/usr/bin/python', {u'assible_python_interpreter': u'/usr/bin/pypy'}, templar) == \
             (u'#!/usr/bin/pypy', u'/usr/bin/pypy')
 
     def test_non_python_interpreter_in_task_vars(self, templar):
-        assert amc._get_shebang(u'/usr/bin/ruby', {u'ansible_ruby_interpreter': u'/usr/local/bin/ruby'}, templar) == \
+        assert amc._get_shebang(u'/usr/bin/ruby', {u'assible_ruby_interpreter': u'/usr/local/bin/ruby'}, templar) == \
             (u'#!/usr/local/bin/ruby', u'/usr/local/bin/ruby')
 
     def test_with_args(self, templar):
-        assert amc._get_shebang(u'/usr/bin/python', {u'ansible_python_interpreter': u'/usr/bin/python3'}, templar, args=('-tt', '-OO')) == \
+        assert amc._get_shebang(u'/usr/bin/python', {u'assible_python_interpreter': u'/usr/bin/python3'}, templar, args=('-tt', '-OO')) == \
             (u'#!/usr/bin/python3 -tt -OO', u'/usr/bin/python3')
 
     def test_python_via_env(self, templar):
-        assert amc._get_shebang(u'/usr/bin/python', {u'ansible_python_interpreter': u'/usr/bin/env python'}, templar) == \
+        assert amc._get_shebang(u'/usr/bin/python', {u'assible_python_interpreter': u'/usr/bin/env python'}, templar) == \
             (u'#!/usr/bin/env python', u'/usr/bin/env python')
 
 
 class TestDetectionRegexes:
-    ANSIBLE_MODULE_UTIL_STRINGS = (
+    ASSIBLE_MODULE_UTIL_STRINGS = (
         # Absolute collection imports
-        b'import ansible_collections.my_ns.my_col.plugins.module_utils.my_util',
-        b'from ansible_collections.my_ns.my_col.plugins.module_utils import my_util',
-        b'from ansible_collections.my_ns.my_col.plugins.module_utils.my_util import my_func',
+        b'import assible_collections.my_ns.my_col.plugins.module_utils.my_util',
+        b'from assible_collections.my_ns.my_col.plugins.module_utils import my_util',
+        b'from assible_collections.my_ns.my_col.plugins.module_utils.my_util import my_func',
         # Absolute core imports
-        b'import ansible.module_utils.basic',
-        b'from ansible.module_utils import basic',
-        b'from ansible.module_utils.basic import AnsibleModule',
+        b'import assible.module_utils.basic',
+        b'from assible.module_utils import basic',
+        b'from assible.module_utils.basic import AssibleModule',
         # Relative imports
         b'from ..module_utils import basic',
         b'from .. module_utils import basic',
         b'from ....module_utils import basic',
-        b'from ..module_utils.basic import AnsibleModule',
+        b'from ..module_utils.basic import AssibleModule',
     )
-    NOT_ANSIBLE_MODULE_UTIL_STRINGS = (
-        b'from ansible import release',
+    NOT_ASSIBLE_MODULE_UTIL_STRINGS = (
+        b'from assible import release',
         b'from ..release import __version__',
         b'from .. import release',
-        b'from ansible.modules.system import ping',
-        b'from ansible_collecitons.my_ns.my_col.plugins.modules import function',
+        b'from assible.modules.system import ping',
+        b'from assible_collecitons.my_ns.my_col.plugins.modules import function',
     )
 
     OFFSET = os.path.dirname(os.path.dirname(amc.__file__))
     CORE_PATHS = (
-        ('%s/modules/from_role.py' % OFFSET, 'ansible/modules/from_role'),
-        ('%s/modules/system/ping.py' % OFFSET, 'ansible/modules/system/ping'),
-        ('%s/modules/cloud/amazon/s3.py' % OFFSET, 'ansible/modules/cloud/amazon/s3'),
+        ('%s/modules/from_role.py' % OFFSET, 'assible/modules/from_role'),
+        ('%s/modules/system/ping.py' % OFFSET, 'assible/modules/system/ping'),
+        ('%s/modules/cloud/amazon/s3.py' % OFFSET, 'assible/modules/cloud/amazon/s3'),
     )
 
     COLLECTION_PATHS = (
-        ('/root/ansible_collections/ns/col/plugins/modules/ping.py',
-         'ansible_collections/ns/col/plugins/modules/ping'),
-        ('/root/ansible_collections/ns/col/plugins/modules/subdir/ping.py',
-         'ansible_collections/ns/col/plugins/modules/subdir/ping'),
+        ('/root/assible_collections/ns/col/plugins/modules/ping.py',
+         'assible_collections/ns/col/plugins/modules/ping'),
+        ('/root/assible_collections/ns/col/plugins/modules/subdir/ping.py',
+         'assible_collections/ns/col/plugins/modules/subdir/ping'),
     )
 
-    @pytest.mark.parametrize('testcase', ANSIBLE_MODULE_UTIL_STRINGS)
+    @pytest.mark.parametrize('testcase', ASSIBLE_MODULE_UTIL_STRINGS)
     def test_detect_new_style_python_module_re(self, testcase):
         assert amc.NEW_STYLE_PYTHON_MODULE_RE.search(testcase)
 
-    @pytest.mark.parametrize('testcase', NOT_ANSIBLE_MODULE_UTIL_STRINGS)
+    @pytest.mark.parametrize('testcase', NOT_ASSIBLE_MODULE_UTIL_STRINGS)
     def test_no_detect_new_style_python_module_re(self, testcase):
         assert not amc.NEW_STYLE_PYTHON_MODULE_RE.search(testcase)
 

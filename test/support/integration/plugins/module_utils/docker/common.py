@@ -1,20 +1,20 @@
 #
-#  Copyright 2016 Red Hat | Ansible
+#  Copyright 2016 Red Hat | Assible
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -28,11 +28,11 @@ from datetime import timedelta
 from distutils.version import LooseVersion
 
 
-from ansible.module_utils.basic import AnsibleModule, env_fallback, missing_required_lib
-from ansible.module_utils.common._collections_compat import Mapping, Sequence
-from ansible.module_utils.six import string_types
-from ansible.module_utils.six.moves.urllib.parse import urlparse
-from ansible.module_utils.parsing.convert_bool import BOOLEANS_TRUE, BOOLEANS_FALSE
+from assible.module_utils.basic import AssibleModule, env_fallback, missing_required_lib
+from assible.module_utils.common._collections_compat import Mapping, Sequence
+from assible.module_utils.six import string_types
+from assible.module_utils.six.moves.urllib.parse import urlparse
+from assible.module_utils.parsing.convert_bool import BOOLEANS_TRUE, BOOLEANS_FALSE
 
 HAS_DOCKER_PY = True
 HAS_DOCKER_PY_2 = False
@@ -124,7 +124,7 @@ if not HAS_DOCKER_PY:
     docker_version = None
 
     # No Docker SDK for Python. Create a place holder client to allow
-    # instantiation of AnsibleModule and proper error handing
+    # instantiation of AssibleModule and proper error handing
     class Client(object):  # noqa: F811
         def __init__(self, **kwargs):
             pass
@@ -153,10 +153,10 @@ def is_valid_tag(tag, allow_empty=False):
 
 
 def sanitize_result(data):
-    """Sanitize data object for return to Ansible.
+    """Sanitize data object for return to Assible.
 
     When the data object contains types such as docker.types.containers.HostConfig,
-    Ansible will fail when these are returned via exit_json or fail_json.
+    Assible will fail when these are returned via exit_json or fail_json.
     HostConfig is derived from dict, but its constructor requires additional
     arguments. This function sanitizes data structures by recursively converting
     everything derived from dict to dict and everything derived from list (and tuple)
@@ -286,7 +286,7 @@ DOCKERPYUPGRADE_RECOMMEND_DOCKER = ("Use `pip install --upgrade docker-py` to up
                                     "`pip uninstall docker-py` instead, followed by `pip install docker`.")
 
 
-class AnsibleDockerClient(Client):
+class AssibleDockerClient(Client):
 
     def __init__(self, argument_spec=None, supports_check_mode=False, mutually_exclusive=None,
                  required_together=None, required_if=None, min_docker_version=MIN_DOCKER_VERSION,
@@ -313,7 +313,7 @@ class AnsibleDockerClient(Client):
         if required_together:
             required_together_params += required_together
 
-        self.module = AnsibleModule(
+        self.module = AssibleModule(
             argument_spec=merged_arg_spec,
             supports_check_mode=supports_check_mode,
             mutually_exclusive=mutually_exclusive_params,
@@ -358,7 +358,7 @@ class AnsibleDockerClient(Client):
         self._connect_params = get_connect_params(self.auth_params, fail_function=self.fail)
 
         try:
-            super(AnsibleDockerClient, self).__init__(**self._connect_params)
+            super(AssibleDockerClient, self).__init__(**self._connect_params)
             self.docker_api_version_str = self.version()['ApiVersion']
         except APIError as exc:
             self.fail("Docker API error: %s" % exc)
@@ -742,7 +742,7 @@ class AnsibleDockerClient(Client):
                     self._url('/distribution/{0}/json', image),
                     headers={'X-Registry-Auth': header}
                 ), json=True)
-        return super(AnsibleDockerClient, self).inspect_distribution(image, **kwargs)
+        return super(AssibleDockerClient, self).inspect_distribution(image, **kwargs)
 
 
 def compare_dict_allow_more_present(av, bv):
@@ -909,7 +909,7 @@ class DifferenceTracker(object):
 
 def clean_dict_booleans_for_docker_api(data):
     '''
-    Go doesn't like Python booleans 'True' or 'False', while Ansible is just
+    Go doesn't like Python booleans 'True' or 'False', while Assible is just
     fine with them in YAML. As such, they need to be converted in cases where
     we pass dictionaries to the Docker API (e.g. docker_network's
     driver_options and docker_prune's filters).

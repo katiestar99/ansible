@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -14,12 +14,12 @@ import tempfile
 import pytest
 
 from units.compat.mock import patch, MagicMock
-from ansible.module_utils._text import to_bytes
+from assible.module_utils._text import to_bytes
 
-from ansible.module_utils import basic
+from assible.module_utils import basic
 
 
-class TestAnsibleModuleSetCwd:
+class TestAssibleModuleSetCwd:
 
     def test_set_cwd(self, monkeypatch):
 
@@ -36,9 +36,9 @@ class TestAnsibleModuleSetCwd:
 
         monkeypatch.setattr(os, 'getcwd', mock_getcwd)
         monkeypatch.setattr(os, 'access', mock_access)
-        monkeypatch.setattr(basic, '_ANSIBLE_ARGS', to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': {}})))
+        monkeypatch.setattr(basic, '_ASSIBLE_ARGS', to_bytes(json.dumps({'ASSIBLE_MODULE_ARGS': {}})))
         with patch('time.time', return_value=42):
-            am = basic.AnsibleModule(argument_spec={})
+            am = basic.AssibleModule(argument_spec={})
 
         result = am._set_cwd()
         assert result == '/tmp'
@@ -72,9 +72,9 @@ class TestAnsibleModuleSetCwd:
         monkeypatch.setattr(os, 'chdir', mock_chdir)
         monkeypatch.setattr(os, 'access', mock_access)
         monkeypatch.setattr(os.path, 'expandvars', mock_expandvars)
-        monkeypatch.setattr(basic, '_ANSIBLE_ARGS', to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': {}})))
+        monkeypatch.setattr(basic, '_ASSIBLE_ARGS', to_bytes(json.dumps({'ASSIBLE_MODULE_ARGS': {}})))
         with patch('time.time', return_value=42):
-            am = basic.AnsibleModule(argument_spec={})
+            am = basic.AssibleModule(argument_spec={})
 
         am._tmpdir = '/tmp2'
         result = am._set_cwd()
@@ -109,9 +109,9 @@ class TestAnsibleModuleSetCwd:
         monkeypatch.setattr(os, 'chdir', mock_chdir)
         monkeypatch.setattr(os, 'access', mock_access)
         monkeypatch.setattr(os.path, 'expandvars', mock_expandvars)
-        monkeypatch.setattr(basic, '_ANSIBLE_ARGS', to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': {}})))
+        monkeypatch.setattr(basic, '_ASSIBLE_ARGS', to_bytes(json.dumps({'ASSIBLE_MODULE_ARGS': {}})))
         with patch('time.time', return_value=42):
-            am = basic.AnsibleModule(argument_spec={})
+            am = basic.AssibleModule(argument_spec={})
 
         am._tmpdir = '/tmp2'
         result = am._set_cwd()
@@ -148,9 +148,9 @@ class TestAnsibleModuleSetCwd:
         monkeypatch.setattr(os, 'chdir', mock_chdir)
         monkeypatch.setattr(os, 'access', mock_access)
         monkeypatch.setattr(os.path, 'expandvars', mock_expandvars)
-        monkeypatch.setattr(basic, '_ANSIBLE_ARGS', to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': {}})))
+        monkeypatch.setattr(basic, '_ASSIBLE_ARGS', to_bytes(json.dumps({'ASSIBLE_MODULE_ARGS': {}})))
         with patch('time.time', return_value=42):
-            am = basic.AnsibleModule(argument_spec={})
+            am = basic.AssibleModule(argument_spec={})
 
         am._tmpdir = '/tmp2'
         monkeypatch.setattr(tempfile, 'gettempdir', mock_gettempdir)
@@ -185,9 +185,9 @@ class TestAnsibleModuleSetCwd:
         monkeypatch.setattr(os, 'chdir', mock_chdir)
         monkeypatch.setattr(os, 'access', mock_access)
         monkeypatch.setattr(os.path, 'expandvars', mock_expandvars)
-        monkeypatch.setattr(basic, '_ANSIBLE_ARGS', to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': {}})))
+        monkeypatch.setattr(basic, '_ASSIBLE_ARGS', to_bytes(json.dumps({'ASSIBLE_MODULE_ARGS': {}})))
         with patch('time.time', return_value=42):
-            am = basic.AnsibleModule(argument_spec={})
+            am = basic.AssibleModule(argument_spec={})
 
         am._tmpdir = '/tmp2'
         monkeypatch.setattr(tempfile, 'gettempdir', mock_gettempdir)

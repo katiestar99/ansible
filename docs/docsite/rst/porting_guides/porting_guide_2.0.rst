@@ -2,15 +2,15 @@
 .. _porting_2.0_guide:
 
 *************************
-Ansible 2.0 Porting Guide
+Assible 2.0 Porting Guide
 *************************
 
-This section discusses the behavioral changes between Ansible 1.x and Ansible 2.0.
+This section discusses the behavioral changes between Assible 1.x and Assible 2.0.
 
-It is intended to assist in updating your playbooks, plugins and other parts of your Ansible infrastructure so they will work with this version of Ansible.
+It is intended to assist in updating your playbooks, plugins and other parts of your Assible infrastructure so they will work with this version of Assible.
 
 
-We suggest you read this page along with `Ansible Changelog for 2.0 <https://github.com/ansible/ansible/blob/stable-2.0/CHANGELOG.md>`_ to understand what updates you may need to make.
+We suggest you read this page along with `Assible Changelog for 2.0 <https://github.com/assible/assible/blob/stable-2.0/CHANGELOG.md>`_ to understand what updates you may need to make.
 
 This document is part of a collection on porting. The complete list of porting guides can be found at :ref:`porting guides <porting_guides>`.
 
@@ -37,9 +37,9 @@ To make an escaped string that will work on all versions you have two options::
 
 - debug: msg="{{ 'test1_junk 1\\3' | regex_replace('(.*)_junk (.*)', '\\1 \\2') }}"
 
-uses key=value escaping which has not changed.  The other option is to check for the ansible version::
+uses key=value escaping which has not changed.  The other option is to check for the assible version::
 
-"{{ (ansible_version|version_compare('2.0', 'ge'))|ternary( 'test1_junk 1\\3' | regex_replace('(.*)_junk (.*)', '\\1 \\2') , 'test1_junk 1\\\\3' | regex_replace('(.*)_junk (.*)', '\\\\1 \\\\2') ) }}"
+"{{ (assible_version|version_compare('2.0', 'ge'))|ternary( 'test1_junk 1\\3' | regex_replace('(.*)_junk (.*)', '\\1 \\2') , 'test1_junk 1\\\\3' | regex_replace('(.*)_junk (.*)', '\\\\1 \\\\2') ) }}"
 
 * trailing newline When a string with a trailing newline was specified in the
   playbook via yaml dict format, the trailing newline was stripped. When
@@ -68,9 +68,9 @@ uses key=value escaping which has not changed.  The other option is to check for
     # Output
     "msg": "Testing some things"
 
-* Behavior of templating DOS-type text files changes with Ansible v2.
+* Behavior of templating DOS-type text files changes with Assible v2.
 
-  A bug in Ansible v1 causes DOS-type text files (using a carriage return and newline) to be templated to Unix-type text files (using only a newline). In Ansible v2 this long-standing bug was finally fixed and DOS-type text files are preserved correctly. This may be confusing when you expect your playbook to not show any differences when migrating to Ansible v2, while in fact you will see every DOS-type file being completely replaced (with what appears to be the exact same content).
+  A bug in Assible v1 causes DOS-type text files (using a carriage return and newline) to be templated to Unix-type text files (using only a newline). In Assible v2 this long-standing bug was finally fixed and DOS-type text files are preserved correctly. This may be confusing when you expect your playbook to not show any differences when migrating to Assible v2, while in fact you will see every DOS-type file being completely replaced (with what appears to be the exact same content).
 
 * When specifying complex args as a variable, the variable must use the full jinja2
   variable syntax (```{{var_name}}```) - bare variable names there are no longer accepted.
@@ -92,24 +92,24 @@ uses key=value escaping which has not changed.  The other option is to check for
 
 * porting task includes
 * More dynamic. Corner-case formats that were not supposed to work now do not, as expected.
-* variables defined in the yaml dict format https://github.com/ansible/ansible/issues/13324
+* variables defined in the yaml dict format https://github.com/assible/assible/issues/13324
 * templating (variables in playbooks and template lookups) has improved with regard to keeping the original instead of turning everything into a string.
   If you need the old behavior, quote the value to pass it around as a string.
 * Empty variables and variables set to null in yaml are no longer converted to empty strings. They will retain the value of `None`.
-  You can override the `null_representation` setting to an empty string in your config file by setting the :envvar:`ANSIBLE_NULL_REPRESENTATION` environment variable.
-* Extras callbacks must be whitelisted in ansible.cfg. Copying is no longer necessary but whitelisting in ansible.cfg must be completed.
+  You can override the `null_representation` setting to an empty string in your config file by setting the :envvar:`ASSIBLE_NULL_REPRESENTATION` environment variable.
+* Extras callbacks must be whitelisted in assible.cfg. Copying is no longer necessary but whitelisting in assible.cfg must be completed.
 * dnf module has been rewritten. Some minor changes in behavior may be observed.
 * win_updates has been rewritten and works as expected now.
 * from 2.0.1 onwards, the implicit setup task from gather_facts now correctly inherits everything from play, but this might cause issues for those setting
-  `environment` at the play level and depending on `ansible_env` existing. Previously this was ignored but now might issue an 'Undefined' error.
+  `environment` at the play level and depending on `assible_env` existing. Previously this was ignored but now might issue an 'Undefined' error.
 
 Deprecated
 ----------
 
-While all items listed here will show a deprecation warning message, they still work as they did in 1.9.x. Please note that they will be removed in 2.2 (Ansible always waits two major releases to remove a deprecated feature).
+While all items listed here will show a deprecation warning message, they still work as they did in 1.9.x. Please note that they will be removed in 2.2 (Assible always waits two major releases to remove a deprecated feature).
 
 * Bare variables in ``with_`` loops should instead use the ``"{{ var }}"`` syntax, which helps eliminate ambiguity.
-* The ansible-galaxy text format requirements file. Users should use the YAML format for requirements instead.
+* The assible-galaxy text format requirements file. Users should use the YAML format for requirements instead.
 * Undefined variables within a ``with_`` loop's list currently do not interrupt the loop, but they do issue a warning; in the future, they will issue an error.
 * Using dictionary variables to set all task parameters is unsafe and will be removed in a future version. For example::
 
@@ -207,7 +207,7 @@ Here are some corner cases encountered when updating. These are mostly caused by
 
     with_items: var1 + var2
 
-  An issue with the 'bare variable' features, which was supposed only template a single variable without the need of braces ({{ )}}, would in some versions of Ansible template full expressions.
+  An issue with the 'bare variable' features, which was supposed only template a single variable without the need of braces ({{ )}}, would in some versions of Assible template full expressions.
   Now you need to use proper templating and braces for all expressions everywhere except conditionals (`when`)::
 
     with_items: "{{var1 + var2}}"
@@ -217,7 +217,7 @@ Here are some corner cases encountered when updating. These are mostly caused by
 Porting plugins
 ===============
 
-In ansible-1.9.x, you would generally copy an existing plugin to create a new one. Simply implementing the methods and attributes that the caller of the plugin expected made it a plugin of that type. In ansible-2.0, most plugins are implemented by subclassing a base class for each plugin type. This way the custom plugin does not need to contain methods which are not customized.
+In assible-1.9.x, you would generally copy an existing plugin to create a new one. Simply implementing the methods and attributes that the caller of the plugin expected made it a plugin of that type. In assible-2.0, most plugins are implemented by subclassing a base class for each plugin type. This way the custom plugin does not need to contain methods which are not customized.
 
 
 Lookup plugins
@@ -240,16 +240,16 @@ Action plugins
 Callback plugins
 ----------------
 
-Although Ansible 2.0 provides a new callback API the old one continues to work
+Although Assible 2.0 provides a new callback API the old one continues to work
 for most callback plugins.  However, if your callback plugin makes use of
 :attr:`self.playbook`, :attr:`self.play`, or :attr:`self.task` then you will
-have to store the values for these yourself as ansible no longer automatically
+have to store the values for these yourself as assible no longer automatically
 populates the callback with them.  Here's a short snippet that shows you how:
 
 .. code-block:: python
 
     import os
-    from ansible.plugins.callback import CallbackBase
+    from assible.plugins.callback import CallbackBase
 
     class CallbackModule(CallbackBase):
         def __init__(self):
@@ -282,23 +282,23 @@ Connection plugins
 Hybrid plugins
 ==============
 
-In specific cases you may want a plugin that supports both ansible-1.9.x *and* ansible-2.0. Much like porting plugins from v1 to v2, you need to understand how plugins work in each version and support both requirements.
+In specific cases you may want a plugin that supports both assible-1.9.x *and* assible-2.0. Much like porting plugins from v1 to v2, you need to understand how plugins work in each version and support both requirements.
 
-Since the ansible-2.0 plugin system is more advanced, it is easier to adapt your plugin to provide similar pieces (subclasses, methods) for ansible-1.9.x as ansible-2.0 expects. This way your code will look a lot cleaner.
+Since the assible-2.0 plugin system is more advanced, it is easier to adapt your plugin to provide similar pieces (subclasses, methods) for assible-1.9.x as assible-2.0 expects. This way your code will look a lot cleaner.
 
 You may find the following tips useful:
 
-* Check whether the ansible-2.0 class(es) are available and if they are missing (ansible-1.9.x) mimic them with the needed methods (for example, ``__init__``)
+* Check whether the assible-2.0 class(es) are available and if they are missing (assible-1.9.x) mimic them with the needed methods (for example, ``__init__``)
 
-* When ansible-2.0 python modules are imported, and they fail (ansible-1.9.x), catch the ``ImportError`` exception and perform the equivalent imports for ansible-1.9.x. With possible translations (for example, importing specific methods).
+* When assible-2.0 python modules are imported, and they fail (assible-1.9.x), catch the ``ImportError`` exception and perform the equivalent imports for assible-1.9.x. With possible translations (for example, importing specific methods).
 
-* Use the existence of these methods as a qualifier to what version of Ansible you are running. So rather than using version checks, you can do capability checks instead. (See examples below)
+* Use the existence of these methods as a qualifier to what version of Assible you are running. So rather than using version checks, you can do capability checks instead. (See examples below)
 
-* Document for each if-then-else case for which specific version each block is needed. This will help others to understand how they have to adapt their plugins, but it will also help you to remove the older ansible-1.9.x support when it is deprecated.
+* Document for each if-then-else case for which specific version each block is needed. This will help others to understand how they have to adapt their plugins, but it will also help you to remove the older assible-1.9.x support when it is deprecated.
 
 * When doing plugin development, it is very useful to have the ``warning()`` method during development, but it is also important to emit warnings for deadends (cases that you expect should never be triggered) or corner cases (for example, cases where you expect misconfigurations).
 
-* It helps to look at other plugins in ansible-1.9.x and ansible-2.0 to understand how the API works and what modules, classes and methods are available.
+* It helps to look at other plugins in assible-1.9.x and assible-2.0 to understand how the API works and what modules, classes and methods are available.
 
 
 Lookup plugins
@@ -315,10 +315,10 @@ As a simple example we are going to make a hybrid ``fileglob`` lookup plugin.
     import glob
 
     try:
-        # ansible-2.0
-        from ansible.plugins.lookup import LookupBase
+        # assible-2.0
+        from assible.plugins.lookup import LookupBase
     except ImportError:
-        # ansible-1.9.x
+        # assible-1.9.x
 
         class LookupBase(object):
             def __init__(self, basedir=None, runner=None, **kwargs):
@@ -329,22 +329,22 @@ As a simple example we are going to make a hybrid ``fileglob`` lookup plugin.
                 return self.basedir
 
     try:
-        # ansible-1.9.x
-        from ansible.utils import (listify_lookup_plugin_terms, path_dwim, warning)
+        # assible-1.9.x
+        from assible.utils import (listify_lookup_plugin_terms, path_dwim, warning)
     except ImportError:
-        # ansible-2.0
-        from ansible.utils.display import Display
+        # assible-2.0
+        from assible.utils.display import Display
         warning = Display().warning
 
     class LookupModule(LookupBase):
 
-        # For ansible-1.9.x, we added inject=None as valid argument
+        # For assible-1.9.x, we added inject=None as valid argument
         def run(self, terms, inject=None, variables=None, **kwargs):
 
-            # ansible-2.0, but we made this work for ansible-1.9.x too !
+            # assible-2.0, but we made this work for assible-1.9.x too !
             basedir = self.get_basedir(variables)
 
-            # ansible-1.9.x
+            # assible-1.9.x
             if 'listify_lookup_plugin_terms' in globals():
                 terms = listify_lookup_plugin_terms(terms, basedir, inject)
 
@@ -352,12 +352,12 @@ As a simple example we are going to make a hybrid ``fileglob`` lookup plugin.
             for term in terms:
                 term_file = os.path.basename(term)
 
-                # For ansible-1.9.x, we imported path_dwim() from ansible.utils
+                # For assible-1.9.x, we imported path_dwim() from assible.utils
                 if 'path_dwim' in globals():
-                    # ansible-1.9.x
+                    # assible-1.9.x
                     dwimmed_path = path_dwim(basedir, os.path.dirname(term))
                 else:
-                    # ansible-2.0
+                    # assible-2.0
                     dwimmed_path = self._loader.path_dwim_relative(basedir, 'files', os.path.dirname(term))
 
                 globbed = glob.glob(os.path.join(dwimmed_path, term_file))
@@ -393,4 +393,4 @@ Connection plugins
 Porting custom scripts
 ======================
 
-Custom scripts that used the ``ansible.runner.Runner`` API in 1.x have to be ported in 2.x.  Please refer to: :ref:`developing_api`
+Custom scripts that used the ``assible.runner.Runner`` API in 1.x have to be ported in 2.x.  Please refer to: :ref:`developing_api`

@@ -1,6 +1,6 @@
 ---
 - name: Remove Config
-  ansible.netcommon.cli_config:
+  assible.netcommon.cli_config:
     config: "{{ lines }}"
   vars:
     lines: |

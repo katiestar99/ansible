@@ -1,19 +1,19 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -21,11 +21,11 @@ __metaclass__ = type
 import ast
 import sys
 
-from ansible import constants as C
-from ansible.module_utils.common.text.converters import container_to_text, to_native
-from ansible.module_utils.six import string_types, PY2
-from ansible.module_utils.six.moves import builtins
-from ansible.plugins.loader import filter_loader, test_loader
+from assible import constants as C
+from assible.module_utils.common.text.converters import container_to_text, to_native
+from assible.module_utils.six import string_types, PY2
+from assible.module_utils.six.moves import builtins
+from assible.plugins.loader import filter_loader, test_loader
 
 
 def safe_eval(expr, locals=None, include_exceptions=False):

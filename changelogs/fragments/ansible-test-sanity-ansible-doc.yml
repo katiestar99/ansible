@@ -1,2 +1,2 @@
 bugfixes:
-  - ansible-test - The ``ansible-doc`` sanity test now works for ``netconf`` plugins.
+  - assible-test - The ``assible-doc`` sanity test now works for ``netconf`` plugins.

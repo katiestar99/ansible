@@ -72,23 +72,23 @@ except AttributeError:
 
 COVERAGE_CONFIG_NAME = 'coveragerc'
 
-ANSIBLE_TEST_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ASSIBLE_TEST_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # assume running from install
-ANSIBLE_ROOT = os.path.dirname(ANSIBLE_TEST_ROOT)
-ANSIBLE_BIN_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
-ANSIBLE_LIB_ROOT = os.path.join(ANSIBLE_ROOT, 'ansible')
-ANSIBLE_SOURCE_ROOT = None
+ASSIBLE_ROOT = os.path.dirname(ASSIBLE_TEST_ROOT)
+ASSIBLE_BIN_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+ASSIBLE_LIB_ROOT = os.path.join(ASSIBLE_ROOT, 'assible')
+ASSIBLE_SOURCE_ROOT = None
 
-if not os.path.exists(ANSIBLE_LIB_ROOT):
+if not os.path.exists(ASSIBLE_LIB_ROOT):
     # running from source
-    ANSIBLE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(ANSIBLE_TEST_ROOT)))
-    ANSIBLE_BIN_PATH = os.path.join(ANSIBLE_ROOT, 'bin')
-    ANSIBLE_LIB_ROOT = os.path.join(ANSIBLE_ROOT, 'lib', 'ansible')
-    ANSIBLE_SOURCE_ROOT = ANSIBLE_ROOT
+    ASSIBLE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(ASSIBLE_TEST_ROOT)))
+    ASSIBLE_BIN_PATH = os.path.join(ASSIBLE_ROOT, 'bin')
+    ASSIBLE_LIB_ROOT = os.path.join(ASSIBLE_ROOT, 'lib', 'assible')
+    ASSIBLE_SOURCE_ROOT = ASSIBLE_ROOT
 
-ANSIBLE_TEST_DATA_ROOT = os.path.join(ANSIBLE_TEST_ROOT, '_data')
-ANSIBLE_TEST_CONFIG_ROOT = os.path.join(ANSIBLE_TEST_ROOT, 'config')
+ASSIBLE_TEST_DATA_ROOT = os.path.join(ASSIBLE_TEST_ROOT, '_data')
+ASSIBLE_TEST_CONFIG_ROOT = os.path.join(ASSIBLE_TEST_ROOT, 'config')
 
 # Modes are set to allow all users the same level of access.
 # This permits files to be used in tests that change users.
@@ -215,23 +215,23 @@ def find_python(version, path=None, required=True):
     return python_bin
 
 
-def get_ansible_version():  # type: () -> str
-    """Return the Ansible version."""
+def get_assible_version():  # type: () -> str
+    """Return the Assible version."""
     try:
-        return get_ansible_version.version
+        return get_assible_version.version
     except AttributeError:
         pass
 
-    # ansible may not be in our sys.path
-    # avoids a symlink to release.py since ansible placement relative to ansible-test may change during delegation
-    load_module(os.path.join(ANSIBLE_LIB_ROOT, 'release.py'), 'ansible_release')
+    # assible may not be in our sys.path
+    # avoids a symlink to release.py since assible placement relative to assible-test may change during delegation
+    load_module(os.path.join(ASSIBLE_LIB_ROOT, 'release.py'), 'assible_release')
 
     # noinspection PyUnresolvedReferences
-    from ansible_release import __version__ as ansible_version  # pylint: disable=import-error
+    from assible_release import __version__ as assible_version  # pylint: disable=import-error
 
-    get_ansible_version.version = ansible_version
+    get_assible_version.version = assible_version
 
-    return ansible_version
+    return assible_version
 
 
 def get_available_python_versions(versions):  # type: (t.List[str]) -> t.Dict[str, str]
@@ -252,7 +252,7 @@ def generate_pip_command(python):
     :type python: str
     :rtype: list[str]
     """
-    return [python, os.path.join(ANSIBLE_TEST_DATA_ROOT, 'quiet_pip.py')]
+    return [python, os.path.join(ASSIBLE_TEST_DATA_ROOT, 'quiet_pip.py')]
 
 
 def raw_command(cmd, capture=False, env=None, data=None, cwd=None, explain=False, stdin=None, stdout=None,
@@ -372,7 +372,7 @@ def common_environment():
         # Example configuration for macOS:
         # export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
         'OBJC_DISABLE_INITIALIZE_FORK_SAFETY',
-        'ANSIBLE_KEEP_REMOTE_FILES',
+        'ASSIBLE_KEEP_REMOTE_FILES',
         # MacOS Homebrew Compatibility
         # https://cryptography.io/en/latest/installation/#building-cryptography-on-macos
         # This may also be required to install pyyaml with libyaml support when installed in non-standard locations.

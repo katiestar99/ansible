@@ -1,4 +1,4 @@
-# Copyright: (c) 2018, Toshio Kuratomi <tkuratomi@ansible.com>
+# Copyright: (c) 2018, Toshio Kuratomi <tkuratomi@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -6,18 +6,18 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 """
-Context of the running Ansible.
+Context of the running Assible.
 
-In the future we *may* create Context objects to allow running multiple Ansible plays in parallel
-with different contexts but that is currently out of scope as the Ansible library is just for
-running the ansible command line tools.
+In the future we *may* create Context objects to allow running multiple Assible plays in parallel
+with different contexts but that is currently out of scope as the Assible library is just for
+running the assible command line tools.
 
-These APIs are still in flux so do not use them unless you are willing to update them with every Ansible release
+These APIs are still in flux so do not use them unless you are willing to update them with every Assible release
 """
 
-from ansible.module_utils.common._collections_compat import Mapping, Set
-from ansible.module_utils.common.collections import is_sequence
-from ansible.utils.context_objects import CLIArgs, GlobalCLIArgs
+from assible.module_utils.common._collections_compat import Mapping, Set
+from assible.module_utils.common.collections import is_sequence
+from assible.utils.context_objects import CLIArgs, GlobalCLIArgs
 
 
 __all__ = ('CLIARGS',)

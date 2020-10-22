@@ -5,18 +5,18 @@ Grammar and Punctuation
 Common Styles and Usage, and Common Mistakes
 ----------------------------------------------------
 
-Ansible
+Assible
 ~~~~~~~~~
-* Write "Ansible." Not "Ansible, Inc." or "AnsibleWorks The only exceptions to this rule are when we're writing legal or financial statements.
+* Write "Assible." Not "Assible, Inc." or "AssibleWorks The only exceptions to this rule are when we're writing legal or financial statements.
 
 * Never use the logotype by itself in body text. Always keep the same font you are using the rest of the sentence.
 
-* A company is singular in the US. In other words, Ansible is an "it," not a "they."
+* A company is singular in the US. In other words, Assible is an "it," not a "they."
 
 
 Capitalization
 ~~~~~~~~~~~~~~
-If it's not a real product, service, or department at Ansible, don't capitalize it. Not even if it seems important. Capitalize only the first letter of the first word in headlines.
+If it's not a real product, service, or department at Assible, don't capitalize it. Not even if it seems important. Capitalize only the first letter of the first word in headlines.
 
 Colon
 ~~~~~~~~~~~~~~~~~
@@ -64,7 +64,7 @@ If that does not convince you, maybe this will:
 
 Contractions
 ~~~~~~~~~~~~~
-Do not use contractions in Ansible documents.
+Do not use contractions in Assible documents.
 
 Em dashes
 ~~~~~~~~~~
@@ -105,7 +105,7 @@ It is fine to use "you" when giving instructions and "the user," "new users," an
 
 Never use "one" in place of "you" when writing technical documentation. Using "one" is far too formal.
 
-Never use "we" when writing. "We" aren't doing anything on the user side. Ansible's products are doing the work as requested by the user.
+Never use "we" when writing. "We" aren't doing anything on the user side. Assible's products are doing the work as requested by the user.
 
 
 Hyphen

@@ -1,4 +1,4 @@
-.. _ansible_faq:
+.. _assible_faq:
 
 Frequently Asked Questions
 ==========================
@@ -10,18 +10,18 @@ Here are some commonly asked questions and their answers.
 Where did all the modules go?
 +++++++++++++++++++++++++++++
 
-In July, 2019, we announced that collections would be the `future of Ansible content delivery <https://www.ansible.com/blog/the-future-of-ansible-content-delivery>`_. A collection is a distribution format for Ansible content that can include playbooks, roles, modules, and plugins. In Ansible 2.9 we added support for collections. In Ansible 2.10 we `extracted most modules from the main ansible/ansible repository <https://access.redhat.com/solutions/5295121>`_ and placed them in :ref:`collections <list_of_collections>`. Collections may be maintained by the Ansible team, by the Ansible community, or by Ansible partners. The `ansible/ansible repository <https://github.com/ansible/ansible>`_ now contains the code for basic features and functions, such as copying module code to managed nodes. This code is also known as ``ansible-base``.
+In July, 2019, we announced that collections would be the `future of Assible content delivery <https://www.assible.com/blog/the-future-of-assible-content-delivery>`_. A collection is a distribution format for Assible content that can include playbooks, roles, modules, and plugins. In Assible 2.9 we added support for collections. In Assible 2.10 we `extracted most modules from the main assible/assible repository <https://access.redhat.com/solutions/5295121>`_ and placed them in :ref:`collections <list_of_collections>`. Collections may be maintained by the Assible team, by the Assible community, or by Assible partners. The `assible/assible repository <https://github.com/assible/assible>`_ now contains the code for basic features and functions, such as copying module code to managed nodes. This code is also known as ``assible-base``.
 
 * To learn more about using collections, see :ref:`collections`.
 * To learn more about developing collections, see :ref:`developing_collections`.
-* To learn more about contributing to existing collections, see the individual collection repository for guidelines, or see :ref:`contributing_maintained_collections` to contribute to one of the Ansible-maintained collections.
+* To learn more about contributing to existing collections, see the individual collection repository for guidelines, or see :ref:`contributing_maintained_collections` to contribute to one of the Assible-maintained collections.
 
 .. _find_my_module:
 
 Where did this specific module go?
 ++++++++++++++++++++++++++++++++++
 
-IF you are searching for a specific module, you can check the `runtime.yml <https://github.com/ansible/ansible/blob/devel/lib/ansible/config/ansible_builtin_runtime.yml>`_ file, which lists the first destination for each module that we extracted from the main ansible/ansible repository. Some modules have moved again since then. You can also search on `Ansible Galaxy <https://galaxy.ansible.com/>`_ or ask on one of our :ref:`IRC channels <communication_irc>`.
+IF you are searching for a specific module, you can check the `runtime.yml <https://github.com/assible/assible/blob/devel/lib/assible/config/assible_builtin_runtime.yml>`_ file, which lists the first destination for each module that we extracted from the main assible/assible repository. Some modules have moved again since then. You can also search on `Assible Galaxy <https://galaxy.assible.com/>`_ or ask on one of our :ref:`IRC channels <communication_irc>`.
 
 .. _set_environment:
 
@@ -41,7 +41,7 @@ Setting environment variables can be done with the `environment` keyword. It can
 
     hosts: servers
     environment:
-      PATH: "{{ ansible_env.PATH }}:/thingy/bin"
+      PATH: "{{ assible_env.PATH }}:/thingy/bin"
       SOME: value
 
 .. note:: starting in 2.0.1 the setup task from ``gather_facts`` also inherits the environment directive from the play, you might need to use the ``|default`` filter to avoid errors if setting this at play level.
@@ -58,36 +58,36 @@ For instance, suppose these hosts have different usernames and ports:
 .. code-block:: ini
 
     [webservers]
-    asdf.example.com  ansible_port=5000   ansible_user=alice
-    jkl.example.com   ansible_port=5001   ansible_user=bob
+    asdf.example.com  assible_port=5000   assible_user=alice
+    jkl.example.com   assible_port=5001   assible_user=bob
 
 You can also dictate the connection type to be used, if you want:
 
 .. code-block:: ini
 
     [testcluster]
-    localhost           ansible_connection=local
-    /path/to/chroot1    ansible_connection=chroot
-    foo.example.com     ansible_connection=paramiko
+    localhost           assible_connection=local
+    /path/to/chroot1    assible_connection=chroot
+    foo.example.com     assible_connection=paramiko
 
 You may also wish to keep these in group variables instead, or file them in a group_vars/<groupname> file.
 See the rest of the documentation for more information about how to organize variables.
 
 .. _use_ssh:
 
-How do I get ansible to reuse connections, enable Kerberized SSH, or have Ansible pay attention to my local SSH config file?
+How do I get assible to reuse connections, enable Kerberized SSH, or have Assible pay attention to my local SSH config file?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Switch your default connection type in the configuration file to ``ssh``, or use ``-c ssh`` to use
-Native OpenSSH for connections instead of the python paramiko library. In Ansible 1.2.1 and later, ``ssh`` will be used
+Native OpenSSH for connections instead of the python paramiko library. In Assible 1.2.1 and later, ``ssh`` will be used
 by default if OpenSSH is new enough to support ControlPersist as an option.
 
-Paramiko is great for starting out, but the OpenSSH type offers many advanced options. You will want to run Ansible
+Paramiko is great for starting out, but the OpenSSH type offers many advanced options. You will want to run Assible
 from a machine new enough to support ControlPersist, if you are using this connection type. You can still manage
 older clients. If you are using RHEL 6, CentOS 6, SLES 10 or SLES 11 the version of OpenSSH is still a bit old, so
 consider managing from a Fedora or openSUSE client even though you are managing older nodes, or just use paramiko.
 
-We keep paramiko as the default as if you are first installing Ansible on these enterprise operating systems, it offers a better experience for new users.
+We keep paramiko as the default as if you are first installing Assible on these enterprise operating systems, it offers a better experience for new users.
 
 .. _use_ssh_jump_hosts:
 
@@ -95,79 +95,79 @@ How do I configure a jump host to access servers that I have no direct access to
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 You can set a ``ProxyCommand`` in the
-``ansible_ssh_common_args`` inventory variable. Any arguments specified in
+``assible_ssh_common_args`` inventory variable. Any arguments specified in
 this variable are added to the sftp/scp/ssh command line when connecting
 to the relevant host(s). Consider the following inventory group:
 
 ..  code-block:: ini
 
     [gatewayed]
-    foo ansible_host=192.0.2.1
-    bar ansible_host=192.0.2.2
+    foo assible_host=192.0.2.1
+    bar assible_host=192.0.2.2
 
 You can create `group_vars/gatewayed.yml` with the following contents::
 
-    ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q user@gateway.example.com"'
+    assible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q user@gateway.example.com"'
 
-Ansible will append these arguments to the command line when trying to
+Assible will append these arguments to the command line when trying to
 connect to any hosts in the group ``gatewayed``. (These arguments are used
-in addition to any ``ssh_args`` from ``ansible.cfg``, so you do not need to
-repeat global ``ControlPersist`` settings in ``ansible_ssh_common_args``.)
+in addition to any ``ssh_args`` from ``assible.cfg``, so you do not need to
+repeat global ``ControlPersist`` settings in ``assible_ssh_common_args``.)
 
 Note that ``ssh -W`` is available only with OpenSSH 5.4 or later. With
 older versions, it's necessary to execute ``nc %h:%p`` or some equivalent
 command on the bastion host.
 
-With earlier versions of Ansible, it was necessary to configure a
+With earlier versions of Assible, it was necessary to configure a
 suitable ``ProxyCommand`` for one or more hosts in ``~/.ssh/config``,
-or globally by setting ``ssh_args`` in ``ansible.cfg``.
+or globally by setting ``ssh_args`` in ``assible.cfg``.
 
 .. _ssh_serveraliveinterval:
 
-How do I get Ansible to notice a dead target in a timely manner?
+How do I get Assible to notice a dead target in a timely manner?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-You can add ``-o ServerAliveInterval=NumberOfSeconds`` in ``ssh_args`` from ``ansible.cfg``. Without this option,
-SSH and therefore Ansible will wait until the TCP connection times out. Another solution is to add ``ServerAliveInterval``
+You can add ``-o ServerAliveInterval=NumberOfSeconds`` in ``ssh_args`` from ``assible.cfg``. Without this option,
+SSH and therefore Assible will wait until the TCP connection times out. Another solution is to add ``ServerAliveInterval``
 into your global SSH configuration. A good value for ``ServerAliveInterval`` is up to you to decide; keep in mind that
 ``ServerAliveCountMax=3`` is the SSH default so any value you set will be tripled before terminating the SSH session.
 
 .. _cloud_provider_performance:
 
-How do I speed up run of ansible for servers from cloud providers (EC2, openstack,.. )?
+How do I speed up run of assible for servers from cloud providers (EC2, openstack,.. )?
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Don't try to manage a fleet of machines of a cloud provider from your laptop.
-Rather connect to a management node inside this cloud provider first and run Ansible from there.
+Rather connect to a management node inside this cloud provider first and run Assible from there.
 
 .. _python_interpreters:
 
 How do I handle not having a Python interpreter at /usr/bin/python on a remote machine?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-While you can write Ansible modules in any language, most Ansible modules are written in Python,
-including the ones central to letting Ansible work.
+While you can write Assible modules in any language, most Assible modules are written in Python,
+including the ones central to letting Assible work.
 
-By default, Ansible assumes it can find a :command:`/usr/bin/python` on your remote system that is
+By default, Assible assumes it can find a :command:`/usr/bin/python` on your remote system that is
 either Python2, version 2.6 or higher or Python3, 3.5 or higher.
 
-Setting the inventory variable ``ansible_python_interpreter`` on any host will tell Ansible to
+Setting the inventory variable ``assible_python_interpreter`` on any host will tell Assible to
 auto-replace the Python interpreter with that value instead. Thus, you can point to any Python you
 want on the system if :command:`/usr/bin/python` on your system does not point to a compatible
 Python interpreter.
 
 Some platforms may only have Python 3 installed by default. If it is not installed as
 :command:`/usr/bin/python`, you will need to configure the path to the interpreter via
-``ansible_python_interpreter``. Although most core modules will work with Python 3, there may be some
+``assible_python_interpreter``. Although most core modules will work with Python 3, there may be some
 special purpose ones which do not or you may encounter a bug in an edge case. As a temporary
-workaround you can install Python 2 on the managed host and configure Ansible to use that Python via
-``ansible_python_interpreter``. If there's no mention in the module's documentation that the module
+workaround you can install Python 2 on the managed host and configure Assible to use that Python via
+``assible_python_interpreter``. If there's no mention in the module's documentation that the module
 requires Python 2, you can also report a bug on our `bug tracker
-<https://github.com/ansible/ansible/issues>`_ so that the incompatibility can be fixed in a future release.
+<https://github.com/assible/assible/issues>`_ so that the incompatibility can be fixed in a future release.
 
-Do not replace the shebang lines of your python modules. Ansible will do this for you automatically at deploy time.
+Do not replace the shebang lines of your python modules. Assible will do this for you automatically at deploy time.
 
-Also, this works for ANY interpreter, for example ruby: ``ansible_ruby_interpreter``, perl: ``ansible_perl_interpreter``, and so on,
+Also, this works for ANY interpreter, for example ruby: ``assible_ruby_interpreter``, perl: ``assible_perl_interpreter``, and so on,
 so you can use this for custom modules written in any scripting language and control the interpreter location.
 
 Keep in mind that if you put ``env`` in your module shebang line (``#!/usr/bin/env <other>``),
@@ -175,12 +175,12 @@ this facility will be ignored so you will be at the mercy of the remote `$PATH`.
 
 .. _installation_faqs:
 
-How do I handle the package dependencies required by Ansible package dependencies during Ansible installation ?
+How do I handle the package dependencies required by Assible package dependencies during Assible installation ?
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-While installing Ansible, sometimes you may encounter errors such as `No package 'libffi' found` or `fatal error: Python.h: No such file or directory`
-These errors are generally caused by the missing packages, which are dependencies of the packages required by Ansible.
-For example, `libffi` package is dependency of `pynacl` and `paramiko` (Ansible -> paramiko -> pynacl -> libffi).
+While installing Assible, sometimes you may encounter errors such as `No package 'libffi' found` or `fatal error: Python.h: No such file or directory`
+These errors are generally caused by the missing packages, which are dependencies of the packages required by Assible.
+For example, `libffi` package is dependency of `pynacl` and `paramiko` (Assible -> paramiko -> pynacl -> libffi).
 
 In order to solve these kinds of dependency issues, you might need to install required packages using
 the OS native package managers, such as `yum`, `dnf`, or `apt`, or as mentioned in the package installation guide.
@@ -198,21 +198,21 @@ A number of them! For a definitive list please see this `Knowledge Base article 
 Running in a virtualenv
 -----------------------
 
-You can install Ansible into a virtualenv on the controller quite simply:
+You can install Assible into a virtualenv on the controller quite simply:
 
 .. code-block:: shell
 
-    $ virtualenv ansible
-    $ source ./ansible/bin/activate
-    $ pip install ansible
+    $ virtualenv assible
+    $ source ./assible/bin/activate
+    $ pip install assible
 
 If you want to run under Python 3 instead of Python 2 you may want to change that slightly:
 
 .. code-block:: shell
 
-    $ virtualenv -p python3 ansible
-    $ source ./ansible/bin/activate
-    $ pip install ansible
+    $ virtualenv -p python3 assible
+    $ source ./assible/bin/activate
+    $ pip install assible
 
 If you need to use any libraries which are not available via pip (for instance, SELinux Python
 bindings on systems such as Red Hat Enterprise Linux or Fedora that have SELinux enabled), then you
@@ -223,15 +223,15 @@ need to install them into the virtualenv. There are two methods:
 
   .. code-block:: shell
 
-      $ virtualenv ansible --system-site-packages
+      $ virtualenv assible --system-site-packages
 
 * Copy those files in manually from the system. For instance, for SELinux bindings you might do:
 
   .. code-block:: shell
 
-      $ virtualenv ansible --system-site-packages
-      $ cp -r -v /usr/lib64/python3.*/site-packages/selinux/ ./py3-ansible/lib64/python3.*/site-packages/
-      $ cp -v /usr/lib64/python3.*/site-packages/*selinux*.so ./py3-ansible/lib64/python3.*/site-packages/
+      $ virtualenv assible --system-site-packages
+      $ cp -r -v /usr/lib64/python3.*/site-packages/selinux/ ./py3-assible/lib64/python3.*/site-packages/
+      $ cp -v /usr/lib64/python3.*/site-packages/*selinux*.so ./py3-assible/lib64/python3.*/site-packages/
 
 
 Running on BSD
@@ -244,42 +244,42 @@ Running on Solaris
 ------------------
 
 By default, Solaris 10 and earlier run a non-POSIX shell which does not correctly expand the default
-tmp directory Ansible uses ( :file:`~/.ansible/tmp`). If you see module failures on Solaris machines, this
+tmp directory Assible uses ( :file:`~/.assible/tmp`). If you see module failures on Solaris machines, this
 is likely the problem. There are several workarounds:
 
 * You can set ``remote_tmp`` to a path that will expand correctly with the shell you are using
   (see the plugin documentation for :ref:`C shell<csh_shell>`, :ref:`fish shell<fish_shell>`,
-  and :ref:`Powershell<powershell_shell>`). For example, in the ansible config file you can set::
+  and :ref:`Powershell<powershell_shell>`). For example, in the assible config file you can set::
 
-    remote_tmp=$HOME/.ansible/tmp
+    remote_tmp=$HOME/.assible/tmp
 
-  In Ansible 2.5 and later, you can also set it per-host in inventory like this::
+  In Assible 2.5 and later, you can also set it per-host in inventory like this::
 
-    solaris1 ansible_remote_tmp=$HOME/.ansible/tmp
+    solaris1 assible_remote_tmp=$HOME/.assible/tmp
 
-* You can set :ref:`ansible_shell_executable<ansible_shell_executable>` to the path to a POSIX compatible shell. For
+* You can set :ref:`assible_shell_executable<assible_shell_executable>` to the path to a POSIX compatible shell. For
   instance, many Solaris hosts have a POSIX shell located at :file:`/usr/xpg4/bin/sh` so you can set
   this in inventory like so::
 
-    solaris1 ansible_shell_executable=/usr/xpg4/bin/sh
+    solaris1 assible_shell_executable=/usr/xpg4/bin/sh
 
   (bash, ksh, and zsh should also be POSIX compatible if you have any of those installed).
 
 Running on z/OS
 ---------------
 
-There are a few common errors that one might run into when trying to execute Ansible on z/OS as a target.
+There are a few common errors that one might run into when trying to execute Assible on z/OS as a target.
 
-* Version 2.7.6 of python for z/OS will not work with Ansible because it represents strings internally as EBCDIC.
+* Version 2.7.6 of python for z/OS will not work with Assible because it represents strings internally as EBCDIC.
 
   To get around this limitation, download and install a later version of `python for z/OS <https://www.rocketsoftware.com/zos-open-source>`_ (2.7.13 or 3.6.1) that represents strings internally as ASCII. Version 2.7.13 is verified to work.
 
-* When ``pipelining = False`` in `/etc/ansible/ansible.cfg` then Ansible modules are transferred in binary mode via sftp however execution of python fails with
+* When ``pipelining = False`` in `/etc/assible/assible.cfg` then Assible modules are transferred in binary mode via sftp however execution of python fails with
 
   .. error::
-      SyntaxError: Non-UTF-8 code starting with \'\\x83\' in file /a/user1/.ansible/tmp/ansible-tmp-1548232945.35-274513842609025/AnsiballZ_stat.py on line 1, but no encoding declared; see https://python.org/dev/peps/pep-0263/ for details
+      SyntaxError: Non-UTF-8 code starting with \'\\x83\' in file /a/user1/.assible/tmp/assible-tmp-1548232945.35-274513842609025/AssiballZ_stat.py on line 1, but no encoding declared; see https://python.org/dev/peps/pep-0263/ for details
 
-  To fix it set ``pipelining = True`` in `/etc/ansible/ansible.cfg`.
+  To fix it set ``pipelining = True`` in `/etc/assible/assible.cfg`.
 
 * Python interpret cannot be found in default location ``/usr/bin/python`` on target host.
 
@@ -288,29 +288,29 @@ There are a few common errors that one might run into when trying to execute Ans
 
   To fix this set the path to the python installation in your inventory like so::
 
-    zos1 ansible_python_interpreter=/usr/lpp/python/python-2017-04-12-py27/python27/bin/python
+    zos1 assible_python_interpreter=/usr/lpp/python/python-2017-04-12-py27/python27/bin/python
 
 * Start of python fails with ``The module libpython2.7.so was not found.``
 
   .. error::
     EE3501S The module libpython2.7.so was not found.
 
-  On z/OS, you must execute python from gnu bash. If gnu bash is installed at ``/usr/lpp/bash``, you can fix this in your inventory by specifying an ``ansible_shell_executable``::
+  On z/OS, you must execute python from gnu bash. If gnu bash is installed at ``/usr/lpp/bash``, you can fix this in your inventory by specifying an ``assible_shell_executable``::
 
-    zos1 ansible_shell_executable=/usr/lpp/bash/bin/bash
+    zos1 assible_shell_executable=/usr/lpp/bash/bin/bash
 
 
 Running under fakeroot
 ----------------------
 
 Some issues arise as ``fakeroot`` does not create a full nor POSIX compliant system by default.
-It is known that it will not correctly expand the default tmp directory Ansible uses (:file:`~/.ansible/tmp`).
+It is known that it will not correctly expand the default tmp directory Assible uses (:file:`~/.assible/tmp`).
 If you see module failures, this is likely the problem.
 The simple workaround is to set ``remote_tmp`` to a path that will expand correctly (see documentation of the shell plugin you are using for specifics).
 
-For example, in the ansible config file (or via environment variable) you can set::
+For example, in the assible config file (or via environment variable) you can set::
 
-    remote_tmp=$HOME/.ansible/tmp
+    remote_tmp=$HOME/.assible/tmp
 
 
 
@@ -322,7 +322,7 @@ What is the best way to make content reusable/redistributable?
 If you have not done so already, read all about "Roles" in the playbooks documentation. This helps you make playbook content
 self-contained, and works well with things like git submodules for sharing content with others.
 
-If some of these plugin types look strange to you, see the API documentation for more details about ways Ansible can be extended.
+If some of these plugin types look strange to you, see the API documentation for more details about ways Assible can be extended.
 
 .. _configuration_file:
 
@@ -337,26 +337,26 @@ See :ref:`intro_configuration`.
 How do I disable cowsay?
 ++++++++++++++++++++++++
 
-If cowsay is installed, Ansible takes it upon itself to make your day happier when running playbooks. If you decide
+If cowsay is installed, Assible takes it upon itself to make your day happier when running playbooks. If you decide
 that you would like to work in a professional cow-free environment, you can either uninstall cowsay, set ``nocows=1``
-in ``ansible.cfg``, or set the :envvar:`ANSIBLE_NOCOWS` environment variable:
+in ``assible.cfg``, or set the :envvar:`ASSIBLE_NOCOWS` environment variable:
 
 .. code-block:: shell-session
 
-    export ANSIBLE_NOCOWS=1
+    export ASSIBLE_NOCOWS=1
 
 .. _browse_facts:
 
-How do I see a list of all of the ansible\_ variables?
+How do I see a list of all of the assible\_ variables?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Ansible by default gathers "facts" about the machines under management, and these facts can be accessed in playbooks
+Assible by default gathers "facts" about the machines under management, and these facts can be accessed in playbooks
 and in templates. To see a list of all of the facts that are available about a machine, you can run the ``setup`` module
 as an ad-hoc action:
 
 .. code-block:: shell-session
 
-    ansible -m setup hostname
+    assible -m setup hostname
 
 This will print out a dictionary of all of the facts that are available for that particular host. You might want to pipe
 the output to a pager.This does NOT include inventory variables or internal 'magic' variables. See the next question
@@ -372,7 +372,7 @@ By running the following command, you can see inventory variables for a host:
 
 .. code-block:: shell-session
 
-    ansible-inventory --list --yaml
+    assible-inventory --list --yaml
 
 
 .. _browse_host_vars:
@@ -384,7 +384,7 @@ To see all host specific variables, which might include facts and other sources:
 
 .. code-block:: shell-session
 
-    ansible -m debug -a "var=hostvars['hostname']" localhost
+    assible -m debug -a "var=hostvars['hostname']" localhost
 
 Unless you are using a fact cache, you normally need to use a play that gathers facts first, for facts included in the task above.
 
@@ -415,7 +415,7 @@ Then you can use the facts inside your template, like this:
 .. code-block:: jinja
 
     {% for host in groups['db_servers'] %}
-       {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}
+       {{ hostvars[host]['assible_eth0']['ipv4']['address'] }}
     {% endfor %}
 
 .. _programatic_access_to_a_variable:
@@ -428,7 +428,7 @@ via a role parameter or other input. Variable names can be built by adding strin
 
 .. code-block:: jinja
 
-    {{ hostvars[inventory_hostname]['ansible_' + which_interface]['ipv4']['address'] }}
+    {{ hostvars[inventory_hostname]['assible_' + which_interface]['ipv4']['address'] }}
 
 The trick about going through hostvars is necessary because it's a dictionary of the entire namespace of variables. ``inventory_hostname``
 is a magic variable that indicates the current host you are looping over in the host loop.
@@ -437,7 +437,7 @@ In the example above, if your interface names have dashes, you must replace them
 
 .. code-block:: jinja
 
-    {{ hostvars[inventory_hostname]['ansible_' + which_interface | replace('_', '-') ]['ipv4']['address'] }}
+    {{ hostvars[inventory_hostname]['assible_' + which_interface | replace('_', '-') ]['ipv4']['address'] }}
 
 Also see dynamic_variables_.
 
@@ -447,8 +447,8 @@ Also see dynamic_variables_.
 How do I access a group variable?
 +++++++++++++++++++++++++++++++++
 
-Technically, you don't, Ansible does not really use groups directly. Groups are labels for host selection and a way to bulk assign variables,
-they are not a first class entity, Ansible only cares about Hosts and Tasks.
+Technically, you don't, Assible does not really use groups directly. Groups are labels for host selection and a way to bulk assign variables,
+they are not a first class entity, Assible only cares about Hosts and Tasks.
 
 That said, you could just access the variable by selecting a host that is part of that group, see first_host_in_a_group_ below for an example.
 
@@ -460,21 +460,21 @@ How do I access a variable of the first host in a group?
 
 What happens if we want the ip address of the first webserver in the webservers group?  Well, we can do that too. Note that if we
 are using dynamic inventory, which host is the 'first' may not be consistent, so you wouldn't want to do this unless your inventory
-is static and predictable. (If you are using :ref:`ansible_tower`, it will use database order, so this isn't a problem even if you are using cloud
+is static and predictable. (If you are using :ref:`assible_tower`, it will use database order, so this isn't a problem even if you are using cloud
 based inventory scripts).
 
 Anyway, here's the trick:
 
 .. code-block:: jinja
 
-    {{ hostvars[groups['webservers'][0]]['ansible_eth0']['ipv4']['address'] }}
+    {{ hostvars[groups['webservers'][0]]['assible_eth0']['ipv4']['address'] }}
 
 Notice how we're pulling out the hostname of the first machine of the webservers group. If you are doing this in a template, you
 could use the Jinja2 '#set' directive to simplify this, or in a playbook, you could also use set_fact::
 
     - set_fact: headnode={{ groups['webservers'][0] }}
 
-    - debug: msg={{ hostvars[headnode].ansible_eth0.ipv4.address }}
+    - debug: msg={{ hostvars[headnode].assible_eth0.ipv4.address }}
 
 Notice how we interchanged the bracket syntax for dots -- that can be done anywhere.
 
@@ -501,11 +501,11 @@ For example, to access the value of the HOME environment variable on the managem
         local_home: "{{ lookup('env','HOME') }}"
 
 
-**On target machines :** Environment variables are available via facts in the ``ansible_env`` variable:
+**On target machines :** Environment variables are available via facts in the ``assible_env`` variable:
 
 .. code-block:: jinja
 
-   {{ ansible_env.HOME }}
+   {{ assible_env.HOME }}
 
 If you need to set environment variables for TASK execution, see :ref:`playbooks_environment`
 in the :ref:`Advanced Playbooks <playbooks_special_topics>` section.
@@ -519,11 +519,11 @@ and distribution and local configuration.
 How do I generate encrypted passwords for the user module?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Ansible ad-hoc command is the easiest option:
+Assible ad-hoc command is the easiest option:
 
 .. code-block:: shell-session
 
-    ansible all -i localhost, -m debug -a "msg={{ 'mypassword' | password_hash('sha512', 'mysecretsalt') }}"
+    assible all -i localhost, -m debug -a "msg={{ 'mypassword' | password_hash('sha512', 'mysecretsalt') }}"
 
 The ``mkpasswd`` utility that is available on most Linux systems is also a great option:
 
@@ -553,7 +553,7 @@ In OpenBSD, a similar option is available in the base system called ``encrypt (1
 
 .. _dot_or_array_notation:
 
-Ansible allows dot notation and array notation for variables. Which notation should I use?
+Assible allows dot notation and array notation for variables. Which notation should I use?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The dot notation comes from Jinja and works fine for variables without special
@@ -587,7 +587,7 @@ When is it unsafe to bulk-set task arguments from a variable?
 
 You can set all of a task's arguments from a dictionary-typed variable. This
 technique can be useful in some dynamic execution scenarios. However, it
-introduces a security risk. We do not recommend it, so Ansible issues a
+introduces a security risk. We do not recommend it, so Assible issues a
 warning when you do something like this::
 
     #...
@@ -605,7 +605,7 @@ be overwritten by malicious values in the ``host facts`` on a compromised
 target machine. To mitigate this risk:
 
 * set bulk variables at a level of precedence greater than ``host facts`` in the order of precedence
-  found in :ref:`ansible_variable_precedence` (the example above is safe because play vars take
+  found in :ref:`assible_variable_precedence` (the example above is safe because play vars take
   precedence over facts)
 * disable the :ref:`inject_facts_as_vars` configuration setting to prevent fact values from colliding
   with variables (this will also disable the original warning)
@@ -613,14 +613,14 @@ target machine. To mitigate this risk:
 
 .. _commercial_support:
 
-Can I get training on Ansible?
+Can I get training on Assible?
 ++++++++++++++++++++++++++++++
 
-Yes! See our `services page <https://www.ansible.com/products/consulting>`_ for information on our services
-and training offerings. Email `info@ansible.com <mailto:info@ansible.com>`_ for further details.
+Yes! See our `services page <https://www.assible.com/products/consulting>`_ for information on our services
+and training offerings. Email `info@assible.com <mailto:info@assible.com>`_ for further details.
 
 We also offer free web-based training classes on a regular basis. See our
-`webinar page <https://www.ansible.com/resources/webinars-training>`_ for more info on upcoming webinars.
+`webinar page <https://www.assible.com/resources/webinars-training>`_ for more info on upcoming webinars.
 
 
 .. _web_interface:
@@ -628,7 +628,7 @@ We also offer free web-based training classes on a regular basis. See our
 Is there a web interface / REST API / GUI?
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Yes! Ansible, Inc makes a great product that makes Ansible even more powerful and easy to use. See :ref:`ansible_tower`.
+Yes! Assible, Inc makes a great product that makes Assible even more powerful and easy to use. See :ref:`assible_tower`.
 
 
 .. _keep_secret_data:
@@ -636,7 +636,7 @@ Yes! Ansible, Inc makes a great product that makes Ansible even more powerful an
 How do I keep secret data in my playbook?
 +++++++++++++++++++++++++++++++++++++++++
 
-If you would like to keep secret data in your Ansible content and still share it publicly or keep things in source control, see :ref:`playbooks_vault`.
+If you would like to keep secret data in your Assible content and still share it publicly or keep things in source control, see :ref:`playbooks_vault`.
 
 If you have a task that you don't want to show the results or command given to it when using -v (verbose) mode, the following task or playbook attribute can be useful::
 
@@ -653,8 +653,8 @@ The ``no_log`` attribute can also apply to an entire play::
 
 Though this will make the play somewhat difficult to debug. It's recommended that this
 be applied to single tasks only, once a playbook is completed. Note that the use of the
-``no_log`` attribute does not prevent data from being shown when debugging Ansible itself via
-the :envvar:`ANSIBLE_DEBUG` environment variable.
+``no_log`` attribute does not prevent data from being shown when debugging Assible itself via
+the :envvar:`ASSIBLE_DEBUG` environment variable.
 
 
 .. _when_to_use_brackets:
@@ -692,24 +692,24 @@ For 'non host vars' you can use the :ref:`vars lookup<vars_lookup>` plugin:
 
 .. _why_no_wheel:
 
-Why don't you ship ansible in wheel format (or other packaging format) ?
+Why don't you ship assible in wheel format (or other packaging format) ?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In most cases it has to do with maintainability. There are many ways to ship software and we do not have
-the resources to release Ansible on every platform.
+the resources to release Assible on every platform.
 In some cases there are technical issues. For example, our dependencies are not present on Python Wheels.
 
-.. _ansible_host_delegated:
+.. _assible_host_delegated:
 
-How do I get the original ansible_host when I delegate a task?
+How do I get the original assible_host when I delegate a task?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-As the documentation states, connection variables are taken from the ``delegate_to`` host so ``ansible_host`` is overwritten,
+As the documentation states, connection variables are taken from the ``delegate_to`` host so ``assible_host`` is overwritten,
 but you can still access the original via ``hostvars``::
 
-   original_host: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
+   original_host: "{{ hostvars[inventory_hostname]['assible_host'] }}"
 
-This works for all overridden connection variables, like ``ansible_user``, ``ansible_port``, and so on.
+This works for all overridden connection variables, like ``assible_user``, ``assible_port``, and so on.
 
 
 .. _scp_protocol_error_filename:
@@ -718,9 +718,9 @@ How do I fix 'protocol error: filename does not match request' when fetching a f
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Since release ``7.9p1`` of OpenSSH there is a `bug <https://bugzilla.mindrot.org/show_bug.cgi?id=2966>`_
-in the SCP client that can trigger this error on the Ansible controller when using SCP as the file transfer mechanism::
+in the SCP client that can trigger this error on the Assible controller when using SCP as the file transfer mechanism::
 
-    failed to transfer file to /tmp/ansible/file.txt\r\nprotocol error: filename does not match request
+    failed to transfer file to /tmp/assible/file.txt\r\nprotocol error: filename does not match request
 
 In these releases, SCP tries to validate that the path of the file to fetch matches the requested path.
 The validation
@@ -728,14 +728,14 @@ fails if the remote filename requires quotes to escape spaces or non-ascii chara
 
 * Use SFTP instead of SCP by setting ``scp_if_ssh`` to ``smart`` (which tries SFTP first) or to ``False``. You can do this in one of four ways:
     * Rely on the default setting, which is ``smart`` - this works if ``scp_if_ssh`` is not explicitly set anywhere
-    * Set a :ref:`host variable <host_variables>` or :ref:`group variable <group_variables>` in inventory: ``ansible_scp_if_ssh: False``
-    * Set an environment variable on your control node: ``export ANSIBLE_SCP_IF_SSH=False``
-    * Pass an environment variable when you run Ansible: ``ANSIBLE_SCP_IF_SSH=smart ansible-playbook``
-    * Modify your ``ansible.cfg`` file: add ``scp_if_ssh=False`` to the ``[ssh_connection]`` section
+    * Set a :ref:`host variable <host_variables>` or :ref:`group variable <group_variables>` in inventory: ``assible_scp_if_ssh: False``
+    * Set an environment variable on your control node: ``export ASSIBLE_SCP_IF_SSH=False``
+    * Pass an environment variable when you run Assible: ``ASSIBLE_SCP_IF_SSH=smart assible-playbook``
+    * Modify your ``assible.cfg`` file: add ``scp_if_ssh=False`` to the ``[ssh_connection]`` section
 * If you must use SCP, set the ``-T`` arg to tell the SCP client to ignore path validation. You can do this in one of three ways:
-    * Set a :ref:`host variable <host_variables>` or :ref:`group variable <group_variables>`: ``ansible_scp_extra_args=-T``,
-    * Export or pass an environment variable: ``ANSIBLE_SCP_EXTRA_ARGS=-T``
-    * Modify your ``ansible.cfg`` file: add ``scp_extra_args=-T`` to the ``[ssh_connection]`` section
+    * Set a :ref:`host variable <host_variables>` or :ref:`group variable <group_variables>`: ``assible_scp_extra_args=-T``,
+    * Export or pass an environment variable: ``ASSIBLE_SCP_EXTRA_ARGS=-T``
+    * Modify your ``assible.cfg`` file: add ``scp_extra_args=-T`` to the ``[ssh_connection]`` section
 
 .. note:: If you see an ``invalid argument`` error when using ``-T``, then your SCP client is not performing filename validation and will not trigger this error.
 
@@ -744,8 +744,8 @@ fails if the remote filename requires quotes to escape spaces or non-ascii chara
 How do I submit a change to the documentation?
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-Documentation for Ansible is kept in the main project git repository, and complete instructions
-for contributing can be found in the docs README `viewable on GitHub <https://github.com/ansible/ansible/blob/devel/docs/docsite/README.md>`_. Thanks!
+Documentation for Assible is kept in the main project git repository, and complete instructions
+for contributing can be found in the docs README `viewable on GitHub <https://github.com/assible/assible/blob/devel/docs/docsite/README.md>`_. Thanks!
 
 .. _i_dont_see_my_question:
 
@@ -760,7 +760,7 @@ Please see the section below for a link to IRC and the Google Group, where you c
        An introduction to playbooks
    :ref:`playbooks_best_practices`
        Tips and tricks for playbooks
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

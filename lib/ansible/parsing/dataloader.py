@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -12,22 +12,22 @@ import os.path
 import re
 import tempfile
 
-from ansible import constants as C
-from ansible.errors import AnsibleFileNotFound, AnsibleParserError
-from ansible.module_utils.basic import is_executable
-from ansible.module_utils.six import binary_type, text_type
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.parsing.quoting import unquote
-from ansible.parsing.utils.yaml import from_yaml
-from ansible.parsing.vault import VaultLib, b_HEADER, is_encrypted, is_encrypted_file, parse_vaulttext_envelope
-from ansible.utils.path import unfrackpath
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleFileNotFound, AssibleParserError
+from assible.module_utils.basic import is_executable
+from assible.module_utils.six import binary_type, text_type
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.parsing.quoting import unquote
+from assible.parsing.utils.yaml import from_yaml
+from assible.parsing.vault import VaultLib, b_HEADER, is_encrypted, is_encrypted_file, parse_vaulttext_envelope
+from assible.utils.path import unfrackpath
+from assible.utils.display import Display
 
 display = Display()
 
 
 # Tries to determine if a path is inside a role, last dir must be 'tasks'
-# this is not perfect but people should really avoid 'tasks' dirs outside roles when using Ansible.
+# this is not perfect but people should really avoid 'tasks' dirs outside roles when using Assible.
 RE_TASKS = re.compile(u'(?:^|%s)+tasks%s?$' % (os.path.sep, os.path.sep))
 
 
@@ -148,25 +148,25 @@ class DataLoader:
 
         :arg file_name: The name of the file to read.  If this is a relative
             path, it will be expanded relative to the basedir
-        :raises AnsibleFileNotFound: if the file_name does not refer to a file
-        :raises AnsibleParserError: if we were unable to read the file
+        :raises AssibleFileNotFound: if the file_name does not refer to a file
+        :raises AssibleParserError: if we were unable to read the file
         :return: Returns a byte string of the file contents
         '''
         if not file_name or not isinstance(file_name, (binary_type, text_type)):
-            raise AnsibleParserError("Invalid filename: '%s'" % to_native(file_name))
+            raise AssibleParserError("Invalid filename: '%s'" % to_native(file_name))
 
         b_file_name = to_bytes(self.path_dwim(file_name))
         # This is what we really want but have to fix unittests to make it pass
         # if not os.path.exists(b_file_name) or not os.path.isfile(b_file_name):
         if not self.path_exists(b_file_name):
-            raise AnsibleFileNotFound("Unable to retrieve file contents", file_name=file_name)
+            raise AssibleFileNotFound("Unable to retrieve file contents", file_name=file_name)
 
         try:
             with open(b_file_name, 'rb') as f:
                 data = f.read()
                 return self._decrypt_if_vault_data(data, b_file_name)
         except (IOError, OSError) as e:
-            raise AnsibleParserError("an error occurred while trying to read the file '%s': %s" % (file_name, to_native(e)), orig_exc=e)
+            raise AssibleParserError("an error occurred while trying to read the file '%s': %s" % (file_name, to_native(e)), orig_exc=e)
 
     def get_basedir(self):
         ''' returns the current basedir '''
@@ -293,7 +293,7 @@ class DataLoader:
         :arg source: A text string which is the filename to search for
         :rtype: A text string
         :returns: An absolute path to the filename ``source`` if found
-        :raises: An AnsibleFileNotFound Exception if the file is found to exist in the search paths
+        :raises: An AssibleFileNotFound Exception if the file is found to exist in the search paths
         '''
         b_dirname = to_bytes(dirname, errors='surrogate_or_strict')
         b_source = to_bytes(source, errors='surrogate_or_strict')
@@ -338,7 +338,7 @@ class DataLoader:
                     break
 
         if result is None:
-            raise AnsibleFileNotFound(file_name=source, paths=[to_native(p) for p in search])
+            raise AssibleFileNotFound(file_name=source, paths=[to_native(p) for p in search])
 
         return result
 
@@ -364,11 +364,11 @@ class DataLoader:
         """
 
         if not file_path or not isinstance(file_path, (binary_type, text_type)):
-            raise AnsibleParserError("Invalid filename: '%s'" % to_native(file_path))
+            raise AssibleParserError("Invalid filename: '%s'" % to_native(file_path))
 
         b_file_path = to_bytes(file_path, errors='surrogate_or_strict')
         if not self.path_exists(b_file_path) or not self.is_file(b_file_path):
-            raise AnsibleFileNotFound(file_name=file_path)
+            raise AssibleFileNotFound(file_name=file_path)
 
         real_path = self.path_dwim(file_path)
 
@@ -384,7 +384,7 @@ class DataLoader:
                         # since the decrypt function doesn't know the file name
                         data = f.read()
                         if not self._vault.secrets:
-                            raise AnsibleParserError("A vault password or secret must be specified to decrypt %s" % to_native(file_path))
+                            raise AssibleParserError("A vault password or secret must be specified to decrypt %s" % to_native(file_path))
 
                         data = self._vault.decrypt(data, filename=real_path)
                         # Make a temp file
@@ -394,7 +394,7 @@ class DataLoader:
             return real_path
 
         except (IOError, OSError) as e:
-            raise AnsibleParserError("an error occurred while trying to read the file '%s': %s" % (to_native(real_path), to_native(e)), orig_exc=e)
+            raise AssibleParserError("an error occurred while trying to read the file '%s': %s" % (to_native(real_path), to_native(e)), orig_exc=e)
 
     def cleanup_tmp_file(self, file_path):
         """

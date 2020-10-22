@@ -1,12 +1,12 @@
 # (c) 2016 Red Hat Inc.
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-DOCUMENTATION = """author: Ansible Networking Team
+DOCUMENTATION = """author: Assible Networking Team
 connection: network_cli
 short_description: Use network_cli to run command on network appliances
 description:
@@ -20,7 +20,7 @@ options:
       to.
     default: inventory_hostname
     vars:
-    - name: ansible_host
+    - name: assible_host
   port:
     type: int
     description:
@@ -31,16 +31,16 @@ options:
     - section: defaults
       key: remote_port
     env:
-    - name: ANSIBLE_REMOTE_PORT
+    - name: ASSIBLE_REMOTE_PORT
     vars:
-    - name: ansible_port
+    - name: assible_port
   network_os:
     description:
     - Configures the device platform network operating system.  This value is used
       to load the correct terminal and cliconf plugins to communicate with the remote
       device.
     vars:
-    - name: ansible_network_os
+    - name: assible_network_os
   remote_user:
     description:
     - The username used to authenticate to the remote device when the SSH connection
@@ -51,17 +51,17 @@ options:
     - section: defaults
       key: remote_user
     env:
-    - name: ANSIBLE_REMOTE_USER
+    - name: ASSIBLE_REMOTE_USER
     vars:
-    - name: ansible_user
+    - name: assible_user
   password:
     description:
     - Configures the user password used to authenticate to the remote device when
       first establishing the SSH connection.
     vars:
-    - name: ansible_password
-    - name: ansible_ssh_pass
-    - name: ansible_ssh_password
+    - name: assible_password
+    - name: assible_ssh_pass
+    - name: assible_ssh_password
   private_key_file:
     description:
     - The private SSH key or certificate file used to authenticate to the remote device
@@ -70,9 +70,9 @@ options:
     - section: defaults
       key: private_key_file
     env:
-    - name: ANSIBLE_PRIVATE_KEY_FILE
+    - name: ASSIBLE_PRIVATE_KEY_FILE
     vars:
-    - name: ansible_private_key_file
+    - name: assible_private_key_file
   become:
     type: boolean
     description:
@@ -87,9 +87,9 @@ options:
     - section: privilege_escalation
       key: become
     env:
-    - name: ANSIBLE_BECOME
+    - name: ASSIBLE_BECOME
     vars:
-    - name: ansible_become
+    - name: assible_become
   become_method:
     description:
     - This option allows the become method to be specified in for handling privilege
@@ -100,13 +100,13 @@ options:
     - section: privilege_escalation
       key: become_method
     env:
-    - name: ANSIBLE_BECOME_METHOD
+    - name: ASSIBLE_BECOME_METHOD
     vars:
-    - name: ansible_become_method
+    - name: assible_become_method
   host_key_auto_add:
     type: boolean
     description:
-    - By default, Ansible will prompt the user before adding SSH keys to the known
+    - By default, Assible will prompt the user before adding SSH keys to the known
       hosts file.  Since persistent connections such as network_cli run in background
       processes, the user will never be prompted.  By enabling this option, unknown
       host keys will automatically be added to the known hosts file.
@@ -117,7 +117,7 @@ options:
     - section: paramiko_connection
       key: host_key_auto_add
     env:
-    - name: ANSIBLE_HOST_KEY_AUTO_ADD
+    - name: ASSIBLE_HOST_KEY_AUTO_ADD
   persistent_connect_timeout:
     type: int
     description:
@@ -129,9 +129,9 @@ options:
     - section: persistent_connection
       key: connect_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_CONNECT_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_CONNECT_TIMEOUT
     vars:
-    - name: ansible_connect_timeout
+    - name: assible_connect_timeout
   persistent_command_timeout:
     type: int
     description:
@@ -143,9 +143,9 @@ options:
     - section: persistent_connection
       key: command_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_COMMAND_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_COMMAND_TIMEOUT
     vars:
-    - name: ansible_command_timeout
+    - name: assible_command_timeout
   persistent_buffer_read_timeout:
     type: float
     description:
@@ -158,14 +158,14 @@ options:
     - section: persistent_connection
       key: buffer_read_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_BUFFER_READ_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_BUFFER_READ_TIMEOUT
     vars:
-    - name: ansible_buffer_read_timeout
+    - name: assible_buffer_read_timeout
   persistent_log_messages:
     type: boolean
     description:
     - This flag will enable logging the command executed and response received from
-      target device in the ansible log file. For this option to work 'log_path' ansible
+      target device in the assible log file. For this option to work 'log_path' assible
       configuration option is required to be set to a file path with write access.
     - Be sure to fully understand the security implications of enabling this option
       as it could create a security vulnerability by logging sensitive information
@@ -175,9 +175,9 @@ options:
     - section: persistent_connection
       key: log_messages
     env:
-    - name: ANSIBLE_PERSISTENT_LOG_MESSAGES
+    - name: ASSIBLE_PERSISTENT_LOG_MESSAGES
     vars:
-    - name: ansible_persistent_log_messages
+    - name: assible_persistent_log_messages
   terminal_stdout_re:
     type: list
     elements: dict
@@ -189,7 +189,7 @@ options:
       argument of I(re.compile) python method to control the way regex is matched
       with the response, for example I('re.I').
     vars:
-    - name: ansible_terminal_stdout_re
+    - name: assible_terminal_stdout_re
   terminal_stderr_re:
     type: list
     elements: dict
@@ -201,14 +201,14 @@ options:
       of I(re.compile) python method to control the way regex is matched with the
       response, for example I('re.I').
     vars:
-    - name: ansible_terminal_stderr_re
+    - name: assible_terminal_stderr_re
   terminal_initial_prompt:
     type: list
     description:
     - A single regex pattern or a sequence of patterns to evaluate the expected prompt
       at the time of initial login to the remote host.
     vars:
-    - name: ansible_terminal_initial_prompt
+    - name: assible_terminal_initial_prompt
   terminal_initial_answer:
     type: list
     description:
@@ -220,7 +220,7 @@ options:
       expected to be matched and set to I(False) if any one login prompt is to be
       matched.
     vars:
-    - name: ansible_terminal_initial_answer
+    - name: assible_terminal_initial_answer
   terminal_initial_prompt_checkall:
     type: boolean
     description:
@@ -231,7 +231,7 @@ options:
       host if not it will result in timeout.
     default: false
     vars:
-    - name: ansible_terminal_initial_prompt_checkall
+    - name: assible_terminal_initial_prompt_checkall
   terminal_inital_prompt_newline:
     type: boolean
     description:
@@ -239,7 +239,7 @@ options:
       if any of values in I(terminal_initial_prompt) is matched.
     default: true
     vars:
-    - name: ansible_terminal_initial_prompt_newline
+    - name: assible_terminal_initial_prompt_newline
   network_cli_retries:
     description:
     - Number of attempts to connect to remote host. The delay time between the retires
@@ -249,12 +249,12 @@ options:
     default: 3
     type: integer
     env:
-    - name: ANSIBLE_NETWORK_CLI_RETRIES
+    - name: ASSIBLE_NETWORK_CLI_RETRIES
     ini:
     - section: persistent_connection
       key: network_cli_retries
     vars:
-    - name: ansible_network_cli_retries
+    - name: assible_network_cli_retries
 """
 
 from functools import wraps
@@ -269,16 +269,16 @@ import time
 import traceback
 from io import BytesIO
 
-from ansible.errors import AnsibleConnectionFailure
-from ansible.module_utils.six import PY3
-from ansible.module_utils.six.moves import cPickle
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible.errors import AssibleConnectionFailure
+from assible.module_utils.six import PY3
+from assible.module_utils.six.moves import cPickle
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.connection import NetworkConnectionBase
-from ansible.plugins.loader import (
+from assible.module_utils._text import to_bytes, to_text
+from assible.playbook.play_context import PlayContext
+from assible.plugins.connection import NetworkConnectionBase
+from assible.plugins.loader import (
     cliconf_loader,
     terminal_loader,
     connection_loader,
@@ -296,14 +296,14 @@ def ensure_connect(func):
     return wrapped
 
 
-class AnsibleCmdRespRecv(Exception):
+class AssibleCmdRespRecv(Exception):
     pass
 
 
 class Connection(NetworkConnectionBase):
     """ CLI (shell) SSH connections on Paramiko """
 
-    transport = "ansible.netcommon.network_cli"
+    transport = "assible.netcommon.network_cli"
     has_pipelining = True
 
     def __init__(self, play_context, new_stdin, *args, **kwargs):
@@ -334,7 +334,7 @@ class Connection(NetworkConnectionBase):
         if self._network_os:
             self._terminal = terminal_loader.get(self._network_os, self)
             if not self._terminal:
-                raise AnsibleConnectionFailure(
+                raise AssibleConnectionFailure(
                     "network os %s is not supported" % self._network_os
                 )
 
@@ -361,9 +361,9 @@ class Connection(NetworkConnectionBase):
                     % self._network_os,
                 )
         else:
-            raise AnsibleConnectionFailure(
+            raise AssibleConnectionFailure(
                 "Unable to automatically determine host network os. Please "
-                "manually configure ansible_network_os value for this host"
+                "manually configure assible_network_os value for this host"
             )
         self.queue_message("log", "network_os is set to %s" % self._network_os)
 
@@ -488,7 +488,7 @@ class Connection(NetworkConnectionBase):
                 except Exception as e:
                     pause = 2 ** (attempt + 1)
                     if attempt == retries or total_pause >= max_pause:
-                        raise AnsibleConnectionFailure(
+                        raise AssibleConnectionFailure(
                             to_text(e, errors="surrogate_or_strict")
                         )
                     else:
@@ -638,7 +638,7 @@ class Connection(NetworkConnectionBase):
                     signal.signal(signal.SIGALRM, self._handle_command_timeout)
                     signal.alarm(command_timeout)
 
-                except AnsibleCmdRespRecv:
+                except AssibleCmdRespRecv:
                     # reset socket timeout to global timeout
                     self._ssh_shell.settimeout(cache_socket_timeout)
                     return self._command_response
@@ -681,7 +681,7 @@ class Connection(NetworkConnectionBase):
                     prompt_retry_check,
                     check_all,
                 ):
-                    raise AnsibleConnectionFailure(
+                    raise AssibleConnectionFailure(
                         "For matched prompt '%s', answer is not valid"
                         % self._matched_cmd_prompt
                     )
@@ -715,7 +715,7 @@ class Connection(NetworkConnectionBase):
             prompt_len = len(to_list(prompt))
             answer_len = len(to_list(answer))
             if prompt_len != answer_len:
-                raise AnsibleConnectionFailure(
+                raise AssibleConnectionFailure(
                     "Number of prompts (%s) is not same as that of answers (%s)"
                     % (prompt_len, answer_len)
                 )
@@ -732,7 +732,7 @@ class Connection(NetworkConnectionBase):
             return to_text(response, errors="surrogate_then_replace")
         except (socket.timeout, AttributeError):
             self.queue_message("error", traceback.format_exc())
-            raise AnsibleConnectionFailure(
+            raise AssibleConnectionFailure(
                 "timeout value %s seconds reached while trying to send command: %s"
                 % (self._ssh_shell.gettimeout(), command.strip())
             )
@@ -743,7 +743,7 @@ class Connection(NetworkConnectionBase):
             "Response received, triggered 'persistent_buffer_read_timeout' timer of %s seconds"
             % self.get_option("persistent_buffer_read_timeout"),
         )
-        raise AnsibleCmdRespRecv()
+        raise AssibleCmdRespRecv()
 
     def _handle_command_timeout(self, signum, frame):
         msg = (
@@ -751,7 +751,7 @@ class Connection(NetworkConnectionBase):
             % self.get_option("persistent_command_timeout")
         )
         self.queue_message("log", msg)
-        raise AnsibleConnectionFailure(msg)
+        raise AssibleConnectionFailure(msg)
 
     def _strip(self, data):
         """
@@ -876,13 +876,13 @@ class Connection(NetworkConnectionBase):
                         return True
 
         if errored_response:
-            raise AnsibleConnectionFailure(errored_response)
+            raise AssibleConnectionFailure(errored_response)
 
         return False
 
     def _validate_timeout_value(self, timeout, timer_name):
         if timeout < 0:
-            raise AnsibleConnectionFailure(
+            raise AssibleConnectionFailure(
                 "'%s' timer value '%s' is invalid, value should be greater than or equal to zero."
                 % (timer_name, timeout)
             )
@@ -908,7 +908,7 @@ class Connection(NetworkConnectionBase):
         if terminal_std_option:
             for item in terminal_std_option:
                 if "pattern" not in item:
-                    raise AnsibleConnectionFailure(
+                    raise AssibleConnectionFailure(
                         "'pattern' is a required key for option '%s',"
                         " received option value is %s" % (option, item)
                     )

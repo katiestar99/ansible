@@ -1,4 +1,4 @@
-# (c) 2019 Ansible Project
+# (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -6,7 +6,7 @@ __metaclass__ = type
 
 import os
 
-from ansible.module_utils._text import to_bytes
+from assible.module_utils._text import to_bytes
 
 B_FLAG_FILES = frozenset([b'MANIFEST.json', b'galaxy.yml'])
 

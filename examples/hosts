@@ -1,6 +1,6 @@
-# This is the default ansible 'hosts' file.
+# This is the default assible 'hosts' file.
 #
-# It should live in /etc/ansible/hosts
+# It should live in /etc/assible/hosts
 #
 #   - Comments begin with the '#' character
 #   - Blank lines are ignored

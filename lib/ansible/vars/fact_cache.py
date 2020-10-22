@@ -1,5 +1,5 @@
 # Copyright: (c) 2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
@@ -7,11 +7,11 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.module_utils.common._collections_compat import MutableMapping
-from ansible.plugins.loader import cache_loader
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.module_utils.common._collections_compat import MutableMapping
+from assible.plugins.loader import cache_loader
+from assible.utils.display import Display
 
 
 display = Display()
@@ -23,7 +23,7 @@ class FactCache(MutableMapping):
 
         self._plugin = cache_loader.get(C.CACHE_PLUGIN)
         if not self._plugin:
-            raise AnsibleError('Unable to load the facts cache plugin (%s).' % (C.CACHE_PLUGIN))
+            raise AssibleError('Unable to load the facts cache plugin (%s).' % (C.CACHE_PLUGIN))
 
         super(FactCache, self).__init__(*args, **kwargs)
 
@@ -99,7 +99,7 @@ class FactCache(MutableMapping):
             display.deprecated('Calling FactCache().update(key, value) is deprecated.  Use'
                                ' FactCache().first_order_merge(key, value) if you want the old'
                                ' behaviour or use FactCache().update({key: value}) if you want'
-                               ' dict-like behaviour.', version='2.12', collection_name='ansible.builtin')
+                               ' dict-like behaviour.', version='2.12', collection_name='assible.builtin')
             return self.first_order_merge(*args)
 
         elif len(args) == 1:

@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils._text import to_native
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.module_utils.common.collections import is_iterable
-from ansible.module_utils.common.validation import check_type_dict
+from assible.module_utils._text import to_native
+from assible.module_utils.common._collections_compat import Mapping
+from assible.module_utils.common.collections import is_iterable
+from assible.module_utils.common.validation import check_type_dict
 
-from ansible.module_utils.six import (
+from assible.module_utils.six import (
     binary_type,
     integer_types,
     string_types,
@@ -37,7 +37,7 @@ PASS_VARS = {
     'syslog_facility': ('_syslog_facility', 'INFO'),
     'tmpdir': ('_tmpdir', None),
     'verbosity': ('_verbosity', 0),
-    'version': ('ansible_version', '0.0'),
+    'version': ('assible_version', '0.0'),
 }
 
 PASS_BOOLS = ('check_mode', 'debug', 'diff', 'keep_remote_files', 'no_log')
@@ -171,7 +171,7 @@ def handle_aliases(argument_spec, params, alias_warnings=None):
     (option, alias) in every case where both an option and its alias are specified.
     """
 
-    legal_inputs = ['_ansible_%s' % k for k in PASS_VARS]
+    legal_inputs = ['_assible_%s' % k for k in PASS_VARS]
     aliases_results = {}  # alias:canon
 
     for (k, v) in argument_spec.items():

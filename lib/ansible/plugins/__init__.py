@@ -1,21 +1,21 @@
 # (c) 2012, Daniel Hokka Zakrisson <daniel@hozac.com>
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com> and others
-# (c) 2017, Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2017, Toshio Kuratomi <tkuratomi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -23,11 +23,11 @@ __metaclass__ = type
 
 from abc import ABCMeta
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import with_metaclass, string_types
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.module_utils._text import to_native
+from assible.module_utils.six import with_metaclass, string_types
+from assible.utils.display import Display
 
 display = Display()
 
@@ -44,7 +44,7 @@ def get_plugin_class(obj):
         return obj.__class__.__name__.lower().replace('module', '')
 
 
-class AnsiblePlugin(with_metaclass(ABCMeta, object)):
+class AssiblePlugin(with_metaclass(ABCMeta, object)):
 
     # allow extra passthrough parameters
     allow_extras = False
@@ -56,7 +56,7 @@ class AnsiblePlugin(with_metaclass(ABCMeta, object)):
         if option not in self._options:
             try:
                 option_value = C.config.get_config_value(option, plugin_type=get_plugin_class(self), plugin_name=self._load_name, variables=hostvars)
-            except AnsibleError as e:
+            except AssibleError as e:
                 raise KeyError(to_native(e))
             self.set_option(option, option_value)
         return self._options.get(option)

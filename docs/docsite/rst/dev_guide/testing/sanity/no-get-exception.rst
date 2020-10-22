@@ -1,7 +1,7 @@
 no-get-exception
 ================
 
-We created a function, ``ansible.module_utils.pycompat24.get_exception`` to
+We created a function, ``assible.module_utils.pycompat24.get_exception`` to
 help retrieve exceptions in a manner compatible with Python 2.4 through
 Python 3.6.  We no longer support Python 2.4 and Python 2.5 so this is
 extraneous and we want to deprecate the function.  Porting code should look

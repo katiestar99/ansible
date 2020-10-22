@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y \
     && \
     apt-get clean
 
-VOLUME /ansible
-WORKDIR /ansible
+VOLUME /assible
+WORKDIR /assible
 
 ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["make deb"]

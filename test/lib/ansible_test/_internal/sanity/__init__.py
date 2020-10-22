@@ -1,4 +1,4 @@
-"""Execute Ansible sanity tests."""
+"""Execute Assible sanity tests."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -22,14 +22,14 @@ from ..util import (
     load_plugins,
     parse_to_list_of_dict,
     ABC,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
     is_binary_file,
     read_lines_without_comments,
     get_available_python_versions,
     find_python,
     is_subdir,
     paths_to_dirs,
-    get_ansible_version,
+    get_assible_version,
     str_to_version,
 )
 
@@ -39,8 +39,8 @@ from ..util_common import (
     handle_layout_messages,
 )
 
-from ..ansible_util import (
-    ansible_environment,
+from ..assible_util import (
+    assible_environment,
 )
 
 from ..target import (
@@ -74,7 +74,7 @@ from ..data import (
 )
 
 COMMAND = 'sanity'
-SANITY_ROOT = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'sanity')
+SANITY_ROOT = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'sanity')
 
 
 def command_sanity(args):
@@ -217,11 +217,11 @@ def collect_code_smell_tests():  # type: () -> t.Tuple[SanityFunc, ...]
     """Return a tuple of available code smell sanity tests."""
     paths = glob.glob(os.path.join(SANITY_ROOT, 'code-smell', '*.py'))
 
-    if data_context().content.is_ansible:
-        # include Ansible specific code-smell tests which are not configured to be skipped
-        ansible_code_smell_root = os.path.join(data_context().content.root, 'test', 'sanity', 'code-smell')
-        skip_tests = read_lines_without_comments(os.path.join(ansible_code_smell_root, 'skip.txt'), remove_blank_lines=True, optional=True)
-        paths.extend(path for path in glob.glob(os.path.join(ansible_code_smell_root, '*.py')) if os.path.basename(path) not in skip_tests)
+    if data_context().content.is_assible:
+        # include Assible specific code-smell tests which are not configured to be skipped
+        assible_code_smell_root = os.path.join(data_context().content.root, 'test', 'sanity', 'code-smell')
+        skip_tests = read_lines_without_comments(os.path.join(assible_code_smell_root, 'skip.txt'), remove_blank_lines=True, optional=True)
+        paths.extend(path for path in glob.glob(os.path.join(assible_code_smell_root, '*.py')) if os.path.basename(path) not in skip_tests)
 
     paths = sorted(p for p in paths if os.access(p, os.X_OK) and os.path.isfile(p))
     tests = tuple(SanityCodeSmellTest(p) for p in paths)
@@ -242,12 +242,12 @@ class SanityIgnoreParser:
 
     def __init__(self, args):  # type: (SanityConfig) -> None
         if data_context().content.collection:
-            ansible_version = '%s.%s' % tuple(get_ansible_version().split('.')[:2])
+            assible_version = '%s.%s' % tuple(get_assible_version().split('.')[:2])
 
-            ansible_label = 'Ansible %s' % ansible_version
-            file_name = 'ignore-%s.txt' % ansible_version
+            assible_label = 'Assible %s' % assible_version
+            file_name = 'ignore-%s.txt' % assible_version
         else:
-            ansible_label = 'Ansible'
+            assible_label = 'Assible'
             file_name = 'ignore.txt'
 
         self.args = args
@@ -267,7 +267,7 @@ class SanityIgnoreParser:
         directories = paths_to_dirs(list(paths))
         paths_by_test = {}  # type: t.Dict[str, t.Set[str]]
 
-        display.info('Read %d sanity test ignore line(s) for %s from: %s' % (len(lines), ansible_label, self.relative_path), verbosity=1)
+        display.info('Read %d sanity test ignore line(s) for %s from: %s' % (len(lines), assible_label, self.relative_path), verbosity=1)
 
         for test in sanity_get_tests():
             test_targets = SanityTargets.filter_and_inject_targets(test, targets)
@@ -608,7 +608,7 @@ class SanityTest(ABC):
     """Sanity test base class."""
     __metaclass__ = abc.ABCMeta
 
-    ansible_only = False
+    assible_only = False
 
     def __init__(self, name):
         self.name = name
@@ -622,7 +622,7 @@ class SanityTest(ABC):
 
     @property
     def error_code(self):  # type: () -> t.Optional[str]
-        """Error code for ansible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
+        """Error code for assible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
         return None
 
     @property
@@ -772,7 +772,7 @@ class SanityCodeSmellTest(SanityTest):
         if self.files:
             targets = [target for target in targets if os.path.basename(target.path) in self.files]
 
-        if self.ignore_self and data_context().content.is_ansible:
+        if self.ignore_self and data_context().content.is_assible:
             relative_self_path = os.path.relpath(self.path, data_context().content.root)
             targets = [target for target in targets if target.path != relative_self_path]
 
@@ -793,7 +793,7 @@ class SanityCodeSmellTest(SanityTest):
 
         cmd = [find_python(python_version), self.path]
 
-        env = ansible_environment(args, color=False)
+        env = assible_environment(args, color=False)
 
         pattern = None
         data = None
@@ -941,6 +941,6 @@ def sanity_init():
     import_plugins('sanity')
     sanity_plugins = {}  # type: t.Dict[str, t.Type[SanityFunc]]
     load_plugins(SanityFunc, sanity_plugins)
-    sanity_tests = tuple([plugin() for plugin in sanity_plugins.values() if data_context().content.is_ansible or not plugin.ansible_only])
+    sanity_tests = tuple([plugin() for plugin in sanity_plugins.values() if data_context().content.is_assible or not plugin.assible_only])
     global SANITY_TESTS  # pylint: disable=locally-disabled, global-statement
     SANITY_TESTS = tuple(sorted(sanity_tests + collect_code_smell_tests(), key=lambda k: k.name))

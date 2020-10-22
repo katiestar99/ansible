@@ -5,8 +5,8 @@ user_home_prefix:
   Darwin: '/Users'
 
 status_command:
-  OpenBSD: "grep ansibulluser /etc/master.passwd | cut -d ':' -f 2"
-  FreeBSD: 'pw user show ansibulluser'
+  OpenBSD: "grep assibulluser /etc/master.passwd | cut -d ':' -f 2"
+  FreeBSD: 'pw user show assibulluser'
 
 default_user_group:
   openSUSE Leap: users

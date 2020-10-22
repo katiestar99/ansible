@@ -1,2 +1,2 @@
 [local]
-testhost ansible_connection=local ansible_python_interpreter=auto  # interpreter discovery required
+testhost assible_connection=local assible_python_interpreter=auto  # interpreter discovery required

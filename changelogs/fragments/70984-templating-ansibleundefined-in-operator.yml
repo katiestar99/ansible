@@ -1,2 +1,2 @@
 bugfixes:
-  - templating - fix error message for ``x in y`` when y is undefined (https://github.com/ansible/ansible/issues/70984)
+  - templating - fix error message for ``x in y`` when y is undefined (https://github.com/assible/assible/issues/70984)

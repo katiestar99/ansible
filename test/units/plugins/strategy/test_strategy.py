@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -25,13 +25,13 @@ import uuid
 
 from units.compat import unittest
 from units.compat.mock import patch, MagicMock
-from ansible.executor.process.worker import WorkerProcess
-from ansible.executor.task_queue_manager import TaskQueueManager
-from ansible.executor.task_result import TaskResult
-from ansible.inventory.host import Host
-from ansible.module_utils.six.moves import queue as Queue
-from ansible.playbook.handler import Handler
-from ansible.plugins.strategy import StrategyBase
+from assible.executor.process.worker import WorkerProcess
+from assible.executor.task_queue_manager import TaskQueueManager
+from assible.executor.task_result import TaskResult
+from assible.inventory.host import Host
+from assible.module_utils.six.moves import queue as Queue
+from assible.playbook.handler import Handler
+from assible.plugins.strategy import StrategyBase
 
 
 class TestStrategyBase(unittest.TestCase):
@@ -392,7 +392,7 @@ class TestStrategyBase(unittest.TestCase):
         self.assertEqual(strategy_base._pending_results, 0)
         self.assertNotIn('test01', strategy_base._blocked_hosts)
 
-        queue_items.append(TaskResult(host=mock_host.name, task=mock_task._uuid, return_data=dict(changed=True, _ansible_notify=['test handler'])))
+        queue_items.append(TaskResult(host=mock_host.name, task=mock_task._uuid, return_data=dict(changed=True, _assible_notify=['test handler'])))
         strategy_base._blocked_hosts['test01'] = True
         strategy_base._pending_results = 1
         strategy_base._queued_task_cache = deepcopy(mock_queued_task_cache)
@@ -413,7 +413,7 @@ class TestStrategyBase(unittest.TestCase):
         # self.assertEqual(strategy_base._pending_results, 1)
 
         # queue_items.append(('bad'))
-        # self.assertRaises(AnsibleError, strategy_base._process_pending_results, iterator=mock_iterator)
+        # self.assertRaises(AssibleError, strategy_base._process_pending_results, iterator=mock_iterator)
         strategy_base.cleanup()
 
     def test_strategy_base_load_included_file(self):

@@ -5,7 +5,7 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# This Ansible library is distributed in the hope that it will be useful,
+# This Assible library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -16,7 +16,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -167,17 +167,17 @@ import json
 import os
 import time
 
-from ansible.module_utils.six.moves.urllib.parse import urlparse
-from ansible.module_utils.six import string_types
-from ansible.module_utils.basic import to_text
-from ansible.module_utils.aws.core import AnsibleAWSModule, is_boto3_error_code
-from ansible.module_utils.ec2 import compare_policies, ec2_argument_spec, boto3_tag_list_to_ansible_dict, ansible_dict_to_boto3_tag_list
-from ansible.module_utils.ec2 import get_aws_connection_info, boto3_conn, AWSRetry
+from assible.module_utils.six.moves.urllib.parse import urlparse
+from assible.module_utils.six import string_types
+from assible.module_utils.basic import to_text
+from assible.module_utils.aws.core import AssibleAWSModule, is_boto3_error_code
+from assible.module_utils.ec2 import compare_policies, ec2_argument_spec, boto3_tag_list_to_assible_dict, assible_dict_to_boto3_tag_list
+from assible.module_utils.ec2 import get_aws_connection_info, boto3_conn, AWSRetry
 
 try:
     from botocore.exceptions import BotoCoreError, ClientError, EndpointConnectionError, WaiterError
 except ImportError:
-    pass  # handled by AnsibleAWSModule
+    pass  # handled by AssibleAWSModule
 
 
 def create_or_update_bucket(s3_client, module, location):
@@ -398,7 +398,7 @@ def create_bucket(s3_client, bucket_name, location):
 
 @AWSRetry.exponential_backoff(max_delay=120, catch_extra_error_codes=['NoSuchBucket'])
 def put_bucket_tagging(s3_client, bucket_name, tags):
-    s3_client.put_bucket_tagging(Bucket=bucket_name, Tagging={'TagSet': ansible_dict_to_boto3_tag_list(tags)})
+    s3_client.put_bucket_tagging(Bucket=bucket_name, Tagging={'TagSet': assible_dict_to_boto3_tag_list(tags)})
 
 
 @AWSRetry.exponential_backoff(max_delay=120, catch_extra_error_codes=['NoSuchBucket'])
@@ -566,7 +566,7 @@ def get_current_bucket_tags_dict(s3_client, bucket_name):
             return {}
         raise e
 
-    return boto3_tag_list_to_ansible_dict(current_tags)
+    return boto3_tag_list_to_assible_dict(current_tags)
 
 
 def paginated_list(s3_client, **pagination_params):
@@ -686,7 +686,7 @@ def main():
         )
     )
 
-    module = AnsibleAWSModule(
+    module = AssibleAWSModule(
         argument_spec=argument_spec,
     )
 
@@ -703,7 +703,7 @@ def main():
     s3_url = module.params.get('s3_url')
     ceph = module.params.get('ceph')
 
-    # allow eucarc environment variables to be used if ansible vars aren't set
+    # allow eucarc environment variables to be used if assible vars aren't set
     if not s3_url and 'S3_URL' in os.environ:
         s3_url = os.environ['S3_URL']
 

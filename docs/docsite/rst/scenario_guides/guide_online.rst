@@ -11,7 +11,7 @@ Check it out: `https://www.online.net/en <https://www.online.net/en>`_
 Dynamic inventory for Online resources
 --------------------------------------
 
-Ansible has a dynamic inventory plugin that can list your resources.
+Assible has a dynamic inventory plugin that can list your resources.
 
 1. Create a YAML configuration such as ``online_inventory.yml`` with this content:
 
@@ -27,14 +27,14 @@ Ansible has a dynamic inventory plugin that can list your resources.
 
 .. code-block:: bash
 
-    $ ansible-inventory -v -i online_inventory.yml --list
+    $ assible-inventory -v -i online_inventory.yml --list
 
 
 4. Now you can run your playbook or any other module with this inventory:
 
 .. code-block:: console
 
-    $ ansible all -i online_inventory.yml -m ping
+    $ assible all -i online_inventory.yml -m ping
     sd-96735 | SUCCESS => {
         "changed": false,
         "ping": "pong"

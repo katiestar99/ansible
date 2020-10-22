@@ -1,19 +1,19 @@
-# (c) 2014 Michael DeHaan, <michael@ansible.com>
+# (c) 2014 Michael DeHaan, <michael@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -24,11 +24,11 @@ import tempfile
 from subprocess import Popen, PIPE
 import tarfile
 
-import ansible.constants as C
-from ansible.errors import AnsibleError
-from ansible.utils.display import Display
-from ansible.module_utils.common.process import get_bin_path
-from ansible.module_utils.common.text.converters import to_text, to_native
+import assible.constants as C
+from assible.errors import AssibleError
+from assible.utils.display import Display
+from assible.module_utils.common.process import get_bin_path
+from assible.module_utils.common.text.converters import to_text, to_native
 
 
 display = Display()
@@ -49,17 +49,17 @@ def scm_archive_resource(src, scm='git', name=None, version='HEAD', keep_scm_met
         except Exception as e:
             ran = " ".join(cmd)
             display.debug("ran %s:" % ran)
-            raise AnsibleError("when executing %s: %s" % (ran, to_native(e)))
+            raise AssibleError("when executing %s: %s" % (ran, to_native(e)))
         if popen.returncode != 0:
-            raise AnsibleError("- command %s failed in directory %s (rc=%s) - %s" % (' '.join(cmd), tempdir, popen.returncode, to_native(stderr)))
+            raise AssibleError("- command %s failed in directory %s (rc=%s) - %s" % (' '.join(cmd), tempdir, popen.returncode, to_native(stderr)))
 
     if scm not in ['hg', 'git']:
-        raise AnsibleError("- scm %s is not currently supported" % scm)
+        raise AssibleError("- scm %s is not currently supported" % scm)
 
     try:
         scm_path = get_bin_path(scm)
     except (ValueError, OSError, IOError):
-        raise AnsibleError("could not find/use %s, it is required to continue with installing %s" % (scm, src))
+        raise AssibleError("could not find/use %s, it is required to continue with installing %s" % (scm, src))
 
     tempdir = tempfile.mkdtemp(dir=C.DEFAULT_LOCAL_TMP)
     clone_cmd = [scm_path, 'clone', src, name]

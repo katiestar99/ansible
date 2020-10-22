@@ -1,19 +1,19 @@
 # (c) 2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -34,13 +34,13 @@ import time
 from struct import unpack, pack
 from termios import TIOCGWINSZ
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleAssertionError
-from ansible.module_utils._text import to_bytes, to_text, to_native
-from ansible.module_utils.six import with_metaclass, text_type
-from ansible.utils.color import stringc
-from ansible.utils.singleton import Singleton
-from ansible.utils.unsafe_proxy import wrap_var
+from assible import constants as C
+from assible.errors import AssibleError, AssibleAssertionError
+from assible.module_utils._text import to_bytes, to_text, to_native
+from assible.module_utils.six import with_metaclass, text_type
+from assible.utils.color import stringc
+from assible.utils.singleton import Singleton
+from assible.utils.unsafe_proxy import wrap_var
 
 try:
     # Python 2
@@ -85,20 +85,20 @@ def get_text_width(text):
     for non-printable wide characters
 
     On Py2, this depends on ``locale.setlocale(locale.LC_ALL, '')``,
-    that in the case of Ansible is done in ``bin/ansible``
+    that in the case of Assible is done in ``bin/assible``
     """
     if not isinstance(text, text_type):
         raise TypeError('get_text_width requires text, not %s' % type(text))
 
     if _LOCALE_INITIALIZATION_ERR:
         Display().warning(
-            'An error occurred while calling ansible.utils.display.initialize_locale '
+            'An error occurred while calling assible.utils.display.initialize_locale '
             '(%s). This may result in incorrectly calculated text widths that can '
             'cause Display to print incorrect line lengths' % _LOCALE_INITIALIZATION_ERR
         )
     elif not _LOCALE_INITIALIZED:
         Display().warning(
-            'ansible.utils.display.initialize_locale has not been called, '
+            'assible.utils.display.initialize_locale has not been called, '
             'this may result in incorrectly calculated text widths that can '
             'cause Display to print incorrect line lengths'
         )
@@ -136,7 +136,7 @@ def get_text_width(text):
 
     if width == 0 and counter and not _LOCALE_INITIALIZED:
         raise EnvironmentError(
-            'ansible.utils.display.initialize_locale has not been called, '
+            'assible.utils.display.initialize_locale has not been called, '
             'and get_text_width could not calculate text width of %r' % text
         )
 
@@ -178,7 +178,7 @@ if getattr(C, 'DEFAULT_LOG_PATH'):
         logging.basicConfig(filename=path, level=logging.INFO,  # DO NOT set to logging.DEBUG
                             format='%(asctime)s p=%(process)d u=%(user)s n=%(name)s | %(message)s')
 
-        logger = logging.getLogger('ansible')
+        logger = logging.getLogger('assible')
         for handler in logging.root.handlers:
             handler.addFilter(FilterBlackList(getattr(C, 'DEFAULT_LOG_FILTER', [])))
             handler.addFilter(FilterUserInjector())
@@ -217,7 +217,7 @@ class Display(with_metaclass(Singleton, object)):
         self._errors = {}
 
         self.b_cowsay = None
-        self.noncow = C.ANSIBLE_COW_SELECTION
+        self.noncow = C.ASSIBLE_COW_SELECTION
 
         self.set_cowsay_info()
 
@@ -226,8 +226,8 @@ class Display(with_metaclass(Singleton, object)):
                 cmd = subprocess.Popen([self.b_cowsay, "-l"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 (out, err) = cmd.communicate()
                 self.cows_available = set([to_text(c) for c in out.split()])
-                if C.ANSIBLE_COW_WHITELIST and any(C.ANSIBLE_COW_WHITELIST):
-                    self.cows_available = set(C.ANSIBLE_COW_WHITELIST).intersection(self.cows_available)
+                if C.ASSIBLE_COW_WHITELIST and any(C.ASSIBLE_COW_WHITELIST):
+                    self.cows_available = set(C.ASSIBLE_COW_WHITELIST).intersection(self.cows_available)
             except Exception:
                 # could not execute cowsay for some reason
                 self.b_cowsay = False
@@ -235,11 +235,11 @@ class Display(with_metaclass(Singleton, object)):
         self._set_column_width()
 
     def set_cowsay_info(self):
-        if C.ANSIBLE_NOCOWS:
+        if C.ASSIBLE_NOCOWS:
             return
 
-        if C.ANSIBLE_COW_PATH:
-            self.b_cowsay = C.ANSIBLE_COW_PATH
+        if C.ASSIBLE_COW_PATH:
+            self.b_cowsay = C.ASSIBLE_COW_PATH
         else:
             for b_cow_path in b_COW_PATHS:
                 if os.path.exists(b_cow_path):
@@ -275,7 +275,7 @@ class Display(with_metaclass(Singleton, object)):
                 msg2 = to_text(msg2, self._output_encoding(stderr=stderr), errors='replace')
 
             # Note: After Display() class is refactored need to update the log capture
-            # code in 'bin/ansible-connection' (and other relevant places).
+            # code in 'bin/assible-connection' (and other relevant places).
             if not stderr:
                 fileobj = sys.stdout
             else:
@@ -307,7 +307,7 @@ class Display(with_metaclass(Singleton, object)):
                     lvl = color_to_log_level[color]
                 except KeyError:
                     # this should not happen, but JIC
-                    raise AnsibleAssertionError('Invalid color supplied to display: %s' % color)
+                    raise AssibleAssertionError('Invalid color supplied to display: %s' % color)
             # actually log
             logger.log(lvl, msg2)
 
@@ -351,8 +351,8 @@ class Display(with_metaclass(Singleton, object)):
         if msg and msg[-1] not in ['!', '?', '.']:
             msg += '.'
 
-        if collection_name == 'ansible.builtin':
-            collection_name = 'ansible-base'
+        if collection_name == 'assible.builtin':
+            collection_name = 'assible-base'
 
         if removed:
             header = '[DEPRECATED]: {0}'.format(msg)
@@ -362,7 +362,7 @@ class Display(with_metaclass(Singleton, object)):
             header = '[DEPRECATION WARNING]: {0}'.format(msg)
             removal_fragment = 'This feature will be removed'
             # FUTURE: make this a standalone warning so it only shows up once?
-            help_text = 'Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.'
+            help_text = 'Deprecation warnings can be disabled by setting deprecation_warnings=False in assible.cfg.'
 
         if collection_name:
             from_fragment = 'from {0}'.format(collection_name)
@@ -387,7 +387,7 @@ class Display(with_metaclass(Singleton, object)):
         message_text = self.get_deprecation_message(msg, version=version, removed=removed, date=date, collection_name=collection_name)
 
         if removed:
-            raise AnsibleError(message_text)
+            raise AssibleError(message_text)
 
         wrapped = textwrap.wrap(message_text, self.columns, drop_whitespace=False)
         message_text = "\n".join(wrapped) + "\n"
@@ -510,7 +510,7 @@ class Display(with_metaclass(Singleton, object)):
 
         if encrypt:
             # Circular import because encrypt needs a display class
-            from ansible.utils.encrypt import do_encrypt
+            from assible.utils.encrypt import do_encrypt
             result = do_encrypt(result, encrypt, salt_size, salt)
 
         # handle utf-8 chars

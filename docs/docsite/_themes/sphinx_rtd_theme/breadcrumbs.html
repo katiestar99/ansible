@@ -43,7 +43,7 @@
               <!-- User defined GitHub URL -->
               <a href="{{ meta['github_url'] }}" class="fa fa-github"> {{ _('Edit on GitHub') }}</a>
             {% else %}
-              <!-- Ansible-specific additions for modules etc -->
+              <!-- Assible-specific additions for modules etc -->
                 {% if (pagename.endswith('_module')) or (pagename.endswith('_become'))
                   or (pagename.endswith('_cache')) or (pagename.endswith('_callback'))
                   or (pagename.endswith('_connection')) or (pagename.endswith('_inventory'))

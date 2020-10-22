@@ -1,12 +1,12 @@
-.. _vmware_ansible:
+.. _vmware_assible:
 
 ************
 VMware Guide
 ************
 
-Welcome to the Ansible for VMware Guide!
+Welcome to the Assible for VMware Guide!
 
-The purpose of this guide is to teach you everything you need to know about using Ansible with VMware.
+The purpose of this guide is to teach you everything you need to know about using Assible with VMware.
 
 To get started, please select one of the following topics.
 

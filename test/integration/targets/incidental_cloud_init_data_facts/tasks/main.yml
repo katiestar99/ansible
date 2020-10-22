@@ -8,8 +8,8 @@
   # Will also have to skip on OpenSUSE when running on Python 2 on newer Leap versions
   # (!= 42 and >= 15) ascloud-init will install the Python 3 package, breaking our build on py2.
   when:
-  - not (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 14)
-  - not (ansible_os_family == "Suse" and ansible_distribution_major_version|int != 42 and ansible_python.version.major != 3)
+  - not (assible_distribution == "Ubuntu" and assible_distribution_major_version|int == 14)
+  - not (assible_os_family == "Suse" and assible_distribution_major_version|int != 42 and assible_python.version.major != 3)
   block:
   - name: setup install cloud-init
     package:

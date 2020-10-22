@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2020, Ansible Project
+# (c) 2020, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -16,8 +16,8 @@ import urllib.parse
 
 from collections import defaultdict
 
-from ansible.module_utils.common.collections import is_iterable
-from ansible.module_utils.urls import Request
+from assible.module_utils.common.collections import is_iterable
+from assible.module_utils.urls import Request
 
 # Pylint doesn't understand Python3 namespace modules.
 from ..commands import Command  # pylint: disable=relative-beyond-top-level

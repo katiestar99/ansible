@@ -22,7 +22,7 @@
   yum_repository:
     name: docker-ce
     description: docker-ce
-    baseurl: https://download.docker.com/linux/centos/{{ ansible_facts.distribution_major_version }}/$basearch/stable
+    baseurl: https://download.docker.com/linux/centos/{{ assible_facts.distribution_major_version }}/$basearch/stable
     gpgcheck: true
     gpgkey: https://download.docker.com/linux/centos/gpg
 
@@ -41,4 +41,4 @@
   service:
     name: docker
     state: started
-  ignore_errors: "{{ ansible_virtualization_type == 'docker' }}"
+  ignore_errors: "{{ assible_virtualization_type == 'docker' }}"

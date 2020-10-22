@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2015-2017 Ansible Project
+# Copyright (c) 2015-2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -17,7 +17,7 @@ EMPTY_INVOCATION = {u'module_args': {}}
 DATETIME = datetime.datetime.strptime('2020-07-13 12:50:00', '%Y-%m-%d %H:%M:%S')
 
 
-class TestAnsibleModuleExitJson:
+class TestAssibleModuleExitJson:
     """
     Test that various means of calling exitJson and FailJson return the messages they've been given
     """
@@ -101,7 +101,7 @@ class TestAnsibleModuleExitJson:
         assert ctx.value.args[0] == error_msg
 
 
-class TestAnsibleModuleExitValuesRemoved:
+class TestAssibleModuleExitValuesRemoved:
     """
     Test that ExitJson and FailJson remove password-like values
     """

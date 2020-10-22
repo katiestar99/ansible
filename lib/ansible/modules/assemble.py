@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2012, Stephen Fromm <sfromm@gmail.com>
-# Copyright: (c) 2016, Toshio Kuratomi <tkuratomi@ansible.com>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2016, Toshio Kuratomi <tkuratomi@assible.com>
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -75,9 +75,9 @@ options:
     type: str
     version_added: '2.0'
 seealso:
-- module: ansible.builtin.copy
-- module: ansible.builtin.template
-- module: ansible.windows.win_copy
+- module: assible.builtin.copy
+- module: assible.builtin.template
+- module: assible.windows.win_copy
 author:
 - Stephen Fromm (@sfromm)
 extends_documentation_fragment:
@@ -109,9 +109,9 @@ import os
 import re
 import tempfile
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.six import b, indexbytes
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.six import b, indexbytes
+from assible.module_utils._text import to_native
 
 
 def assemble_from_fragments(src_path, delimiter=None, compiled_regexp=None, ignore_hidden=False, tmpdir=None):
@@ -173,7 +173,7 @@ def cleanup(path, result=None):
 
 def main():
 
-    module = AnsibleModule(
+    module = AssibleModule(
         # not checking because of daisy chain to file module
         argument_spec=dict(
             src=dict(type='path', required=True),

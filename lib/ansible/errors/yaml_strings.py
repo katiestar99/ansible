@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible. If not, see <http://www.gnu.org/licenses/>.
+# along with Assible. If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -41,7 +41,7 @@ be elsewhere in the file depending on the exact syntax problem.
 YAML_COMMON_DICT_ERROR = """\
 This one looks easy to fix. YAML thought it was looking for the start of a
 hash/dictionary and was confused to see a second "{". Most likely this was
-meant to be an ansible template evaluation instead, so we have to give the
+meant to be an assible template evaluation instead, so we have to give the
 parser a small hint that we wanted a string instead. The solution here is to
 just quote the entire value.
 

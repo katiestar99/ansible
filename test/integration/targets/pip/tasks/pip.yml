@@ -1,20 +1,20 @@
 # test code for the pip module
 # (c) 2014, Michael DeHaan <michael.dehaan@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # FIXME: replace the python test package
 
@@ -41,7 +41,7 @@
     that:
        - "not (uninstall_result is changed)"
 
-- command: "{{ ansible_python.executable }} -c 'import {{ item }}'"
+- command: "{{ assible_python.executable }} -c 'import {{ item }}'"
   register: absent_result
   failed_when: "absent_result.rc == 0"
   loop: '{{ pip_test_modules }}'
@@ -60,7 +60,7 @@
     that:
       - "install_result is changed"
 
-- command: "{{ ansible_python.executable }} -c 'import {{ item }}'"
+- command: "{{ assible_python.executable }} -c 'import {{ item }}'"
   loop: '{{ pip_test_modules }}'
 
 # now remove it to test uninstallation of a package we are sure is installed
@@ -119,7 +119,7 @@
     virtualenv: "{{ output_dir }}/pipenv"
   register: req_installed
 
-- name: "check that a change didn't occurr this time (bug ansible#1705)"
+- name: "check that a change didn't occurr this time (bug assible#1705)"
   assert:
     that:
       - "not (req_installed is changed)"
@@ -131,7 +131,7 @@
     editable: True
   register: url_installed
 
-- name: "check that a change didn't occurr (bug ansible-modules-core#1645)"
+- name: "check that a change didn't occurr (bug assible-modules-core#1645)"
   assert:
     that:
       - "not (url_installed is changed)"
@@ -220,7 +220,7 @@
     that:
       - "diff_case_check_mode is not changed"
 
-# ansible#23204
+# assible#23204
 - name: ensure is a fresh virtualenv
   file:
     state: absent
@@ -237,7 +237,7 @@
     that:
       - "pip_install_venv is changed"
 
-# https://github.com/ansible/ansible/issues/37912
+# https://github.com/assible/assible/issues/37912
 # support chdir without virtualenv
 - name: create chdir test directories
   file:
@@ -246,7 +246,7 @@
   loop:
     - pip_module
     - pip_root
-    - pip_module/ansible_test_pip_chdir
+    - pip_module/assible_test_pip_chdir
 
 - name: copy test module
   copy:
@@ -254,7 +254,7 @@
     dest: "{{ output_dir }}/pip_module/{{ item }}"
   loop:
     - setup.py
-    - ansible_test_pip_chdir/__init__.py
+    - assible_test_pip_chdir/__init__.py
 
 - name: install test module
   pip:
@@ -263,15 +263,15 @@
     extra_args: --user --upgrade --root {{ output_dir }}/pip_root
 
 - name: register python_site_lib
-  command: '{{ ansible_python.executable }} -c "import site; print(site.USER_SITE)"'
+  command: '{{ assible_python.executable }} -c "import site; print(site.USER_SITE)"'
   register: pip_python_site_lib
 
 - name: register python_user_base
-  command: '{{ ansible_python.executable }} -c "import site; print(site.USER_BASE)"'
+  command: '{{ assible_python.executable }} -c "import site; print(site.USER_BASE)"'
   register: pip_python_user_base
 
 - name: run test module
-  shell: "PYTHONPATH=$(echo {{ output_dir }}/pip_root{{ pip_python_site_lib.stdout }}) {{ output_dir }}/pip_root{{ pip_python_user_base.stdout }}/bin/ansible_test_pip_chdir"
+  shell: "PYTHONPATH=$(echo {{ output_dir }}/pip_root{{ pip_python_site_lib.stdout }}) {{ output_dir }}/pip_root{{ pip_python_user_base.stdout }}/bin/assible_test_pip_chdir"
   register: pip_chdir_command
 
 - name: make sure command ran
@@ -279,7 +279,7 @@
     that:
       - pip_chdir_command.stdout == "success"
 
-# https://github.com/ansible/ansible/issues/25122
+# https://github.com/assible/assible/issues/25122
 - name: ensure is a fresh virtualenv
   file:
     state: absent
@@ -298,7 +298,7 @@
     that:
       - "venv_chdir is changed"
 
-# ansible#38785
+# assible#38785
 - name: allow empty list of packages
   pip:
     name: []
@@ -309,7 +309,7 @@
     that:
       - "not (pip_install_empty is changed)"
 
-# https://github.com/ansible/ansible/issues/41043
+# https://github.com/assible/assible/issues/41043
 - name: do not consider an empty string as a version
   pip:
     name: q
@@ -486,7 +486,7 @@
     name: "{{ pip_test_packages }}"
     state: absent
 
-# https://github.com/ansible/ansible/issues/47198
+# https://github.com/assible/assible/issues/47198
 # distribute is a legacy package that will fail on newer Python 3 versions
 - block:
   - name: make sure the virtualenv does not exist
@@ -515,19 +515,19 @@
   - name: inspect the cmd
     assert:
       that: "'distribute' in remove_distribute.cmd"
-  when: ansible_python.version.major == 2
+  when: assible_python.version.major == 2
 
 ### test virtualenv_command begin ###
 
 - name: Test virtualenv command with arguments
-  when: "ansible_system == 'Linux'"
+  when: "assible_system == 'Linux'"
   block:
     - name: make sure the virtualenv does not exist
       file:
         state: absent
         name: "{{ output_dir }}/pipenv"
 
-    # ref: https://github.com/ansible/ansible/issues/52275
+    # ref: https://github.com/assible/assible/issues/52275
     - name: install using virtualenv_command with arguments
       pip:
         name: "{{ pip_test_package }}"
@@ -543,7 +543,7 @@
 
 ### test virtualenv_command end ###
 
-# https://github.com/ansible/ansible/issues/68592
+# https://github.com/assible/assible/issues/68592
 # Handle pre-release version numbers in check_mode for already-installed
 # packages.
 # TODO: Limiting to py3 test boxes for now so the example of 'black' installs,
@@ -576,4 +576,4 @@
         - pip_prereleases is not changed
         - '"black==19.10b0" in pip_prereleases.stdout_lines'
 
-  when: ansible_python.version.major == 3
+  when: assible_python.version.major == 3

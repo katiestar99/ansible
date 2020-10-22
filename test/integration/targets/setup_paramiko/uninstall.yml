@@ -8,10 +8,10 @@
         - name: Uninstall Paramiko
           include_tasks: "{{ item }}"
           with_first_found:
-            - "uninstall-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}-python-{{ ansible_python.version.major }}.yml"
-            - "uninstall-{{ ansible_os_family }}-{{ ansible_distribution_major_version }}-python-{{ ansible_python.version.major }}.yml"
-            - "uninstall-{{ ansible_pkg_mgr }}-python-{{ ansible_python.version.major }}.yml"
-            - "uninstall-{{ ansible_pkg_mgr }}.yml"
+            - "uninstall-{{ assible_distribution }}-{{ assible_distribution_major_version }}-python-{{ assible_python.version.major }}.yml"
+            - "uninstall-{{ assible_os_family }}-{{ assible_distribution_major_version }}-python-{{ assible_python.version.major }}.yml"
+            - "uninstall-{{ assible_pkg_mgr }}-python-{{ assible_python.version.major }}.yml"
+            - "uninstall-{{ assible_pkg_mgr }}.yml"
             - "uninstall-fail.yml"
         - name: Verify Paramiko was uninstalled
           detect_paramiko:

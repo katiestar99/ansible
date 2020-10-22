@@ -69,7 +69,7 @@ message:
     sample: 'goodbye'
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def run_module():
@@ -90,11 +90,11 @@ def run_module():
         message=''
     )
 
-    # the AnsibleModule object will be our abstraction working with Ansible
+    # the AssibleModule object will be our abstraction working with Assible
     # this includes instantiation, a couple of common attr would be the
     # args/params passed to the execution, as well as if the module
     # supports check mode
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=module_args,
         supports_check_mode=True
     )
@@ -117,12 +117,12 @@ def run_module():
 
     # during the execution of the module, if there is an exception or a
     # conditional state that effectively causes a failure, run
-    # AnsibleModule.fail_json() to pass in the message and the result
+    # AssibleModule.fail_json() to pass in the message and the result
     if module.params['name'] == 'fail me':
         module.fail_json(msg='You requested this to fail', **result)
 
     # in the event of a successful module execution, you will want to
-    # simple AnsibleModule.exit_json(), passing the key/value results
+    # simple AssibleModule.exit_json(), passing the key/value results
     module.exit_json(**result)
 
 

@@ -1,4 +1,4 @@
-angular.module('ansibleApp', []).filter('moduleVersion', function() {
+angular.module('assibleApp', []).filter('moduleVersion', function() {
   return function(modules, version) {
 
     var parseVersionString = function (str) {

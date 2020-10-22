@@ -1,18 +1,18 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = """
-    author: Ansible Core Team
+    author: Assible Core Team
     name: paramiko
     short_description: Run tasks via python ssh (paramiko)
     description:
         - Use the python ssh implementation (Paramiko) to connect to targets
         - The paramiko transport is provided because many distributions, in particular EL6 and before do not support ControlPersist
           in their SSH implementations.
-        - This is needed on the Ansible control machine to be reasonably efficient with connections.
+        - This is needed on the Assible control machine to be reasonably efficient with connections.
           Thus paramiko is faster for most users on these platforms.
           Users with ControlPersist capability can consider using -c ssh or configuring the transport in the configuration file.
         - This plugin also borrows a lot of settings from the ssh plugin as they both cover the same protocol.
@@ -23,20 +23,20 @@ DOCUMENTATION = """
             - Address of the remote target
         default: inventory_hostname
         vars:
-            - name: ansible_host
-            - name: ansible_ssh_host
-            - name: ansible_paramiko_host
+            - name: assible_host
+            - name: assible_ssh_host
+            - name: assible_paramiko_host
       remote_user:
         description:
             - User to login/authenticate as
             - Can be set from the CLI via the C(--user) or C(-u) options.
         vars:
-            - name: ansible_user
-            - name: ansible_ssh_user
-            - name: ansible_paramiko_user
+            - name: assible_user
+            - name: assible_ssh_user
+            - name: assible_paramiko_user
         env:
-            - name: ANSIBLE_REMOTE_USER
-            - name: ANSIBLE_PARAMIKO_REMOTE_USER
+            - name: ASSIBLE_REMOTE_USER
+            - name: ASSIBLE_PARAMIKO_REMOTE_USER
               version_added: '2.5'
         ini:
             - section: defaults
@@ -49,22 +49,22 @@ DOCUMENTATION = """
           - Secret used to either login the ssh server or as a passphrase for ssh keys that require it
           - Can be set from the CLI via the C(--ask-pass) option.
         vars:
-            - name: ansible_password
-            - name: ansible_ssh_pass
-            - name: ansible_ssh_password
-            - name: ansible_paramiko_pass
-            - name: ansible_paramiko_password
+            - name: assible_password
+            - name: assible_ssh_pass
+            - name: assible_ssh_password
+            - name: assible_paramiko_pass
+            - name: assible_paramiko_password
               version_added: '2.5'
       host_key_auto_add:
         description: 'TODO: write it'
-        env: [{name: ANSIBLE_PARAMIKO_HOST_KEY_AUTO_ADD}]
+        env: [{name: ASSIBLE_PARAMIKO_HOST_KEY_AUTO_ADD}]
         ini:
           - {key: host_key_auto_add, section: paramiko_connection}
         type: boolean
       look_for_keys:
         default: True
         description: 'TODO: write it'
-        env: [{name: ANSIBLE_PARAMIKO_LOOK_FOR_KEYS}]
+        env: [{name: ASSIBLE_PARAMIKO_LOOK_FOR_KEYS}]
         ini:
         - {key: look_for_keys, section: paramiko_connection}
         type: boolean
@@ -73,14 +73,14 @@ DOCUMENTATION = """
         description:
             - Proxy information for running the connection via a jumphost
             - Also this plugin will scan 'ssh_args', 'ssh_extra_args' and 'ssh_common_args' from the 'ssh' plugin settings for proxy information if set.
-        env: [{name: ANSIBLE_PARAMIKO_PROXY_COMMAND}]
+        env: [{name: ASSIBLE_PARAMIKO_PROXY_COMMAND}]
         ini:
           - {key: proxy_command, section: paramiko_connection}
       pty:
         default: True
         description: 'TODO: write it'
         env:
-          - name: ANSIBLE_PARAMIKO_PTY
+          - name: ASSIBLE_PARAMIKO_PTY
         ini:
           - section: paramiko_connection
             key: pty
@@ -88,20 +88,20 @@ DOCUMENTATION = """
       record_host_keys:
         default: True
         description: 'TODO: write it'
-        env: [{name: ANSIBLE_PARAMIKO_RECORD_HOST_KEYS}]
+        env: [{name: ASSIBLE_PARAMIKO_RECORD_HOST_KEYS}]
         ini:
           - section: paramiko_connection
             key: record_host_keys
         type: boolean
       host_key_checking:
-        description: 'Set this to "False" if you want to avoid host key checking by the underlying tools Ansible uses to connect to the host'
+        description: 'Set this to "False" if you want to avoid host key checking by the underlying tools Assible uses to connect to the host'
         type: boolean
         default: True
         env:
-          - name: ANSIBLE_HOST_KEY_CHECKING
-          - name: ANSIBLE_SSH_HOST_KEY_CHECKING
+          - name: ASSIBLE_HOST_KEY_CHECKING
+          - name: ASSIBLE_SSH_HOST_KEY_CHECKING
             version_added: '2.5'
-          - name: ANSIBLE_PARAMIKO_HOST_KEY_CHECKING
+          - name: ASSIBLE_PARAMIKO_HOST_KEY_CHECKING
             version_added: '2.5'
         ini:
           - section: defaults
@@ -110,18 +110,18 @@ DOCUMENTATION = """
             key: host_key_checking
             version_added: '2.5'
         vars:
-          - name: ansible_host_key_checking
+          - name: assible_host_key_checking
             version_added: '2.5'
-          - name: ansible_ssh_host_key_checking
+          - name: assible_ssh_host_key_checking
             version_added: '2.5'
-          - name: ansible_paramiko_host_key_checking
+          - name: assible_paramiko_host_key_checking
             version_added: '2.5'
       use_persistent_connections:
         description: 'Toggles the use of persistence for connections'
         type: boolean
         default: False
         env:
-          - name: ANSIBLE_USE_PERSISTENT_CONNECTIONS
+          - name: ASSIBLE_USE_PERSISTENT_CONNECTIONS
         ini:
           - section: defaults
             key: use_persistent_connections
@@ -141,19 +141,19 @@ from termios import tcflush, TCIFLUSH
 from distutils.version import LooseVersion
 from binascii import hexlify
 
-from ansible.errors import (
-    AnsibleAuthenticationFailure,
-    AnsibleConnectionFailure,
-    AnsibleError,
-    AnsibleFileNotFound,
+from assible.errors import (
+    AssibleAuthenticationFailure,
+    AssibleConnectionFailure,
+    AssibleError,
+    AssibleFileNotFound,
 )
-from ansible.module_utils.compat.paramiko import PARAMIKO_IMPORT_ERR, paramiko
-from ansible.module_utils.six import iteritems
-from ansible.module_utils.six.moves import input
-from ansible.plugins.connection import ConnectionBase
-from ansible.utils.display import Display
-from ansible.utils.path import makedirs_safe
-from ansible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.compat.paramiko import PARAMIKO_IMPORT_ERR, paramiko
+from assible.module_utils.six import iteritems
+from assible.module_utils.six.moves import input
+from assible.plugins.connection import ConnectionBase
+from assible.utils.display import Display
+from assible.utils.path import makedirs_safe
+from assible.module_utils._text import to_bytes, to_native, to_text
 
 display = Display()
 
@@ -193,7 +193,7 @@ class MyAddPolicy(object):
             if self.connection.get_option('use_persistent_connections') or self.connection.force_persistence:
                 # don't print the prompt string since the user cannot respond
                 # to the question anyway
-                raise AnsibleError(AUTHENTICITY_MSG[1:92] % (hostname, ktype, fingerprint))
+                raise AssibleError(AUTHENTICITY_MSG[1:92] % (hostname, ktype, fingerprint))
 
             self.connection.connection_lock()
 
@@ -209,9 +209,9 @@ class MyAddPolicy(object):
             self.connection.connection_unlock()
 
             if inp not in ['yes', 'y', '']:
-                raise AnsibleError("host connection rejected by user")
+                raise AssibleError("host connection rejected by user")
 
-        key._added_by_ansible_this_time = True
+        key._added_by_assible_this_time = True
 
         # existing implementation below:
         client._host_keys.add(hostname, key.get_name(), key)
@@ -249,7 +249,7 @@ class Connection(ConnectionBase):
 
     def _parse_proxy_command(self, port=22):
         proxy_command = None
-        # Parse ansible_ssh_common_args, specifically looking for ProxyCommand
+        # Parse assible_ssh_common_args, specifically looking for ProxyCommand
         ssh_args = [
             getattr(self._play_context, 'ssh_extra_args', '') or '',
             getattr(self._play_context, 'ssh_common_args', '') or '',
@@ -296,7 +296,7 @@ class Connection(ConnectionBase):
         ''' activates the connection object '''
 
         if paramiko is None:
-            raise AnsibleError("paramiko is not installed: %s" % to_native(PARAMIKO_IMPORT_ERR))
+            raise AssibleError("paramiko is not installed: %s" % to_native(PARAMIKO_IMPORT_ERR))
 
         port = self._play_context.port or 22
         display.vvv("ESTABLISH PARAMIKO SSH CONNECTION FOR USER: %s on PORT %s TO %s" % (self._play_context.remote_user, port, self._play_context.remote_addr),
@@ -352,20 +352,20 @@ class Connection(ConnectionBase):
                 **ssh_connect_kwargs
             )
         except paramiko.ssh_exception.BadHostKeyException as e:
-            raise AnsibleConnectionFailure('host key mismatch for %s' % e.hostname)
+            raise AssibleConnectionFailure('host key mismatch for %s' % e.hostname)
         except paramiko.ssh_exception.AuthenticationException as e:
             msg = 'Failed to authenticate: {0}'.format(to_text(e))
-            raise AnsibleAuthenticationFailure(msg)
+            raise AssibleAuthenticationFailure(msg)
         except Exception as e:
             msg = to_text(e)
             if u"PID check failed" in msg:
-                raise AnsibleError("paramiko version issue, please upgrade paramiko on the machine running ansible")
+                raise AssibleError("paramiko version issue, please upgrade paramiko on the machine running assible")
             elif u"Private key file is encrypted" in msg:
                 msg = 'ssh %s@%s:%s : %s\nTo connect as a different user, use -u <username>.' % (
                     self._play_context.remote_user, self._play_context.remote_addr, port, msg)
-                raise AnsibleConnectionFailure(msg)
+                raise AssibleConnectionFailure(msg)
             else:
-                raise AnsibleConnectionFailure(msg)
+                raise AssibleConnectionFailure(msg)
 
         return ssh
 
@@ -375,7 +375,7 @@ class Connection(ConnectionBase):
         super(Connection, self).exec_command(cmd, in_data=in_data, sudoable=sudoable)
 
         if in_data:
-            raise AnsibleError("Internal Error: this module does not support optimized module pipelining")
+            raise AssibleError("Internal Error: this module does not support optimized module pipelining")
 
         bufsize = 4096
 
@@ -387,10 +387,10 @@ class Connection(ConnectionBase):
             msg = u"Failed to open session"
             if text_e:
                 msg += u": %s" % text_e
-            raise AnsibleConnectionFailure(to_native(msg))
+            raise AssibleConnectionFailure(to_native(msg))
 
         # sudo usually requires a PTY (cf. requiretty option), therefore
-        # we give it one by default (pty=True in ansible.cfg), and we try
+        # we give it one by default (pty=True in assible.cfg), and we try
         # to initialise from the calling environment when sudoable is enabled
         if self.get_option('pty') and sudoable:
             chan.get_pty(term=os.getenv('TERM', 'vt100'), width=int(os.getenv('COLUMNS', 0)), height=int(os.getenv('LINES', 0)))
@@ -417,10 +417,10 @@ class Connection(ConnectionBase):
                         if b'unknown user' in become_output:
                             n_become_user = to_native(self.become.get_option('become_user',
                                                                              playcontext=self._play_context))
-                            raise AnsibleError('user %s does not exist' % n_become_user)
+                            raise AssibleError('user %s does not exist' % n_become_user)
                         else:
                             break
-                            # raise AnsibleError('ssh connection closed waiting for password prompt')
+                            # raise AssibleError('ssh connection closed waiting for password prompt')
                     become_output += chunk
 
                     # need to check every line because we might get lectured
@@ -438,12 +438,12 @@ class Connection(ConnectionBase):
                         become_pass = self.become.get_option('become_pass', playcontext=self._play_context)
                         chan.sendall(to_bytes(become_pass, errors='surrogate_or_strict') + b'\n')
                     else:
-                        raise AnsibleError("A password is required but none was supplied")
+                        raise AssibleError("A password is required but none was supplied")
                 else:
                     no_prompt_out += become_output
                     no_prompt_err += become_output
         except socket.timeout:
-            raise AnsibleError('ssh timed out waiting for privilege escalation.\n' + become_output)
+            raise AssibleError('ssh timed out waiting for privilege escalation.\n' + become_output)
 
         stdout = b''.join(chan.makefile('rb', bufsize))
         stderr = b''.join(chan.makefile_stderr('rb', bufsize))
@@ -458,17 +458,17 @@ class Connection(ConnectionBase):
         display.vvv("PUT %s TO %s" % (in_path, out_path), host=self._play_context.remote_addr)
 
         if not os.path.exists(to_bytes(in_path, errors='surrogate_or_strict')):
-            raise AnsibleFileNotFound("file or module does not exist: %s" % in_path)
+            raise AssibleFileNotFound("file or module does not exist: %s" % in_path)
 
         try:
             self.sftp = self.ssh.open_sftp()
         except Exception as e:
-            raise AnsibleError("failed to open a SFTP connection (%s)" % e)
+            raise AssibleError("failed to open a SFTP connection (%s)" % e)
 
         try:
             self.sftp.put(to_bytes(in_path, errors='surrogate_or_strict'), to_bytes(out_path, errors='surrogate_or_strict'))
         except IOError:
-            raise AnsibleError("failed to transfer file to %s" % out_path)
+            raise AssibleError("failed to transfer file to %s" % out_path)
 
     def _connect_sftp(self):
 
@@ -489,18 +489,18 @@ class Connection(ConnectionBase):
         try:
             self.sftp = self._connect_sftp()
         except Exception as e:
-            raise AnsibleError("failed to open a SFTP connection (%s)" % to_native(e))
+            raise AssibleError("failed to open a SFTP connection (%s)" % to_native(e))
 
         try:
             self.sftp.get(to_bytes(in_path, errors='surrogate_or_strict'), to_bytes(out_path, errors='surrogate_or_strict'))
         except IOError:
-            raise AnsibleError("failed to transfer file from %s" % in_path)
+            raise AssibleError("failed to transfer file from %s" % in_path)
 
     def _any_keys_added(self):
 
         for hostname, keys in iteritems(self.ssh._host_keys):
             for keytype, key in iteritems(keys):
-                added_this_time = getattr(key, '_added_by_ansible_this_time', False)
+                added_this_time = getattr(key, '_added_by_assible_this_time', False)
                 if added_this_time:
                     return True
         return False
@@ -524,14 +524,14 @@ class Connection(ConnectionBase):
                 for keytype, key in iteritems(keys):
 
                     # was f.write
-                    added_this_time = getattr(key, '_added_by_ansible_this_time', False)
+                    added_this_time = getattr(key, '_added_by_assible_this_time', False)
                     if not added_this_time:
                         f.write("%s %s %s\n" % (hostname, keytype, key.get_base64()))
 
             for hostname, keys in iteritems(self.ssh._host_keys):
 
                 for keytype, key in iteritems(keys):
-                    added_this_time = getattr(key, '_added_by_ansible_this_time', False)
+                    added_this_time = getattr(key, '_added_by_assible_this_time', False)
                     if added_this_time:
                         f.write("%s %s %s\n" % (hostname, keytype, key.get_base64()))
 

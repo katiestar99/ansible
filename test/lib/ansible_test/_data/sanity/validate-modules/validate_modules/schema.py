@@ -12,9 +12,9 @@ from distutils.version import StrictVersion
 from functools import partial
 
 from voluptuous import ALLOW_EXTRA, PREVENT_EXTRA, All, Any, Invalid, Length, Required, Schema, Self, ValueInvalid
-from ansible.module_utils.six import string_types
-from ansible.module_utils.common.collections import is_iterable
-from ansible.utils.version import SemanticVersion
+from assible.module_utils.six import string_types
+from assible.module_utils.common.collections import is_iterable
+from assible.utils.version import SemanticVersion
 
 from .utils import parse_isodate
 
@@ -23,17 +23,17 @@ tuple_string_types = tuple(string_types)
 any_string_types = Any(*string_types)
 
 # Valid DOCUMENTATION.author lines
-# Based on Ansibulbot's extract_github_id()
+# Based on Assibulbot's extract_github_id()
 #   author: First Last (@name) [optional anything]
-#     "Ansible Core Team" - Used by the Bot
+#     "Assible Core Team" - Used by the Bot
 #     "Michael DeHaan" - nop
-#     "OpenStack Ansible SIG" - OpenStack does not use GitHub
+#     "OpenStack Assible SIG" - OpenStack does not use GitHub
 #     "Name (!UNKNOWN)" - For the few untraceable authors
-author_line = re.compile(r'^\w.*(\(@([\w-]+)\)|!UNKNOWN)(?![\w.])|^Ansible Core Team$|^Michael DeHaan$|^OpenStack Ansible SIG$')
+author_line = re.compile(r'^\w.*(\(@([\w-]+)\)|!UNKNOWN)(?![\w.])|^Assible Core Team$|^Michael DeHaan$|^OpenStack Assible SIG$')
 
 
-def _add_ansible_error_code(exception, error_code):
-    setattr(exception, 'ansible_error_code', error_code)
+def _add_assible_error_code(exception, error_code):
+    setattr(exception, 'assible_error_code', error_code)
     return exception
 
 
@@ -41,7 +41,7 @@ def isodate(v, error_code=None):
     try:
         parse_isodate(v, allow_date=True)
     except ValueError as e:
-        raise _add_ansible_error_code(Invalid(str(e)), error_code or 'ansible-invalid-date')
+        raise _add_assible_error_code(Invalid(str(e)), error_code or 'assible-invalid-date')
     return v
 
 
@@ -50,11 +50,11 @@ COLLECTION_NAME_RE = re.compile('^([^.]+.[^.]+)$')
 
 def collection_name(v, error_code=None):
     if not isinstance(v, string_types):
-        raise _add_ansible_error_code(
+        raise _add_assible_error_code(
             Invalid('Collection name must be a string'), error_code or 'collection-invalid-name')
     m = COLLECTION_NAME_RE.match(v)
     if not m:
-        raise _add_ansible_error_code(
+        raise _add_assible_error_code(
             Invalid('Collection name must be of format `<namespace>.<name>`'), error_code or 'collection-invalid-name')
     return v
 
@@ -149,25 +149,25 @@ def check_removal_version(v, version_field, collection_name_field, error_code='i
     if not isinstance(version, string_types) or not isinstance(collection_name, string_types):
         # If they are not strings, schema validation will have already complained.
         return v
-    if collection_name == 'ansible.builtin':
+    if collection_name == 'assible.builtin':
         try:
             parsed_version = StrictVersion()
             parsed_version.parse(version)
         except ValueError as exc:
-            raise _add_ansible_error_code(
-                Invalid('%s (%r) is not a valid ansible-base version: %s' % (version_field, version, exc)),
+            raise _add_assible_error_code(
+                Invalid('%s (%r) is not a valid assible-base version: %s' % (version_field, version, exc)),
                 error_code=error_code)
         return v
     try:
         parsed_version = SemanticVersion()
         parsed_version.parse(version)
         if parsed_version.major != 0 and (parsed_version.minor != 0 or parsed_version.patch != 0):
-            raise _add_ansible_error_code(
+            raise _add_assible_error_code(
                 Invalid('%s (%r) must be a major release, not a minor or patch release (see specification at '
                         'https://semver.org/)' % (version_field, version)),
                 error_code='removal-version-must-be-major')
     except ValueError as exc:
-        raise _add_ansible_error_code(
+        raise _add_assible_error_code(
             Invalid('%s (%r) is not a valid collection version (see specification at https://semver.org/): '
                     '%s' % (version_field, version, exc)),
             error_code=error_code)
@@ -177,11 +177,11 @@ def check_removal_version(v, version_field, collection_name_field, error_code='i
 def option_deprecation(v):
     if v.get('removed_in_version') or v.get('removed_at_date'):
         if v.get('removed_in_version') and v.get('removed_at_date'):
-            raise _add_ansible_error_code(
+            raise _add_assible_error_code(
                 Invalid('Only one of removed_in_version and removed_at_date must be specified'),
                 error_code='deprecation-either-date-or-version')
         if not v.get('removed_from_collection'):
-            raise _add_ansible_error_code(
+            raise _add_assible_error_code(
                 Invalid('If removed_in_version or removed_at_date is specified, '
                         'removed_from_collection must be specified as well'),
                 error_code='deprecation-collection-missing')
@@ -246,7 +246,7 @@ def argument_spec_schema(for_collection):
     return Schema(schemas)
 
 
-def ansible_module_kwargs_schema(for_collection):
+def assible_module_kwargs_schema(for_collection):
     schema = {
         'argument_spec': argument_spec_schema(for_collection),
         'bypass_checks': bool,
@@ -273,17 +273,17 @@ def version_added(v, error_code='version-added-invalid', accept_historical=False
         version_added = v.get('version_added')
         if isinstance(version_added, string_types):
             # If it is not a string, schema validation will have already complained
-            # - or we have a float and we are in ansible/ansible, in which case we're
+            # - or we have a float and we are in assible/assible, in which case we're
             # also happy.
-            if v.get('version_added_collection') == 'ansible.builtin':
+            if v.get('version_added_collection') == 'assible.builtin':
                 if version_added == 'historical' and accept_historical:
                     return v
                 try:
                     version = StrictVersion()
                     version.parse(version_added)
                 except ValueError as exc:
-                    raise _add_ansible_error_code(
-                        Invalid('version_added (%r) is not a valid ansible-base version: '
+                    raise _add_assible_error_code(
+                        Invalid('version_added (%r) is not a valid assible-base version: '
                                 '%s' % (version_added, exc)),
                         error_code=error_code)
             else:
@@ -291,13 +291,13 @@ def version_added(v, error_code='version-added-invalid', accept_historical=False
                     version = SemanticVersion()
                     version.parse(version_added)
                     if version.major != 0 and version.patch != 0:
-                        raise _add_ansible_error_code(
+                        raise _add_assible_error_code(
                             Invalid('version_added (%r) must be a major or minor release, '
                                     'not a patch release (see specification at '
                                     'https://semver.org/)' % (version_added, )),
                             error_code='version-added-must-be-major-or-minor')
                 except ValueError as exc:
-                    raise _add_ansible_error_code(
+                    raise _add_assible_error_code(
                         Invalid('version_added (%r) is not a valid collection version '
                                 '(see specification at https://semver.org/): '
                                 '%s' % (version_added, exc)),

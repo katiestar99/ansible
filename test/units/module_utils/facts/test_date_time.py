@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Ansible Project
+# Copyright (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -10,7 +10,7 @@ import datetime
 import string
 import time
 
-from ansible.module_utils.facts.system import date_time
+from assible.module_utils.facts.system import date_time
 
 EPOCH_TS = 1594449296.123456
 DT = datetime.datetime(2020, 7, 11, 12, 34, 56, 124356)

@@ -16,7 +16,7 @@ short_description:  Manage services
 description:
     - Controls services on remote hosts. Supported init systems include BSD init,
       OpenRC, SysV, Solaris SMF, systemd, upstart.
-    - For Windows targets, use the M(ansible.windows.win_service) module instead.
+    - For Windows targets, use the M(assible.windows.win_service) module instead.
 options:
     name:
         description:
@@ -73,16 +73,16 @@ options:
     use:
         description:
         - The service module actually uses system specific modules, normally through auto detection, this setting can force a specific module.
-        - Normally it uses the value of the 'ansible_service_mgr' fact and falls back to the old 'service' module when none matching is found.
+        - Normally it uses the value of the 'assible_service_mgr' fact and falls back to the old 'service' module when none matching is found.
         type: str
         default: auto
         version_added: 2.2
 notes:
     - For AIX, group subsystem names can be used.
 seealso:
-- module: ansible.windows.win_service
+- module: assible.windows.win_service
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Michael DeHaan
 '''
 
@@ -144,11 +144,11 @@ import time
 if platform.system() != 'SunOS':
     from distutils.version import LooseVersion
 
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.sys_info import get_platform_subclass
-from ansible.module_utils.service import fail_if_missing
-from ansible.module_utils.six import PY2, b
+from assible.module_utils._text import to_bytes, to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.sys_info import get_platform_subclass
+from assible.module_utils.service import fail_if_missing
+from assible.module_utils.six import PY2, b
 
 
 class Service(object):
@@ -1577,7 +1577,7 @@ class AIX(Service):
 # Main control flow
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(type='str', required=True),
             state=dict(type='str', choices=['started', 'stopped', 'reloaded', 'restarted']),

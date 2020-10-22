@@ -1,31 +1,31 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import ansible.constants as C
-from ansible.errors import AnsibleParserError
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.block import Block
-from ansible.playbook.task import Task
-from ansible.utils.display import Display
-from ansible.utils.sentinel import Sentinel
+import assible.constants as C
+from assible.errors import AssibleParserError
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.block import Block
+from assible.playbook.task import Task
+from assible.utils.display import Display
+from assible.utils.sentinel import Sentinel
 
 __all__ = ['TaskInclude']
 
@@ -77,18 +77,18 @@ class TaskInclude(Task):
         # validate bad args, otherwise we silently ignore
         bad_opts = my_arg_names.difference(self.VALID_ARGS)
         if bad_opts and task.action in ('include_tasks', 'import_tasks'):
-            raise AnsibleParserError('Invalid options for %s: %s' % (task.action, ','.join(list(bad_opts))), obj=data)
+            raise AssibleParserError('Invalid options for %s: %s' % (task.action, ','.join(list(bad_opts))), obj=data)
 
         if not task.args.get('_raw_params'):
             task.args['_raw_params'] = task.args.pop('file', None)
             if not task.args['_raw_params']:
-                raise AnsibleParserError('No file specified for %s' % task.action)
+                raise AssibleParserError('No file specified for %s' % task.action)
 
         apply_attrs = task.args.get('apply', {})
         if apply_attrs and task.action != 'include_tasks':
-            raise AnsibleParserError('Invalid options for %s: apply' % task.action, obj=data)
+            raise AssibleParserError('Invalid options for %s: apply' % task.action, obj=data)
         elif not isinstance(apply_attrs, dict):
-            raise AnsibleParserError('Expected a dict for apply but got %s instead' % type(apply_attrs), obj=data)
+            raise AssibleParserError('Expected a dict for apply but got %s instead' % type(apply_attrs), obj=data)
 
         return task
 
@@ -100,7 +100,7 @@ class TaskInclude(Task):
             # This check doesn't handle ``include`` as we have no idea at this point if it is static or not
             if ds[k] is not Sentinel and ds['action'] in ('include_tasks', 'include_role'):
                 if C.INVALID_TASK_ATTRIBUTE_FAILED:
-                    raise AnsibleParserError("'%s' is not a valid attribute for a %s" % (k, self.__class__.__name__), obj=ds)
+                    raise AssibleParserError("'%s' is not a valid attribute for a %s" % (k, self.__class__.__name__), obj=ds)
                 else:
                     display.warning("Ignoring invalid attribute: %s" % k)
 

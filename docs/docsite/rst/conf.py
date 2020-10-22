@@ -28,17 +28,17 @@ import os
 # absolute, like shown here.
 # sys.path.append(os.path.abspath('some/directory'))
 #
-sys.path.insert(0, os.path.join('ansible', 'lib'))
+sys.path.insert(0, os.path.join('assible', 'lib'))
 sys.path.append(os.path.abspath(os.path.join('..', '_extensions')))
 
-# We want sphinx to document the ansible modules contained in this repository,
+# We want sphinx to document the assible modules contained in this repository,
 # not those that may happen to be installed in the version
 # of Python used to run sphinx.  When sphinx loads in order to document,
 # the repository version needs to be the one that is loaded:
 sys.path.insert(0, os.path.abspath(os.path.join('..', '..', '..', 'lib')))
 
 VERSION = 'devel'
-AUTHOR = 'Ansible, Inc'
+AUTHOR = 'Assible, Inc'
 
 
 # General configuration
@@ -64,7 +64,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'Ansible'
+project = 'Assible'
 copyright = "2019 Red Hat, Inc."
 
 # The default replacements for |version| and |release|, also used in various
@@ -131,27 +131,27 @@ rst_epilog = """
 
 html_theme_path = ['../_themes']
 html_theme = 'sphinx_rtd_theme'
-html_short_title = 'Ansible Documentation'
+html_short_title = 'Assible Documentation'
 html_show_sphinx = False
 
 html_theme_options = {
-    'canonical_url': "https://docs.ansible.com/ansible/latest/",
+    'canonical_url': "https://docs.assible.com/assible/latest/",
     'vcs_pageview_mode': 'edit'
 }
 
 html_context = {
     'display_github': 'True',
-    'github_user': 'ansible',
-    'github_repo': 'ansible',
+    'github_user': 'assible',
+    'github_repo': 'assible',
     'github_version': 'devel/docs/docsite/rst/',
-    'github_module_version': 'devel/lib/ansible/modules/',
-    'github_root_dir': 'devel/lib/ansible',
-    'github_cli_version': 'devel/lib/ansible/cli/',
+    'github_module_version': 'devel/lib/assible/modules/',
+    'github_root_dir': 'devel/lib/assible',
+    'github_cli_version': 'devel/lib/assible/cli/',
     'current_version': version,
     'latest_version': '2.10',
     # list specifically out of order to make latest work
     'available_versions': ('latest', '2.9', '2.9_ja', '2.8', 'devel'),
-    'css_files': ('_static/ansible.css',  # overrides to the standard theme
+    'css_files': ('_static/assible.css',  # overrides to the standard theme
                   ),
 }
 
@@ -162,7 +162,7 @@ html_context = {
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Ansible Documentation'
+html_title = 'Assible Documentation'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -211,7 +211,7 @@ html_copy_source = False
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-# html_use_opensearch = 'https://docs.ansible.com/ansible/latest'
+# html_use_opensearch = 'https://docs.assible.com/assible/latest'
 
 # If nonempty, this is the file name suffix for HTML files (e.g. ".xhtml").
 # html_file_suffix = ''
@@ -224,9 +224,9 @@ htmlhelp_basename = 'Poseidodoc'
 # the extension builds 404.rst into a location-agnostic 404 page
 #
 # default is `en` - using this for the sub-site:
-notfound_default_language = "ansible"
+notfound_default_language = "assible"
 # default is `latest`:
-# setting explicitly - docsite serves up /ansible/latest/404.html
+# setting explicitly - docsite serves up /assible/latest/404.html
 # so keep this set to `latest` even on the `devel` branch
 # then no maintenance is needed when we branch a new stable_x.x
 notfound_default_version = "latest"
@@ -246,7 +246,7 @@ notfound_no_urls_prefix = False
 # (source start file, target name, title, author, document class
 # [howto/manual]).
 latex_documents = [
-    ('index', 'ansible.tex', 'Ansible 2.2 Documentation', AUTHOR, 'manual'),
+    ('index', 'assible.tex', 'Assible 2.2 Documentation', AUTHOR, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -280,12 +280,12 @@ autoclass_content = 'both'
 intersphinx_mapping = {'python': ('https://docs.python.org/2/', (None, '../python2.inv')),
                        'python3': ('https://docs.python.org/3/', (None, '../python3.inv')),
                        'jinja2': ('http://jinja.palletsprojects.com/', (None, '../jinja2.inv')),
-                       'ansible_2_10': ('https://docs.ansible.com/ansible/2.10/', (None, '../ansible_2_10.inv')),
-                       'ansible_2_9': ('https://docs.ansible.com/ansible/2.9/', (None, '../ansible_2_9.inv')),
-                       'ansible_2_8': ('https://docs.ansible.com/ansible/2.8/', (None, '../ansible_2_8.inv')),
-                       'ansible_2_7': ('https://docs.ansible.com/ansible/2.7/', (None, '../ansible_2_7.inv')),
-                       'ansible_2_6': ('https://docs.ansible.com/ansible/2.6/', (None, '../ansible_2_6.inv')),
-                       'ansible_2_5': ('https://docs.ansible.com/ansible/2.5/', (None, '../ansible_2_5.inv')),
+                       'assible_2_10': ('https://docs.assible.com/assible/2.10/', (None, '../assible_2_10.inv')),
+                       'assible_2_9': ('https://docs.assible.com/assible/2.9/', (None, '../assible_2_9.inv')),
+                       'assible_2_8': ('https://docs.assible.com/assible/2.8/', (None, '../assible_2_8.inv')),
+                       'assible_2_7': ('https://docs.assible.com/assible/2.7/', (None, '../assible_2_7.inv')),
+                       'assible_2_6': ('https://docs.assible.com/assible/2.6/', (None, '../assible_2_6.inv')),
+                       'assible_2_5': ('https://docs.assible.com/assible/2.5/', (None, '../assible_2_5.inv')),
                        }
 
 # linckchecker settings

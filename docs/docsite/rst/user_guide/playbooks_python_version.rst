@@ -4,7 +4,7 @@
 Python3 in templates
 ********************
 
-Ansible uses Jinja2 to leverage Python data types and standard functions in templates and variables.
+Assible uses Jinja2 to leverage Python data types and standard functions in templates and variables.
 You can use these data types and standard functions to perform a rich set of operations on your data. However,
 if you use templates, you must be aware of differences between Python versions.
 
@@ -16,12 +16,12 @@ Dictionary views
 ================
 
 In Python2, the :meth:`dict.keys`, :meth:`dict.values`, and :meth:`dict.items`
-methods return a list.  Jinja2 returns that to Ansible via a string
-representation that Ansible can turn back into a list.
+methods return a list.  Jinja2 returns that to Assible via a string
+representation that Assible can turn back into a list.
 
 In Python3, those methods return a :ref:`dictionary view <python3:dict-views>` object. The
 string representation that Jinja2 returns for dictionary views cannot be parsed back
-into a list by Ansible.  It is, however, easy to make this portable by
+into a list by Assible.  It is, however, easy to make this portable by
 using the :func:`list <jinja2:list>` filter whenever using :meth:`dict.keys`,
 :meth:`dict.values`, or :meth:`dict.items`::
 

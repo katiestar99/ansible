@@ -1,13 +1,13 @@
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
-Function Get-AnsibleWebRequest {
+Function Get-AssibleWebRequest {
     <#
     .SYNOPSIS
-    Creates a System.Net.WebRequest object based on common URL module options in Ansible.
+    Creates a System.Net.WebRequest object based on common URL module options in Assible.
 
     .DESCRIPTION
-    Will create a WebRequest based on common input options within Ansible. This can be used manually or with
+    Will create a WebRequest based on common input options within Assible. This can be used manually or with
     Invoke-WithWebRequest.
 
     .PARAMETER Uri
@@ -77,16 +77,16 @@ Function Get-AnsibleWebRequest {
     using Become, using SSH with password auth, or WinRM with CredSSP or Kerberos with credential delegation.
 
     .PARAMETER Module
-    The AnsibleBasic module that can be used as a backup parameter source or a way to return warnings back to the
-    Ansible controller.
+    The AssibleBasic module that can be used as a backup parameter source or a way to return warnings back to the
+    Assible controller.
 
     .EXAMPLE
     $spec = @{
         options = @{}
     }
-    $module = Ansible.Basic.AnsibleModule]::Create($args, $spec, @(Get-AnsibleWebRequestSpec))
+    $module = Assible.Basic.AssibleModule]::Create($args, $spec, @(Get-AssibleWebRequestSpec))
 
-    $web_request = Get-AnsibleWebRequest -Module $module
+    $web_request = Get-AssibleWebRequest -Module $module
     #>
     [CmdletBinding()]
     [OutputType([System.Net.WebRequest])]
@@ -108,7 +108,7 @@ Function Get-AnsibleWebRequest {
 
         [Alias("http_agent")]
         [System.String]
-        $HttpAgent = "ansible-httpget",
+        $HttpAgent = "assible-httpget",
 
         [Alias("maximum_redirection")]
         [System.Int32]
@@ -167,7 +167,7 @@ Function Get-AnsibleWebRequest {
         [Switch]
         $ProxyUseDefaultCredential,
 
-        [ValidateScript({ $_.GetType().FullName -eq 'Ansible.Basic.AnsibleModule' })]
+        [ValidateScript({ $_.GetType().FullName -eq 'Assible.Basic.AssibleModule' })]
         [System.Object]
         $Module
     )
@@ -303,7 +303,7 @@ Function Get-AnsibleWebRequest {
         # For backwards compatibility we need to support setting the User-Agent if the header was set in the task.
         # We just need to make sure that if an explicit http_agent module was set then that takes priority.
         if ($Headers -and $Headers.ContainsKey("User-Agent")) {
-            if ($HttpAgent -eq $ansible_web_request_options.http_agent.default) {
+            if ($HttpAgent -eq $assible_web_request_options.http_agent.default) {
                 $HttpAgent = $Headers['User-Agent']
             } elseif ($null -ne $Module) {
                 $Module.Warn("The 'User-Agent' header and the 'http_agent' was set, using the 'http_agent' for web request")
@@ -343,13 +343,13 @@ Function Invoke-WithWebRequest {
     safely as well as setting common module return values.
 
     .PARAMETER Module
-    The Ansible.Basic module to set the return values for. This will set the following return values;
+    The Assible.Basic module to set the return values for. This will set the following return values;
         elapsed - The total time, in seconds, that it took to send the web request and process the response
         msg - The human readable description of the response status code
         status_code - An int that is the response status code
 
     .PARAMETER Request
-    The System.Net.WebRequest to call. This can either be manually crafted or created with Get-AnsibleWebRequest.
+    The System.Net.WebRequest to call. This can either be manually crafted or created with Get-AssibleWebRequest.
 
     .PARAMETER Script
     The ScriptBlock to invoke during the web request. This ScriptBlock should take in the params
@@ -370,9 +370,9 @@ Function Invoke-WithWebRequest {
             path = @{ type = "path"; required = $true }
         }
     }
-    $module = Ansible.Basic.AnsibleModule]::Create($args, $spec, @(Get-AnsibleWebRequestSpec))
+    $module = Assible.Basic.AssibleModule]::Create($args, $spec, @(Get-AssibleWebRequestSpec))
 
-    $web_request = Get-AnsibleWebRequest -Module $module
+    $web_request = Get-AssibleWebRequest -Module $module
 
     Invoke-WithWebRequest -Module $module -Request $web_request -Script {
         Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -390,7 +390,7 @@ Function Invoke-WithWebRequest {
     param (
         [Parameter(Mandatory=$true)]
         [System.Object]
-        [ValidateScript({ $_.GetType().FullName -eq 'Ansible.Basic.AnsibleModule' })]
+        [ValidateScript({ $_.GetType().FullName -eq 'Assible.Basic.AssibleModule' })]
         $Module,
 
         [Parameter(Mandatory=$true)]
@@ -465,28 +465,28 @@ Function Invoke-WithWebRequest {
     }
 }
 
-Function Get-AnsibleWebRequestSpec {
+Function Get-AssibleWebRequestSpec {
     <#
     .SYNOPSIS
-    Used by modules to get the argument spec fragment for AnsibleModule.
+    Used by modules to get the argument spec fragment for AssibleModule.
 
     .EXAMPLES
     $spec = @{
         options = @{}
     }
-    $module = [Ansible.Basic.AnsibleModule]::Create($args, $spec, @(Get-AnsibleWebRequestSpec))
+    $module = [Assible.Basic.AssibleModule]::Create($args, $spec, @(Get-AssibleWebRequestSpec))
     #>
-    @{ options = $ansible_web_request_options }
+    @{ options = $assible_web_request_options }
 }
 
-# See lib/ansible/plugins/doc_fragments/url_windows.py
-# Kept here for backwards compat as this variable was added in Ansible 2.9. Ultimately this util should be removed
+# See lib/assible/plugins/doc_fragments/url_windows.py
+# Kept here for backwards compat as this variable was added in Assible 2.9. Ultimately this util should be removed
 # once the deprecation period has been added.
-$ansible_web_request_options = @{
+$assible_web_request_options = @{
     method = @{ type="str" }
     follow_redirects = @{ type="str"; choices=@("all","none","safe"); default="safe" }
     headers = @{ type="dict" }
-    http_agent = @{ type="str"; default="ansible-httpget" }
+    http_agent = @{ type="str"; default="assible-httpget" }
     maximum_redirection = @{ type="int"; default=50 }
     timeout = @{ type="int"; default=30 }  # Was defaulted to 10 in win_get_url but 30 in win_uri so we use 30
     validate_certs = @{ type="bool"; default=$true }
@@ -508,7 +508,7 @@ $ansible_web_request_options = @{
 }
 
 $export_members = @{
-    Function = "Get-AnsibleWebRequest", "Get-AnsibleWebRequestSpec", "Invoke-WithWebRequest"
-    Variable = "ansible_web_request_options"
+    Function = "Get-AssibleWebRequest", "Get-AssibleWebRequestSpec", "Invoke-WithWebRequest"
+    Variable = "assible_web_request_options"
 }
 Export-ModuleMember @export_members

@@ -4,7 +4,7 @@
     - setup_pexpect
 
   tasks:
-    - name: Test ansible-playbook and ansible with -K
+    - name: Test assible-playbook and assible with -K
       block:
         - name: Create user to connect as
           user:
@@ -23,9 +23,9 @@
           file:
             path: /run/nologin
             state: absent
-        # Make Ansible run Python to run Ansible
+        # Make Assible run Python to run Assible
         - name: Run the test
-          shell: python test_k_and_K.py {{ ansible_python_interpreter }}
+          shell: python test_k_and_K.py {{ assible_python_interpreter }}
       always:
         - name: Remove users
           user:
@@ -39,4 +39,4 @@
       # the user to 'wheel' and things magically work.
       # TODO: In theory, we should test this with all the different 'become'
       # plugins in base.
-      when: ansible_distribution == 'Fedora'
+      when: assible_distribution == 'Fedora'

@@ -9,9 +9,9 @@ Sanity Tests
 .. contents:: Topics
 
 Sanity tests are made up of scripts and tools used to perform static code analysis.
-The primary purpose of these tests is to enforce Ansible coding standards and requirements.
+The primary purpose of these tests is to enforce Assible coding standards and requirements.
 
-Tests are run with ``ansible-test sanity``.
+Tests are run with ``assible-test sanity``.
 All available tests are run unless the ``--test`` option is used.
 
 
@@ -31,23 +31,23 @@ How to run
    source hacking/env-setup
 
    # Run all sanity tests
-   ansible-test sanity
+   assible-test sanity
 
    # Run all sanity tests including disabled ones
-   ansible-test sanity --allow-disabled
+   assible-test sanity --allow-disabled
 
    # Run all sanity tests against against certain files
-   ansible-test sanity lib/ansible/modules/files/template.py
+   assible-test sanity lib/assible/modules/files/template.py
 
    # Run all tests inside docker (good if you don't have dependencies installed)
-   ansible-test sanity --docker default
+   assible-test sanity --docker default
 
    # Run validate-modules against a specific file
-   ansible-test sanity --test validate-modules lib/ansible/modules/files/template.py
+   assible-test sanity --test validate-modules lib/assible/modules/files/template.py
 
 Available Tests
 ===============
 
-Tests can be listed with ``ansible-test sanity --list-tests``.
+Tests can be listed with ``assible-test sanity --list-tests``.
 
 See the full list of :ref:`sanity tests <all_sanity_tests>`, which details the various tests and details how to fix identified issues.

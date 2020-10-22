@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright:
-#   (c) 2018 Ansible Project
+#   (c) 2018 Assible Project
 # License: GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -9,9 +9,9 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.modules.copy import AnsibleModuleError, split_pre_existing_dir
+from assible.modules.copy import AssibleModuleError, split_pre_existing_dir
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 THREE_DIRS_DATA = (('/dir1/dir2',
@@ -114,7 +114,7 @@ def test_split_pre_existing_dir_one_level_exists(directory, expected, mocker):
 @pytest.mark.parametrize('directory', (d[0] for d in ONE_DIR_DATA if d[1] is None))
 def test_split_pre_existing_dir_root_does_not_exist(directory, mocker):
     mocker.patch('os.path.exists', return_value=False)
-    with pytest.raises(AnsibleModuleError) as excinfo:
+    with pytest.raises(AssibleModuleError) as excinfo:
         split_pre_existing_dir(directory)
     assert excinfo.value.results['msg'].startswith("The '/' directory doesn't exist on this machine.")
 
@@ -192,7 +192,7 @@ INVALID_DATA = (
 def test_good_symbolic_modes(mocker, stat_info, mode_string, expected):
     mock_stat = mocker.MagicMock()
     mock_stat.st_mode = stat_info
-    assert AnsibleModule._symbolic_mode_to_octal(mock_stat, mode_string) == expected
+    assert AssibleModule._symbolic_mode_to_octal(mock_stat, mode_string) == expected
 
 
 @pytest.mark.parametrize('stat_info, mode_string, expected', UMASK_DATA)
@@ -203,7 +203,7 @@ def test_umask_with_symbolic_modes(mocker, stat_info, mode_string, expected):
     mock_stat = mocker.MagicMock()
     mock_stat.st_mode = stat_info
 
-    assert AnsibleModule._symbolic_mode_to_octal(mock_stat, mode_string) == expected
+    assert AssibleModule._symbolic_mode_to_octal(mock_stat, mode_string) == expected
 
 
 @pytest.mark.parametrize('stat_info, mode_string, expected', INVALID_DATA)
@@ -211,5 +211,5 @@ def test_invalid_symbolic_modes(mocker, stat_info, mode_string, expected):
     mock_stat = mocker.MagicMock()
     mock_stat.st_mode = stat_info
     with pytest.raises(ValueError) as exc:
-        assert AnsibleModule._symbolic_mode_to_octal(mock_stat, mode_string) == 'blah'
+        assert AssibleModule._symbolic_mode_to_octal(mock_stat, mode_string) == 'blah'
     assert exc.match(expected)

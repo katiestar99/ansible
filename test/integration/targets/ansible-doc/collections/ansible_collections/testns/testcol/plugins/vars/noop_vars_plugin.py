@@ -14,10 +14,10 @@ DOCUMENTATION = '''
           - key: stage
             section: testns.testcol.noop_vars_plugin
         env:
-          - name: ANSIBLE_VARS_PLUGIN_STAGE
+          - name: ASSIBLE_VARS_PLUGIN_STAGE
 '''
 
-from ansible.plugins.vars import BaseVarsPlugin
+from assible.plugins.vars import BaseVarsPlugin
 
 
 class VarsModule(BaseVarsPlugin):

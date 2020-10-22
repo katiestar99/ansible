@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# (c) 2017, Brian Coca <bcoca@ansible.com>
+# (c) 2017, Brian Coca <bcoca@assible.com>
 # (c) 2017, Adam Miller <admiller@redhat.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = '''
 module: sysvinit
 author:
-    - "Ansible Core Team"
+    - "Assible Core Team"
 version_added: "2.6"
 short_description:  Manage SysV services.
 description:
@@ -117,13 +117,13 @@ results:
 
 import re
 from time import sleep
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.service import sysv_is_enabled, get_sysv_script, sysv_exists, fail_if_missing, get_ps, daemonize
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.service import sysv_is_enabled, get_sysv_script, sysv_exists, fail_if_missing, get_ps, daemonize
 
 
 def main():
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(required=True, type='str', aliases=['service']),
             state=dict(choices=['started', 'stopped', 'restarted', 'reloaded'], type='str'),

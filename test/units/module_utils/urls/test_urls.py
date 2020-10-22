@@ -5,8 +5,8 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils import urls
-from ansible.module_utils._text import to_native
+from assible.module_utils import urls
+from assible.module_utils._text import to_native
 
 import pytest
 
@@ -49,30 +49,30 @@ def test_build_ssl_validation_error(mocker):
 def test_maybe_add_ssl_handler(mocker):
     mocker.patch.object(urls, 'HAS_SSL', new=False)
     with pytest.raises(urls.NoSSLError):
-        urls.maybe_add_ssl_handler('https://ansible.com/', True)
+        urls.maybe_add_ssl_handler('https://assible.com/', True)
 
     mocker.patch.object(urls, 'HAS_SSL', new=True)
-    url = 'https://user:passwd@ansible.com/'
+    url = 'https://user:passwd@assible.com/'
     handler = urls.maybe_add_ssl_handler(url, True)
-    assert handler.hostname == 'ansible.com'
+    assert handler.hostname == 'assible.com'
     assert handler.port == 443
 
-    url = 'https://ansible.com:4433/'
+    url = 'https://assible.com:4433/'
     handler = urls.maybe_add_ssl_handler(url, True)
-    assert handler.hostname == 'ansible.com'
+    assert handler.hostname == 'assible.com'
     assert handler.port == 4433
 
-    url = 'https://user:passwd@ansible.com:4433/'
+    url = 'https://user:passwd@assible.com:4433/'
     handler = urls.maybe_add_ssl_handler(url, True)
-    assert handler.hostname == 'ansible.com'
+    assert handler.hostname == 'assible.com'
     assert handler.port == 4433
 
-    url = 'https://ansible.com/'
+    url = 'https://assible.com/'
     handler = urls.maybe_add_ssl_handler(url, True)
-    assert handler.hostname == 'ansible.com'
+    assert handler.hostname == 'assible.com'
     assert handler.port == 443
 
-    url = 'http://ansible.com/'
+    url = 'http://assible.com/'
     handler = urls.maybe_add_ssl_handler(url, True)
     assert handler is None
 
@@ -93,7 +93,7 @@ def test_basic_auth_header():
 
 
 def test_ParseResultDottedDict():
-    url = 'https://ansible.com/blog'
+    url = 'https://assible.com/blog'
     parts = urls.urlparse(url)
     dotted_parts = urls.ParseResultDottedDict(parts._asdict())
     assert parts[0] == dotted_parts.scheme
@@ -103,7 +103,7 @@ def test_ParseResultDottedDict():
 
 def test_unix_socket_patch_httpconnection_connect(mocker):
     unix_conn = mocker.patch.object(urls.UnixHTTPConnection, 'connect')
-    conn = urls.httplib.HTTPConnection('ansible.com')
+    conn = urls.httplib.HTTPConnection('assible.com')
     with urls.unix_socket_patch_httpconnection_connect():
         conn.connect()
     assert unix_conn.call_count == 1

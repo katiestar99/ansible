@@ -23,7 +23,7 @@ from ..data import (
 
 class SanityDocsTest(SanityVersionNeutral):
     """Sanity test for documentation of sanity tests."""
-    ansible_only = True
+    assible_only = True
 
     @property
     def can_ignore(self):  # type: () -> bool
@@ -52,7 +52,7 @@ class SanityDocsTest(SanityVersionNeutral):
         results = []
 
         results += [SanityMessage(
-            message='missing docs for ansible-test sanity --test %s' % r,
+            message='missing docs for assible-test sanity --test %s' % r,
             path=os.path.join(sanity_dir, '%s.rst' % r),
         ) for r in sorted(missing)]
 

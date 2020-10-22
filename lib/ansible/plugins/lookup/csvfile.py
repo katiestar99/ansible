@@ -1,5 +1,5 @@
 # (c) 2013, Jan-Piet Mens <jpmens(at)gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -25,7 +25,7 @@ DOCUMENTATION = """
         default: TAB
       file:
         description: name of the CSV/TSV file to open.
-        default: ansible.csv
+        default: assible.csv
       encoding:
         description: Encoding (character set) of the used CSV file.
         default: utf-8
@@ -68,12 +68,12 @@ RETURN = """
 import codecs
 import csv
 
-from ansible.errors import AnsibleError, AnsibleAssertionError
-from ansible.parsing.splitter import parse_kv
-from ansible.plugins.lookup import LookupBase
-from ansible.module_utils.six import PY2
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.common._collections_compat import MutableSequence
+from assible.errors import AssibleError, AssibleAssertionError
+from assible.parsing.splitter import parse_kv
+from assible.plugins.lookup import LookupBase
+from assible.module_utils.six import PY2
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.common._collections_compat import MutableSequence
 
 
 class CSVRecoder:
@@ -128,7 +128,7 @@ class LookupModule(LookupBase):
                 if len(row) and row[0] == key:
                     return row[int(col)]
         except Exception as e:
-            raise AnsibleError("csvfile: %s" % to_native(e))
+            raise AssibleError("csvfile: %s" % to_native(e))
 
         return dflt
 
@@ -140,7 +140,7 @@ class LookupModule(LookupBase):
             kv = parse_kv(term)
 
             if '_raw_params' not in kv:
-                raise AnsibleError('Search key is required but was not found')
+                raise AssibleError('Search key is required but was not found')
 
             key = kv['_raw_params']
 
@@ -148,7 +148,7 @@ class LookupModule(LookupBase):
                 'col': "1",          # column to return
                 'default': None,
                 'delimiter': "TAB",
-                'file': 'ansible.csv',
+                'file': 'assible.csv',
                 'encoding': 'utf-8',
             }
 
@@ -158,10 +158,10 @@ class LookupModule(LookupBase):
                     if name == '_raw_params':
                         continue
                     if name not in paramvals:
-                        raise AnsibleAssertionError('%s not in paramvals' % name)
+                        raise AssibleAssertionError('%s not in paramvals' % name)
                     paramvals[name] = value
             except (ValueError, AssertionError) as e:
-                raise AnsibleError(e)
+                raise AssibleError(e)
 
             if paramvals['delimiter'] == 'TAB':
                 paramvals['delimiter'] = "\t"

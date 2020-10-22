@@ -3,7 +3,7 @@
 ****************************
 Developing Cisco ACI modules
 ****************************
-This is a brief walk-through of how to create new Cisco ACI modules for Ansible.
+This is a brief walk-through of how to create new Cisco ACI modules for Assible.
 
 For more information about Cisco ACI, look at the :ref:`Cisco ACI user guide <aci_guide>`.
 
@@ -18,7 +18,7 @@ What's covered in this section:
 
 Introduction
 ============
-The `cisco.aci collection <https://galaxy.ansible.com/cisco/aci>`_ already includes a large number of Cisco ACI modules, however the ACI object model is huge and covering all possible functionality would easily cover more than 1500 individual modules.
+The `cisco.aci collection <https://galaxy.assible.com/cisco/aci>`_ already includes a large number of Cisco ACI modules, however the ACI object model is huge and covering all possible functionality would easily cover more than 1500 individual modules.
 
 If you need specific functionality, you have 2 options:
 
@@ -49,8 +49,8 @@ The following imports are standard across ACI modules:
 
 .. code-block:: python
 
-    from ansible.module_utils.aci import ACIModule, aci_argument_spec
-    from ansible.module_utils.basic import AnsibleModule
+    from assible.module_utils.aci import ACIModule, aci_argument_spec
+    from assible.module_utils.basic import AssibleModule
 
 
 Defining the argument spec
@@ -85,13 +85,13 @@ The first line adds the standard connection parameters to the module. After that
 
 .. hint:: Do not provide default values for configuration arguments. Default values could cause unintended changes to the object.
 
-Using the AnsibleModule object
+Using the AssibleModule object
 ------------------------------
-The following section creates an AnsibleModule instance. The module should support check-mode, so we pass the ``argument_spec`` and  ``supports_check_mode`` arguments. Since these modules support querying the APIC for all objects of the module's class, the object/parent IDs should only be required if ``state: absent`` or ``state: present``.
+The following section creates an AssibleModule instance. The module should support check-mode, so we pass the ``argument_spec`` and  ``supports_check_mode`` arguments. Since these modules support querying the APIC for all objects of the module's class, the object/parent IDs should only be required if ``state: absent`` or ``state: present``.
 
 .. code-block:: python
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=[
@@ -103,7 +103,7 @@ The following section creates an AnsibleModule instance. The module should suppo
 
 Mapping variable definition
 ---------------------------
-Once the AnsibleModule object has been initiated, the necessary parameter values should be extracted from ``params`` and any data validation should be done. Usually the only params that need to be extracted are those related to the ACI object configuration and its child configuration. If you have integer objects that you would like to validate, then the validation should be done here, and the ``ACIModule.payload()`` method will handle the string conversion.
+Once the AssibleModule object has been initiated, the necessary parameter values should be extracted from ``params`` and any data validation should be done. Usually the only params that need to be extracted are those related to the ACI object configuration and its child configuration. If you have integer objects that you would like to validate, then the validation should be done here, and the ``ACIModule.payload()`` method will handle the string conversion.
 
 .. code-block:: python
 
@@ -120,7 +120,7 @@ Once the AnsibleModule object has been initiated, the necessary parameter values
 
 Using the ACIModule object
 --------------------------
-The ACIModule class handles most of the logic for the ACI modules. The ACIModule extends functionality to the AnsibleModule object, so the module instance must be passed into the class instantiation.
+The ACIModule class handles most of the logic for the ACI modules. The ACIModule extends functionality to the AssibleModule object, so the module instance must be passed into the class instantiation.
 
 .. code-block:: python
 
@@ -323,9 +323,9 @@ You can test your ``construct_url()`` and ``payload()`` arguments without access
 
     #!/usr/bin/python
     import json
-    from ansible.module_utils.network.aci.aci import ACIModule
+    from assible.module_utils.network.aci.aci import ACIModule
 
-    # Just another class mimicing a bare AnsibleModule class for construct_url() and payload() methods
+    # Just another class mimicing a bare AssibleModule class for construct_url() and payload() methods
     class AltModule():
         params = dict(
             host='dummy',
@@ -395,7 +395,7 @@ You can run from your fork something like:
 
 .. code-block:: bash
 
-    $ ansible-test sanity --python 2.7 lib/ansible/modules/network/aci/aci_tenant.py
+    $ assible-test sanity --python 2.7 lib/assible/modules/network/aci/aci_tenant.py
 
 .. seealso::
 
@@ -409,7 +409,7 @@ You can run this:
 
 .. code-block:: bash
 
-    $ ansible-test network-integration --continue-on-error --allow-unsupported --diff -v aci_tenant
+    $ assible-test network-integration --continue-on-error --allow-unsupported --diff -v aci_tenant
 
 .. note:: You may need to add ``--python 2.7`` or ``--python 3.6`` in order to use the correct python version for performing tests.
 
@@ -425,7 +425,7 @@ You may want to edit the used inventory at *test/integration/inventory.networkin
     aci_use_proxy=no
 
     [aci]
-    localhost ansible_ssh_host=127.0.0.1 ansible_connection=local
+    localhost assible_ssh_host=127.0.0.1 assible_connection=local
 
 .. seealso::
 
@@ -439,5 +439,5 @@ You can run this:
 
 .. code-block:: bash
 
-    $ ansible-test network-integration --python 2.7 --allow-unsupported --coverage aci_tenant
-    $ ansible-test coverage report
+    $ assible-test network-integration --python 2.7 --allow-unsupported --coverage aci_tenant
+    $ assible-test coverage report

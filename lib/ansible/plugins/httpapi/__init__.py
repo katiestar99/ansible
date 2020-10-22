@@ -6,10 +6,10 @@ __metaclass__ = type
 
 from abc import abstractmethod
 
-from ansible.plugins import AnsiblePlugin
+from assible.plugins import AssiblePlugin
 
 
-class HttpApiBase(AnsiblePlugin):
+class HttpApiBase(AssiblePlugin):
     def __init__(self, connection):
         super(HttpApiBase, self).__init__()
 

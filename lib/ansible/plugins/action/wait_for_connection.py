@@ -1,19 +1,19 @@
 # (c) 2017, Dag Wieers <dag@wieers.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # CI-required python3 boilerplate
 from __future__ import (absolute_import, division, print_function)
@@ -22,9 +22,9 @@ __metaclass__ = type
 import time
 from datetime import datetime, timedelta
 
-from ansible.module_utils._text import to_text
-from ansible.plugins.action import ActionBase
-from ansible.utils.display import Display
+from assible.module_utils._text import to_text
+from assible.plugins.action import ActionBase
+from assible.utils.display import Display
 
 display = Display()
 
@@ -81,14 +81,14 @@ class ActionModule(ActionBase):
             display.vvv("wait_for_connection: attempting ping module test")
             # re-run interpreter discovery if we ran it in the first iteration
             if self._discovered_interpreter_key:
-                task_vars['ansible_facts'].pop(self._discovered_interpreter_key, None)
+                task_vars['assible_facts'].pop(self._discovered_interpreter_key, None)
             # call connection reset between runs if it's there
             try:
                 self._connection.reset()
             except AttributeError:
                 pass
 
-            ping_result = self._execute_module(module_name='ansible.legacy.ping', module_args=dict(), task_vars=task_vars)
+            ping_result = self._execute_module(module_name='assible.legacy.ping', module_args=dict(), task_vars=task_vars)
 
             # Test module output
             if ping_result['ping'] != 'pong':

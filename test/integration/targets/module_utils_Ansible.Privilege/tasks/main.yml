@@ -1,9 +1,9 @@
 ---
-- name: test Ansible.Privilege.cs
-  ansible_privilege_tests:
-  register: ansible_privilege_test
+- name: test Assible.Privilege.cs
+  assible_privilege_tests:
+  register: assible_privilege_test
 
-- name: assert test Ansible.Privilege.cs
+- name: assert test Assible.Privilege.cs
   assert:
     that:
-    - ansible_privilege_test.data == "success"
+    - assible_privilege_test.data == "success"

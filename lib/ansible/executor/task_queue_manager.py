@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -25,24 +25,24 @@ import threading
 import time
 import multiprocessing.queues
 
-from ansible import constants as C
-from ansible import context
-from ansible.errors import AnsibleError
-from ansible.executor.play_iterator import PlayIterator
-from ansible.executor.stats import AggregateStats
-from ansible.executor.task_result import TaskResult
-from ansible.module_utils.six import PY3, string_types
-from ansible.module_utils._text import to_text, to_native
-from ansible.playbook.play_context import PlayContext
-from ansible.playbook.task import Task
-from ansible.plugins.loader import callback_loader, strategy_loader, module_loader
-from ansible.plugins.callback import CallbackBase
-from ansible.template import Templar
-from ansible.vars.hostvars import HostVars
-from ansible.vars.reserved import warn_if_reserved
-from ansible.utils.display import Display
-from ansible.utils.lock import lock_decorator
-from ansible.utils.multiprocessing import context as multiprocessing_context
+from assible import constants as C
+from assible import context
+from assible.errors import AssibleError
+from assible.executor.play_iterator import PlayIterator
+from assible.executor.stats import AggregateStats
+from assible.executor.task_result import TaskResult
+from assible.module_utils.six import PY3, string_types
+from assible.module_utils._text import to_text, to_native
+from assible.playbook.play_context import PlayContext
+from assible.playbook.task import Task
+from assible.plugins.loader import callback_loader, strategy_loader, module_loader
+from assible.plugins.callback import CallbackBase
+from assible.template import Templar
+from assible.vars.hostvars import HostVars
+from assible.vars.reserved import warn_if_reserved
+from assible.utils.display import Display
+from assible.utils.lock import lock_decorator
+from assible.utils.multiprocessing import context as multiprocessing_context
 
 
 __all__ = ['TaskQueueManager']
@@ -83,7 +83,7 @@ class FinalQueue(multiprocessing.queues.Queue):
 class TaskQueueManager:
 
     '''
-    This class handles the multiprocessing requirements of Ansible by
+    This class handles the multiprocessing requirements of Assible by
     creating a pool of worker forks, a result handler fork, and a
     manager object with shared datastructures/queues for coordinating
     work between all processes.
@@ -131,7 +131,7 @@ class TaskQueueManager:
         try:
             self._final_q = FinalQueue()
         except OSError as e:
-            raise AnsibleError("Unable to use multiprocessing, this is normally caused by lack of access to /dev/shm: %s" % to_native(e))
+            raise AssibleError("Unable to use multiprocessing, this is normally caused by lack of access to /dev/shm: %s" % to_native(e))
 
         self._callback_lock = threading.Lock()
 
@@ -163,13 +163,13 @@ class TaskQueueManager:
             stdout_callback_loaded = True
         elif isinstance(self._stdout_callback, string_types):
             if self._stdout_callback not in callback_loader:
-                raise AnsibleError("Invalid callback for stdout specified: %s" % self._stdout_callback)
+                raise AssibleError("Invalid callback for stdout specified: %s" % self._stdout_callback)
             else:
                 self._stdout_callback = callback_loader.get(self._stdout_callback)
                 self._stdout_callback.set_options()
                 stdout_callback_loaded = True
         else:
-            raise AnsibleError("callback must be an instance of CallbackBase or the name of a callback plugin")
+            raise AssibleError("callback must be an instance of CallbackBase or the name of a callback plugin")
 
         # get all configured loadable callbacks (adjacent, builtin)
         callback_list = list(callback_loader.all(class_only=True))
@@ -215,7 +215,7 @@ class TaskQueueManager:
             elif not self._run_additional_callbacks or (callback_needs_whitelist and (
                 # only run if not adhoc, or adhoc was specifically configured to run + check enabled list
                     C.DEFAULT_CALLBACK_WHITELIST is None or callback_name not in C.DEFAULT_CALLBACK_WHITELIST)):
-                # 2.x plugins shipped with ansible should require whitelisting, older or non shipped should load automatically
+                # 2.x plugins shipped with assible should require whitelisting, older or non shipped should load automatically
                 continue
 
             try:
@@ -242,7 +242,7 @@ class TaskQueueManager:
         '''
         Iterates over the roles/tasks in a play, using the given (or default)
         strategy for queueing tasks. The default is the linear strategy, which
-        operates like classic Ansible by keeping all hosts in lock-step with
+        operates like classic Assible by keeping all hosts in lock-step with
         a given task (meaning no hosts move on to the next task until all hosts
         are done with the current task).
         '''
@@ -291,7 +291,7 @@ class TaskQueueManager:
         # load the specified strategy (or the default linear one)
         strategy = strategy_loader.get(new_play.strategy, self)
         if strategy is None:
-            raise AnsibleError("Invalid play strategy specified: %s" % new_play.strategy, obj=play._ds)
+            raise AssibleError("Invalid play strategy specified: %s" % new_play.strategy, obj=play._ds)
 
         # Because the TQM may survive multiple play runs, we start by marking
         # any hosts as failed in the iterator here which may have been marked

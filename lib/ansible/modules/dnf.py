@@ -33,7 +33,7 @@ options:
 
   list:
     description:
-      - Various (non-idempotent) commands for usage with C(/usr/bin/ansible) and I(not) playbooks. See examples.
+      - Various (non-idempotent) commands for usage with C(/usr/bin/assible) and I(not) playbooks. See examples.
     type: str
 
   state:
@@ -227,7 +227,7 @@ options:
     version_added: "2.11"
 notes:
   - When used with a `loop:` each package will be processed individually, it is much more efficient to pass the list directly to the `name` option.
-  - Group removal doesn't work if the group was installed with Ansible because
+  - Group removal doesn't work if the group was installed with Assible because
     upstream dnf's API doesn't properly mark groups as installed, therefore upon
     removal the module is unable to detect that the group is installed
     (https://bugzilla.redhat.com/show_bug.cgi?id=1620324)
@@ -327,18 +327,18 @@ try:
 except ImportError:
     HAS_DNF = False
 
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.urls import fetch_file
-from ansible.module_utils.six import PY2, text_type
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.urls import fetch_file
+from assible.module_utils.six import PY2, text_type
 from distutils.version import LooseVersion
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.yumdnf import YumDnf, yumdnf_argument_spec
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.yumdnf import YumDnf, yumdnf_argument_spec
 
 
 class DnfModule(YumDnf):
     """
-    DNF Ansible module back-end implementation
+    DNF Assible module back-end implementation
     """
 
     def __init__(self, module):
@@ -360,7 +360,7 @@ class DnfModule(YumDnf):
 
     def is_lockfile_pid_valid(self):
         # FIXME? it looks like DNF takes care of invalid lock files itself?
-        # https://github.com/ansible/ansible/issues/57189
+        # https://github.com/assible/assible/issues/57189
         return True
 
     def _sanitize_dnf_error_msg_install(self, spec, error):
@@ -510,7 +510,7 @@ class DnfModule(YumDnf):
             if self.module.check_mode:
                 self.module.fail_json(
                     msg="`{0}` is not installed, but it is required"
-                    "for the Ansible dnf module.".format(package),
+                    "for the Assible dnf module.".format(package),
                     results=[],
                 )
 
@@ -527,7 +527,7 @@ class DnfModule(YumDnf):
                 self.module.fail_json(
                     msg="Could not import the dnf python module using {0} ({1}). "
                         "Please install `{2}` package or ensure you have specified the "
-                        "correct ansible_python_interpreter.".format(sys.executable, sys.version.replace('\n', ''),
+                        "correct assible_python_interpreter.".format(sys.executable, sys.version.replace('\n', ''),
                                                                      package),
                     results=[],
                     cmd='dnf install -y {0}'.format(package),
@@ -1290,7 +1290,7 @@ class DnfModule(YumDnf):
             )
 
         # Set state as installed by default
-        # This is not set in AnsibleModule() because the following shouldn't happen
+        # This is not set in AssibleModule() because the following shouldn't happen
         # - dnf: autoremove=yes state=installed
         if self.state is None:
             self.state = 'installed'
@@ -1337,7 +1337,7 @@ def main():
     yumdnf_argument_spec['argument_spec']['allowerasing'] = dict(default=False, type='bool')
     yumdnf_argument_spec['argument_spec']['nobest'] = dict(default=False, type='bool')
 
-    module = AnsibleModule(
+    module = AssibleModule(
         **yumdnf_argument_spec
     )
 

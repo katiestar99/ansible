@@ -3,15 +3,15 @@
 Data manipulation
 #########################
 
-In many cases, you need to do some complex operation with your variables, while Ansible is not recommended as a data processing/manipulation tool, you can use the existing Jinja2 templating in conjunction with the many added Ansible filters, lookups and tests to do some very complex transformations.
+In many cases, you need to do some complex operation with your variables, while Assible is not recommended as a data processing/manipulation tool, you can use the existing Jinja2 templating in conjunction with the many added Assible filters, lookups and tests to do some very complex transformations.
 
 Let's start with a quick definition of each type of plugin:
-  - lookups: Mainly used to query 'external data', in Ansible these were the primary part of loops using the ``with_<lookup>`` construct, but they can be used independently to return data for processing. They normally return a list due to their primary function in loops as mentioned previously. Used with the ``lookup`` or ``query`` Jinja2 operators.
+  - lookups: Mainly used to query 'external data', in Assible these were the primary part of loops using the ``with_<lookup>`` construct, but they can be used independently to return data for processing. They normally return a list due to their primary function in loops as mentioned previously. Used with the ``lookup`` or ``query`` Jinja2 operators.
   - filters: used to change/transform data, used with the ``|`` Jinja2 operator.
   - tests: used to validate data, used with the ``is`` Jinja2 operator.
 
 .. _note:
-   * Some tests and filters are provided directly by Jinja2, so their availability depends on the Jinja2 version, not Ansible.
+   * Some tests and filters are provided directly by Jinja2, so their availability depends on the Jinja2 version, not Assible.
 
 .. _for_loops_or_list_comprehensions:
 
@@ -39,7 +39,7 @@ The Python equivalent code would be:
         for config in chains_config[chain]['configs']:
             print(config['type'])
 
-There are several ways to do it in Ansible, this is just one example:
+There are several ways to do it in Assible, this is just one example:
 
 .. code-block:: YAML+Jinja
  :emphasize-lines: 3
@@ -67,7 +67,7 @@ There are several ways to do it in Ansible, this is just one example:
                       version: 1.1
 
 
-.. code-block:: ansible-output
+.. code-block:: assible-output
  :caption: Results of debug task, a list with the extracted keys
 
     ok: [localhost] => {
@@ -96,8 +96,8 @@ In this case, we want to find the mount point for a given path across our machin
      vars:
         path: /var/lib/cache
      tasks:
-     - name: The mount point for {{path}}, found using the Ansible mount facts, [-1] is the same as the 'last' filter
-       debug: msg="{{(ansible_facts.mounts | selectattr('mount', 'in', path) | list | sort(attribute='mount'))[-1]['mount']}}"
+     - name: The mount point for {{path}}, found using the Assible mount facts, [-1] is the same as the 'last' filter
+       debug: msg="{{(assible_facts.mounts | selectattr('mount', 'in', path) | list | sort(attribute='mount'))[-1]['mount']}}"
 
 
 
@@ -150,7 +150,7 @@ You can use loops and list comprehensions as shown above to help, also other fil
 Create dictionary from list
 ---------------------------
 
-In most languages it is easy to create a dictionary (a.k.a. map/associative array/hash and so on) from a list of pairs, in Ansible there are a couple of ways to do it and the best one for you might depend on the source of your data.
+In most languages it is easy to create a dictionary (a.k.a. map/associative array/hash and so on) from a list of pairs, in Assible there are a couple of ways to do it and the best one for you might depend on the source of your data.
 
 
 These example produces ``{"a": "b", "c": "d"}``
@@ -221,23 +221,23 @@ An example on how to use facts to find a host's data that meets condition X:
 .. code-block:: YAML+Jinja
 
   vars:
-    uptime_of_host_most_recently_rebooted: "{{ansible_play_hosts_all | map('extract', hostvars, 'ansible_uptime_seconds') | sort | first}}"
+    uptime_of_host_most_recently_rebooted: "{{assible_play_hosts_all | map('extract', hostvars, 'assible_uptime_seconds') | sort | first}}"
 
 
 Using an example from @zoradache on reddit, to show the 'uptime in days/hours/minutes' (assumes facts where gathered).
-https://www.reddit.com/r/ansible/comments/gj5a93/trying_to_get_uptime_from_seconds/fqj2qr3/
+https://www.reddit.com/r/assible/comments/gj5a93/trying_to_get_uptime_from_seconds/fqj2qr3/
 
 .. code-block:: YAML+Jinja
 
  - debug:
-    msg: Timedelta {{ now() - now().fromtimestamp(now(fmt='%s') | int - ansible_uptime_seconds) }}
+    msg: Timedelta {{ now() - now().fromtimestamp(now(fmt='%s') | int - assible_uptime_seconds) }}
 
 
 .. seealso::
 
    :doc:`playbooks_filters`
-       Jinja2 filters included with Ansible
+       Jinja2 filters included with Assible
    :doc:`playbooks_tests`
-       Jinja2 tests included with Ansible
+       Jinja2 tests included with Assible
    `Jinja2 Docs <https://jinja.palletsprojects.com/>`_
       Jinja2 documentation, includes lists for core filters and tests

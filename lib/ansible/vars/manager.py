@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -31,22 +31,22 @@ except ImportError:
 
 from jinja2.exceptions import UndefinedError
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleParserError, AnsibleUndefinedVariable, AnsibleFileNotFound, AnsibleAssertionError, AnsibleTemplateError
-from ansible.inventory.host import Host
-from ansible.inventory.helpers import sort_groups, get_group_vars
-from ansible.module_utils._text import to_text
-from ansible.module_utils.common._collections_compat import Mapping, MutableMapping, Sequence
-from ansible.module_utils.six import iteritems, text_type, string_types
-from ansible.plugins.loader import lookup_loader
-from ansible.vars.fact_cache import FactCache
-from ansible.template import Templar
-from ansible.utils.display import Display
-from ansible.utils.listify import listify_lookup_plugin_terms
-from ansible.utils.vars import combine_vars, load_extra_vars, load_options_vars
-from ansible.utils.unsafe_proxy import wrap_var
-from ansible.vars.clean import namespace_facts, clean_facts
-from ansible.vars.plugins import get_vars_from_inventory_sources, get_vars_from_path
+from assible import constants as C
+from assible.errors import AssibleError, AssibleParserError, AssibleUndefinedVariable, AssibleFileNotFound, AssibleAssertionError, AssibleTemplateError
+from assible.inventory.host import Host
+from assible.inventory.helpers import sort_groups, get_group_vars
+from assible.module_utils._text import to_text
+from assible.module_utils.common._collections_compat import Mapping, MutableMapping, Sequence
+from assible.module_utils.six import iteritems, text_type, string_types
+from assible.plugins.loader import lookup_loader
+from assible.vars.fact_cache import FactCache
+from assible.template import Templar
+from assible.utils.display import Display
+from assible.utils.listify import listify_lookup_plugin_terms
+from assible.utils.vars import combine_vars, load_extra_vars, load_options_vars
+from assible.utils.unsafe_proxy import wrap_var
+from assible.vars.clean import namespace_facts, clean_facts
+from assible.vars.plugins import get_vars_from_inventory_sources, get_vars_from_path
 
 display = Display()
 
@@ -67,7 +67,7 @@ def preprocess_vars(a):
 
     for item in data:
         if not isinstance(item, MutableMapping):
-            raise AnsibleError("variable files must contain either a dictionary of variables, or a list of dictionaries. Got: %s (%s)" % (a, type(a)))
+            raise AssibleError("variable files must contain either a dictionary of variables, or a list of dictionaries. Got: %s (%s)" % (a, type(a)))
 
     return data
 
@@ -101,7 +101,7 @@ class VariableManager:
         # load fact cache
         try:
             self._fact_cache = FactCache()
-        except AnsibleError as e:
+        except AssibleError as e:
             # bad cache plugin is not fatal error
             # fallback to a dict as in memory cache
             display.warning(to_text(e))
@@ -214,7 +214,7 @@ class VariableManager:
                 basedirs = [task.get_search_path()[0]]
             elif C.PLAYBOOK_VARS_ROOT != 'top':
                 # preserves default basedirs, only option pre 2.3
-                raise AnsibleError('Unknown playbook vars logic: %s' % C.PLAYBOOK_VARS_ROOT)
+                raise AssibleError('Unknown playbook vars logic: %s' % C.PLAYBOOK_VARS_ROOT)
 
             # if we have a task in this context, and that task has a role, make
             # sure it sees its defaults above any other roles, as we previously
@@ -241,9 +241,9 @@ class VariableManager:
                                 data.update(plugin.get_group_vars(entity.name))
                     except AttributeError:
                         if hasattr(plugin, 'run'):
-                            raise AnsibleError("Cannot use v1 type vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
+                            raise AssibleError("Cannot use v1 type vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
                         else:
-                            raise AnsibleError("Invalid vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
+                            raise AssibleError("Invalid vars plugin %s from %s" % (plugin._load_name, plugin._original_path))
                 return data
 
             # internal functions that actually do the work
@@ -315,8 +315,8 @@ class VariableManager:
                 if C.INJECT_FACTS_AS_VARS:
                     all_vars = _combine_and_track(all_vars, wrap_var(clean_facts(facts)), "facts")
                 else:
-                    # always 'promote' ansible_local
-                    all_vars = _combine_and_track(all_vars, wrap_var({'ansible_local': facts.get('ansible_local', {})}), "facts")
+                    # always 'promote' assible_local
+                    all_vars = _combine_and_track(all_vars, wrap_var({'assible_local': facts.get('assible_local', {})}), "facts")
             except KeyError:
                 pass
 
@@ -346,7 +346,7 @@ class VariableManager:
                         for vars_file in vars_file_list:
                             vars_file = templar.template(vars_file)
                             if not (isinstance(vars_file, Sequence)):
-                                raise AnsibleError(
+                                raise AssibleError(
                                     "Invalid vars_files entry found: %r\n"
                                     "vars_files entries should be either a string type or "
                                     "a list of string types after template expansion" % vars_file
@@ -357,19 +357,19 @@ class VariableManager:
                                     for item in data:
                                         all_vars = _combine_and_track(all_vars, item, "play vars_files from '%s'" % vars_file)
                                 break
-                            except AnsibleFileNotFound:
+                            except AssibleFileNotFound:
                                 # we continue on loader failures
                                 continue
-                            except AnsibleParserError:
+                            except AssibleParserError:
                                 raise
                         else:
                             # if include_delegate_to is set to False, we ignore the missing
                             # vars file here because we're working on a delegated host
                             if include_delegate_to:
-                                raise AnsibleFileNotFound("vars file %s was not found" % vars_file_item)
-                    except (UndefinedError, AnsibleUndefinedVariable):
+                                raise AssibleFileNotFound("vars file %s was not found" % vars_file_item)
+                    except (UndefinedError, AssibleUndefinedVariable):
                         if host is not None and self._fact_cache.get(host.name, dict()).get('module_setup') and task is not None:
-                            raise AnsibleUndefinedVariable("an undefined variable was found when attempting to template the vars_files item '%s'"
+                            raise AssibleUndefinedVariable("an undefined variable was found when attempting to template the vars_files item '%s'"
                                                            % vars_file_item, obj=vars_file_item)
                         else:
                             # we do not have a full context here, and the missing variable could be because of that
@@ -379,7 +379,7 @@ class VariableManager:
 
                     display.vvv("Read vars_file '%s'" % vars_file_item)
             except TypeError:
-                raise AnsibleParserError("Error while reading vars files - please supply a list of file names. "
+                raise AssibleParserError("Error while reading vars files - please supply a list of file names. "
                                          "Got '%s' of type %s" % (vars_files, type(vars_files)))
 
             # By default, we now merge in all vars from all roles in the play,
@@ -434,7 +434,7 @@ class VariableManager:
         # if we have a task and we're delegating to another host, figure out the
         # variables for that host now so we don't have to rely on hostvars later
         if task and task.delegate_to is not None and include_delegate_to:
-            all_vars['ansible_delegated_vars'], all_vars['_ansible_loop_cache'] = self._get_delegated_vars(play, task, all_vars)
+            all_vars['assible_delegated_vars'], all_vars['_assible_loop_cache'] = self._get_delegated_vars(play, task, all_vars)
 
         display.debug("done with get_vars()")
         if C.DEFAULT_DEBUG:
@@ -446,14 +446,14 @@ class VariableManager:
     def _get_magic_variables(self, play, host, task, include_hostvars, include_delegate_to,
                              _hosts=None, _hosts_all=None):
         '''
-        Returns a dictionary of so-called "magic" variables in Ansible,
+        Returns a dictionary of so-called "magic" variables in Assible,
         which are special variables we set internally for use.
         '''
 
         variables = {}
         variables['playbook_dir'] = os.path.abspath(self._loader.get_basedir())
-        variables['ansible_playbook_python'] = sys.executable
-        variables['ansible_config_file'] = C.CONFIG_FILE
+        variables['assible_playbook_python'] = sys.executable
+        variables['assible_config_file'] = C.CONFIG_FILE
 
         if play:
             # This is a list of all role names of all dependencies for all roles for this play
@@ -461,27 +461,27 @@ class VariableManager:
             # This is a list of all role names of all roles for this play
             play_role_names = [r.get_name() for r in play.roles]
 
-            # ansible_role_names includes all role names, dependent or directly referenced by the play
-            variables['ansible_role_names'] = list(set(dependency_role_names + play_role_names))
-            # ansible_play_role_names includes the names of all roles directly referenced by this play
+            # assible_role_names includes all role names, dependent or directly referenced by the play
+            variables['assible_role_names'] = list(set(dependency_role_names + play_role_names))
+            # assible_play_role_names includes the names of all roles directly referenced by this play
             # roles that are implicitly referenced via dependencies are not listed.
-            variables['ansible_play_role_names'] = play_role_names
-            # ansible_dependent_role_names includes the names of all roles that are referenced via dependencies
+            variables['assible_play_role_names'] = play_role_names
+            # assible_dependent_role_names includes the names of all roles that are referenced via dependencies
             # dependencies that are also explicitly named as roles are included in this list
-            variables['ansible_dependent_role_names'] = dependency_role_names
+            variables['assible_dependent_role_names'] = dependency_role_names
 
-            # DEPRECATED: role_names should be deprecated in favor of ansible_role_names or ansible_play_role_names
-            variables['role_names'] = variables['ansible_play_role_names']
+            # DEPRECATED: role_names should be deprecated in favor of assible_role_names or assible_play_role_names
+            variables['role_names'] = variables['assible_play_role_names']
 
-            variables['ansible_play_name'] = play.get_name()
+            variables['assible_play_name'] = play.get_name()
 
         if task:
             if task._role:
                 variables['role_name'] = task._role.get_name(include_role_fqcn=False)
                 variables['role_path'] = task._role._role_path
                 variables['role_uuid'] = text_type(task._role._uuid)
-                variables['ansible_collection_name'] = task._role._role_collection
-                variables['ansible_role_name'] = task._role.get_name()
+                variables['assible_collection_name'] = task._role._role_collection
+                variables['assible_role_name'] = task._role.get_name()
 
         if self._inventory is not None:
             variables['groups'] = self._inventory.get_groups_dict()
@@ -497,13 +497,13 @@ class VariableManager:
                 if not _hosts:
                     _hosts = [h.name for h in self._inventory.get_hosts()]
 
-                variables['ansible_play_hosts_all'] = _hosts_all[:]
-                variables['ansible_play_hosts'] = [x for x in variables['ansible_play_hosts_all'] if x not in play._removed_hosts]
-                variables['ansible_play_batch'] = [x for x in _hosts if x not in play._removed_hosts]
+                variables['assible_play_hosts_all'] = _hosts_all[:]
+                variables['assible_play_hosts'] = [x for x in variables['assible_play_hosts_all'] if x not in play._removed_hosts]
+                variables['assible_play_batch'] = [x for x in _hosts if x not in play._removed_hosts]
 
-                # DEPRECATED: play_hosts should be deprecated in favor of ansible_play_batch,
+                # DEPRECATED: play_hosts should be deprecated in favor of assible_play_batch,
                 # however this would take work in the templating engine, so for now we'll add both
-                variables['play_hosts'] = variables['ansible_play_batch']
+                variables['play_hosts'] = variables['assible_play_batch']
 
         # the 'omit' value allows params to be left out if the variable they are based on is undefined
         variables['omit'] = self._omit_token
@@ -533,11 +533,11 @@ class VariableManager:
         vars_copy = existing_variables.copy()
 
         # get search path for this task to pass to lookup plugins
-        vars_copy['ansible_search_path'] = task.get_search_path()
+        vars_copy['assible_search_path'] = task.get_search_path()
 
         # ensure basedir is always in (dwim already searches here but we need to display it)
-        if self._loader.get_basedir() not in vars_copy['ansible_search_path']:
-            vars_copy['ansible_search_path'].append(self._loader.get_basedir())
+        if self._loader.get_basedir() not in vars_copy['assible_search_path']:
+            vars_copy['assible_search_path'].append(self._loader.get_basedir())
 
         templar = Templar(loader=self._loader, variables=vars_copy)
 
@@ -566,16 +566,16 @@ class VariableManager:
 
                     items = wrap_var(mylookup.run(terms=loop_terms, variables=vars_copy))
 
-                except AnsibleTemplateError:
+                except AssibleTemplateError:
                     # This task will be skipped later due to this, so we just setup
                     # a dummy array for the later code so it doesn't fail
                     items = [None]
             else:
-                raise AnsibleError("Failed to find the lookup named '%s' in the available lookup plugins" % task.loop_with)
+                raise AssibleError("Failed to find the lookup named '%s' in the available lookup plugins" % task.loop_with)
         elif task.loop is not None:
             try:
                 items = templar.template(task.loop)
-            except AnsibleTemplateError:
+            except AssibleTemplateError:
                 # This task will be skipped later due to this, so we just setup
                 # a dummy array for the later code so it doesn't fail
                 items = [None]
@@ -597,9 +597,9 @@ class VariableManager:
             if delegated_host_name != task.delegate_to:
                 cache_items = True
             if delegated_host_name is None:
-                raise AnsibleError(message="Undefined delegate_to host for task:", obj=task._ds)
+                raise AssibleError(message="Undefined delegate_to host for task:", obj=task._ds)
             if not isinstance(delegated_host_name, string_types):
-                raise AnsibleError(message="the field 'delegate_to' has an invalid type (%s), and could not be"
+                raise AssibleError(message="the field 'delegate_to' has an invalid type (%s), and could not be"
                                            " converted to a string type." % type(delegated_host_name), obj=task._ds)
 
             if delegated_host_name in delegated_host_vars:
@@ -637,15 +637,15 @@ class VariableManager:
             )
             delegated_host_vars[delegated_host_name]['inventory_hostname'] = vars_copy.get('inventory_hostname')
 
-        _ansible_loop_cache = None
+        _assible_loop_cache = None
         if has_loop and cache_items:
             # delegate_to templating produced a change, so we will cache the templated items
             # in a special private hostvar
             # this ensures that delegate_to+loop doesn't produce different results than TaskExecutor
             # which may reprocess the loop
-            _ansible_loop_cache = items
+            _assible_loop_cache = items
 
-        return delegated_host_vars, _ansible_loop_cache
+        return delegated_host_vars, _assible_loop_cache
 
     def clear_facts(self, hostname):
         '''
@@ -659,7 +659,7 @@ class VariableManager:
         '''
 
         if not isinstance(facts, Mapping):
-            raise AnsibleAssertionError("the type of 'facts' to set for host_facts should be a Mapping but is a %s" % type(facts))
+            raise AssibleAssertionError("the type of 'facts' to set for host_facts should be a Mapping but is a %s" % type(facts))
 
         try:
             host_cache = self._fact_cache[host]
@@ -682,7 +682,7 @@ class VariableManager:
         '''
 
         if not isinstance(facts, Mapping):
-            raise AnsibleAssertionError("the type of 'facts' to set for nonpersistent_facts should be a Mapping but is a %s" % type(facts))
+            raise AssibleAssertionError("the type of 'facts' to set for nonpersistent_facts should be a Mapping but is a %s" % type(facts))
 
         try:
             self._nonpersistent_fact_cache[host].update(facts)

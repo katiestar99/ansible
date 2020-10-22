@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -12,9 +12,9 @@ from abc import ABCMeta, abstractmethod, abstractproperty
 
 class Command(metaclass=ABCMeta):
     """
-    Subcommands of :program:`build-ansible.py`.
+    Subcommands of :program:`build-assible.py`.
 
-    This defines an interface that all subcommands must conform to.  :program:`build-ansible.py`
+    This defines an interface that all subcommands must conform to.  :program:`build-assible.py`
     will require that these things are present in order to proceed.
     """
     @staticmethod

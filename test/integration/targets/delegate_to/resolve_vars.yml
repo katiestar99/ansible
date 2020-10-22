@@ -5,7 +5,7 @@
   tasks:
     - add_host:
         name: host1
-        ansible_connection: local
+        assible_connection: local
 
 - hosts: localhost
   gather_facts: no

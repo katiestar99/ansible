@@ -8,9 +8,9 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils._text import to_native
-from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils.six.moves.urllib import parse as urllib_parse
+from assible.module_utils._text import to_native
+from assible.module_utils.basic import missing_required_lib
+from assible.module_utils.six.moves.urllib import parse as urllib_parse
 from mimetypes import MimeTypes
 
 import os
@@ -206,7 +206,7 @@ class RabbitClient():
         except Exception as e:
             self.module.fail_json(msg="Queue declare issue: %s" % to_native(e))
 
-        # https://github.com/ansible/ansible/blob/devel/lib/ansible/module_utils/cloudstack.py#L150
+        # https://github.com/assible/assible/blob/devel/lib/assible/module_utils/cloudstack.py#L150
         if args['routing_key'] is None:
             args['routing_key'] = self.queue
 

@@ -6,7 +6,7 @@
     - name: ensure delegated host uses current host as inventory_hostname
       assert:
         that:
-          - inventory_hostname == ansible_delegated_vars['testhost5']['inventory_hostname']
+          - inventory_hostname == assible_delegated_vars['testhost5']['inventory_hostname']
       delegate_to: testhost5
 
     - name: Set info on inventory_hostname
@@ -20,8 +20,8 @@
       ignore_errors: True
       remote_user: "{{ login }}"
       vars:
-        ansible_password: "{{ mypass }}"
-        ansible_connection: fakelocal
+        assible_password: "{{ mypass }}"
+        assible_connection: fakelocal
       register: badlogin
 
     - name: ensure we skipped do to unreachable and not templating error
@@ -36,7 +36,7 @@
       ignore_errors: True
       remote_user: "{{ login }}"
       vars:
-        ansible_password: "{{ mypass }}"
+        assible_password: "{{ mypass }}"
       register: badlogin
 
     - name: ensure we skipped do to unreachable and not templating error
@@ -53,7 +53,7 @@
       ignore_unreachable: True
       ignore_errors: True
       vars:
-        ansible_password: "{{ hostvars[inventory_hostname]['mypass'] }}"
+        assible_password: "{{ hostvars[inventory_hostname]['mypass'] }}"
       register: badlogin
 
     - name: ensure we skipped do to unreachable and not templating error

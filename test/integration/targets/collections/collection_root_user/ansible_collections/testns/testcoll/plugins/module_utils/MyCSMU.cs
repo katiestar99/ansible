@@ -1,11 +1,11 @@
 using System;
 
-using ansible_collections.testns.testcoll.plugins.module_utils.AnotherCSMU;
-using ansible_collections.testns.testcoll.plugins.module_utils.subpkg.subcs;
+using assible_collections.testns.testcoll.plugins.module_utils.AnotherCSMU;
+using assible_collections.testns.testcoll.plugins.module_utils.subpkg.subcs;
 
 //TypeAccelerator -Name MyCSMU -TypeName CustomThing
 
-namespace ansible_collections.testns.testcoll.plugins.module_utils.MyCSMU
+namespace assible_collections.testns.testcoll.plugins.module_utils.MyCSMU
 {
     public class CustomThing
     {

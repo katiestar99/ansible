@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -9,14 +9,14 @@ __metaclass__ = type
 DOCUMENTATION = '''
     name: minimal
     type: stdout
-    short_description: minimal Ansible screen output
+    short_description: minimal Assible screen output
     version_added: historical
     description:
-        - This is the default output callback used by the ansible command (ad-hoc)
+        - This is the default output callback used by the assible command (ad-hoc)
 '''
 
-from ansible.plugins.callback import CallbackBase
-from ansible import constants as C
+from assible.plugins.callback import CallbackBase
+from assible import constants as C
 
 
 class CallbackModule(CallbackBase):
@@ -62,7 +62,7 @@ class CallbackModule(CallbackBase):
             color = C.COLOR_OK
             state = 'SUCCESS'
 
-        if result._task.action in C.MODULE_NO_JSON and 'ansible_job_id' not in result._result:
+        if result._task.action in C.MODULE_NO_JSON and 'assible_job_id' not in result._result:
             self._display.display(self._command_generic_msg(result._host.get_name(), result._result, state), color=color)
         else:
             self._display.display("%s | %s => %s" % (result._host.get_name(), state, self._dump_results(result._result, indent=4)), color=color)

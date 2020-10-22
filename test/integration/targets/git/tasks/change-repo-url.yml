@@ -1,5 +1,5 @@
 # test change of repo url
-# see https://github.com/ansible/ansible-modules-core/pull/721
+# see https://github.com/assible/assible-modules-core/pull/721
 
 - name: CHANGE-REPO-URL | clear checkout_dir
   file:
@@ -42,7 +42,7 @@
     that: "repo_content.stat.exists"
 
 # Make sure 'changed' result is accurate in check mode.
-# See https://github.com/ansible/ansible-modules-core/pull/4243
+# See https://github.com/assible/assible-modules-core/pull/4243
 
 - name: CHANGE-REPO-URL | clear checkout_dir
   file:

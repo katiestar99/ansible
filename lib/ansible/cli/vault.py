@@ -1,5 +1,5 @@
 # (c) 2014, James Tanner <tanner.jc@gmail.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -8,27 +8,27 @@ __metaclass__ = type
 import os
 import sys
 
-from ansible import constants as C
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.errors import AnsibleOptionsError
-from ansible.module_utils._text import to_text, to_bytes
-from ansible.parsing.dataloader import DataLoader
-from ansible.parsing.vault import VaultEditor, VaultLib, match_encrypt_secret
-from ansible.utils.display import Display
+from assible import constants as C
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.errors import AssibleOptionsError
+from assible.module_utils._text import to_text, to_bytes
+from assible.parsing.dataloader import DataLoader
+from assible.parsing.vault import VaultEditor, VaultLib, match_encrypt_secret
+from assible.utils.display import Display
 
 display = Display()
 
 
 class VaultCLI(CLI):
-    ''' can encrypt any structured data file used by Ansible.
+    ''' can encrypt any structured data file used by Assible.
     This can include *group_vars/* or *host_vars/* inventory variables,
     variables loaded by *include_vars* or *vars_files*, or variable files
-    passed on the ansible-playbook command line with *-e @file.yml* or *-e @file.json*.
+    passed on the assible-playbook command line with *-e @file.yml* or *-e @file.json*.
     Role variables and defaults are also included!
 
-    Because Ansible tasks, handlers, and other objects are data, these can also be encrypted with vault.
+    Because Assible tasks, handlers, and other objects are data, these can also be encrypted with vault.
     If you'd like to not expose what variables you are using, you can keep an individual task file entirely encrypted.
     '''
 
@@ -51,7 +51,7 @@ class VaultCLI(CLI):
 
     def init_parser(self):
         super(VaultCLI, self).init_parser(
-            desc="encryption/decryption utility for Ansible data files",
+            desc="encryption/decryption utility for Assible data files",
             epilog="\nSee '%s <command> --help' for more information on a specific command.\n\n" % os.path.basename(sys.argv[0])
         )
 
@@ -123,10 +123,10 @@ class VaultCLI(CLI):
         if options.vault_ids:
             for vault_id in options.vault_ids:
                 if u';' in vault_id:
-                    raise AnsibleOptionsError("'%s' is not a valid vault id. The character ';' is not allowed in vault ids" % vault_id)
+                    raise AssibleOptionsError("'%s' is not a valid vault id. The character ';' is not allowed in vault ids" % vault_id)
 
         if getattr(options, 'output_file', None) and len(options.args) > 1:
-            raise AnsibleOptionsError("At most one input file may be used with the --output option")
+            raise AssibleOptionsError("At most one input file may be used with the --output option")
 
         if options.action == 'encrypt_string':
             if '-' in options.args or not options.args or options.encrypt_string_stdin_name:
@@ -134,7 +134,7 @@ class VaultCLI(CLI):
 
             # TODO: prompting from stdin and reading from stdin seem mutually exclusive, but verify that.
             if options.encrypt_string_prompt and self.encrypt_string_read_stdin:
-                raise AnsibleOptionsError('The --prompt option is not supported if also reading input from stdin')
+                raise AssibleOptionsError('The --prompt option is not supported if also reading input from stdin')
 
         return options
 
@@ -164,7 +164,7 @@ class VaultCLI(CLI):
                                                      vault_password_files=list(context.CLIARGS['vault_password_files']),
                                                      ask_vault_pass=context.CLIARGS['ask_vault_pass'])
             if not vault_secrets:
-                raise AnsibleOptionsError("A vault password is required to use Ansible's Vault")
+                raise AssibleOptionsError("A vault password is required to use Assible's Vault")
 
         if action in ['encrypt', 'encrypt_string', 'create']:
 
@@ -182,11 +182,11 @@ class VaultCLI(CLI):
                                          create_new_password=True)
 
             if len(vault_secrets) > 1 and not encrypt_vault_id:
-                raise AnsibleOptionsError("The vault-ids %s are available to encrypt. Specify the vault-id to encrypt with --encrypt-vault-id" %
+                raise AssibleOptionsError("The vault-ids %s are available to encrypt. Specify the vault-id to encrypt with --encrypt-vault-id" %
                                           ','.join([x[0] for x in vault_secrets]))
 
             if not vault_secrets:
-                raise AnsibleOptionsError("A vault password is required to use Ansible's Vault")
+                raise AssibleOptionsError("A vault password is required to use Assible's Vault")
 
             encrypt_secret = match_encrypt_secret(vault_secrets,
                                                   encrypt_vault_id=encrypt_vault_id)
@@ -221,7 +221,7 @@ class VaultCLI(CLI):
                                          create_new_password=True)
 
             if not new_vault_secrets:
-                raise AnsibleOptionsError("A new vault password is required to use Ansible's Vault rekey")
+                raise AssibleOptionsError("A new vault password is required to use Assible's Vault rekey")
 
             # There is only one new_vault_id currently and one new_vault_secret, or we
             # use the id specified in --encrypt-vault-id
@@ -304,7 +304,7 @@ class VaultCLI(CLI):
             prompt_response = display.prompt(msg)
 
             if prompt_response == '':
-                raise AnsibleOptionsError('The plaintext provided from the prompt was empty, not encrypting')
+                raise AssibleOptionsError('The plaintext provided from the prompt was empty, not encrypting')
 
             b_plaintext = to_bytes(prompt_response)
             b_plaintext_list.append((b_plaintext, self.FROM_PROMPT, name))
@@ -316,7 +316,7 @@ class VaultCLI(CLI):
 
             stdin_text = sys.stdin.read()
             if stdin_text == '':
-                raise AnsibleOptionsError('stdin was empty, not encrypting')
+                raise AssibleOptionsError('stdin was empty, not encrypting')
 
             if sys.stdout.isatty() and not stdin_text.endswith("\n"):
                 display.display("\n")
@@ -354,7 +354,7 @@ class VaultCLI(CLI):
             name, plaintext = name_and_text
 
             if plaintext == '':
-                raise AnsibleOptionsError('The plaintext provided from the command line args was empty, not encrypting')
+                raise AssibleOptionsError('The plaintext provided from the command line args was empty, not encrypting')
 
             b_plaintext = to_bytes(plaintext)
             b_plaintext_list.append((b_plaintext, self.FROM_ARGS, name))
@@ -425,7 +425,7 @@ class VaultCLI(CLI):
         ''' create and open a file in an editor that will be encrypted with the provided vault secret when closed'''
 
         if len(context.CLIARGS['args']) != 1:
-            raise AnsibleOptionsError("ansible-vault create can take only one filename argument")
+            raise AssibleOptionsError("assible-vault create can take only one filename argument")
 
         self.editor.create_file(context.CLIARGS['args'][0], self.encrypt_secret,
                                 vault_id=self.encrypt_vault_id)

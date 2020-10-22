@@ -1,6 +1,6 @@
 
 # usage: source hacking/env-setup [-q]
-#    modifies environment for running Ansible from checkout
+#    modifies environment for running Assible from checkout
 
 # prepend a value to a potentially empty path variable
 # usage: prepend_path variable_name value
@@ -45,11 +45,11 @@ fi
 # The below is an alternative to readlink -fn which doesn't exist on macOS
 # Source: http://stackoverflow.com/a/1678636
 FULL_PATH=$($PYTHON_BIN -c "import os; print(os.path.realpath('$HACKING_DIR'))")
-export ANSIBLE_HOME="$(dirname "$FULL_PATH")"
+export ASSIBLE_HOME="$(dirname "$FULL_PATH")"
 
-PREFIX_PYTHONPATH="$ANSIBLE_HOME/lib"
-PREFIX_PATH="$ANSIBLE_HOME/bin"
-PREFIX_MANPATH="$ANSIBLE_HOME/docs/man"
+PREFIX_PYTHONPATH="$ASSIBLE_HOME/lib"
+PREFIX_PATH="$ASSIBLE_HOME/bin"
+PREFIX_MANPATH="$ASSIBLE_HOME/docs/man"
 
 expr "$PYTHONPATH" : "${PREFIX_PYTHONPATH}.*" > /dev/null || prepend_path PYTHONPATH "$PREFIX_PYTHONPATH"
 expr "$PATH" : "${PREFIX_PATH}.*" > /dev/null || prepend_path PATH "$PREFIX_PATH"
@@ -63,21 +63,21 @@ expr "$MANPATH" : "${PREFIX_MANPATH}.*" > /dev/null || prepend_path MANPATH "$PR
 gen_egg_info()
 {
     # check for current and past egg-info directory names
-    if ls "$PREFIX_PYTHONPATH"/ansible*.egg-info >/dev/null 2>&1; then
+    if ls "$PREFIX_PYTHONPATH"/assible*.egg-info >/dev/null 2>&1; then
         # bypass shell aliases with leading backslash
-        # see https://github.com/ansible/ansible/pull/11967
-        \rm -rf "$PREFIX_PYTHONPATH"/ansible*.egg-info
+        # see https://github.com/assible/assible/pull/11967
+        \rm -rf "$PREFIX_PYTHONPATH"/assible*.egg-info
     fi
     $PYTHON_BIN setup.py egg_info
 }
 
-if [ "$ANSIBLE_HOME" != "$PWD" ] ; then
+if [ "$ASSIBLE_HOME" != "$PWD" ] ; then
     current_dir="$PWD"
 else
-    current_dir="$ANSIBLE_HOME"
+    current_dir="$ASSIBLE_HOME"
 fi
 (
-	cd "$ANSIBLE_HOME"
+	cd "$ASSIBLE_HOME"
 	if [ "$verbosity" = silent ] ; then
 	    gen_egg_info > /dev/null 2>&1 &
             find . -type f -name "*.pyc" -exec rm -f {} \; > /dev/null 2>&1
@@ -91,7 +91,7 @@ fi
 if [ "$verbosity" != silent ] ; then
     cat <<- EOF
 
-	Setting up Ansible to run out of checkout...
+	Setting up Assible to run out of checkout...
 
 	PATH=$PATH
 	PYTHONPATH=$PYTHONPATH

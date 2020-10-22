@@ -1,4 +1,4 @@
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -8,8 +8,8 @@ import pytest
 
 from jinja2 import Environment
 
-import ansible.plugins.filter.mathstuff as ms
-from ansible.errors import AnsibleFilterError, AnsibleFilterTypeError
+import assible.plugins.filter.mathstuff as ms
+from assible.errors import AssibleFilterError, AssibleFilterTypeError
 
 
 UNIQUE_DATA = (([1, 3, 4, 2], sorted([1, 2, 3, 4])),
@@ -85,9 +85,9 @@ class TestMax:
 class TestLogarithm:
     def test_log_non_number(self):
         # Message changed in python3.6
-        with pytest.raises(AnsibleFilterTypeError, match='log\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
+        with pytest.raises(AssibleFilterTypeError, match='log\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
             ms.logarithm('a')
-        with pytest.raises(AnsibleFilterTypeError, match='log\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
+        with pytest.raises(AssibleFilterTypeError, match='log\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
             ms.logarithm(10, base='a')
 
     def test_log_ten(self):
@@ -104,10 +104,10 @@ class TestLogarithm:
 class TestPower:
     def test_power_non_number(self):
         # Message changed in python3.6
-        with pytest.raises(AnsibleFilterTypeError, match='pow\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
+        with pytest.raises(AssibleFilterTypeError, match='pow\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
             ms.power('a', 10)
 
-        with pytest.raises(AnsibleFilterTypeError, match='pow\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
+        with pytest.raises(AssibleFilterTypeError, match='pow\\(\\) can only be used on numbers: (a float is required|must be real number, not str)'):
             ms.power(10, 'a')
 
     def test_power_squared(self):
@@ -120,13 +120,13 @@ class TestPower:
 class TestInversePower:
     def test_root_non_number(self):
         # Messages differed in python-2.6, python-2.7-3.5, and python-3.6+
-        with pytest.raises(AnsibleFilterTypeError, match="root\\(\\) can only be used on numbers:"
+        with pytest.raises(AssibleFilterTypeError, match="root\\(\\) can only be used on numbers:"
                            " (invalid literal for float\\(\\): a"
                            "|could not convert string to float: a"
                            "|could not convert string to float: 'a')"):
             ms.inversepower(10, 'a')
 
-        with pytest.raises(AnsibleFilterTypeError, match="root\\(\\) can only be used on numbers: (a float is required|must be real number, not str)"):
+        with pytest.raises(AssibleFilterTypeError, match="root\\(\\) can only be used on numbers: (a float is required|must be real number, not str)"):
             ms.inversepower('a', 10)
 
     def test_square_root(self):
@@ -151,18 +151,18 @@ class TestRekeyOnMember():
     # (Input data structure, member to rekey on, expected error message)
     INVALID_ENTRIES = (
         # Fail when key is not found
-        (AnsibleFilterError, [{"proto": "eigrp", "state": "enabled"}], 'invalid_key', "Key invalid_key was not found"),
-        (AnsibleFilterError, {"eigrp": {"proto": "eigrp", "state": "enabled"}}, 'invalid_key', "Key invalid_key was not found"),
+        (AssibleFilterError, [{"proto": "eigrp", "state": "enabled"}], 'invalid_key', "Key invalid_key was not found"),
+        (AssibleFilterError, {"eigrp": {"proto": "eigrp", "state": "enabled"}}, 'invalid_key', "Key invalid_key was not found"),
         # Fail when key is duplicated
-        (AnsibleFilterError, [{"proto": "eigrp"}, {"proto": "ospf"}, {"proto": "ospf"}],
+        (AssibleFilterError, [{"proto": "eigrp"}, {"proto": "ospf"}, {"proto": "ospf"}],
          'proto', 'Key ospf is not unique, cannot correctly turn into dict'),
         # Fail when value is not a dict
-        (AnsibleFilterTypeError, ["string"], 'proto', "List item is not a valid dict"),
-        (AnsibleFilterTypeError, [123], 'proto', "List item is not a valid dict"),
-        (AnsibleFilterTypeError, [[{'proto': 1}]], 'proto', "List item is not a valid dict"),
+        (AssibleFilterTypeError, ["string"], 'proto', "List item is not a valid dict"),
+        (AssibleFilterTypeError, [123], 'proto', "List item is not a valid dict"),
+        (AssibleFilterTypeError, [[{'proto': 1}]], 'proto', "List item is not a valid dict"),
         # Fail when we do not send a dict or list
-        (AnsibleFilterTypeError, "string", 'proto', "Type is not a valid list, set, or dict"),
-        (AnsibleFilterTypeError, 123, 'proto', "Type is not a valid list, set, or dict"),
+        (AssibleFilterTypeError, "string", 'proto', "Type is not a valid list, set, or dict"),
+        (AssibleFilterTypeError, 123, 'proto', "Type is not a valid list, set, or dict"),
     )
 
     @pytest.mark.parametrize("list_original, key, expected", VALID_ENTRIES)

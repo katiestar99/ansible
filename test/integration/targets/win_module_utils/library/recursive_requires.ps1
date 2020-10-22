@@ -1,7 +1,7 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.Recursive3
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Recursive3
 #Requires -Version 2
 
 $ErrorActionPreference = "Stop"

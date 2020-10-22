@@ -1,4 +1,4 @@
-"""Context information for the current invocation of ansible-test."""
+"""Context information for the current invocation of assible-test."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -10,9 +10,9 @@ from .util import (
     ApplicationError,
     import_plugins,
     is_subdir,
-    ANSIBLE_LIB_ROOT,
-    ANSIBLE_TEST_ROOT,
-    ANSIBLE_SOURCE_ROOT,
+    ASSIBLE_LIB_ROOT,
+    ASSIBLE_TEST_ROOT,
+    ASSIBLE_SOURCE_ROOT,
     display,
 )
 
@@ -41,9 +41,9 @@ from .provider.layout import (
 
 
 class DataContext:
-    """Data context providing details about the current execution environment for ansible-test."""
+    """Data context providing details about the current execution environment for assible-test."""
     def __init__(self):
-        content_path = os.environ.get('ANSIBLE_TEST_CONTENT_ROOT')
+        content_path = os.environ.get('ASSIBLE_TEST_CONTENT_ROOT')
         current_path = os.getcwd()
 
         layout_providers = get_path_provider_classes(LayoutProvider)
@@ -51,14 +51,14 @@ class DataContext:
 
         self.__layout_providers = layout_providers
         self.__source_providers = source_providers
-        self.__ansible_source = None  # type: t.Optional[t.Tuple[t.Tuple[str, str], ...]]
+        self.__assible_source = None  # type: t.Optional[t.Tuple[t.Tuple[str, str], ...]]
 
         self.payload_callbacks = []  # type: t.List[t.Callable[t.List[t.Tuple[str, str]], None]]
 
         if content_path:
             content = self.__create_content_layout(layout_providers, source_providers, content_path, False)
-        elif ANSIBLE_SOURCE_ROOT and is_subdir(current_path, ANSIBLE_SOURCE_ROOT):
-            content = self.__create_content_layout(layout_providers, source_providers, ANSIBLE_SOURCE_ROOT, False)
+        elif ASSIBLE_SOURCE_ROOT and is_subdir(current_path, ASSIBLE_SOURCE_ROOT):
+            content = self.__create_content_layout(layout_providers, source_providers, ASSIBLE_SOURCE_ROOT, False)
         else:
             content = self.__create_content_layout(layout_providers, source_providers, current_path, True)
 
@@ -75,7 +75,7 @@ class DataContext:
         if not collection:
             return []
 
-        root_path = os.path.join(collection.root, 'ansible_collections')
+        root_path = os.path.join(collection.root, 'assible_collections')
         display.info('Scanning collection root: %s' % root_path, verbosity=1)
         namespace_names = sorted(name for name in os.listdir(root_path) if os.path.isdir(os.path.join(root_path, name)))
         collections = []
@@ -124,38 +124,38 @@ class DataContext:
 
         return layout
 
-    def __create_ansible_source(self):
-        """Return a tuple of Ansible source files with both absolute and relative paths."""
-        if not ANSIBLE_SOURCE_ROOT:
+    def __create_assible_source(self):
+        """Return a tuple of Assible source files with both absolute and relative paths."""
+        if not ASSIBLE_SOURCE_ROOT:
             sources = []
 
-            source_provider = InstalledSource(ANSIBLE_LIB_ROOT)
-            sources.extend((os.path.join(source_provider.root, path), os.path.join('lib', 'ansible', path))
+            source_provider = InstalledSource(ASSIBLE_LIB_ROOT)
+            sources.extend((os.path.join(source_provider.root, path), os.path.join('lib', 'assible', path))
                            for path in source_provider.get_paths(source_provider.root))
 
-            source_provider = InstalledSource(ANSIBLE_TEST_ROOT)
-            sources.extend((os.path.join(source_provider.root, path), os.path.join('test', 'lib', 'ansible_test', path))
+            source_provider = InstalledSource(ASSIBLE_TEST_ROOT)
+            sources.extend((os.path.join(source_provider.root, path), os.path.join('test', 'lib', 'assible_test', path))
                            for path in source_provider.get_paths(source_provider.root))
 
             return tuple(sources)
 
-        if self.content.is_ansible:
+        if self.content.is_assible:
             return tuple((os.path.join(self.content.root, path), path) for path in self.content.all_files())
 
         try:
-            source_provider = find_path_provider(SourceProvider, self.__source_providers, ANSIBLE_SOURCE_ROOT, False)
+            source_provider = find_path_provider(SourceProvider, self.__source_providers, ASSIBLE_SOURCE_ROOT, False)
         except ProviderNotFoundForPath:
-            source_provider = UnversionedSource(ANSIBLE_SOURCE_ROOT)
+            source_provider = UnversionedSource(ASSIBLE_SOURCE_ROOT)
 
         return tuple((os.path.join(source_provider.root, path), path) for path in source_provider.get_paths(source_provider.root))
 
     @property
-    def ansible_source(self):  # type: () -> t.Tuple[t.Tuple[str, str], ...]
-        """Return a tuple of Ansible source files with both absolute and relative paths."""
-        if not self.__ansible_source:
-            self.__ansible_source = self.__create_ansible_source()
+    def assible_source(self):  # type: () -> t.Tuple[t.Tuple[str, str], ...]
+        """Return a tuple of Assible source files with both absolute and relative paths."""
+        if not self.__assible_source:
+            self.__assible_source = self.__create_assible_source()
 
-        return self.__ansible_source
+        return self.__assible_source
 
     def register_payload_callback(self, callback):  # type: (t.Callable[t.List[t.Tuple[str, str]], None]) -> None
         """Register the given payload callback."""
@@ -176,11 +176,11 @@ def data_init():  # type: () -> DataContext
         context = DataContext()
     except ProviderNotFoundForPath:
         options = [
-            ' - an Ansible collection: {...}/ansible_collections/{namespace}/{collection}/',
+            ' - an Assible collection: {...}/assible_collections/{namespace}/{collection}/',
         ]
 
-        if ANSIBLE_SOURCE_ROOT:
-            options.insert(0, ' - the Ansible source: %s/' % ANSIBLE_SOURCE_ROOT)
+        if ASSIBLE_SOURCE_ROOT:
+            options.insert(0, ' - the Assible source: %s/' % ASSIBLE_SOURCE_ROOT)
 
         raise ApplicationError('''The current working directory must be at or below:
 

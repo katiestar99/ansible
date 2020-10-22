@@ -4,7 +4,7 @@
 # Copyright: (c) 2017, Dag Wieers <dag@wieers.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -34,7 +34,7 @@ options:
     description:
       - Prefix of file/directory name created by module.
     type: str
-    default: ansible.
+    default: assible.
   suffix:
     description:
       - Suffix of file/directory name created by module.
@@ -63,5 +63,5 @@ path:
   description: The absolute path to the created file or directory.
   returned: success
   type: str
-  sample: C:\Users\Administrator\AppData\Local\Temp\ansible.bMlvdk
+  sample: C:\Users\Administrator\AppData\Local\Temp\assible.bMlvdk
 '''

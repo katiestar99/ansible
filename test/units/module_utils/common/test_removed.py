@@ -7,7 +7,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.removed import removed_module
+from assible.module_utils.common.removed import removed_module
 
 
 @pytest.mark.parametrize('input_data', [u'2.8', 2.8, 2, '', ])
@@ -27,19 +27,19 @@ def test_removed_module_sys_exit(input_data):
         (
             u'2.8',
             u'This module has been removed. '
-            'The module documentation for Ansible-2.7 may contain hints for porting',
+            'The module documentation for Assible-2.7 may contain hints for porting',
             u'',
         ),
         (
             2.8,
             u'This module has been removed. '
-            'The module documentation for Ansible-2.7 may contain hints for porting',
+            'The module documentation for Assible-2.7 may contain hints for porting',
             u'',
         ),
         (
             2,
             u'This module has been removed. '
-            'The module documentation for Ansible-1 may contain hints for porting',
+            'The module documentation for Assible-1 may contain hints for porting',
             u'',
         ),
         (
@@ -50,7 +50,7 @@ def test_removed_module_sys_exit(input_data):
         (
             0.1,
             u'This module has been removed. '
-            'The module documentation for Ansible-0.0 may contain hints for porting',
+            'The module documentation for Assible-0.0 may contain hints for porting',
             u'',
         ),
     ]

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2020 Ansible Project
+# (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -9,7 +9,7 @@ import base64
 import os.path
 import pytest
 
-import ansible.module_utils.urls as urls
+import assible.module_utils.urls as urls
 
 
 @pytest.mark.skipif(not urls.HAS_CRYPTOGRAPHY, reason='Requires cryptography to be installed')

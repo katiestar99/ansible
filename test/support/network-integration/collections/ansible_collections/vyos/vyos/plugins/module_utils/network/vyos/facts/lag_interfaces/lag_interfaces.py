@@ -15,10 +15,10 @@ __metaclass__ = type
 from re import findall, search, M
 from copy import deepcopy
 
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.lag_interfaces.lag_interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.lag_interfaces.lag_interfaces import (
     Lag_interfacesArgs,
 )
 
@@ -41,7 +41,7 @@ class Lag_interfacesFacts(object):
 
         self.generated_spec = utils.generate_dict(facts_argument_spec)
 
-    def populate_facts(self, connection, ansible_facts, data=None):
+    def populate_facts(self, connection, assible_facts, data=None):
         """ Populate the facts for lag_interfaces
         :param module: the module instance
         :param connection: the device connection
@@ -92,8 +92,8 @@ class Lag_interfacesFacts(object):
             for cfg in params["config"]:
                 facts["lag_interfaces"].append(utils.remove_empties(cfg))
 
-        ansible_facts["ansible_network_resources"].update(facts)
-        return ansible_facts
+        assible_facts["assible_network_resources"].update(facts)
+        return assible_facts
 
     def render_config(self, conf):
         """

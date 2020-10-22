@@ -1,4 +1,4 @@
-module ansible-podman 1.0;
+module assible-podman 1.0;
 
 require {
         type container_t;

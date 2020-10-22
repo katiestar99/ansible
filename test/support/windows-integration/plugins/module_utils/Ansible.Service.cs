@@ -6,9 +6,9 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
-using Ansible.Privilege;
+using Assible.Privilege;
 
-namespace Ansible.Service
+namespace Assible.Service
 {
     internal class NativeHelpers
     {

@@ -5,8 +5,8 @@
 
 - name: download a git repository
   command: >
-    ansible-galaxy collection download
-    git+https://github.com/ansible-collections/amazon.aws.git,37875c5b4ba5bf3cc43e07edf29f3432fd76def5
+    assible-galaxy collection download
+    git+https://github.com/assible-collections/amazon.aws.git,37875c5b4ba5bf3cc43e07edf29f3432fd76def5
     git+https://github.com/AlanCoding/awx.git#awx_collection,750c22a150d04eef1cb625fd4f83cce57949416c
   args:
     chdir: '{{ galaxy_dir }}/download'
@@ -30,12 +30,12 @@
       - download_collection_awx_actual.stat.exists
 
 - name: test the downloaded repository can be installed
-  command: 'ansible-galaxy collection install -r requirements.yml'
+  command: 'assible-galaxy collection install -r requirements.yml'
   args:
     chdir: '{{ galaxy_dir }}/download/collections/'
 
 - name: list installed collections
-  command: 'ansible-galaxy collection list'
+  command: 'assible-galaxy collection list'
   register: installed_collections
 
 - assert:

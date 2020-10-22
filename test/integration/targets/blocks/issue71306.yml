@@ -6,7 +6,7 @@
         - block:
           - name: EXPECTED FAILURE
             fail:
-            when: ansible_host == "host1"
+            when: assible_host == "host1"
 
           - debug:
               msg: "I am successful!"

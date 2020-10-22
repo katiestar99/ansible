@@ -2,7 +2,7 @@
 # Copyright: (c) 2017, James Tanner <tanner.jc@gmail.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# https://github.com/ansible/ansible/issues/25011
+# https://github.com/assible/assible/issues/25011
 # Sending "-folders 1" to vcsim nests the datacenter under
 # the folder so that the path prefix is no longer /vm
 #

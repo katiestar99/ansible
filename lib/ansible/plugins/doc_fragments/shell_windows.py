@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -13,14 +13,14 @@ class ModuleDocFragment(object):
 options:
   async_dir:
     description:
-    - Directory in which ansible will keep async job information.
-    - Before Ansible 2.8, this was set to C(remote_tmp + "\\.ansible_async").
-    default: '%USERPROFILE%\\.ansible_async'
+    - Directory in which assible will keep async job information.
+    - Before Assible 2.8, this was set to C(remote_tmp + "\\.assible_async").
+    default: '%USERPROFILE%\\.assible_async'
     ini:
     - section: powershell
       key: async_dir
     vars:
-    - name: ansible_async_dir
+    - name: assible_async_dir
     version_added: '2.8'
   remote_tmp:
     description:
@@ -30,7 +30,7 @@ options:
     - section: powershell
       key: remote_tmp
     vars:
-    - name: ansible_remote_tmp
+    - name: assible_remote_tmp
   set_module_language:
     description:
     - Controls if we set the locale for modules when executing on the

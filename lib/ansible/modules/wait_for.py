@@ -19,11 +19,11 @@ description:
        which is true of certain Java application servers.
      - It is also useful when starting guests with the M(community.libvirt.virt) module and needing to pause until they are ready.
      - This module can also be used to wait for a regex match a string to be present in a file.
-     - In Ansible 1.6 and later, this module can also be used to wait for a file to be available or
+     - In Assible 1.6 and later, this module can also be used to wait for a file to be available or
        absent on the filesystem.
-     - In Ansible 1.8 and later, this module can also be used to wait for active connections to be closed before continuing, useful if a node
+     - In Assible 1.8 and later, this module can also be used to wait for active connections to be closed before continuing, useful if a node
        is being rotated out of a load balancer pool.
-     - For Windows targets, use the M(ansible.windows.win_wait_for) module instead.
+     - For Windows targets, use the M(assible.windows.win_wait_for) module instead.
 version_added: "0.7"
 options:
   host:
@@ -89,7 +89,7 @@ options:
   sleep:
     description:
       - Number of seconds to sleep between checks.
-      - Before Ansible 2.3 this was hardcoded to 1 second.
+      - Before Assible 2.3 this was hardcoded to 1 second.
     type: int
     default: 1
     version_added: "2.3"
@@ -99,16 +99,16 @@ options:
     type: str
     version_added: "2.4"
 notes:
-  - The ability to use search_regex with a port connection was added in Ansible 1.7.
-  - Prior to Ansible 2.4, testing for the absence of a directory or UNIX socket did not work correctly.
-  - Prior to Ansible 2.4, testing for the presence of a file did not work correctly if the remote user did not have read access to that file.
+  - The ability to use search_regex with a port connection was added in Assible 1.7.
+  - Prior to Assible 2.4, testing for the absence of a directory or UNIX socket did not work correctly.
+  - Prior to Assible 2.4, testing for the presence of a file did not work correctly if the remote user did not have read access to that file.
   - Under some circumstances when using mandatory access control, a path may always be treated as being absent even if it exists, but
     can't be modified or created by the remote user either.
   - When waiting for a path, symbolic links will be followed.  Many other modules that manipulate files do not follow symbolic links,
     so operations on the path using other modules may not work exactly as expected.
 seealso:
-- module: ansible.builtin.wait_for_connection
-- module: ansible.windows.win_wait_for
+- module: assible.builtin.wait_for_connection
+- module: assible.windows.win_wait_for
 - module: community.windows.win_wait_for_process
 author:
     - Jeroen Hoekx (@jhoekx)
@@ -178,20 +178,20 @@ EXAMPLES = r'''
 - name: Wait 300 seconds for port 22 to become open and contain "OpenSSH"
   wait_for:
     port: 22
-    host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+    host: '{{ (assible_ssh_host|default(assible_host))|default(inventory_hostname) }}'
     search_regex: OpenSSH
     delay: 10
   connection: local
 
-# Same as above but you normally have ansible_connection set in inventory, which overrides 'connection'
+# Same as above but you normally have assible_connection set in inventory, which overrides 'connection'
 - name: Wait 300 seconds for port 22 to become open and contain "OpenSSH"
   wait_for:
     port: 22
-    host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+    host: '{{ (assible_ssh_host|default(assible_host))|default(inventory_hostname) }}'
     search_regex: OpenSSH
     delay: 10
   vars:
-    ansible_connection: local
+    assible_connection: local
 '''
 
 RETURN = r'''
@@ -227,9 +227,9 @@ import socket
 import time
 import traceback
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.common.sys_info import get_platform_subclass
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils.common.sys_info import get_platform_subclass
+from assible.module_utils._text import to_native
 
 
 HAS_PSUTIL = False
@@ -457,7 +457,7 @@ def get_connection_state_id(state):
 
 def main():
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             host=dict(type='str', default='127.0.0.1'),
             timeout=dict(type='int', default=300),

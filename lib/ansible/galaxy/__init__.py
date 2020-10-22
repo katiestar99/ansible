@@ -1,24 +1,24 @@
 ########################################################################
 #
-# (C) 2015, Brian Coca <bcoca@ansible.com>
+# (C) 2015, Brian Coca <bcoca@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
-''' This manages remote shared Ansible objects, mainly roles'''
+''' This manages remote shared Assible objects, mainly roles'''
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -26,9 +26,9 @@ __metaclass__ = type
 import os
 import yaml
 
-import ansible.constants as C
-from ansible import context
-from ansible.module_utils._text import to_bytes
+import assible.constants as C
+from assible import context
+from assible.module_utils._text import to_bytes
 
 #      default_readme_template
 #      default_meta_template

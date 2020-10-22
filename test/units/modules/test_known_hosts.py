@@ -3,19 +3,19 @@ __metaclass__ = type
 
 import os
 import tempfile
-from ansible.module_utils import basic
+from assible.module_utils import basic
 
 from units.compat import unittest
-from ansible.module_utils._text import to_bytes
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils._text import to_bytes
+from assible.module_utils.basic import AssibleModule
 
-from ansible.modules.known_hosts import compute_diff, sanity_check
+from assible.modules.known_hosts import compute_diff, sanity_check
 
 
 class KnownHostsDiffTestCase(unittest.TestCase):
 
     def _create_file(self, content):
-        tmp_file = tempfile.NamedTemporaryFile(prefix='ansible-test-', suffix='-known_hosts', delete=False)
+        tmp_file = tempfile.NamedTemporaryFile(prefix='assible-test-', suffix='-known_hosts', delete=False)
         tmp_file.write(to_bytes(content))
         tmp_file.close()
         self.addCleanup(os.unlink, tmp_file.name)
@@ -103,7 +103,7 @@ class KnownHostsDiffTestCase(unittest.TestCase):
     def test_sanity_check(self):
         basic._load_params = lambda: {}
         # Module used internally to execute ssh-keygen system executable
-        module = AnsibleModule(argument_spec={})
+        module = AssibleModule(argument_spec={})
         host = '10.0.0.1'
         key = '%s ssh-rsa ASDF foo@bar' % (host,)
         keygen = module.get_bin_path('ssh-keygen')

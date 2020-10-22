@@ -6,7 +6,7 @@ import json
 
 
 def main():
-    print(json.dumps(dict(changed=False, source='overridden ansible.builtin (should not be possible)')))
+    print(json.dumps(dict(changed=False, source='overridden assible.builtin (should not be possible)')))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -16,7 +16,7 @@ description:
 - Documentation on the template formatting can be found in the
   L(Template Designer Documentation,http://jinja.pocoo.org/docs/templates/).
 - Additional variables listed below can be used in templates.
-- C(ansible_managed) (configurable via the C(defaults) section of C(ansible.cfg)) contains a string which can be used to
+- C(assible_managed) (configurable via the C(defaults) section of C(assible.cfg)) contains a string which can be used to
   describe the template name, host, modification time of the template file and the owner uid.
 - C(template_host) contains the node name of the template's machine.
 - C(template_uid) is the numeric user id of the owner.
@@ -27,7 +27,7 @@ description:
 options:
   src:
     description:
-    - Path of a Jinja2 formatted template on the Ansible controller.
+    - Path of a Jinja2 formatted template on the Assible controller.
     - This can be a relative or an absolute path.
     - The file must be encoded with C(utf-8) but I(output_encoding) can be used to control the encoding of the output
       template.
@@ -101,13 +101,13 @@ options:
     version_added: '2.7'
 notes:
 - Including a string that uses a date in the template will result in the template being marked 'changed' each time.
-- Since Ansible 0.9, templates are loaded with C(trim_blocks=True).
+- Since Assible 0.9, templates are loaded with C(trim_blocks=True).
 - >
   Also, you can override jinja2 settings by adding a special header to template file.
   i.e. C(#jinja2:variable_start_string:'[%', variable_end_string:'%]', trim_blocks: False)
   which changes the variable interpolation markers to C([% var %]) instead of C({{ var }}).
   This is the best way to prevent evaluation of things that look like, but should not be Jinja2.
-- Using raw/endraw in Jinja2 will not work as you expect because templates in Ansible are recursively
+- Using raw/endraw in Jinja2 will not work as you expect because templates in Assible are recursively
   evaluated.
 - To find Byte Order Marks in files, use C(Format-Hex <file> -Count 16) on Windows, and use C(od -a -t x1 -N 16 <file>)
   on Linux.

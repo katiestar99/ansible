@@ -7,7 +7,7 @@
 # This is a windows documentation stub.  actual code lives in the .ps1
 # file of the same name
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -77,14 +77,14 @@ options:
     description:
     - The username to use for authentication.
     - The aliases I(user) and I(username) are deprecated and will be removed in
-      Ansible 2.14.
+      Assible 2.14.
     aliases:
     - user
     - username
   url_password:
     description:
     - The password for I(url_username).
-    - The alias I(password) is deprecated and will be removed in Ansible 2.14.
+    - The alias I(password) is deprecated and will be removed in Assible 2.14.
     aliases:
     - password
   proxy_url:
@@ -113,7 +113,7 @@ notes:
 - If your URL includes an escaped slash character (%2F) this module will convert it to a real slash.
   This is a result of the behaviour of the System.Uri class as described in
   L(the documentation,https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/network/schemesettings-element-uri-settings#remarks).
-- Since Ansible 2.8, the module will skip reporting a change if the remote
+- Since Assible 2.8, the module will skip reporting a change if the remote
   checksum is the same as the local local even when C(force=yes). This is to
   better align with M(get_url).
 extends_documentation_fragment:

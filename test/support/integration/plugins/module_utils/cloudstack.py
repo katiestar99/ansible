@@ -11,8 +11,8 @@ import sys
 import time
 import traceback
 
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.basic import missing_required_lib
+from assible.module_utils._text import to_text, to_native
+from assible.module_utils.basic import missing_required_lib
 
 CS_IMP_ERR = None
 try:
@@ -42,7 +42,7 @@ def cs_required_together():
     return [['api_key', 'api_secret']]
 
 
-class AnsibleCloudStack:
+class AssibleCloudStack:
 
     def __init__(self, module):
         if not HAS_LIB_CS:
@@ -653,12 +653,12 @@ class AnsibleCloudStack:
     def get_result_and_facts(self, facts_name, resource):
         result = self.get_result(resource)
 
-        ansible_facts = {
+        assible_facts = {
             facts_name: result.copy()
         }
         for k in ['diff', 'changed']:
-            if k in ansible_facts[facts_name]:
-                del ansible_facts[facts_name][k]
+            if k in assible_facts[facts_name]:
+                del assible_facts[facts_name][k]
 
-        result.update(ansible_facts=ansible_facts)
+        result.update(assible_facts=assible_facts)
         return result

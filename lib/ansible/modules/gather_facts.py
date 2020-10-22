@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -13,10 +13,10 @@ module: gather_facts
 version_added: 2.8
 short_description: Gathers facts about remote hosts
 description:
-     - This module takes care of executing the configured facts modules, the default is to use the M(ansible.builtin.setup) module.
+     - This module takes care of executing the configured facts modules, the default is to use the M(assible.builtin.setup) module.
      - This module is automatically called by playbooks to gather useful variables about remote hosts that can be used in playbooks.
-     - It can also be executed directly by C(/usr/bin/ansible) to check what variables are available to a host.
-     - Ansible provides many I(facts) about the system, automatically.
+     - It can also be executed directly by C(/usr/bin/assible) to check what variables are available to a host.
+     - Assible provides many I(facts) about the system, automatically.
 options:
     parallel:
         description:
@@ -30,7 +30,7 @@ notes:
     - Facts returned by each module will be merged, conflicts will favor 'last merged'.
       Order is not guaranteed, when doing parallel gathering on multiple modules.
 author:
-    - "Ansible Core Team"
+    - "Assible Core Team"
 '''
 
 RETURN = """
@@ -39,5 +39,5 @@ RETURN = """
 
 EXAMPLES = """
 # Display facts from all hosts and store them indexed by I(hostname) at C(/tmp/facts).
-# ansible all -m gather_facts --tree /tmp/facts
+# assible all -m gather_facts --tree /tmp/facts
 """

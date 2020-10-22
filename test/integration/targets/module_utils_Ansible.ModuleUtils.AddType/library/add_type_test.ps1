@@ -1,7 +1,7 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.AddType
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.AddType
 
 $ErrorActionPreference = "Stop"
 
@@ -230,7 +230,7 @@ Assert-Equals -actual $actual -expected "symbol"
 $type_accelerator = @'
 using System;
 
-//TypeAccelerator -Name AnsibleType -TypeName Class9
+//TypeAccelerator -Name AssibleType -TypeName Class9
 
 namespace Namespace9
 {
@@ -244,13 +244,13 @@ namespace Namespace9
 }
 '@
 Add-CSharpType -Reference $type_accelerator
-$actual = [AnsibleType]::GetString()
+$actual = [AssibleType]::GetString()
 Assert-Equals -actual $actual -expected "a"
 
 $missing_type_class = @'
 using System;
 
-//TypeAccelerator -Name AnsibleTypeMissing -TypeName MissingClass
+//TypeAccelerator -Name AssibleTypeMissing -TypeName MissingClass
 
 namespace Namespace10
 {

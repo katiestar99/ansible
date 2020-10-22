@@ -7,9 +7,9 @@
 # Copyright: (c) 2019, Uladzimir Klybik <uladzimir_klybik@epam.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#Requires -Module Ansible.ModuleUtils.FileUtil
-#Requires -Module Ansible.ModuleUtils.WebRequest
+#AssibleRequires -CSharpUtil Assible.Basic
+#Requires -Module Assible.ModuleUtils.FileUtil
+#Requires -Module Assible.ModuleUtils.WebRequest
 
 $spec = @{
     options = @{
@@ -40,7 +40,7 @@ $spec = @{
     )
     supports_check_mode = $true
 }
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec, @(Get-AnsibleWebRequestSpec))
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec, @(Get-AssibleWebRequestSpec))
 
 $url = $module.Params.url
 $dest = $module.Params.dest
@@ -54,7 +54,7 @@ $module.Result.url = $url
 
 Function Get-ChecksumFromUri {
     param(
-        [Parameter(Mandatory=$true)][Ansible.Basic.AnsibleModule]$Module,
+        [Parameter(Mandatory=$true)][Assible.Basic.AssibleModule]$Module,
         [Parameter(Mandatory=$true)][Uri]$Uri,
         [Uri]$SourceUri
     )
@@ -78,7 +78,7 @@ Function Get-ChecksumFromUri {
 
         Write-Output -InputObject $hash_from_file
     }
-    $web_request = Get-AnsibleWebRequest -Uri $Uri -Module $Module
+    $web_request = Get-AssibleWebRequest -Uri $Uri -Module $Module
 
     try {
         Invoke-WithWebRequest -Module $Module -Request $web_request -Script $script
@@ -95,18 +95,18 @@ Function Compare-ModifiedFile {
     newer than the local resource date.
     #>
     param(
-        [Parameter(Mandatory=$true)][Ansible.Basic.AnsibleModule]$Module,
+        [Parameter(Mandatory=$true)][Assible.Basic.AssibleModule]$Module,
         [Parameter(Mandatory=$true)][Uri]$Uri,
         [Parameter(Mandatory=$true)][String]$Dest
     )
 
-    $dest_last_mod = (Get-AnsibleItem -Path $Dest).LastWriteTimeUtc
+    $dest_last_mod = (Get-AssibleItem -Path $Dest).LastWriteTimeUtc
 
     # If the URI is a file we don't need to go through the whole WebRequest
     if ($Uri.IsFile) {
-        $src_last_mod = (Get-AnsibleItem -Path $Uri.AbsolutePath).LastWriteTimeUtc
+        $src_last_mod = (Get-AssibleItem -Path $Uri.AbsolutePath).LastWriteTimeUtc
     } else {
-        $web_request = Get-AnsibleWebRequest -Uri $Uri -Module $Module
+        $web_request = Get-AssibleWebRequest -Uri $Uri -Module $Module
         $web_request.Method = switch ($web_request.GetType().Name) {
             FtpWebRequest { [System.Net.WebRequestMethods+Ftp]::GetDateTimestamp }
             HttpWebRequest { [System.Net.WebRequestMethods+Http]::Head }
@@ -150,7 +150,7 @@ Function Get-Checksum {
 
 Function Invoke-DownloadFile {
     param(
-        [Parameter(Mandatory=$true)][Ansible.Basic.AnsibleModule]$Module,
+        [Parameter(Mandatory=$true)][Assible.Basic.AssibleModule]$Module,
         [Parameter(Mandatory=$true)][Uri]$Uri,
         [Parameter(Mandatory=$true)][String]$Dest,
         [String]$Checksum,
@@ -193,7 +193,7 @@ Function Invoke-DownloadFile {
             if ($dest_checksum -eq $tmp_checksum) {
                 $download = $false
                 $Module.Result.checksum_dest = $dest_checksum
-                $Module.Result.size = (Get-AnsibleItem -Path $Dest).Length
+                $Module.Result.size = (Get-AssibleItem -Path $Dest).Length
             }
         }
 
@@ -202,7 +202,7 @@ Function Invoke-DownloadFile {
             $Module.Result.changed = $true
         }
     }
-    $web_request = Get-AnsibleWebRequest -Uri $Uri -Module $Module
+    $web_request = Get-AssibleWebRequest -Uri $Uri -Module $Module
 
     try {
         Invoke-WithWebRequest -Module $Module -Request $web_request -Script $download_script
@@ -268,7 +268,7 @@ if ($force -or -not (Test-Path -LiteralPath $dest)) {
 if ((-not $module.Result.ContainsKey("checksum_dest")) -and (Test-Path -LiteralPath $dest)) {
     # Calculate the dest file checksum if it hasn't already been done
     $module.Result.checksum_dest = Get-Checksum -Path $dest -Algorithm $checksum_algorithm
-    $module.Result.size = (Get-AnsibleItem -Path $dest).Length
+    $module.Result.size = (Get-AssibleItem -Path $dest).Length
 }
 
 $module.ExitJson()

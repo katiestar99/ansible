@@ -1,11 +1,11 @@
-"""Enable unit testing of Ansible collections. PYTEST_DONT_REWRITE"""
+"""Enable unit testing of Assible collections. PYTEST_DONT_REWRITE"""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import os
 
-# set by ansible-test to a single directory, rather than a list of directories as supported by Ansible itself
-ANSIBLE_COLLECTIONS_PATH = os.path.join(os.environ['ANSIBLE_COLLECTIONS_PATH'], 'ansible_collections')
+# set by assible-test to a single directory, rather than a list of directories as supported by Assible itself
+ASSIBLE_COLLECTIONS_PATH = os.path.join(os.environ['ASSIBLE_COLLECTIONS_PATH'], 'assible_collections')
 
 
 # this monkeypatch to _pytest.pathlib.resolve_package_path fixes PEP420 resolution for collections in pytest >= 6.0.0
@@ -13,20 +13,20 @@ ANSIBLE_COLLECTIONS_PATH = os.path.join(os.environ['ANSIBLE_COLLECTIONS_PATH'], 
 def collection_resolve_package_path(path):
     """Configure the Python package path so that pytest can find our collections."""
     for parent in path.parents:
-        if str(parent) == ANSIBLE_COLLECTIONS_PATH:
+        if str(parent) == ASSIBLE_COLLECTIONS_PATH:
             return parent
 
-    raise Exception('File "%s" not found in collection path "%s".' % (path, ANSIBLE_COLLECTIONS_PATH))
+    raise Exception('File "%s" not found in collection path "%s".' % (path, ASSIBLE_COLLECTIONS_PATH))
 
 
 # this monkeypatch to py.path.local.LocalPath.pypkgpath fixes PEP420 resolution for collections in pytest < 6.0.0
 def collection_pypkgpath(self):
     """Configure the Python package path so that pytest can find our collections."""
     for parent in self.parts(reverse=True):
-        if str(parent) == ANSIBLE_COLLECTIONS_PATH:
+        if str(parent) == ASSIBLE_COLLECTIONS_PATH:
             return parent
 
-    raise Exception('File "%s" not found in collection path "%s".' % (self.strpath, ANSIBLE_COLLECTIONS_PATH))
+    raise Exception('File "%s" not found in collection path "%s".' % (self.strpath, ASSIBLE_COLLECTIONS_PATH))
 
 
 def pytest_configure():
@@ -38,12 +38,12 @@ def pytest_configure():
         pytest_configure.executed = True
 
     # noinspection PyProtectedMember
-    from ansible.utils.collection_loader._collection_finder import _AnsibleCollectionFinder
+    from assible.utils.collection_loader._collection_finder import _AssibleCollectionFinder
 
     # allow unit tests to import code from collections
 
     # noinspection PyProtectedMember
-    _AnsibleCollectionFinder(paths=[os.path.dirname(ANSIBLE_COLLECTIONS_PATH)])._install()  # pylint: disable=protected-access
+    _AssibleCollectionFinder(paths=[os.path.dirname(ASSIBLE_COLLECTIONS_PATH)])._install()  # pylint: disable=protected-access
 
     try:
         # noinspection PyProtectedMember
@@ -58,7 +58,7 @@ def pytest_configure():
         # noinspection PyProtectedMember
         import py._path.local
 
-        # force collections unit tests to be loaded with the ansible_collections namespace
+        # force collections unit tests to be loaded with the assible_collections namespace
         # original idea from https://stackoverflow.com/questions/50174130/how-do-i-pytest-a-project-using-pep-420-namespace-packages/50175552#50175552
         # noinspection PyProtectedMember
         py._path.local.LocalPath.pypkgpath = collection_pypkgpath  # pylint: disable=protected-access

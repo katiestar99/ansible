@@ -4,11 +4,11 @@
 Developer Guide
 ***************
 
-Welcome to the Ansible Developer Guide!
+Welcome to the Assible Developer Guide!
 
 **Who should use this guide?**
 
-If you want to extend Ansible by using a custom module or plugin locally, creating a module or plugin, adding functionality to an existing module, or expanding test coverage, this guide is for you. We've included detailed information for developers on how to test and document modules, as well as the prerequisites for getting your module or plugin accepted into the main Ansible repository.
+If you want to extend Assible by using a custom module or plugin locally, creating a module or plugin, adding functionality to an existing module, or expanding test coverage, this guide is for you. We've included detailed information for developers on how to test and document modules, as well as the prerequisites for getting your module or plugin accepted into the main Assible repository.
 
 Find the task that best describes what you want to do:
 
@@ -17,7 +17,7 @@ Find the task that best describes what you want to do:
    * I want to :ref:`add a custom plugin or module locally <developing_locally>`.
    * I want to figure out if :ref:`developing a module is the right approach <module_dev_should_you>` for my use case.
    * I want to :ref:`develop a collection <developing_collections>`.
-   * I want to :ref:`contribute to an Ansible-maintained collection <contributing_maintained_collections>`.
+   * I want to :ref:`contribute to an Assible-maintained collection <contributing_maintained_collections>`.
    * I want to :ref:`migrate a role to a collection <migrating_roles>`.
 
 * I've read the info above, and I'm sure I want to develop a module:
@@ -32,7 +32,7 @@ Find the task that best describes what you want to do:
       * an :ref:`OpenStack module <OpenStack_module_development>`.
       * an :ref:`oVirt/RHV module <oVirt_module_development>`.
       * a :ref:`VMware module <VMware_module_development>`.
-   * I want to :ref:`write a series of related modules <developing_modules_in_groups>` that integrate Ansible with a new product (for example, a database, cloud provider, network platform, and so on).
+   * I want to :ref:`write a series of related modules <developing_modules_in_groups>` that integrate Assible with a new product (for example, a database, cloud provider, network platform, and so on).
 
 * I want to refine my code:
 
@@ -46,14 +46,14 @@ Find the task that best describes what you want to do:
 * I want to work on other development projects:
 
    * I want to :ref:`write a plugin <developing_plugins>`.
-   * I want to :ref:`connect Ansible to a new source of inventory <developing_inventory>`.
+   * I want to :ref:`connect Assible to a new source of inventory <developing_inventory>`.
    * I want to :ref:`deprecate an outdated module <deprecating_modules>`.
 
-* I want to contribute back to the Ansible project:
+* I want to contribute back to the Assible project:
 
-  * I want to :ref:`understand how to contribute to Ansible <ansible_community_guide>`.
+  * I want to :ref:`understand how to contribute to Assible <assible_community_guide>`.
   * I want to :ref:`contribute my module or plugin <developing_modules_checklist>`.
-  * I want to :ref:`understand the license agreement <contributor_license_agreement>` for contributions to Ansible.
+  * I want to :ref:`understand the license agreement <contributor_license_agreement>` for contributions to Assible.
 
 If you prefer to read the entire guide, here's a list of the pages in order.
 

@@ -1,4 +1,4 @@
-"""Test runner for all Ansible tests."""
+"""Test runner for all Assible tests."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -21,7 +21,7 @@ from .util import (
     generate_pip_command,
     read_lines_without_comments,
     MAXFD,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
 )
 
 from .delegation import (
@@ -203,7 +203,7 @@ def parse_args():
         if '--requirements' not in sys.argv:
             raise
         # install argparse without using constraints since pip may be too old to support them
-        # not using the ansible-test requirements file since this install is for sys.executable rather than the delegated python (which may be different)
+        # not using the assible-test requirements file since this install is for sys.executable rather than the delegated python (which may be different)
         # argparse has no special requirements, so upgrading pip is not required here
         raw_command(generate_pip_install(generate_pip_command(sys.executable), '', packages=['argparse'], use_constraints=False))
         import argparse
@@ -246,7 +246,7 @@ def parse_args():
 
     common.add_argument('--debug',
                         action='store_true',
-                        help='run ansible commands in debug mode')
+                        help='run assible commands in debug mode')
 
     # noinspection PyTypeChecker
     common.add_argument('--truncate',
@@ -648,7 +648,7 @@ def parse_args():
     env.add_argument('--timeout',
                      type=int,
                      metavar='MINUTES',
-                     help='timeout for future ansible-test commands (0 clears)')
+                     help='timeout for future assible-test commands (0 clears)')
 
     if argcomplete:
         argcomplete.autocomplete(parser, always_complete_options=False, validator=lambda i, k: True)
@@ -910,7 +910,7 @@ def add_environments(parser, isolated_delegation=True):
 
     environments.add_argument('--venv',
                               action='store_true',
-                              help='run from ansible-test managed virtual environments')
+                              help='run from assible-test managed virtual environments')
 
     venv = parser.add_argument_group(title='venv arguments')
 
@@ -1003,7 +1003,7 @@ def add_httptester_options(parser, argparse):
 
     group.add_argument('--httptester',
                        metavar='IMAGE',
-                       default='quay.io/ansible/http-test-container:1.3.0',
+                       default='quay.io/assible/http-test-container:1.3.0',
                        help='docker image to use for the httptester container')
 
     group.add_argument('--disable-httptester',
@@ -1032,7 +1032,7 @@ def add_extra_docker_options(parser, integration=True):
                         dest='docker_pull',
                         help='do not explicitly pull the latest docker images')
 
-    if data_context().content.is_ansible:
+    if data_context().content.is_assible:
         docker.add_argument('--docker-keep-git',
                             action='store_true',
                             help='transfer git related files into the docker container')
@@ -1110,7 +1110,7 @@ def complete_remote_shell(prefix, parsed_args, **_):
     images = sorted(get_remote_completion().keys())
 
     # 2008 doesn't support SSH so we do not add to the list of valid images
-    windows_completion_path = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'completion', 'windows.txt')
+    windows_completion_path = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'completion', 'windows.txt')
     images.extend(["windows/%s" % i for i in read_lines_without_comments(windows_completion_path, remove_blank_lines=True) if i != '2008'])
 
     return [i for i in images if i.startswith(prefix)]
@@ -1136,7 +1136,7 @@ def complete_windows(prefix, parsed_args, **_):
     :type parsed_args: any
     :rtype: list[str]
     """
-    images = read_lines_without_comments(os.path.join(ANSIBLE_TEST_DATA_ROOT, 'completion', 'windows.txt'), remove_blank_lines=True)
+    images = read_lines_without_comments(os.path.join(ASSIBLE_TEST_DATA_ROOT, 'completion', 'windows.txt'), remove_blank_lines=True)
 
     return [i for i in images if i.startswith(prefix) and (not parsed_args.windows or i not in parsed_args.windows)]
 

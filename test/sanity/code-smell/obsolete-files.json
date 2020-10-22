@@ -2,7 +2,7 @@
     "include_symlinks": true,
     "prefixes": [
         "test/runner/",
-        "test/sanity/ansible-doc/",
+        "test/sanity/assible-doc/",
         "test/sanity/compile/",
         "test/sanity/import/",
         "test/sanity/pep8/",

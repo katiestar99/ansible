@@ -1,2 +1,2 @@
 bugfixes:
-  - action plugins - change all action/module delegations to use FQ names while allowing overrides (https://github.com/ansible/ansible/issues/69788)
+  - action plugins - change all action/module delegations to use FQ names while allowing overrides (https://github.com/assible/assible/issues/69788)

@@ -3,24 +3,24 @@
     include_role:
       name: setup_epel
     when:
-      - ansible_distribution in ['RedHat', 'CentOS']
-      - ansible_distribution_major_version is version('7', '==')
+      - assible_distribution in ['RedHat', 'CentOS']
+      - assible_distribution_major_version is version('7', '==')
 
   - name: Include distribution specific variables
     include_vars: "{{ lookup('first_found', params) }}"
     vars:
       params:
         files:
-          - "{{ ansible_facts.distribution }}-{{ ansible_facts.distribution_version }}.yml"
-          - "{{ ansible_facts.os_family }}-{{ ansible_facts.distribution_major_version }}.yml"
-          - "{{ ansible_facts.distribution }}.yml"
-          - "{{ ansible_facts.os_family }}.yml"
+          - "{{ assible_facts.distribution }}-{{ assible_facts.distribution_version }}.yml"
+          - "{{ assible_facts.os_family }}-{{ assible_facts.distribution_major_version }}.yml"
+          - "{{ assible_facts.distribution }}.yml"
+          - "{{ assible_facts.os_family }}.yml"
           - default.yml
         paths:
           - "{{ role_path }}/vars"
 
   - name: Install rpmfluff and deps
-    action: "{{ ansible_facts.pkg_mgr }}"
+    action: "{{ assible_facts.pkg_mgr }}"
     args:
       name: "{{ rpm_repo_packages }}"
 
@@ -28,8 +28,8 @@
     pip:
       name: rpmfluff
     when:
-      - ansible_facts.distribution in ['RedHat', 'CentOS']
-      - ansible_facts.distribution_major_version is version('8', '>=')
+      - assible_facts.distribution in ['RedHat', 'CentOS']
+      - assible_facts.distribution_major_version is version('8', '>=')
 
   - name: Copy script for creating a repo
     copy:
@@ -38,7 +38,7 @@
       mode: 0755
 
   - name: Create RPMs and put them into a repo
-    shell: "{{ansible_python_interpreter}} /tmp/create-repo.py {{ ansible_architecture }}"
+    shell: "{{assible_python_interpreter}} /tmp/create-repo.py {{ assible_architecture }}"
     register: repo
 
   - set_fact:
@@ -46,8 +46,8 @@
 
   - name: Install the repo
     yum_repository:
-      name: "fake-{{ ansible_architecture }}"
-      description: "fake-{{ ansible_architecture }}"
+      name: "fake-{{ assible_architecture }}"
+      description: "fake-{{ assible_architecture }}"
       baseurl: "file://{{ repodir }}"
       gpgcheck: no
 
@@ -61,7 +61,7 @@
     command: createrepo -g {{ repodir_comps.dest | quote }} {{ repodir | quote }}
 
   - name: Create RPMs and put them into a repo (i686)
-    shell: "{{ansible_python_interpreter}} /tmp/create-repo.py i686"
+    shell: "{{assible_python_interpreter}} /tmp/create-repo.py i686"
     register: repo_i686
 
   - set_fact:
@@ -75,7 +75,7 @@
       gpgcheck: no
 
   - name: Create RPMs and put them into a repo (ppc64)
-    shell: "{{ansible_python_interpreter}} /tmp/create-repo.py ppc64"
+    shell: "{{assible_python_interpreter}} /tmp/create-repo.py ppc64"
     register: repo_ppc64
 
   - set_fact:
@@ -90,8 +90,8 @@
 
   - set_fact:
       repos:
-        - "fake-{{ ansible_architecture }}"
+        - "fake-{{ assible_architecture }}"
         - "fake-i686"
         - "fake-ppc64"
 
-  when: ansible_distribution in ['RedHat', 'CentOS', 'ScientificLinux', 'Fedora']
+  when: assible_distribution in ['RedHat', 'CentOS', 'ScientificLinux', 'Fedora']

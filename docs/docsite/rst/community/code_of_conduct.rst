@@ -18,19 +18,19 @@ that you treat your fellow community members with respect and courtesy, and in g
 Don't Be A Jerk. This Code of Conduct is meant to be followed in spirit as much as in
 letter and is not exhaustive.
 
-All Ansible events and participants therein are governed by this Code of Conduct and
+All Assible events and participants therein are governed by this Code of Conduct and
 anti-harassment policy. We expect organizers to enforce these guidelines throughout all events,
 and we expect attendees, speakers, sponsors, and volunteers to help ensure a safe
 environment for our whole community. Specifically, this Code of Conduct covers
-participation in all Ansible-related forums and mailing lists, code and documentation
+participation in all Assible-related forums and mailing lists, code and documentation
 contributions, public IRC channels, private correspondence, and public meetings.
 
-Ansible community members are...
+Assible community members are...
 
 **Considerate**
 
 Contributions of every kind have far-ranging consequences. Just as your work depends on
-the work of others, decisions you make surrounding your contributions to the Ansible
+the work of others, decisions you make surrounding your contributions to the Assible
 community will affect your fellow community members. You are strongly encouraged to take
 those consequences into account while making decisions.
 
@@ -52,7 +52,7 @@ rudeness, hostility, threatening behavior, abuse (verbal or physical), or person
 
 **Kind**
 
-Everyone should feel welcome in the Ansible community, regardless of their background.
+Everyone should feel welcome in the Assible community, regardless of their background.
 Please be courteous, respectful and polite to fellow community members. Do not make or
 post offensive comments related to skill level, gender, gender identity or expression,
 sexual orientation, disability, physical appearance, body size, race, or religion.
@@ -74,7 +74,7 @@ gist.github.com or another paste site to provide code snippets.
 
 **Helpful**
 
-The Ansible community is committed to being a welcoming environment for all users,
+The Assible community is committed to being a welcoming environment for all users,
 regardless of skill level. We were all beginners once upon a time, and our community
 cannot grow without an environment where new users feel safe and comfortable asking questions.
 It can become frustrating to answer the same questions repeatedly; however, community
@@ -115,7 +115,7 @@ Policy violations
 =================
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by
-contacting `codeofconduct@ansible.com <mailto:codeofconduct@ansible.com>`_, to any channel
+contacting `codeofconduct@assible.com <mailto:codeofconduct@assible.com>`_, to any channel
 operator in the community IRC channels, or to the local organizers of an event. Meetup
 organizers are encouraged to prominently display points of contact for reporting unacceptable
 behavior at local events.
@@ -134,7 +134,7 @@ offline.
 We expect all participants, organizers, speakers, and attendees to follow these policies at
 all of our event venues and event-related social events.
 
-The Ansible Community Code of Conduct is licensed under the Creative Commons
+The Assible Community Code of Conduct is licensed under the Creative Commons
 Attribution-Share Alike 3.0 license. Our Code of Conduct was adapted from Codes of Conduct
 of other open source projects, including:
 

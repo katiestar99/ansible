@@ -4,7 +4,7 @@
 Galaxy Developer Guide
 **********************
 
-You can host collections and roles on Galaxy to share with the Ansible community. Galaxy content is formatted in pre-packaged units of work such as :ref:`roles <playbooks_reuse_roles>`, and new in Galaxy 3.2, :ref:`collections <collections>`.
+You can host collections and roles on Galaxy to share with the Assible community. Galaxy content is formatted in pre-packaged units of work such as :ref:`roles <playbooks_reuse_roles>`, and new in Galaxy 3.2, :ref:`collections <collections>`.
 You can create roles for provisioning infrastructure, deploying applications, and all of the tasks you do everyday. Taking this a step further, you can create collections which provide a comprehensive package of automation that may include multiple playbooks, roles, modules, and plugins.
 
 .. contents::
@@ -16,8 +16,8 @@ You can create roles for provisioning infrastructure, deploying applications, an
 Creating collections for Galaxy
 ===============================
 
-Collections are a distribution format for Ansible content. You can use collections to package and distribute playbooks, roles, modules, and plugins.
-You can publish and use collections through `Ansible Galaxy <https://galaxy.ansible.com>`_.
+Collections are a distribution format for Assible content. You can use collections to package and distribute playbooks, roles, modules, and plugins.
+You can publish and use collections through `Assible Galaxy <https://galaxy.assible.com>`_.
 
 See :ref:`developing_collections` for details on how to create collections.
 
@@ -31,7 +31,7 @@ Use the ``init`` command to initialize the base structure of a new role, saving 
 
 .. code-block:: bash
 
-   $ ansible-galaxy init role_name
+   $ assible-galaxy init role_name
 
 The above will create the following directory structure in the current working directory:
 
@@ -65,9 +65,9 @@ use the ``--force`` option. Force will create the above subdirectories and files
 Container enabled
 -----------------
 
-If you are creating a Container Enabled role, pass ``--type container`` to ``ansible-galaxy init``. This will create the same directory structure as above, but populate it
+If you are creating a Container Enabled role, pass ``--type container`` to ``assible-galaxy init``. This will create the same directory structure as above, but populate it
 with default files appropriate for a Container Enabled role. For instance, the README.md has a slightly different structure, the *.travis.yml* file tests
-the role using `Ansible Container <https://github.com/ansible/ansible-container>`_, and the meta directory includes a *container.yml* file.
+the role using `Assible Container <https://github.com/assible/assible-container>`_, and the meta directory includes a *container.yml* file.
 
 Using a custom role skeleton
 ----------------------------
@@ -76,7 +76,7 @@ A custom role skeleton directory can be supplied as follows:
 
 .. code-block:: bash
 
-   $ ansible-galaxy init --role-skeleton=/path/to/skeleton role_name
+   $ assible-galaxy init --role-skeleton=/path/to/skeleton role_name
 
 When a skeleton is provided, init will:
 
@@ -84,7 +84,7 @@ When a skeleton is provided, init will:
 - any .j2 files found outside of a templates folder will be rendered as templates. The only useful variable at the moment is role_name
 - The .git folder and any .git_keep files will not be copied
 
-Alternatively, the role_skeleton and ignoring of files can be configured via ansible.cfg
+Alternatively, the role_skeleton and ignoring of files can be configured via assible.cfg
 
 .. code-block:: text
 
@@ -104,7 +104,7 @@ The following shows authenticating with the Galaxy website using a GitHub userna
 
 .. code-block:: text
 
-   $ ansible-galaxy login
+   $ assible-galaxy login
 
    We need your GitHub login to identify you.
    This information will not be sent to Galaxy, only to api.github.com.
@@ -132,15 +132,15 @@ Use the following to import to role:
 
 .. code-block:: bash
 
-  $ ansible-galaxy import github_user github_repo
+  $ assible-galaxy import github_user github_repo
 
 By default the command will wait for Galaxy to complete the import process, displaying the results as the import progresses:
 
 .. code-block:: text
 
       Successfully submitted import request 41
-      Starting import 41: role_name=myrole repo=githubuser/ansible-role-repo ref=
-      Retrieving GitHub repo githubuser/ansible-role-repo
+      Starting import 41: role_name=myrole repo=githubuser/assible-role-repo ref=
+      Retrieving GitHub repo githubuser/assible-role-repo
       Accessing branch: master
       Parsing and validating meta/main.yml
       Parsing galaxy_tags
@@ -175,7 +175,7 @@ Use the following to delete a role:
 
 .. code-block:: bash
 
-  $ ansible-galaxy delete github_user github_repo
+  $ assible-galaxy delete github_user github_repo
 
 This only removes the role from Galaxy. It does not remove or alter the actual GitHub repository.
 
@@ -191,7 +191,7 @@ also need an account in Travis, and your Travis token. Once you're ready, use th
 
 .. code-block:: bash
 
-  $ ansible-galaxy setup travis github_user github_repo xxx-travis-token-xxx
+  $ assible-galaxy setup travis github_user github_repo xxx-travis-token-xxx
 
 The setup command requires your Travis token, however the token is not stored in Galaxy. It is used along with the GitHub username and repo to create a hash as described
 in `the Travis documentation <https://docs.travis-ci.com/user/notifications/>`_. The hash is stored in Galaxy and used to verify notifications received from Travis.
@@ -204,7 +204,7 @@ To instruct Travis to notify Galaxy when a build completes, add the following to
 .. code-block:: text
 
     notifications:
-        webhooks: https://galaxy.ansible.com/api/v1/notifications/
+        webhooks: https://galaxy.assible.com/api/v1/notifications/
 
 
 List Travis integrations
@@ -214,7 +214,7 @@ Use the ``--list`` option to display your Travis integrations:
 
 .. code-block:: bash
 
-      $ ansible-galaxy setup --list
+      $ assible-galaxy setup --list
 
 
       ID         Source     Repo
@@ -230,7 +230,7 @@ Use the ``--remove`` option to disable and remove a Travis integration:
 
   .. code-block:: bash
 
-    $ ansible-galaxy setup --remove ID
+    $ assible-galaxy setup --remove ID
 
 Provide the ID of the integration to be disabled. You can find the ID by using the ``--list`` option.
 
@@ -239,8 +239,8 @@ Provide the ID of the integration to be disabled. You can find the ID by using t
   :ref:`collections`
     Shareable collections of modules, playbooks and roles
   :ref:`playbooks_reuse_roles`
-    All about ansible roles
-  `Mailing List <https://groups.google.com/group/ansible-project>`_
+    All about assible roles
+  `Mailing List <https://groups.google.com/group/assible-project>`_
     Questions? Help? Ideas?  Stop by the list on Google Groups
   `irc.freenode.net <http://irc.freenode.net>`_
-    #ansible IRC chat channel
+    #assible IRC chat channel

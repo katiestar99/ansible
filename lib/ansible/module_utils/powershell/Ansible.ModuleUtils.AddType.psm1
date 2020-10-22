@@ -1,11 +1,11 @@
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 Function Add-CSharpType {
     <#
     .SYNOPSIS
     Compiles one or more C# scripts similar to Add-Type. This exposes
-    more configuration options that are useable within Ansible and it
+    more configuration options that are useable within Assible and it
     also allows multiple C# sources to be compiled together.
 
     .PARAMETER References
@@ -18,20 +18,20 @@ Function Add-CSharpType {
     .PARAMETER PassThru
     [Switch] Whether to return the loaded Assembly
 
-    .PARAMETER AnsibleModule
-    [Ansible.Basic.AnsibleModule] used to derive the TempPath and Debug values.
+    .PARAMETER AssibleModule
+    [Assible.Basic.AssibleModule] used to derive the TempPath and Debug values.
         TempPath is set to the Tmpdir property of the class
-        IncludeDebugInfo is set when the Ansible verbosity is >= 3
+        IncludeDebugInfo is set when the Assible verbosity is >= 3
 
     .PARAMETER TempPath
     [String] The temporary directory in which the dynamic assembly is
     compiled to. This file is deleted once compilation is complete.
-    Cannot be used when AnsibleModule is set. This is a no-op when
+    Cannot be used when AssibleModule is set. This is a no-op when
     running on PSCore.
 
     .PARAMETER IncludeDebugInfo
     [Switch] Whether to include debug information in the compiled
-    assembly. Cannot be used when AnsibleModule is set. This is a no-op
+    assembly. Cannot be used when AssibleModule is set. This is a no-op
     when running on PSCore.
 
     .PARAMETER CompileSymbols
@@ -48,8 +48,8 @@ Function Add-CSharpType {
         * CORECLR - Added when running on PowerShell Core.
         * WINDOWS - Added when running on Windows.
         * UNIX - Added when running on non-Windows.
-        * X86 - Added when running on a 32-bit process (Ansible 2.10+)
-        * AMD64 - Added when running on a 64-bit process (Ansible 2.10+)
+        * X86 - Added when running on a 32-bit process (Assible 2.10+)
+        * AMD64 - Added when running on a 64-bit process (Assible 2.10+)
 
     * Ignore compiler warnings inline with the following comment inline
 
@@ -59,10 +59,10 @@ Function Add-CSharpType {
 
         //AssemblyReference -Name Dll.Location.dll [-CLR Core|Framework]
 
-        # Added in Ansible 2.10
+        # Added in Assible 2.10
         //AssemblyReference -Type System.Type.Name [-CLR Core|Framework]
 
-    * Create automatic type accelerators to simplify long namespace names (Ansible 2.9+)
+    * Create automatic type accelerators to simplify long namespace names (Assible 2.9+)
 
         //TypeAccelerator -Name <AcceleratorName> -TypeName <Name of compiled type>
     #>
@@ -70,7 +70,7 @@ Function Add-CSharpType {
         [Parameter(Mandatory=$true)][AllowEmptyCollection()][String[]]$References,
         [Switch]$IgnoreWarnings,
         [Switch]$PassThru,
-        [Parameter(Mandatory=$true, ParameterSetName="Module")][Object]$AnsibleModule,
+        [Parameter(Mandatory=$true, ParameterSetName="Module")][Object]$AssibleModule,
         [Parameter(ParameterSetName="Manual")][String]$TempPath = $env:TMP,
         [Parameter(ParameterSetName="Manual")][Switch]$IncludeDebugInfo,
         [String[]]$CompileSymbols = @()
@@ -255,8 +255,8 @@ Function Add-CSharpType {
 
         # configure compile options based on input
         if ($PSCmdlet.ParameterSetName -eq "Module") {
-            $temp_path = $AnsibleModule.Tmpdir
-            $include_debug = $AnsibleModule.Verbosity -ge 3
+            $temp_path = $AssibleModule.Tmpdir
+            $include_debug = $AssibleModule.Verbosity -ge 3
         } else {
             $temp_path = $TempPath
             $include_debug = $IncludeDebugInfo.IsPresent

@@ -1,4 +1,4 @@
-- name: test set_fact incremental https://github.com/ansible/ansible/issues/38271
+- name: test set_fact incremental https://github.com/assible/assible/issues/38271
   hosts: testhost
   gather_facts: no
   tasks:

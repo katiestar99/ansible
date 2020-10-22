@@ -1,6 +1,6 @@
 ---
 - debug:
-    msg: "START vyos_lldp_interfaces empty_config integration tests on connection={{ ansible_connection }}"
+    msg: "START vyos_lldp_interfaces empty_config integration tests on connection={{ assible_connection }}"
 
 - name: Merged with empty config should give appropriate error message
   vyos.vyos.vyos_lldp_interfaces:

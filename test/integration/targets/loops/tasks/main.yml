@@ -205,7 +205,7 @@
 
 
 # The following test cases are to ensure that we don't have a regression on
-# GitHub Issue https://github.com/ansible/ansible/issues/35481
+# GitHub Issue https://github.com/assible/assible/issues/35481
 #
 # This should execute and not cause a RuntimeError
 - debug:
@@ -237,14 +237,14 @@
 - debug:
     var: "item"
   loop:
-    - "{{ ansible_search_path }}"
+    - "{{ assible_search_path }}"
   register: loop_search_path
 
 - assert:
     that:
-      - ansible_search_path == loop_search_path.results.0.item
+      - assible_search_path == loop_search_path.results.0.item
 
-# https://github.com/ansible/ansible/issues/45189
+# https://github.com/assible/assible/issues/45189
 - name: with_X conditional delegate_to shortcircuit on templating error
   debug:
     msg: "loop"
@@ -269,7 +269,7 @@
   register: literal_empty_list
   failed_when: literal_empty_list is not skipped
 
-# https://github.com/ansible/ansible/issues/47372
+# https://github.com/assible/assible/issues/47372
 - name: Loop unsafe list
   debug:
     var: item
@@ -282,16 +282,16 @@
 - name: extended loop info
   assert:
     that:
-      - ansible_loop.nextitem == 'orange'
-      - ansible_loop.index == 1
-      - ansible_loop.index0 == 0
-      - ansible_loop.first
-      - not ansible_loop.last
-      - ansible_loop.previtem is undefined
-      - ansible_loop.allitems == ['apple', 'orange', 'banana']
-      - ansible_loop.revindex == 3
-      - ansible_loop.revindex0 == 2
-      - ansible_loop.length == 3
+      - assible_loop.nextitem == 'orange'
+      - assible_loop.index == 1
+      - assible_loop.index0 == 0
+      - assible_loop.first
+      - not assible_loop.last
+      - assible_loop.previtem is undefined
+      - assible_loop.allitems == ['apple', 'orange', 'banana']
+      - assible_loop.revindex == 3
+      - assible_loop.revindex0 == 2
+      - assible_loop.length == 3
   loop:
     - apple
     - orange
@@ -303,16 +303,16 @@
 - name: extended loop info 2
   assert:
     that:
-      - ansible_loop.nextitem == 'banana'
-      - ansible_loop.index == 2
-      - ansible_loop.index0 == 1
-      - not ansible_loop.first
-      - not ansible_loop.last
-      - ansible_loop.previtem == 'apple'
-      - ansible_loop.allitems == ['apple', 'orange', 'banana']
-      - ansible_loop.revindex == 2
-      - ansible_loop.revindex0 == 1
-      - ansible_loop.length == 3
+      - assible_loop.nextitem == 'banana'
+      - assible_loop.index == 2
+      - assible_loop.index0 == 1
+      - not assible_loop.first
+      - not assible_loop.last
+      - assible_loop.previtem == 'apple'
+      - assible_loop.allitems == ['apple', 'orange', 'banana']
+      - assible_loop.revindex == 2
+      - assible_loop.revindex0 == 1
+      - assible_loop.length == 3
   loop:
     - apple
     - orange
@@ -324,16 +324,16 @@
 - name: extended loop info 3
   assert:
     that:
-      - ansible_loop.nextitem is undefined
-      - ansible_loop.index == 3
-      - ansible_loop.index0 == 2
-      - not ansible_loop.first
-      - ansible_loop.last
-      - ansible_loop.previtem == 'orange'
-      - ansible_loop.allitems == ['apple', 'orange', 'banana']
-      - ansible_loop.revindex == 1
-      - ansible_loop.revindex0 == 0
-      - ansible_loop.length == 3
+      - assible_loop.nextitem is undefined
+      - assible_loop.index == 3
+      - assible_loop.index0 == 2
+      - not assible_loop.first
+      - assible_loop.last
+      - assible_loop.previtem == 'orange'
+      - assible_loop.allitems == ['apple', 'orange', 'banana']
+      - assible_loop.revindex == 1
+      - assible_loop.revindex0 == 0
+      - assible_loop.length == 3
   loop:
     - apple
     - orange
@@ -345,13 +345,13 @@
 - name: Validate the loop_var name
   assert:
     that:
-      - ansible_loop_var == 'alvin'
+      - assible_loop_var == 'alvin'
   loop:
     - 1
   loop_control:
     loop_var: alvin
 
-# https://github.com/ansible/ansible/issues/58820
+# https://github.com/assible/assible/issues/58820
 - name: Test using templated loop_var inside include_tasks
   include_tasks: templated_loop_var_tasks.yml
   loop:
@@ -361,12 +361,12 @@
   vars:
     loop_var_name: templated_loop_var_name
 
-# https://github.com/ansible/ansible/issues/59414
+# https://github.com/assible/assible/issues/59414
 - name: Test preserving original connection related vars
   debug:
-    var: ansible_remote_tmp
+    var: assible_remote_tmp
   vars:
-    ansible_remote_tmp: /tmp/test1
+    assible_remote_tmp: /tmp/test1
   with_items:
   - 1
   - 2
@@ -374,9 +374,9 @@
 
 - assert:
     that:
-      - loop_out['results'][1]['ansible_remote_tmp'] == '/tmp/test1'
+      - loop_out['results'][1]['assible_remote_tmp'] == '/tmp/test1'
 
-# https://github.com/ansible/ansible/issues/64169
+# https://github.com/assible/assible/issues/64169
 - include_vars: 64169.yml
 
 - set_fact: "{{ item.key }}={{ hostvars[inventory_hostname][item.value] }}"

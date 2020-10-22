@@ -14,22 +14,22 @@ Strategy plugins control the flow of play execution by handling task and host sc
 Enabling strategy plugins
 -------------------------
 
-All strategy plugins shipped with Ansible are enabled by default. You can enable a custom strategy plugin by
-putting it in one of the lookup directory sources configured in :ref:`ansible.cfg <ansible_configuration_settings>`.
+All strategy plugins shipped with Assible are enabled by default. You can enable a custom strategy plugin by
+putting it in one of the lookup directory sources configured in :ref:`assible.cfg <assible_configuration_settings>`.
 
 .. _using_strategy:
 
 Using strategy plugins
 ----------------------
 
-Only one strategy plugin can be used in a play, but you can use different ones for each play in a playbook or ansible run.
-The default is the :ref:`linear <linear_strategy>` plugin. You can change this default in Ansible :ref:`configuration <ansible_configuration_settings>` using an environment variable:
+Only one strategy plugin can be used in a play, but you can use different ones for each play in a playbook or assible run.
+The default is the :ref:`linear <linear_strategy>` plugin. You can change this default in Assible :ref:`configuration <assible_configuration_settings>` using an environment variable:
 
 .. code-block:: shell
 
-    export ANSIBLE_STRATEGY=free
+    export ASSIBLE_STRATEGY=free
 
-or in the `ansible.cfg` file:
+or in the `assible.cfg` file:
 
 .. code-block:: ini
 
@@ -55,8 +55,8 @@ You can also specify the strategy plugin in the play via the :ref:`strategy keyw
 Plugin list
 -----------
 
-You can use ``ansible-doc -t strategy -l`` to see the list of available plugins.
-Use ``ansible-doc -t strategy <plugin name>`` to see plugin-specific specific documentation and examples.
+You can use ``assible-doc -t strategy -l`` to see the list of available plugins.
+Use ``assible-doc -t strategy <plugin name>`` to see plugin-specific specific documentation and examples.
 
 
 .. seealso::
@@ -64,16 +64,16 @@ Use ``ansible-doc -t strategy <plugin name>`` to see plugin-specific specific do
    :ref:`about_playbooks`
        An introduction to playbooks
    :ref:`inventory_plugins`
-       Ansible inventory plugins
+       Assible inventory plugins
    :ref:`callback_plugins`
-       Ansible callback plugins
+       Assible callback plugins
    :ref:`playbooks_filters`
        Jinja2 filter plugins
    :ref:`playbooks_tests`
        Jinja2 test plugins
    :ref:`playbooks_lookups`
        Jinja2 lookup plugins
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

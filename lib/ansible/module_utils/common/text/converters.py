@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019 Ansible Project
-# (c) 2016 Toshio Kuratomi <tkuratomi@ansible.com>
+# Copyright (c) 2019 Assible Project
+# (c) 2016 Toshio Kuratomi <tkuratomi@assible.com>
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import absolute_import, division, print_function
@@ -10,8 +10,8 @@ import codecs
 import datetime
 import json
 
-from ansible.module_utils.common._collections_compat import Set
-from ansible.module_utils.six import (
+from assible.module_utils.common._collections_compat import Set
+from assible.module_utils.six import (
     PY3,
     binary_type,
     iteritems,
@@ -64,12 +64,12 @@ def to_bytes(obj, encoding='utf-8', errors=None, nonstring='simplerepr'):
                 surrogates are first replaced with a replacement characters
                 and then the string is encoded using ``replace`` (which replaces
                 the rest of the nonencodable bytes).  If ``surrogateescape`` is
-                not present it will simply use ``replace``.  (Added in Ansible 2.3)
+                not present it will simply use ``replace``.  (Added in Assible 2.3)
                 This strategy is designed to never traceback when it attempts
                 to encode a string.
 
-        The default until Ansible-2.2 was ``surrogate_or_replace``
-        From Ansible-2.3 onwards, the default is ``surrogate_then_replace``.
+        The default until Assible-2.2 was ``surrogate_or_replace``
+        From Assible-2.3 onwards, the default is ``surrogate_then_replace``.
 
     :kwarg nonstring: The strategy to use if a nonstring is specified in
         ``obj``.  Default is 'simplerepr'.  Valid values are:
@@ -168,7 +168,7 @@ def to_text(obj, encoding='utf-8', errors=None, nonstring='simplerepr'):
                 handler, otherwise it will use replace.
             :surrogate_then_replace: Does the same as surrogate_or_replace but
                 `was added for symmetry with the error handlers in
-                :func:`ansible.module_utils._text.to_bytes` (Added in Ansible 2.3)
+                :func:`assible.module_utils._text.to_bytes` (Added in Assible 2.3)
 
         Because surrogateescape was added in Python3 this usually means that
         Python3 will use `surrogateescape` and Python2 will use the fallback
@@ -177,9 +177,9 @@ def to_text(obj, encoding='utf-8', errors=None, nonstring='simplerepr'):
         python2, be sure to register the error handler prior to importing this
         module.
 
-        The default until Ansible-2.2 was `surrogate_or_replace`
-        In Ansible-2.3 this defaults to `surrogate_then_replace` for symmetry
-        with :func:`ansible.module_utils._text.to_bytes` .
+        The default until Assible-2.2 was `surrogate_or_replace`
+        In Assible-2.3 this defaults to `surrogate_then_replace` for symmetry
+        with :func:`assible.module_utils._text.to_bytes` .
     :kwarg nonstring: The strategy to use if a nonstring is specified in
         ``obj``.  Default is 'simplerepr'.  Valid values are:
 
@@ -192,7 +192,7 @@ def to_text(obj, encoding='utf-8', errors=None, nonstring='simplerepr'):
     :returns: Typically this returns a text string.  If a nonstring object is
         passed in this may be a different type depending on the strategy
         specified by nonstring.  This will never return a byte string.
-        From Ansible-2.3 onwards, the default is `surrogate_then_replace`.
+        From Assible-2.3 onwards, the default is `surrogate_then_replace`.
 
     .. version_changed:: 2.3
 
@@ -242,8 +242,8 @@ def to_text(obj, encoding='utf-8', errors=None, nonstring='simplerepr'):
 #:      Transform a variable into the native str type for the python version
 #:
 #:      On Python2, this is an alias for
-#:      :func:`~ansible.module_utils.to_bytes`.  On Python3 it is an alias for
-#:      :func:`~ansible.module_utils.to_text`.  It makes it easier to
+#:      :func:`~assible.module_utils.to_bytes`.  On Python3 it is an alias for
+#:      :func:`~assible.module_utils.to_text`.  It makes it easier to
 #:      transform a variable into the native str type for the python version
 #:      the code is running on.  Use this when constructing the message to
 #:      send to exceptions or when dealing with an API that needs to take

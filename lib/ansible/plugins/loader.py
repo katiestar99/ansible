@@ -1,7 +1,7 @@
 # (c) 2012, Daniel Hokka Zakrisson <daniel@hozac.com>
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com> and others
-# (c) 2017, Toshio Kuratomi <tkuratomi@ansible.com>
-# (c) 2017 Ansible Project
+# (c) 2017, Toshio Kuratomi <tkuratomi@assible.com>
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -15,19 +15,19 @@ import warnings
 
 from collections import defaultdict, namedtuple
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsiblePluginCircularRedirect, AnsiblePluginRemovedError, AnsibleCollectionUnsupportedVersionError
-from ansible.module_utils._text import to_bytes, to_text, to_native
-from ansible.module_utils.compat.importlib import import_module
-from ansible.module_utils.six import string_types
-from ansible.parsing.utils.yaml import from_yaml
-from ansible.parsing.yaml.loader import AnsibleLoader
-from ansible.plugins import get_plugin_class, MODULE_CACHE, PATH_CACHE, PLUGIN_PATH_CACHE
-from ansible.utils.collection_loader import AnsibleCollectionConfig, AnsibleCollectionRef
-from ansible.utils.collection_loader._collection_finder import _AnsibleCollectionFinder, _get_collection_metadata
-from ansible.utils.display import Display
-from ansible.utils.plugin_docs import add_fragments
-from ansible import __version__ as ansible_version
+from assible import constants as C
+from assible.errors import AssibleError, AssiblePluginCircularRedirect, AssiblePluginRemovedError, AssibleCollectionUnsupportedVersionError
+from assible.module_utils._text import to_bytes, to_text, to_native
+from assible.module_utils.compat.importlib import import_module
+from assible.module_utils.six import string_types
+from assible.parsing.utils.yaml import from_yaml
+from assible.parsing.yaml.loader import AssibleLoader
+from assible.plugins import get_plugin_class, MODULE_CACHE, PATH_CACHE, PLUGIN_PATH_CACHE
+from assible.utils.collection_loader import AssibleCollectionConfig, AssibleCollectionRef
+from assible.utils.collection_loader._collection_finder import _AssibleCollectionFinder, _get_collection_metadata
+from assible.utils.display import Display
+from assible.utils.plugin_docs import add_fragments
+from assible import __version__ as assible_version
 
 # TODO: take the packaging dep, or vendor SpecifierSet?
 
@@ -93,11 +93,11 @@ def get_shell_plugin(shell_type=None, executable=None):
                             shell_type = shell.SHELL_FAMILY
                             break
         else:
-            raise AnsibleError("Either a shell type or a shell executable must be provided ")
+            raise AssibleError("Either a shell type or a shell executable must be provided ")
 
     shell = shell_loader.get(shell_type)
     if not shell:
-        raise AnsibleError("Could not find the shell plugin required (%s)." % shell_type)
+        raise AssibleError("Could not find the shell plugin required (%s)." % shell_type)
 
     if executable:
         setattr(shell, 'executable', executable)
@@ -225,7 +225,7 @@ class PluginLoader:
         self._searched_paths = set()
 
     def __repr__(self):
-        return 'PluginLoader(type={0})'.format(AnsibleCollectionRef.legacy_plugin_dir_to_plugin_type(self.subdir))
+        return 'PluginLoader(type={0})'.format(AssibleCollectionRef.legacy_plugin_dir_to_plugin_type(self.subdir))
 
     def _clear_caches(self):
 
@@ -321,7 +321,7 @@ class PluginLoader:
         ''' Return a list of PluginPathContext objects to search for plugins in '''
 
         # FIXME: This is potentially buggy if subdirs is sometimes True and sometimes False.
-        # In current usage, everything calls this with subdirs=True except for module_utils_loader and ansible-doc
+        # In current usage, everything calls this with subdirs=True except for module_utils_loader and assible-doc
         # which always calls it with subdirs=False. So there currently isn't a problem with this caching.
         if self._paths is not None:
             return self._paths
@@ -382,7 +382,7 @@ class PluginLoader:
 
             # if type name != 'module_doc_fragment':
             if type_name in C.CONFIGURABLE_PLUGINS:
-                dstring = AnsibleLoader(getattr(module, 'DOCUMENTATION', ''), file_name=path).get_single_data()
+                dstring = AssibleLoader(getattr(module, 'DOCUMENTATION', ''), file_name=path).get_single_data()
                 if dstring:
                     add_fragments(dstring, path, fragment_loader=fragment_loader, is_module=(type_name == 'module'))
 
@@ -442,9 +442,9 @@ class PluginLoader:
 
         plugin_load_context.resolved = False
 
-        plugin_type = AnsibleCollectionRef.legacy_plugin_dir_to_plugin_type(self.subdir)
+        plugin_type = AssibleCollectionRef.legacy_plugin_dir_to_plugin_type(self.subdir)
 
-        acr = AnsibleCollectionRef.from_fqcr(fq_name, plugin_type)
+        acr = AssibleCollectionRef.from_fqcr(fq_name, plugin_type)
 
         # check collection metadata to see if any special handling is required for this plugin
         routing_metadata = self._query_collection_routing_meta(acr, plugin_type, extension=extension)
@@ -470,7 +470,7 @@ class PluginLoader:
                 plugin_load_context.removal_version = removal_version
                 plugin_load_context.resolved = True
                 plugin_load_context.exit_reason = removed_msg
-                raise AnsiblePluginRemovedError(removed_msg, plugin_load_context=plugin_load_context)
+                raise AssiblePluginRemovedError(removed_msg, plugin_load_context=plugin_load_context)
 
             redirect = routing_metadata.get('redirect', None)
 
@@ -539,7 +539,7 @@ class PluginLoader:
             result = self._resolve_plugin_step(name, mod_type, ignore_deprecated, check_aliases, collection_list, plugin_load_context=plugin_load_context)
             if result.pending_redirect:
                 if result.pending_redirect in result.redirect_list:
-                    raise AnsiblePluginCircularRedirect('plugin redirect loop resolving {0} (path: {1})'.format(result.original_name, result.redirect_list))
+                    raise AssiblePluginCircularRedirect('plugin redirect loop resolving {0} (path: {1})'.format(result.original_name, result.redirect_list))
                 name = result.pending_redirect
                 result.pending_redirect = None
                 plugin_load_context = result
@@ -577,15 +577,15 @@ class PluginLoader:
         if mod_type:
             suffix = mod_type
         elif self.class_name:
-            # Ansible plugins that run in the controller process (most plugins)
+            # Assible plugins that run in the controller process (most plugins)
             suffix = '.py'
         else:
-            # Only Ansible Modules.  Ansible modules can be any executable so
+            # Only Assible Modules.  Assible modules can be any executable so
             # they can have any suffix
             suffix = ''
 
         # FIXME: need this right now so we can still load shipped PS module_utils- come up with a more robust solution
-        if (AnsibleCollectionRef.is_valid_fqcr(name) or collection_list) and not name.startswith('Ansible'):
+        if (AssibleCollectionRef.is_valid_fqcr(name) or collection_list) and not name.startswith('Assible'):
             if '.' in name or not collection_list:
                 candidates = [name]
             else:
@@ -595,13 +595,13 @@ class PluginLoader:
                 try:
                     plugin_load_context.load_attempts.append(candidate_name)
                     # HACK: refactor this properly
-                    if candidate_name.startswith('ansible.legacy'):
-                        # 'ansible.legacy' refers to the plugin finding behavior used before collections existed.
+                    if candidate_name.startswith('assible.legacy'):
+                        # 'assible.legacy' refers to the plugin finding behavior used before collections existed.
                         # They need to search 'library' and the various '*_plugins' directories in order to find the file.
-                        plugin_load_context = self._find_plugin_legacy(name.replace('ansible.legacy.', '', 1),
+                        plugin_load_context = self._find_plugin_legacy(name.replace('assible.legacy.', '', 1),
                                                                        plugin_load_context, ignore_deprecated, check_aliases, suffix)
                     else:
-                        # 'ansible.builtin' should be handled here. This means only internal, or builtin, paths are searched.
+                        # 'assible.builtin' should be handled here. This means only internal, or builtin, paths are searched.
                         plugin_load_context = self._find_fq_plugin(candidate_name, suffix, plugin_load_context=plugin_load_context)
 
                         if candidate_name != plugin_load_context.original_name and candidate_name not in plugin_load_context.redirect_list:
@@ -609,7 +609,7 @@ class PluginLoader:
 
                     if plugin_load_context.resolved or plugin_load_context.pending_redirect:  # if we got an answer or need to chase down a redirect, return
                         return plugin_load_context
-                except (AnsiblePluginRemovedError, AnsiblePluginCircularRedirect, AnsibleCollectionUnsupportedVersionError):
+                except (AssiblePluginRemovedError, AssiblePluginCircularRedirect, AssibleCollectionUnsupportedVersionError):
                     # these are generally fatal, let them fly
                     raise
                 except ImportError as ie:
@@ -645,7 +645,7 @@ class PluginLoader:
             path_with_context = pull_cache[name]
             plugin_load_context.plugin_resolved_path = path_with_context.path
             plugin_load_context.plugin_resolved_name = name
-            plugin_load_context.plugin_resolved_collection = 'ansible.builtin' if path_with_context.internal else ''
+            plugin_load_context.plugin_resolved_collection = 'assible.builtin' if path_with_context.internal else ''
             plugin_load_context.resolved = True
             return plugin_load_context
         except KeyError:
@@ -669,7 +669,7 @@ class PluginLoader:
             for full_path in (f for f in full_paths if os.path.isfile(f) and not f.endswith('__init__.py')):
                 full_name = os.path.basename(full_path)
 
-                # HACK: We have no way of executing python byte compiled files as ansible modules so specifically exclude them
+                # HACK: We have no way of executing python byte compiled files as assible modules so specifically exclude them
                 # FIXME: I believe this is only correct for modules and module_utils.
                 # For all other plugins we want .pyc and .pyo should be valid
                 if any(full_path.endswith(x) for x in C.MODULE_IGNORE_EXTS):
@@ -701,7 +701,7 @@ class PluginLoader:
                 path_with_context = pull_cache[name]
                 plugin_load_context.plugin_resolved_path = path_with_context.path
                 plugin_load_context.plugin_resolved_name = name
-                plugin_load_context.plugin_resolved_collection = 'ansible.builtin' if path_with_context.internal else ''
+                plugin_load_context.plugin_resolved_collection = 'assible.builtin' if path_with_context.internal else ''
                 plugin_load_context.resolved = True
                 return plugin_load_context
             except KeyError:
@@ -716,17 +716,17 @@ class PluginLoader:
                 path_with_context = pull_cache[alias_name]
                 if not ignore_deprecated and not os.path.islink(path_with_context.path):
                     # FIXME: this is not always the case, some are just aliases
-                    display.deprecated('%s is kept for backwards compatibility but usage is discouraged. '  # pylint: disable=ansible-deprecated-no-version
+                    display.deprecated('%s is kept for backwards compatibility but usage is discouraged. '  # pylint: disable=assible-deprecated-no-version
                                        'The module documentation details page may explain more about this rationale.' % name.lstrip('_'))
                 plugin_load_context.plugin_resolved_path = path_with_context.path
                 plugin_load_context.plugin_resolved_name = alias_name
-                plugin_load_context.plugin_resolved_collection = 'ansible.builtin' if path_with_context.internal else ''
+                plugin_load_context.plugin_resolved_collection = 'assible.builtin' if path_with_context.internal else ''
                 plugin_load_context.resolved = True
                 return plugin_load_context
 
         # last ditch, if it's something that can be redirected, look for a builtin redirect before giving up
-        candidate_fqcr = 'ansible.builtin.{0}'.format(name)
-        if '.' not in name and AnsibleCollectionRef.is_valid_fqcr(candidate_fqcr):
+        candidate_fqcr = 'assible.builtin.{0}'.format(name)
+        if '.' not in name and AssibleCollectionRef.is_valid_fqcr(candidate_fqcr):
             return self._find_fq_plugin(fq_name=candidate_fqcr, extension=suffix, plugin_load_context=plugin_load_context)
 
         return plugin_load_context.nope('{0} is not eligible for last-chance resolution'.format(name))
@@ -737,7 +737,7 @@ class PluginLoader:
         try:
             return self.find_plugin(name, collection_list=collection_list) is not None
         except Exception as ex:
-            if isinstance(ex, AnsibleError):
+            if isinstance(ex, AssibleError):
                 raise
             # log and continue, likely an innocuous type/package loading failure in collections import
             display.debug('has_plugin error: {0}'.format(to_text(ex)))
@@ -747,13 +747,13 @@ class PluginLoader:
     def _load_module_source(self, name, path):
 
         # avoid collisions across plugins
-        if name.startswith('ansible_collections.'):
+        if name.startswith('assible_collections.'):
             full_name = name
         else:
             full_name = '.'.join([self.package, name])
 
         if full_name in sys.modules:
-            # Avoids double loading, See https://github.com/ansible/ansible/issues/13110
+            # Avoids double loading, See https://github.com/assible/assible/issues/13110
             return sys.modules[full_name]
 
         with warnings.catch_warnings():
@@ -889,7 +889,7 @@ class PluginLoader:
         class_only = kwargs.pop('class_only', False)
         # Having both path_only and class_only is a coding bug
         if path_only and class_only:
-            raise AnsibleError('Do not set both path_only and class_only when calling PluginLoader.all()')
+            raise AssibleError('Do not set both path_only and class_only when calling PluginLoader.all()')
 
         all_matches = []
         found_in_cache = True
@@ -972,7 +972,7 @@ class Jinja2Loader(PluginLoader):
         if '.' in name:
             return super(Jinja2Loader, self).find_plugin(name, collection_list=collection_list)
 
-        raise AnsibleError('No code should call find_plugin for Jinja2Loaders (Not implemented)')
+        raise AssibleError('No code should call find_plugin for Jinja2Loaders (Not implemented)')
 
     def get(self, name, *args, **kwargs):
         # Nothing using Jinja2Loader use this method.  We can't use the base class version because
@@ -980,26 +980,26 @@ class Jinja2Loader(PluginLoader):
         if '.' in name:
             return super(Jinja2Loader, self).get(name, *args, **kwargs)
 
-        raise AnsibleError('No code should call find_plugin for Jinja2Loaders (Not implemented)')
+        raise AssibleError('No code should call find_plugin for Jinja2Loaders (Not implemented)')
 
     def all(self, *args, **kwargs):
         """
         Differences with :meth:`PluginLoader.all`:
 
-        * We do not deduplicate ansible plugin names.  This is because we don't care about our
+        * We do not deduplicate assible plugin names.  This is because we don't care about our
           plugin names, here.  We care about the names of the actual jinja2 plugins which are inside
           of our plugins.
         * We reverse the order of the list of plugins compared to other PluginLoaders.  This is
           because of how calling code chooses to sync the plugins from the list.  It adds all the
-          Jinja2 plugins from one of our Ansible plugins into a dict.  Then it adds the Jinja2
-          plugins from the next Ansible plugin, overwriting any Jinja2 plugins that had the same
+          Jinja2 plugins from one of our Assible plugins into a dict.  Then it adds the Jinja2
+          plugins from the next Assible plugin, overwriting any Jinja2 plugins that had the same
           name.  This is an encapsulation violation (the PluginLoader should not know about what
           calling code does with the data) but we're pushing the common code here.  We'll fix
           this in the future by moving more of the common code into this PluginLoader.
         * We return a list.  We could iterate the list instead but that's extra work for no gain because
           the API receiving this doesn't care.  It just needs an iterable
         """
-        # We don't deduplicate ansible plugin names.  Instead, calling code deduplicates jinja2
+        # We don't deduplicate assible plugin names.  Instead, calling code deduplicates jinja2
         # plugin names.
         kwargs['_dedupe'] = False
 
@@ -1015,7 +1015,7 @@ def _load_plugin_filter():
     filters = defaultdict(frozenset)
     user_set = False
     if C.PLUGIN_FILTERS_CFG is None:
-        filter_cfg = '/etc/ansible/plugin_filters.yml'
+        filter_cfg = '/etc/assible/plugin_filters.yml'
     else:
         filter_cfg = C.PLUGIN_FILTERS_CFG
         user_set = True
@@ -1044,25 +1044,25 @@ def _load_plugin_filter():
             # Modules and action plugins share the same blacklist since the difference between the
             # two isn't visible to the users
             try:
-                filters['ansible.modules'] = frozenset(filter_data['module_blacklist'])
+                filters['assible.modules'] = frozenset(filter_data['module_blacklist'])
             except TypeError:
                 display.warning(u'Unable to parse the plugin filter file {0} as'
                                 u' module_blacklist is not a list.'
                                 u' Skipping.'.format(filter_cfg))
                 return filters
-            filters['ansible.plugins.action'] = filters['ansible.modules']
+            filters['assible.plugins.action'] = filters['assible.modules']
         else:
             display.warning(u'The plugin filter file, {0} was a version not recognized by this'
-                            u' version of Ansible. Skipping.'.format(filter_cfg))
+                            u' version of Assible. Skipping.'.format(filter_cfg))
     else:
         if user_set:
             display.warning(u'The plugin filter file, {0} does not exist.'
                             u' Skipping.'.format(filter_cfg))
 
-    # Specialcase the stat module as Ansible can run very few things if stat is blacklisted.
-    if 'stat' in filters['ansible.modules']:
-        raise AnsibleError('The stat module was specified in the module blacklist file, {0}, but'
-                           ' Ansible will not function without the stat module.  Please remove stat'
+    # Specialcase the stat module as Assible can run very few things if stat is blacklisted.
+    if 'stat' in filters['assible.modules']:
+        raise AssibleError('The stat module was specified in the module blacklist file, {0}, but'
+                           ' Assible will not function without the stat module.  Please remove stat'
                            ' from the blacklist.'.format(to_native(filter_cfg)))
     return filters
 
@@ -1074,49 +1074,49 @@ def _on_collection_load_handler(collection_name, collection_path):
     collection_meta = _get_collection_metadata(collection_name)
 
     try:
-        if not _does_collection_support_ansible_version(collection_meta.get('requires_ansible', ''), ansible_version):
-            mismatch_behavior = C.config.get_config_value('COLLECTIONS_ON_ANSIBLE_VERSION_MISMATCH')
-            message = 'Collection {0} does not support Ansible version {1}'.format(collection_name, ansible_version)
+        if not _does_collection_support_assible_version(collection_meta.get('requires_assible', ''), assible_version):
+            mismatch_behavior = C.config.get_config_value('COLLECTIONS_ON_ASSIBLE_VERSION_MISMATCH')
+            message = 'Collection {0} does not support Assible version {1}'.format(collection_name, assible_version)
             if mismatch_behavior == 'warning':
                 display.warning(message)
             elif mismatch_behavior == 'error':
-                raise AnsibleCollectionUnsupportedVersionError(message)
-    except AnsibleError:
+                raise AssibleCollectionUnsupportedVersionError(message)
+    except AssibleError:
         raise
     except Exception as ex:
-        display.warning('Error parsing collection metadata requires_ansible value from collection {0}: {1}'.format(collection_name, ex))
+        display.warning('Error parsing collection metadata requires_assible value from collection {0}: {1}'.format(collection_name, ex))
 
 
-def _does_collection_support_ansible_version(requirement_string, ansible_version):
+def _does_collection_support_assible_version(requirement_string, assible_version):
     if not requirement_string:
         return True
 
     if not SpecifierSet:
-        display.warning('packaging Python module unavailable; unable to validate collection Ansible version requirements')
+        display.warning('packaging Python module unavailable; unable to validate collection Assible version requirements')
         return True
 
     ss = SpecifierSet(requirement_string)
 
     # ignore prerelease/postrelease/beta/dev flags for simplicity
-    base_ansible_version = Version(ansible_version).base_version
+    base_assible_version = Version(assible_version).base_version
 
-    return ss.contains(base_ansible_version)
+    return ss.contains(base_assible_version)
 
 
 def _configure_collection_loader():
-    if AnsibleCollectionConfig.collection_finder:
-        display.warning('AnsibleCollectionFinder has already been configured')
+    if AssibleCollectionConfig.collection_finder:
+        display.warning('AssibleCollectionFinder has already been configured')
         return
 
-    finder = _AnsibleCollectionFinder(C.config.get_config_value('COLLECTIONS_PATHS'), C.config.get_config_value('COLLECTIONS_SCAN_SYS_PATH'))
+    finder = _AssibleCollectionFinder(C.config.get_config_value('COLLECTIONS_PATHS'), C.config.get_config_value('COLLECTIONS_SCAN_SYS_PATH'))
     finder._install()
 
     # this should succeed now
-    AnsibleCollectionConfig.on_collection_load += _on_collection_load_handler
+    AssibleCollectionConfig.on_collection_load += _on_collection_load_handler
 
 
 # TODO: All of the following is initialization code   It should be moved inside of an initialization
-# function which is called at some point early in the ansible and ansible-playbook CLI startup.
+# function which is called at some point early in the assible and assible-playbook CLI startup.
 
 _PLUGIN_FILTERS = _load_plugin_filter()
 
@@ -1125,14 +1125,14 @@ _configure_collection_loader()
 # doc fragments first
 fragment_loader = PluginLoader(
     'ModuleDocFragment',
-    'ansible.plugins.doc_fragments',
+    'assible.plugins.doc_fragments',
     C.DOC_FRAGMENT_PLUGIN_PATH,
     'doc_fragments',
 )
 
 action_loader = PluginLoader(
     'ActionModule',
-    'ansible.plugins.action',
+    'assible.plugins.action',
     C.DEFAULT_ACTION_PLUGIN_PATH,
     'action_plugins',
     required_base_class='ActionBase',
@@ -1140,21 +1140,21 @@ action_loader = PluginLoader(
 
 cache_loader = PluginLoader(
     'CacheModule',
-    'ansible.plugins.cache',
+    'assible.plugins.cache',
     C.DEFAULT_CACHE_PLUGIN_PATH,
     'cache_plugins',
 )
 
 callback_loader = PluginLoader(
     'CallbackModule',
-    'ansible.plugins.callback',
+    'assible.plugins.callback',
     C.DEFAULT_CALLBACK_PLUGIN_PATH,
     'callback_plugins',
 )
 
 connection_loader = PluginLoader(
     'Connection',
-    'ansible.plugins.connection',
+    'assible.plugins.connection',
     C.DEFAULT_CONNECTION_PLUGIN_PATH,
     'connection_plugins',
     aliases={'paramiko': 'paramiko_ssh'},
@@ -1163,21 +1163,21 @@ connection_loader = PluginLoader(
 
 shell_loader = PluginLoader(
     'ShellModule',
-    'ansible.plugins.shell',
+    'assible.plugins.shell',
     'shell_plugins',
     'shell_plugins',
 )
 
 module_loader = PluginLoader(
     '',
-    'ansible.modules',
+    'assible.modules',
     C.DEFAULT_MODULE_PATH,
     'library',
 )
 
 module_utils_loader = PluginLoader(
     '',
-    'ansible.module_utils',
+    'assible.module_utils',
     C.DEFAULT_MODULE_UTILS_PATH,
     'module_utils',
 )
@@ -1186,14 +1186,14 @@ module_utils_loader = PluginLoader(
 # regular module_utils doesn't. This can be revisited once we have more granular loaders.
 ps_module_utils_loader = PluginLoader(
     '',
-    'ansible.module_utils',
+    'assible.module_utils',
     C.DEFAULT_MODULE_UTILS_PATH,
     'module_utils',
 )
 
 lookup_loader = PluginLoader(
     'LookupModule',
-    'ansible.plugins.lookup',
+    'assible.plugins.lookup',
     C.DEFAULT_LOOKUP_PLUGIN_PATH,
     'lookup_plugins',
     required_base_class='LookupBase',
@@ -1201,21 +1201,21 @@ lookup_loader = PluginLoader(
 
 filter_loader = Jinja2Loader(
     'FilterModule',
-    'ansible.plugins.filter',
+    'assible.plugins.filter',
     C.DEFAULT_FILTER_PLUGIN_PATH,
     'filter_plugins',
 )
 
 test_loader = Jinja2Loader(
     'TestModule',
-    'ansible.plugins.test',
+    'assible.plugins.test',
     C.DEFAULT_TEST_PLUGIN_PATH,
     'test_plugins'
 )
 
 strategy_loader = PluginLoader(
     'StrategyModule',
-    'ansible.plugins.strategy',
+    'assible.plugins.strategy',
     C.DEFAULT_STRATEGY_PLUGIN_PATH,
     'strategy_plugins',
     required_base_class='StrategyBase',
@@ -1223,7 +1223,7 @@ strategy_loader = PluginLoader(
 
 terminal_loader = PluginLoader(
     'TerminalModule',
-    'ansible.plugins.terminal',
+    'assible.plugins.terminal',
     C.DEFAULT_TERMINAL_PLUGIN_PATH,
     'terminal_plugins',
     required_base_class='TerminalBase'
@@ -1231,14 +1231,14 @@ terminal_loader = PluginLoader(
 
 vars_loader = PluginLoader(
     'VarsModule',
-    'ansible.plugins.vars',
+    'assible.plugins.vars',
     C.DEFAULT_VARS_PLUGIN_PATH,
     'vars_plugins',
 )
 
 cliconf_loader = PluginLoader(
     'Cliconf',
-    'ansible.plugins.cliconf',
+    'assible.plugins.cliconf',
     C.DEFAULT_CLICONF_PLUGIN_PATH,
     'cliconf_plugins',
     required_base_class='CliconfBase'
@@ -1246,7 +1246,7 @@ cliconf_loader = PluginLoader(
 
 netconf_loader = PluginLoader(
     'Netconf',
-    'ansible.plugins.netconf',
+    'assible.plugins.netconf',
     C.DEFAULT_NETCONF_PLUGIN_PATH,
     'netconf_plugins',
     required_base_class='NetconfBase'
@@ -1254,14 +1254,14 @@ netconf_loader = PluginLoader(
 
 inventory_loader = PluginLoader(
     'InventoryModule',
-    'ansible.plugins.inventory',
+    'assible.plugins.inventory',
     C.DEFAULT_INVENTORY_PLUGIN_PATH,
     'inventory_plugins'
 )
 
 httpapi_loader = PluginLoader(
     'HttpApi',
-    'ansible.plugins.httpapi',
+    'assible.plugins.httpapi',
     C.DEFAULT_HTTPAPI_PLUGIN_PATH,
     'httpapi_plugins',
     required_base_class='HttpApiBase',
@@ -1269,7 +1269,7 @@ httpapi_loader = PluginLoader(
 
 become_loader = PluginLoader(
     'BecomeModule',
-    'ansible.plugins.become',
+    'assible.plugins.become',
     C.BECOME_PLUGIN_PATH,
     'become_plugins'
 )

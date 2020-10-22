@@ -10,7 +10,7 @@ import os
 import struct
 import sys
 
-from ansible.module_utils.basic import to_bytes
+from assible.module_utils.basic import to_bytes
 
 ILLEGAL_CHARS = [
     b'<',

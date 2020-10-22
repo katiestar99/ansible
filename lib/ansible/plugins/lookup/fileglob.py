@@ -1,5 +1,5 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -18,8 +18,8 @@ DOCUMENTATION = """
         required: True
     notes:
       - Patterns are only supported on files, not directory/paths.
-      - Matching is against local system files on the Ansible controller.
-        To iterate a list of files on a remote node, use the M(ansible.builtin.find) module.
+      - Matching is against local system files on the Assible controller.
+        To iterate a list of files on a remote node, use the M(assible.builtin.find) module.
       - Returns a string list of paths joined by commas, or an empty list if no files match. For a 'true list' pass C(wantlist=True) to the lookup.
 """
 
@@ -48,9 +48,9 @@ RETURN = """
 import os
 import glob
 
-from ansible.plugins.lookup import LookupBase
-from ansible.errors import AnsibleFileNotFound
-from ansible.module_utils._text import to_bytes, to_text
+from assible.plugins.lookup import LookupBase
+from assible.errors import AssibleFileNotFound
+from assible.module_utils._text import to_bytes, to_text
 
 
 class LookupModule(LookupBase):
@@ -65,8 +65,8 @@ class LookupModule(LookupBase):
                 found_paths.append(self.find_file_in_search_path(variables, 'files', os.path.dirname(term)))
             else:
                 # no dir, just file, so use paths and 'files' paths instead
-                if 'ansible_search_path' in variables:
-                    paths = variables['ansible_search_path']
+                if 'assible_search_path' in variables:
+                    paths = variables['assible_search_path']
                 else:
                     paths = [self.get_basedir(variables)]
                 for p in paths:

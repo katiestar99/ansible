@@ -1,18 +1,18 @@
-# unit tests for ansible ohai fact collector
+# unit tests for assible ohai fact collector
 # -*- coding: utf-8 -*-
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # Make coding more python3-ish
@@ -23,7 +23,7 @@ from units.compat.mock import Mock, patch
 
 from .. base import BaseFactsTest
 
-from ansible.module_utils.facts.other.ohai import OhaiFactCollector
+from assible.module_utils.facts.other.ohai import OhaiFactCollector
 
 ohai_json_output = r'''
 {
@@ -328,7 +328,7 @@ ohai_json_output = r'''
   "platform_version": "25",
   "platform_family": "fedora",
   "packages": {
-    "ansible": {
+    "assible": {
       "epoch": "0",
       "version": "2.2.1.0",
       "release": "1.fc25",
@@ -3955,10 +3955,10 @@ ohai_json_output = r'''
             "capacity": 42949672960,
             "type": 0
           },
-          "centos5-ansible_default.img": {
-            "key": "/var/lib/libvirt/images/centos5-ansible_default.img",
-            "name": "centos5-ansible_default.img",
-            "path": "/var/lib/libvirt/images/centos5-ansible_default.img",
+          "centos5-assible_default.img": {
+            "key": "/var/lib/libvirt/images/centos5-assible_default.img",
+            "name": "centos5-assible_default.img",
+            "path": "/var/lib/libvirt/images/centos5-assible_default.img",
             "allocation": 8986624,
             "capacity": 42949672960,
             "type": 0
@@ -6726,7 +6726,7 @@ class TestOhaiCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'ohai']
     valid_subsets = ['ohai']
-    fact_namespace = 'ansible_ohai'
+    fact_namespace = 'assible_ohai'
     collector_class = OhaiFactCollector
 
     def _mock_module(self):
@@ -6738,7 +6738,7 @@ class TestOhaiCollector(BaseFactsTest):
         mock_module.run_command = Mock(return_value=(0, ohai_json_output, ''))
         return mock_module
 
-    @patch('ansible.module_utils.facts.other.ohai.OhaiFactCollector.get_ohai_output')
+    @patch('assible.module_utils.facts.other.ohai.OhaiFactCollector.get_ohai_output')
     def test_bogus_json(self, mock_get_ohai_output):
         module = self._mock_module()
 
@@ -6751,7 +6751,7 @@ class TestOhaiCollector(BaseFactsTest):
         self.assertIsInstance(facts_dict, dict)
         self.assertEqual(facts_dict, {})
 
-    @patch('ansible.module_utils.facts.other.ohai.OhaiFactCollector.run_ohai')
+    @patch('assible.module_utils.facts.other.ohai.OhaiFactCollector.run_ohai')
     def test_ohai_non_zero_return_code(self, mock_run_ohai):
         module = self._mock_module()
 

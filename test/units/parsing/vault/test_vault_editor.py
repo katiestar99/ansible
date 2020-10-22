@@ -1,20 +1,20 @@
 # (c) 2014, James Tanner <tanner.jc@gmail.com>
-# (c) 2014, James Cammarata, <jcammarata@ansible.com>
+# (c) 2014, James Cammarata, <jcammarata@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -28,15 +28,15 @@ import pytest
 from units.compat import unittest
 from units.compat.mock import patch
 
-from ansible import errors
-from ansible.parsing import vault
-from ansible.parsing.vault import VaultLib, VaultEditor, match_encrypt_secret
+from assible import errors
+from assible.parsing import vault
+from assible.parsing.vault import VaultLib, VaultEditor, match_encrypt_secret
 
-from ansible.module_utils._text import to_bytes, to_text
+from assible.module_utils._text import to_bytes, to_text
 
 from units.mock.vault_helper import TextVaultSecret
 
-v11_data = """$ANSIBLE_VAULT;1.1;AES256
+v11_data = """$ASSIBLE_VAULT;1.1;AES256
 62303130653266653331306264616235333735323636616539316433666463323964623162386137
 3961616263373033353631316333623566303532663065310a393036623466376263393961326530
 64336561613965383835646464623865663966323464653236343638373165343863623638316664
@@ -83,7 +83,7 @@ class TestVaultEditor(unittest.TestCase):
             assert hasattr(v, slot), "VaultLib is missing the %s method" % slot
 
     def _create_test_dir(self):
-        suffix = '_ansible_unit_test_%s_' % (self.__class__.__name__)
+        suffix = '_assible_unit_test_%s_' % (self.__class__.__name__)
         return tempfile.mkdtemp(suffix=suffix)
 
     def _create_file(self, test_dir, name, content=None, symlink=False):
@@ -99,7 +99,7 @@ class TestVaultEditor(unittest.TestCase):
             vault_secrets = self._secrets(self.vault_password)
         return VaultEditor(VaultLib(vault_secrets))
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_helper_empty_target(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
 
@@ -113,7 +113,7 @@ class TestVaultEditor(unittest.TestCase):
 
         self.assertNotEqual(src_contents, b_ciphertext)
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_helper_call_exception(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
 
@@ -121,17 +121,17 @@ class TestVaultEditor(unittest.TestCase):
         src_file_path = self._create_file(self._test_dir, 'src_file', content=src_contents)
 
         error_txt = 'calling editor raised an exception'
-        mock_sp_call.side_effect = errors.AnsibleError(error_txt)
+        mock_sp_call.side_effect = errors.AssibleError(error_txt)
 
         ve = self._vault_editor()
 
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 error_txt,
                                 ve._edit_file_helper,
                                 src_file_path,
                                 self.vault_secret)
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_helper_symlink_target(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
 
@@ -165,7 +165,7 @@ class TestVaultEditor(unittest.TestCase):
     def _faux_command(self, tmp_path):
         pass
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_helper_no_change(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
 
@@ -232,7 +232,7 @@ class TestVaultEditor(unittest.TestCase):
         ve = self._vault_editor()
         ve.encrypt_file(src_file_path, self.vault_secret)
 
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 'The value for the new_password to rekey',
                                 ve.rekey_file,
                                 src_file_path,
@@ -247,7 +247,7 @@ class TestVaultEditor(unittest.TestCase):
         ve = self._vault_editor()
 
         new_password = 'password2:electricbugaloo'
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 'input is not vault encrypted data',
                                 ve.rekey_file,
                                 src_file_path, new_password)
@@ -271,7 +271,7 @@ class TestVaultEditor(unittest.TestCase):
         src_file_path = self._create_file(self._test_dir, 'src_file', content=src_file_contents)
 
         ve = self._vault_editor()
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 'input is not vault encrypted data',
                                 ve.plaintext,
                                 src_file_path)
@@ -303,7 +303,7 @@ class TestVaultEditor(unittest.TestCase):
 
         self._assert_file_is_link(src_file_link_path, src_file_path)
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_no_vault_id(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
         src_contents = to_bytes("some info in a file\nyup.")
@@ -325,12 +325,12 @@ class TestVaultEditor(unittest.TestCase):
         new_src_file = open(src_file_path, 'rb')
         new_src_file_contents = new_src_file.read()
 
-        self.assertTrue(b'$ANSIBLE_VAULT;1.1;AES256' in new_src_file_contents)
+        self.assertTrue(b'$ASSIBLE_VAULT;1.1;AES256' in new_src_file_contents)
 
         src_file_plaintext = ve.vault.decrypt(new_src_file_contents)
         self.assertEqual(src_file_plaintext, new_src_contents)
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_with_vault_id(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
         src_contents = to_bytes("some info in a file\nyup.")
@@ -353,12 +353,12 @@ class TestVaultEditor(unittest.TestCase):
         new_src_file = open(src_file_path, 'rb')
         new_src_file_contents = new_src_file.read()
 
-        self.assertTrue(b'$ANSIBLE_VAULT;1.2;AES256;vault_secrets' in new_src_file_contents)
+        self.assertTrue(b'$ASSIBLE_VAULT;1.2;AES256;vault_secrets' in new_src_file_contents)
 
         src_file_plaintext = ve.vault.decrypt(new_src_file_contents)
         self.assertEqual(src_file_plaintext, new_src_contents)
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_symlink(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
         src_contents = to_bytes("some info in a file\nyup.")
@@ -394,7 +394,7 @@ class TestVaultEditor(unittest.TestCase):
         # self.assertEqual(src_file_plaintext, new_src_contents,
         #                 'The decrypted plaintext of the editted file is not the expected contents.')
 
-    @patch('ansible.parsing.vault.subprocess.call')
+    @patch('assible.parsing.vault.subprocess.call')
     def test_edit_file_not_encrypted(self, mock_sp_call):
         self._test_dir = self._create_test_dir()
         src_contents = to_bytes("some info in a file\nyup.")
@@ -409,7 +409,7 @@ class TestVaultEditor(unittest.TestCase):
         mock_sp_call.side_effect = faux_editor
 
         ve = self._vault_editor()
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 'input is not vault encrypted data',
                                 ve.edit_file,
                                 src_file_path)
@@ -420,7 +420,7 @@ class TestVaultEditor(unittest.TestCase):
         src_file_path = self._create_file(self._test_dir, 'src_file', content=src_contents)
 
         ve = self._vault_editor()
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 'please use .edit. instead',
                                 ve.create_file,
                                 src_file_path,
@@ -432,7 +432,7 @@ class TestVaultEditor(unittest.TestCase):
         src_file_path = self._create_file(self._test_dir, 'src_file', content=src_contents)
 
         ve = self._vault_editor()
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 'input is not vault encrypted data',
                                 ve.decrypt_file,
                                 src_file_path)
@@ -447,7 +447,7 @@ class TestVaultEditor(unittest.TestCase):
         tmp_file = tempfile.NamedTemporaryFile()
         os.unlink(tmp_file.name)
 
-        _secrets = self._secrets('ansible')
+        _secrets = self._secrets('assible')
         ve = self._vault_editor(_secrets)
         ve.create_file(tmp_file.name, vault.match_encrypt_secret(_secrets)[1])
 
@@ -458,13 +458,13 @@ class TestVaultEditor(unittest.TestCase):
         with v11_file as f:
             f.write(to_bytes(v11_data))
 
-        ve = self._vault_editor(self._secrets("ansible"))
+        ve = self._vault_editor(self._secrets("assible"))
 
         # make sure the password functions for the cipher
         error_hit = False
         try:
             ve.decrypt_file(v11_file.name)
-        except errors.AnsibleError:
+        except errors.AssibleError:
             error_hit = True
 
         # verify decrypted content

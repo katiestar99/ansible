@@ -1,19 +1,19 @@
 # (c) 2017, Adrian Likins <alikins@redhat.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -24,9 +24,9 @@ from units.compat.mock import patch, MagicMock
 
 from units.mock.loader import DictDataLoader
 
-from ansible.release import __version__
-from ansible.parsing import vault
-from ansible import cli
+from assible.release import __version__
+from assible.parsing import vault
+from assible import cli
 
 
 class TestCliVersion(unittest.TestCase):
@@ -42,7 +42,7 @@ class TestCliVersion(unittest.TestCase):
 
 class TestCliBuildVaultIds(unittest.TestCase):
     def setUp(self):
-        self.tty_patcher = patch('ansible.cli.sys.stdin.isatty', return_value=True)
+        self.tty_patcher = patch('assible.cli.sys.stdin.isatty', return_value=True)
         self.mock_isatty = self.tty_patcher.start()
 
     def tearDown(self):
@@ -61,24 +61,24 @@ class TestCliBuildVaultIds(unittest.TestCase):
         self.assertEqual(res, [])
 
     def test_no_vault_id_no_auto_prompt(self):
-        # simulate 'ansible-playbook site.yml' with out --ask-vault-pass, should not prompt
+        # simulate 'assible-playbook site.yml' with out --ask-vault-pass, should not prompt
         res = cli.CLI.build_vault_ids([], auto_prompt=False)
         self.assertEqual(res, [])
 
     def test_no_vault_ids_auto_prompt(self):
         # create_new_password=False
-        # simulate 'ansible-vault edit encrypted.yml'
+        # simulate 'assible-vault edit encrypted.yml'
         res = cli.CLI.build_vault_ids([], auto_prompt=True)
         self.assertEqual(res, ['default@prompt_ask_vault_pass'])
 
     def test_no_vault_ids_auto_prompt_ask_vault_pass(self):
         # create_new_password=False
-        # simulate 'ansible-vault edit --ask-vault-pass encrypted.yml'
+        # simulate 'assible-vault edit --ask-vault-pass encrypted.yml'
         res = cli.CLI.build_vault_ids([], auto_prompt=True, ask_vault_pass=True)
         self.assertEqual(res, ['default@prompt_ask_vault_pass'])
 
     def test_create_new_password_auto_prompt(self):
-        # simulate 'ansible-vault encrypt somefile.yml'
+        # simulate 'assible-vault encrypt somefile.yml'
         res = cli.CLI.build_vault_ids([], auto_prompt=True, create_new_password=True)
         self.assertEqual(res, ['default@prompt_ask_vault_pass'])
 
@@ -115,10 +115,10 @@ class TestCliBuildVaultIds(unittest.TestCase):
 class TestCliSetupVaultSecrets(unittest.TestCase):
     def setUp(self):
         self.fake_loader = DictDataLoader({})
-        self.tty_patcher = patch('ansible.cli.sys.stdin.isatty', return_value=True)
+        self.tty_patcher = patch('assible.cli.sys.stdin.isatty', return_value=True)
         self.mock_isatty = self.tty_patcher.start()
 
-        self.display_v_patcher = patch('ansible.cli.display.verbosity', return_value=6)
+        self.display_v_patcher = patch('assible.cli.display.verbosity', return_value=6)
         self.mock_display_v = self.display_v_patcher.start()
         cli.display.verbosity = 5
 
@@ -131,7 +131,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         res = cli.CLI.setup_vault_secrets(None, None, auto_prompt=False)
         self.assertIsInstance(res, list)
 
-    @patch('ansible.cli.get_file_vault_secret')
+    @patch('assible.cli.get_file_vault_secret')
     def test_password_file(self, mock_file_secret):
         filename = '/dev/null/secret'
         mock_file_secret.return_value = MagicMock(bytes=b'file1_password',
@@ -146,7 +146,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         match = matches[0][1]
         self.assertEqual(match.bytes, b'file1_password')
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt(self, mock_prompt_secret):
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
                                                     vault_id='prompt1')
@@ -162,7 +162,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         match = matches[0][1]
         self.assertEqual(match.bytes, b'prompt1_password')
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt_no_tty(self, mock_prompt_secret):
         self.mock_isatty.return_value = False
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
@@ -180,8 +180,8 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         self.assertIn('prompt1', [x[0] for x in matches])
         self.assertEqual(len(matches), 1)
 
-    @patch('ansible.cli.get_file_vault_secret')
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.get_file_vault_secret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt_no_tty_and_password_file(self, mock_prompt_secret, mock_file_secret):
         self.mock_isatty.return_value = False
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
@@ -213,7 +213,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
             # simple mock, same password/prompt for each mock_prompt_secret
             self.assertEqual(matches[index][1].bytes, password)
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_multiple_prompts(self, mock_prompt_secret):
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
                                                     vault_id='prompt1')
@@ -226,7 +226,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         vault_id_names = ['prompt1', 'prompt2']
         self._assert_ids(vault_id_names, res)
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_multiple_prompts_and_ask_vault_pass(self, mock_prompt_secret):
         self.mock_isatty.return_value = False
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
@@ -243,9 +243,9 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         vault_id_names = ['prompt1', 'prompt2', 'prompt3', 'default']
         self._assert_ids(vault_id_names, res)
 
-    @patch('ansible.cli.C')
-    @patch('ansible.cli.get_file_vault_secret')
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.C')
+    @patch('assible.cli.get_file_vault_secret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_default_file_vault(self, mock_prompt_secret,
                                 mock_file_secret,
                                 mock_config):
@@ -281,8 +281,8 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         self.assertEqual(matches[1][1].bytes, b'prompt1_password')
         self.assertEqual(len(matches), 2)
 
-    @patch('ansible.cli.get_file_vault_secret')
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.get_file_vault_secret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_default_file_vault_identity_list(self, mock_prompt_secret,
                                               mock_file_secret):
         default_vault_ids = ['some_prompt@prompt',
@@ -310,7 +310,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         matches = vault.match_secrets(res, ['some_prompt'])
         self.assertEqual(matches[0][1].bytes, b'some_prompt_password')
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt_just_ask_vault_pass(self, mock_prompt_secret):
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
                                                     vault_id='default')
@@ -324,7 +324,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         match = vault.match_secrets(res, ['default'])[0][1]
         self.assertEqual(match.bytes, b'prompt1_password')
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt_new_password_ask_vault_pass(self, mock_prompt_secret):
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
                                                     vault_id='default')
@@ -338,7 +338,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         match = vault.match_secrets(res, ['default'])[0][1]
         self.assertEqual(match.bytes, b'prompt1_password')
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt_new_password_vault_id_prompt(self, mock_prompt_secret):
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
                                                     vault_id='some_vault_id')
@@ -352,7 +352,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         match = vault.match_secrets(res, ['some_vault_id'])[0][1]
         self.assertEqual(match.bytes, b'prompt1_password')
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt_new_password_vault_id_prompt_ask_vault_pass(self, mock_prompt_secret):
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
                                                     vault_id='default')
@@ -366,7 +366,7 @@ class TestCliSetupVaultSecrets(unittest.TestCase):
         match = vault.match_secrets(res, ['some_vault_id'])[0][1]
         self.assertEqual(match.bytes, b'prompt1_password')
 
-    @patch('ansible.cli.PromptVaultSecret')
+    @patch('assible.cli.PromptVaultSecret')
     def test_prompt_new_password_vault_id_prompt_ask_vault_pass_ask_vault_pass(self, mock_prompt_secret):
         mock_prompt_secret.return_value = MagicMock(bytes=b'prompt1_password',
                                                     vault_id='default')

@@ -12,12 +12,12 @@
 - name: validate response
   assert:
     that:
-    - asyncresult.ansible_job_id is match('\d+\.\d+')
+    - asyncresult.assible_job_id is match('\d+\.\d+')
     - asyncresult.started == 1
     - asyncresult is started
     - asyncresult.finished == 0
     - asyncresult is not finished
-    - asyncresult.results_file is search('\.ansible_async.+\d+\.\d+')
+    - asyncresult.results_file is search('\.assible_async.+\d+\.\d+')
      # ensure that async is actually async- this test will fail if # hosts > forks or if the target host is VERY slow
     - (lookup('pipe', 'date +%s') | int) - (start_timestamp | int) < 15
 
@@ -31,18 +31,18 @@
 - name: validate response
   assert:
     that:
-    - asyncresult.ansible_job_id is match('\d+\.\d+')
+    - asyncresult.assible_job_id is match('\d+\.\d+')
     - asyncresult.finished == 1
     - asyncresult is finished
     - asyncresult is changed
-    - asyncresult.ansible_async_watchdog_pid is number
-#    - asyncresult.module_tempdir is search('ansible-tmp-')
+    - asyncresult.assible_async_watchdog_pid is number
+#    - asyncresult.module_tempdir is search('assible-tmp-')
     - asyncresult.module_pid is number
 
 # this part of the test is flaky- Windows PIDs are reused aggressively, so this occasionally fails due to a new process with the same ID
 # FUTURE: consider having the test module hook to a kernel object we can poke at that gets signaled/released on exit
 #- name: ensure that watchdog and module procs have exited
-#  raw: Get-Process | Where { $_.Id -in ({{ asyncresult.ansible_async_watchdog_pid }}, {{ asyncresult.module_pid }}) }
+#  raw: Get-Process | Where { $_.Id -in ({{ asyncresult.assible_async_watchdog_pid }}, {{ asyncresult.module_pid }}) }
 #  register: proclist
 #
 #- name: validate no running watchdog/module processes were returned
@@ -69,17 +69,17 @@
 - name: validate response
   assert:
     that:
-    - asyncresult.ansible_job_id is match('\d+\.\d+')
+    - asyncresult.assible_job_id is match('\d+\.\d+')
     - asyncresult.finished == 1
     - asyncresult is finished
     - asyncresult is changed
-#    - asyncresult.module_tempdir is search('ansible-tmp-')
+#    - asyncresult.module_tempdir is search('assible-tmp-')
     - asyncresult.module_pid is number
 
 # this part of the test is flaky- Windows PIDs are reused aggressively, so this occasionally fails due to a new process with the same ID
 # FUTURE: consider having the test module hook to a kernel object we can poke at that gets signaled/released on exit
 #- name: ensure that watchdog and module procs have exited
-#  raw: Get-Process | Where { $_.Id -in ({{ asyncresult.ansible_async_watchdog_pid }}, {{ asyncresult.module_pid }}) }
+#  raw: Get-Process | Where { $_.Id -in ({{ asyncresult.assible_async_watchdog_pid }}, {{ asyncresult.module_pid }}) }
 #  register: proclist
 #
 #- name: validate no running watchdog/module processes were returned
@@ -107,7 +107,7 @@
 - name: validate response
   assert:
     that:
-    - asyncresult.ansible_job_id is match('\d+\.\d+')
+    - asyncresult.assible_job_id is match('\d+\.\d+')
     - asyncresult.finished == 1
     - asyncresult is finished
     - asyncresult is not changed
@@ -125,7 +125,7 @@
 - name: validate response
   assert:
     that:
-    - asyncresult.ansible_job_id is match('\d+\.\d+')
+    - asyncresult.assible_job_id is match('\d+\.\d+')
     - asyncresult.finished == 1
     - asyncresult is finished
     - asyncresult is changed
@@ -143,7 +143,7 @@
 - name: validate response
   assert:
     that:
-    - asyncresult.ansible_job_id is match('\d+\.\d+')
+    - asyncresult.assible_job_id is match('\d+\.\d+')
     - asyncresult.finished == 1
     - asyncresult is finished
     - asyncresult is not changed
@@ -170,12 +170,12 @@
   register: async_custom_dir
   async: 5
   vars:
-    ansible_async_dir: '{{win_output_dir}}'
+    assible_async_dir: '{{win_output_dir}}'
 
 - name: assert results file is in the remote tmp specified
   assert:
     that:
-    - async_custom_dir.results_file == win_output_dir + '\\' + async_custom_dir.ansible_job_id
+    - async_custom_dir.results_file == win_output_dir + '\\' + async_custom_dir.assible_job_id
 
 - name: test async fire and forget with custom async dir
   win_shell: echo hi
@@ -183,20 +183,20 @@
   async: 5
   poll: 0
   vars:
-    ansible_async_dir: '{{win_output_dir}}'
+    assible_async_dir: '{{win_output_dir}}'
 
 - name: poll with different dir - fail
   async_status:
-    jid: '{{ async_custom_dir_poll.ansible_job_id }}'
+    jid: '{{ async_custom_dir_poll.assible_job_id }}'
   register: fail_async_custom_dir_poll
   ignore_errors: yes
 
 - name: poll with different dir - success
   async_status:
-    jid: '{{ async_custom_dir_poll.ansible_job_id }}'
+    jid: '{{ async_custom_dir_poll.assible_job_id }}'
   register: success_async_custom_dir_poll
   vars:
-    ansible_async_dir: '{{win_output_dir}}'
+    assible_async_dir: '{{win_output_dir}}'
 
 - name: assert test async fire and forget with custom async dir
   assert:
@@ -204,7 +204,7 @@
     - fail_async_custom_dir_poll.failed
     - '"could not find job at ''" + nonascii_output.results_file|win_dirname + "''" in fail_async_custom_dir_poll.msg'
     - not success_async_custom_dir_poll.failed
-    - success_async_custom_dir_poll.results_file == win_output_dir + '\\' + async_custom_dir_poll.ansible_job_id
+    - success_async_custom_dir_poll.results_file == win_output_dir + '\\' + async_custom_dir_poll.assible_job_id
 
 # FUTURE: figure out why the last iteration of this test often fails on shippable
 #- name: loop async success
@@ -222,7 +222,7 @@
 #  until: asyncout is finished
 #  retries: 10
 #  delay: 1
-#  with_items: "{{ async_many.results | map(attribute='ansible_job_id') | list }}"
+#  with_items: "{{ async_many.results | map(attribute='assible_job_id') | list }}"
 #
 #- name: validate results
 #  assert:
@@ -231,13 +231,13 @@
 #    - item is finished
 #    - item.slept_sec == 3
 #    - item is changed
-#    - item.ansible_job_id is match('\d+\.\d+')
+#    - item.assible_job_id is match('\d+\.\d+')
 #  with_items: "{{ asyncout.results }}"
 
 # this part of the test is flaky- Windows PIDs are reused aggressively, so this occasionally fails due to a new process with the same ID
 # FUTURE: consider having the test module hook to a kernel object we can poke at that gets signaled/released on exit
 #- name: ensure that all watchdog and module procs have exited
-#  raw: Get-Process | Where { $_.Id -in ({{ asyncout.results | join(',', attribute='ansible_async_watchdog_pid') }}, {{ asyncout.results | join(',', attribute='module_pid') }}) }
+#  raw: Get-Process | Where { $_.Id -in ({{ asyncout.results | join(',', attribute='assible_async_watchdog_pid') }}, {{ asyncout.results | join(',', attribute='module_pid') }}) }
 #  register: proclist
 #
 #- name: validate no processes were returned
@@ -248,7 +248,7 @@
 # FUTURE: test junk before/after JSON
 # FUTURE: verify tempdir stays through module exec
 # FUTURE: verify tempdir is deleted after module exec
-# FUTURE: verify tempdir is permanent with ANSIBLE_KEEP_REMOTE_FILES=1 (how?)
+# FUTURE: verify tempdir is permanent with ASSIBLE_KEEP_REMOTE_FILES=1 (how?)
 # FUTURE: verify binary modules work
 
 # FUTURE: test status/return

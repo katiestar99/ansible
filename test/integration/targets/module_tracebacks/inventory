@@ -1,5 +1,5 @@
-testhost_local ansible_connection=local
-testhost_ssh   ansible_connection=ssh   ansible_host=localhost
+testhost_local assible_connection=local
+testhost_ssh   assible_connection=ssh   assible_host=localhost
 
 [all:vars]
-ansible_python_interpreter="{{ ansible_playbook_python }}"
+assible_python_interpreter="{{ assible_playbook_python }}"

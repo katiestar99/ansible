@@ -1,7 +1,7 @@
 ---
 - hosts: testhost
   vars:
-    - ansible_hostname: "BAD!"
+    - assible_hostname: "BAD!"
     - vars_var: "vars_var"
     - param_var: "BAD!"
     - vars_files_var: "BAD!"

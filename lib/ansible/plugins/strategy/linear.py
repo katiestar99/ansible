@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -27,21 +27,21 @@ DOCUMENTATION = '''
           the next series of hosts until the batch is done, before going on to the next task.
     version_added: "2.0"
     notes:
-     - This was the default Ansible behaviour before 'strategy plugins' were introduced in 2.0.
-    author: Ansible Core Team
+     - This was the default Assible behaviour before 'strategy plugins' were introduced in 2.0.
+    author: Assible Core Team
 '''
 
-from ansible.errors import AnsibleError, AnsibleAssertionError
-from ansible.executor.play_iterator import PlayIterator
-from ansible.module_utils.six import iteritems
-from ansible.module_utils._text import to_text
-from ansible.playbook.block import Block
-from ansible.playbook.included_file import IncludedFile
-from ansible.playbook.task import Task
-from ansible.plugins.loader import action_loader
-from ansible.plugins.strategy import StrategyBase
-from ansible.template import Templar
-from ansible.utils.display import Display
+from assible.errors import AssibleError, AssibleAssertionError
+from assible.executor.play_iterator import PlayIterator
+from assible.module_utils.six import iteritems
+from assible.module_utils._text import to_text
+from assible.playbook.block import Block
+from assible.playbook.included_file import IncludedFile
+from assible.playbook.task import Task
+from assible.plugins.loader import action_loader
+from assible.plugins.strategy import StrategyBase
+from assible.template import Templar
+from assible.utils.display import Display
 
 display = Display()
 
@@ -52,7 +52,7 @@ class StrategyModule(StrategyBase):
 
     def _replace_with_noop(self, target):
         if self.noop_task is None:
-            raise AnsibleAssertionError('strategy.linear.StrategyModule.noop_task is None, need Task()')
+            raise AssibleAssertionError('strategy.linear.StrategyModule.noop_task is None, need Task()')
 
         result = []
         for el in target:
@@ -383,7 +383,7 @@ class StrategyModule(StrategyBase):
                                         all_blocks[host].append(noop_block)
                             display.debug("done iterating over new_blocks loaded from include file")
 
-                        except AnsibleError as e:
+                        except AssibleError as e:
                             for host in included_file._hosts:
                                 self._tqm._failed_hosts[host.name] = True
                                 iterator.mark_host_failed(host)

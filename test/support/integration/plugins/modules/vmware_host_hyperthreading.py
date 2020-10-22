@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
     'supported_by': 'community'
@@ -104,9 +104,9 @@ try:
 except ImportError:
     pass
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.vmware import PyVmomi, vmware_argument_spec
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.vmware import PyVmomi, vmware_argument_spec
+from assible.module_utils._text import to_native
 
 
 class VmwareHostHyperthreading(PyVmomi):
@@ -246,7 +246,7 @@ def main():
         cluster_name=dict(type='str', required=False),
     )
 
-    module = AnsibleModule(argument_spec=argument_spec,
+    module = AssibleModule(argument_spec=argument_spec,
                            required_one_of=[
                                ['cluster_name', 'esxi_hostname'],
                            ],

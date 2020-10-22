@@ -18,25 +18,25 @@ release: version summary changelog commit-release
 
 .PHONY: version
 version:
-	sed -i.bak "s/^__version__ = .*$$/__version__ = '${version}'/" ../../lib/ansible/release.py
-	rm ../../lib/ansible/release.py.bak
+	sed -i.bak "s/^__version__ = .*$$/__version__ = '${version}'/" ../../lib/assible/release.py
+	rm ../../lib/assible/release.py.bak
 
 .PHONY: summary
 summary:
 	@printf '%s\n%s\n%s\n' \
 	'release_summary: |' \
 	'   | Release Date: $(shell date '+%Y-%m-%d')' \
-	'   | `Porting Guide <https://docs.ansible.com/ansible/devel/porting_guides.html>`__' > \
+	'   | `Porting Guide <https://docs.assible.com/assible/devel/porting_guides.html>`__' > \
 	../../changelogs/fragments/v${version}_summary.yaml
 
 .PHONY: changelog
 changelog:
-	antsibull-changelog release -vv --use-ansible-doc && antsibull-changelog generate -vv --use-ansible-doc
-	ansible-test sanity changelogs/
+	antsibull-changelog release -vv --use-assible-doc && antsibull-changelog generate -vv --use-assible-doc
+	assible-test sanity changelogs/
 
 .PHONY: commit-release
 commit-release:
-	git add ../../changelogs/ ../../lib/ansible/release.py
+	git add ../../changelogs/ ../../lib/assible/release.py
 	git commit -m "New release v${version}"
 
 .PHONY: publish
@@ -52,10 +52,10 @@ tag:
 
 .PHONY: postversion
 postversion:
-	sed -i.bak "s/^__version__ = .*$$/__version__ = '${version}.post0'/" ../../lib/ansible/release.py
-	rm ../../lib/ansible/release.py.bak
+	sed -i.bak "s/^__version__ = .*$$/__version__ = '${version}.post0'/" ../../lib/assible/release.py
+	rm ../../lib/assible/release.py.bak
 
 .PHONY: commit-postversion
 commit-postversion:
-	git add ../../lib/ansible/release.py
-	git commit -m "Update Ansible release version to v${version}."
+	git add ../../lib/assible/release.py
+	git commit -m "Update Assible release version to v${version}."

@@ -1,8 +1,8 @@
 :orphan:
 
-pylint-ansible-test
+pylint-assible-test
 ===================
 
 Python static analysis for common programming errors.
 
-A more strict set of rules applied to ``ansible-test``.
+A more strict set of rules applied to ``assible-test``.

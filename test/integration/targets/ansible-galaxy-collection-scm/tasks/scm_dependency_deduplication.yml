@@ -1,5 +1,5 @@
 - name: Install all collections in a repo, one of which has a recursive dependency
-  command: 'ansible-galaxy collection install git+file://{{ galaxy_dir }}/development/namespace_1/.git'
+  command: 'assible-galaxy collection install git+file://{{ galaxy_dir }}/development/namespace_1/.git'
   register: command
 
 - assert:
@@ -16,7 +16,7 @@
       - "'namespace_2.collection_2' in command.stdout_lines[8]"
 
 - name: list installed collections
-  command: 'ansible-galaxy collection list'
+  command: 'assible-galaxy collection list'
   register: installed_collections
 
 - assert:
@@ -25,7 +25,7 @@
       - "'namespace_2.collection_2' in installed_collections.stdout"
 
 - name: Install a specific collection in a repo with a recursive dependency
-  command: 'ansible-galaxy collection install git+file://{{ galaxy_dir }}/development/namespace_1/.git#/collection_1/ --force-with-deps'
+  command: 'assible-galaxy collection install git+file://{{ galaxy_dir }}/development/namespace_1/.git#/collection_1/ --force-with-deps'
   register: command
 
 - assert:
@@ -42,7 +42,7 @@
       - "'namespace_2.collection_2' in command.stdout_lines[8]"
 
 - name: list installed collections
-  command: 'ansible-galaxy collection list'
+  command: 'assible-galaxy collection list'
   register: installed_collections
 
 - assert:

@@ -1,4 +1,4 @@
-# Copyright: (c) 2018, Matt Davis <mdavis@ansible.com>
+# Copyright: (c) 2018, Matt Davis <mdavis@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -6,11 +6,11 @@ __metaclass__ = type
 
 from datetime import datetime
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_native
-from ansible.plugins.action import ActionBase
-from ansible.plugins.action.reboot import ActionModule as RebootActionModule
-from ansible.utils.display import Display
+from assible.errors import AssibleError
+from assible.module_utils._text import to_native
+from assible.plugins.action import ActionBase
+from assible.plugins.action.reboot import ActionModule as RebootActionModule
+from assible.utils.display import Display
 
 display = Display()
 
@@ -71,7 +71,7 @@ class ActionModule(RebootActionModule, ActionBase):
         stdout = reboot_result['stdout']
         stderr = reboot_result['stderr']
         if reboot_result['rc'] == 1190 or (reboot_result['rc'] != 0 and "(1190)" in reboot_result['stderr']):
-            display.warning('A scheduled reboot was pre-empted by Ansible.')
+            display.warning('A scheduled reboot was pre-empted by Assible.')
 
             # Try to abort (this may fail if it was already aborted)
             result1 = self._low_level_execute_command(self._connection._shell._encode_script('shutdown /a'),

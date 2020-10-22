@@ -1,21 +1,21 @@
 ########################################################################
 #
-# (C) 2015, Chris Houseknecht <chouse@ansible.com>
+# (C) 2015, Chris Houseknecht <chouse@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
 
@@ -25,14 +25,14 @@ __metaclass__ = type
 import getpass
 import json
 
-from ansible import context
-from ansible.errors import AnsibleError
-from ansible.galaxy.user_agent import user_agent
-from ansible.module_utils.six.moves import input
-from ansible.module_utils.six.moves.urllib.error import HTTPError
-from ansible.module_utils.urls import open_url
-from ansible.utils.color import stringc
-from ansible.utils.display import Display
+from assible import context
+from assible.errors import AssibleError
+from assible.galaxy.user_agent import user_agent
+from assible.module_utils.six.moves import input
+from assible.module_utils.six.moves.urllib.error import HTTPError
+from assible.module_utils.urls import open_url
+from assible.utils.color import stringc
+from assible.utils.display import Display
 
 display = Display()
 
@@ -71,11 +71,11 @@ class GalaxyLogin(object):
             pass
 
         if not self.github_username or not self.github_password:
-            raise AnsibleError("Invalid GitHub credentials. Username and password are required.")
+            raise AssibleError("Invalid GitHub credentials. Username and password are required.")
 
     def remove_github_token(self):
         '''
-        If for some reason an ansible-galaxy token was left from a prior login, remove it. We cannot
+        If for some reason an assible-galaxy token was left from a prior login, remove it. We cannot
         retrieve the token after creation, so we are forced to create a new one.
         '''
         try:
@@ -84,10 +84,10 @@ class GalaxyLogin(object):
                                         validate_certs=self._validate_certs, http_agent=user_agent()))
         except HTTPError as e:
             res = json.load(e)
-            raise AnsibleError(res['message'])
+            raise AssibleError(res['message'])
 
         for token in tokens:
-            if token['note'] == 'ansible-galaxy login':
+            if token['note'] == 'assible-galaxy login':
                 display.vvvvv('removing token: %s' % token['token_last_eight'])
                 try:
                     open_url('https://api.github.com/authorizations/%d' % token['id'],
@@ -95,19 +95,19 @@ class GalaxyLogin(object):
                              force_basic_auth=True, validate_certs=self._validate_certs, http_agent=user_agent())
                 except HTTPError as e:
                     res = json.load(e)
-                    raise AnsibleError(res['message'])
+                    raise AssibleError(res['message'])
 
     def create_github_token(self):
         '''
-        Create a personal authorization token with a note of 'ansible-galaxy login'
+        Create a personal authorization token with a note of 'assible-galaxy login'
         '''
         self.remove_github_token()
-        args = json.dumps({"scopes": ["public_repo"], "note": "ansible-galaxy login"})
+        args = json.dumps({"scopes": ["public_repo"], "note": "assible-galaxy login"})
         try:
             data = json.load(open_url(self.GITHUB_AUTH, url_username=self.github_username,
                                       url_password=self.github_password, force_basic_auth=True, data=args,
                                       validate_certs=self._validate_certs, http_agent=user_agent()))
         except HTTPError as e:
             res = json.load(e)
-            raise AnsibleError(res['message'])
+            raise AssibleError(res['message'])
         return data['token']

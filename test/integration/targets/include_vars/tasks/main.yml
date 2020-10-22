@@ -15,8 +15,8 @@
     that:
       - "testing == 789"
       - "base_dir == 'environments/development'"
-      - "{{ included_one_file.ansible_included_var_files | length }} == 1"
-      - "'vars/environments/development/all.yml' in included_one_file.ansible_included_var_files[0]"
+      - "{{ included_one_file.assible_included_var_files | length }} == 1"
+      - "'vars/environments/development/all.yml' in included_one_file.assible_included_var_files[0]"
 
 - name: include the vars/environments/development/all.yml and save results in all
   include_vars:
@@ -51,7 +51,7 @@
   assert:
     that:
       - webapp_version is defined
-      - "'file_without_extension' in '{{ include_without_file_extension.ansible_included_var_files | join(' ') }}'"
+      - "'file_without_extension' in '{{ include_without_file_extension.assible_included_var_files | join(' ') }}'"
 
 - name: include every directory in vars
   include_vars:
@@ -65,12 +65,12 @@
       - "testing == 456"
       - "base_dir == 'services'"
       - "webapp_containers == 10"
-      - "{{ include_every_dir.ansible_included_var_files | length }} == 6"
-      - "'vars/all/all.yml' in include_every_dir.ansible_included_var_files[0]"
-      - "'vars/environments/development/all.yml' in include_every_dir.ansible_included_var_files[1]"
-      - "'vars/environments/development/services/webapp.yml' in include_every_dir.ansible_included_var_files[2]"
-      - "'vars/services/webapp.yml' in include_every_dir.ansible_included_var_files[4]"
-      - "'vars/webapp/file_without_extension' in include_every_dir.ansible_included_var_files[5]"
+      - "{{ include_every_dir.assible_included_var_files | length }} == 6"
+      - "'vars/all/all.yml' in include_every_dir.assible_included_var_files[0]"
+      - "'vars/environments/development/all.yml' in include_every_dir.assible_included_var_files[1]"
+      - "'vars/environments/development/services/webapp.yml' in include_every_dir.assible_included_var_files[2]"
+      - "'vars/services/webapp.yml' in include_every_dir.assible_included_var_files[4]"
+      - "'vars/webapp/file_without_extension' in include_every_dir.assible_included_var_files[5]"
 
 - name: include every directory in vars except files matching webapp.yml
   include_vars:
@@ -85,9 +85,9 @@
     that:
       - "testing == 789"
       - "base_dir == 'environments/development'"
-      - "{{ include_without_webapp.ansible_included_var_files | length }} == 3"
-      - "'webapp.yml' not in '{{ include_without_webapp.ansible_included_var_files | join(' ') }}'"
-      - "'file_without_extension' not in '{{ include_without_webapp.ansible_included_var_files | join(' ') }}'"
+      - "{{ include_without_webapp.assible_included_var_files | length }} == 3"
+      - "'webapp.yml' not in '{{ include_without_webapp.assible_included_var_files | join(' ') }}'"
+      - "'file_without_extension' not in '{{ include_without_webapp.assible_included_var_files | join(' ') }}'"
 
 - name: include only files matching webapp.yml
   include_vars:
@@ -101,9 +101,9 @@
       - "testing == 101112"
       - "base_dir == 'development/services'"
       - "webapp_containers == 20"
-      - "{{ include_match_webapp.ansible_included_var_files | length }} == 1"
-      - "'vars/environments/development/services/webapp.yml' in include_match_webapp.ansible_included_var_files[0]"
-      - "'all.yml' not in '{{ include_match_webapp.ansible_included_var_files | join(' ') }}'"
+      - "{{ include_match_webapp.assible_included_var_files | length }} == 1"
+      - "'vars/environments/development/services/webapp.yml' in include_match_webapp.assible_included_var_files[0]"
+      - "'all.yml' not in '{{ include_match_webapp.assible_included_var_files | join(' ') }}'"
 
 - name: include only files matching webapp.yml and store results in webapp
   include_vars:

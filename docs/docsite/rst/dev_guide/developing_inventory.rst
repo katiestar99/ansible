@@ -4,13 +4,13 @@
 Developing dynamic inventory
 ****************************
 
-Ansible can pull inventory information from dynamic sources, including cloud sources, by using the supplied :ref:`inventory plugins <inventory_plugins>`. For details about how to pull inventory information, see :ref:`dynamic_inventory`. If the source you want is not currently covered by existing plugins, you can create your own inventory plugin as with any other plugin type.
+Assible can pull inventory information from dynamic sources, including cloud sources, by using the supplied :ref:`inventory plugins <inventory_plugins>`. For details about how to pull inventory information, see :ref:`dynamic_inventory`. If the source you want is not currently covered by existing plugins, you can create your own inventory plugin as with any other plugin type.
 
 In previous versions, you had to create a script or program that could output JSON in the correct format when invoked with the proper arguments.
 You can still use and write inventory scripts, as we ensured backwards compatibility via the :ref:`script inventory plugin <script_inventory>`
 and there is no restriction on the programming language used.
 If you choose to write a script, however, you will need to implement some features yourself such as caching, configuration management, dynamic variable and group composition, and so on.
-If you use :ref:`inventory plugins <inventory_plugins>` instead, you can leverage the Ansible codebase and add these common features automatically.
+If you use :ref:`inventory plugins <inventory_plugins>` instead, you can leverage the Assible codebase and add these common features automatically.
 
 .. contents:: Topics
    :local:
@@ -66,11 +66,11 @@ The first thing you want to do is use the base class:
 
 .. code-block:: python
 
-    from ansible.plugins.inventory import BaseInventoryPlugin
+    from assible.plugins.inventory import BaseInventoryPlugin
 
     class InventoryModule(BaseInventoryPlugin):
 
-        NAME = 'myplugin'  # used internally by Ansible, it should match the file name but not required
+        NAME = 'myplugin'  # used internally by Assible, it should match the file name but not required
 
 If the inventory plugin is in a collection, the NAME should be in the 'namespace.collection_name.myplugin' format. The base class has a couple of methods that each plugin should implement and a few helpers for parsing the inventory source and updating the inventory.
 
@@ -78,7 +78,7 @@ After you have the basic plugin working, you can incorporate other features by a
 
 .. code-block:: python
 
-    from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
+    from assible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
 
     class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
@@ -91,7 +91,7 @@ For the bulk of the work in a plugin, we mostly want to deal with 2 methods ``ve
 verify_file method
 ^^^^^^^^^^^^^^^^^^
 
-Ansible uses this method to quickly determine if the inventory source is usable by the plugin. The determination does not need to be 100% accurate, as there might be an overlap in what plugins can handle and by default Ansible will try the enabled plugins as per their sequence.
+Assible uses this method to quickly determine if the inventory source is usable by the plugin. The determination does not need to be 100% accurate, as there might be an overlap in what plugins can handle and by default Assible will try the enabled plugins as per their sequence.
 
 .. code-block:: python
 
@@ -132,7 +132,7 @@ This method does the bulk of the work in the plugin.
 It takes the following parameters:
 
  * inventory: inventory object with existing data and the methods to add hosts/groups/variables to inventory
- * loader: Ansible's DataLoader. The DataLoader can read files, auto load JSON/YAML and decrypt vaulted data, and cache read files.
+ * loader: Assible's DataLoader. The DataLoader can read files, auto load JSON/YAML and decrypt vaulted data, and cache read files.
  * path: string with inventory source (this is usually a path, but is not required)
  * cache: indicates whether the plugin should use or avoid caches (cache plugin and/or loader)
 
@@ -147,7 +147,7 @@ The base class does some minimal assignment for reuse in other methods.
         self.inventory = inventory
         self.templar = Templar(loader=loader)
 
-It is up to the plugin now to parse the provided inventory source and translate it into Ansible inventory.
+It is up to the plugin now to parse the provided inventory source and translate it into Assible inventory.
 To facilitate this, the example below uses a few helper functions:
 
 .. code-block:: python
@@ -182,12 +182,12 @@ To facilitate this, the example below uses a few helper functions:
             for colo in mydata:
                 for server in mydata[colo]['servers']:
                     self.inventory.add_host(server['name'])
-                    self.inventory.set_variable(server['name'], 'ansible_host', server['external_ip'])
+                    self.inventory.set_variable(server['name'], 'assible_host', server['external_ip'])
 
-The specifics will vary depending on API and structure returned. Remember that if you get an inventory source error or any other issue, you should ``raise AnsibleParserError`` to let Ansible know that the source was invalid or the process failed.
+The specifics will vary depending on API and structure returned. Remember that if you get an inventory source error or any other issue, you should ``raise AssibleParserError`` to let Assible know that the source was invalid or the process failed.
 
 For examples on how to implement an inventory plugin, see the source code here:
-`lib/ansible/plugins/inventory <https://github.com/ansible/ansible/tree/devel/lib/ansible/plugins/inventory>`_.
+`lib/assible/plugins/inventory <https://github.com/assible/assible/tree/devel/lib/assible/plugins/inventory>`_.
 
 .. _inventory_plugin_caching:
 
@@ -284,7 +284,7 @@ For example, if you use the integrated caching, ``cache_plugin``, ``cache_timeou
 The 'auto' plugin
 -----------------
 
-From Ansible 2.5 onwards, we include the :ref:`auto inventory plugin <auto_inventory>` and enable it by default. If the ``plugin`` field in your standard configuration file matches the name of your inventory plugin, the ``auto`` inventory plugin will load your plugin. The 'auto' plugin makes it easier to use your plugin without having to update configurations.
+From Assible 2.5 onwards, we include the :ref:`auto inventory plugin <auto_inventory>` and enable it by default. If the ``plugin`` field in your standard configuration file matches the name of your inventory plugin, the ``auto`` inventory plugin will load your plugin. The 'auto' plugin makes it easier to use your plugin without having to update configurations.
 
 
 .. _inventory_scripts:
@@ -301,7 +301,7 @@ Even though we now have inventory plugins, we still support inventory scripts, n
 Inventory script conventions
 ----------------------------
 
-Inventory scripts must accept the ``--list`` and ``--host <hostname>`` arguments. Although other arguments are allowed, Ansible will not use them.
+Inventory scripts must accept the ``--list`` and ``--host <hostname>`` arguments. Although other arguments are allowed, Assible will not use them.
 Such arguments might still be useful for executing the scripts directly.
 
 When the script is called with the single argument ``--list``, the script must output to stdout a JSON-encoded hash or
@@ -345,7 +345,7 @@ Tuning the external inventory script
 
 .. versionadded:: 1.3
 
-The stock inventory script system mentioned above works for all versions of Ansible, but calling ``--host`` for every host can be rather inefficient, especially if it involves API calls to a remote subsystem.
+The stock inventory script system mentioned above works for all versions of Assible, but calling ``--host`` for every host can be rather inefficient, especially if it involves API calls to a remote subsystem.
 
 To avoid this inefficiency, if the inventory script returns a top-level element called "_meta", it is possible to return all the host variables in a single script execution. When this meta element contains a value for "hostvars", the inventory script will not be invoked with ``--host`` for each host. This behavior results in a significant performance increase for large numbers of hosts.
 
@@ -368,7 +368,7 @@ The data to be added to the top-level JSON dictionary looks like this::
         }
     }
 
-To satisfy the requirements of using ``_meta``, to prevent ansible from calling your inventory with ``--host`` you must at least populate ``_meta`` with an empty ``hostvars`` dictionary.
+To satisfy the requirements of using ``_meta``, to prevent assible from calling your inventory with ``--host`` you must at least populate ``_meta`` with an empty ``hostvars`` dictionary.
 For example::
 
     {
@@ -404,7 +404,7 @@ A skeleton example of this JSON object is:
        }
    }
 
-An easy way to see how this should look is using :ref:`ansible-inventory`, which also supports ``--list`` and ``--host`` parameters like an inventory script would.
+An easy way to see how this should look is using :ref:`assible-inventory`, which also supports ``--list`` and ``--host`` parameters like an inventory script would.
 
 .. seealso::
 
@@ -414,9 +414,9 @@ An easy way to see how this should look is using :ref:`ansible-inventory`, which
        Get started with developing a module
    :ref:`developing_plugins`
        How to develop plugins
-   `Ansible Tower <https://www.ansible.com/products/tower>`_
-       REST API endpoint and GUI for Ansible, syncs with dynamic inventory
-   `Development Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `Assible Tower <https://www.assible.com/products/tower>`_
+       REST API endpoint and GUI for Assible, syncs with dynamic inventory
+   `Development Mailing List <https://groups.google.com/group/assible-devel>`_
        Mailing list for development topics
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

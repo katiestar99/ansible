@@ -1,19 +1,19 @@
 # Copyright 2012, Tim Bielawa <tbielawa@redhat.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -25,12 +25,12 @@ import time
 import tty
 
 from os import isatty
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.module_utils.six import PY3
-from ansible.plugins.action import ActionBase
-from ansible.utils.display import Display
+from assible.errors import AssibleError
+from assible.module_utils._text import to_text, to_native
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils.six import PY3
+from assible.plugins.action import ActionBase
+from assible.utils.display import Display
 
 display = Display()
 
@@ -54,12 +54,12 @@ else:
     CLEAR_TO_EOL = b'\x1b[K'
 
 
-class AnsibleTimeoutExceeded(Exception):
+class AssibleTimeoutExceeded(Exception):
     pass
 
 
 def timeout_handler(signum, frame):
-    raise AnsibleTimeoutExceeded
+    raise AssibleTimeoutExceeded
 
 
 def clear_line(stdout):
@@ -252,9 +252,9 @@ class ActionModule(ActionBase):
 
                     clear_line(stdout)
 
-                    raise AnsibleError('user requested abort!')
+                    raise AssibleError('user requested abort!')
 
-        except AnsibleTimeoutExceeded:
+        except AssibleTimeoutExceeded:
             # this is the exception we expect when the alarm signal
             # fires, so we simply ignore it to move into the cleanup
             pass

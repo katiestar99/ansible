@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -9,9 +9,9 @@ __metaclass__ = type
 import os
 import pytest
 
-import ansible.constants as C
-from ansible.galaxy.token import GalaxyToken, NoTokenSentinel
-from ansible.module_utils._text import to_bytes, to_text
+import assible.constants as C
+from assible.galaxy.token import GalaxyToken, NoTokenSentinel
+from assible.module_utils._text import to_bytes, to_text
 
 
 @pytest.fixture()

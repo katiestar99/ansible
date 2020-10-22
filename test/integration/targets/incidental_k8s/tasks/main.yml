@@ -1,6 +1,6 @@
 - set_fact:
     virtualenv: "{{ remote_tmp_dir }}/virtualenv"
-    virtualenv_command: "{{ ansible_python_interpreter }} -m virtualenv"
+    virtualenv_command: "{{ assible_python_interpreter }} -m virtualenv"
 
 - set_fact:
     virtualenv_interpreter: "{{ virtualenv }}/bin/python"
@@ -20,7 +20,7 @@
 
 - include_tasks: validate_not_installed.yml
   vars:
-    ansible_python_interpreter: "{{ virtualenv_interpreter }}"
+    assible_python_interpreter: "{{ virtualenv_interpreter }}"
 
 - file:
     path: "{{ virtualenv }}"
@@ -40,8 +40,8 @@
 
 - include_tasks: validate_installed.yml
   vars:
-    ansible_python_interpreter: "{{ virtualenv_interpreter }}"
-    playbook_namespace: ansible-test-k8s-validate
+    assible_python_interpreter: "{{ virtualenv_interpreter }}"
+    playbook_namespace: assible-test-k8s-validate
 
 - file:
     path: "{{ virtualenv }}"
@@ -61,9 +61,9 @@
 
 - include_tasks: older_openshift_fail.yml
   vars:
-    ansible_python_interpreter: "{{ virtualenv_interpreter }}"
+    assible_python_interpreter: "{{ virtualenv_interpreter }}"
     recreate_crd_default_merge_expectation: recreate_crd is failed
-    playbook_namespace: ansible-test-k8s-older-openshift
+    playbook_namespace: assible-test-k8s-older-openshift
 
 - file:
     path: "{{ virtualenv }}"
@@ -82,9 +82,9 @@
 
 - include_tasks: full_test.yml
   vars:
-    ansible_python_interpreter: "{{ virtualenv_interpreter }}"
+    assible_python_interpreter: "{{ virtualenv_interpreter }}"
     create_crd_with_apply: no
-    playbook_namespace: ansible-test-k8s-full
+    playbook_namespace: assible-test-k8s-full
 
 - file:
     path: "{{ virtualenv }}"

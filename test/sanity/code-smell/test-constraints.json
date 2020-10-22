@@ -1,6 +1,6 @@
 {
     "prefixes": [
-        "test/lib/ansible_test/_data/requirements/"
+        "test/lib/assible_test/_data/requirements/"
     ],
     "extensions": [
         ".txt"

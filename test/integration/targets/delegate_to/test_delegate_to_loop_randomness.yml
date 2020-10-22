@@ -7,15 +7,15 @@
       add_host:
         name: "foo{{item}}"
         groups: foo
-        ansible_connection: local
-        ansible_python_interpreter: "{{ ansible_playbook_python }}"
+        assible_connection: local
+        assible_python_interpreter: "{{ assible_playbook_python }}"
       loop: "{{ range(10)|list }}"
 
     # We expect all of the next 3 runs to succeeed
     # this is done multiple times to increase randomness
     - assert:
         that:
-          - item in ansible_delegated_vars
+          - item in assible_delegated_vars
       delegate_to: "{{ item }}"
       loop:
         - "{{ groups.foo|random }}"
@@ -24,7 +24,7 @@
 
     - assert:
         that:
-          - item in ansible_delegated_vars
+          - item in assible_delegated_vars
       delegate_to: "{{ item }}"
       loop:
         - "{{ groups.foo|random }}"
@@ -33,7 +33,7 @@
 
     - assert:
         that:
-          - item in ansible_delegated_vars
+          - item in assible_delegated_vars
       delegate_to: "{{ item }}"
       loop:
         - "{{ groups.foo|random }}"

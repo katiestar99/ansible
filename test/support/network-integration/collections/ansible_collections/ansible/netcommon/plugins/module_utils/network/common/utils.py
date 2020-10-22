@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -36,16 +36,16 @@ import json
 
 from itertools import chain
 
-from ansible.module_utils._text import to_text, to_bytes
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.module_utils.six import iteritems, string_types
-from ansible.module_utils import basic
-from ansible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils._text import to_text, to_bytes
+from assible.module_utils.common._collections_compat import Mapping
+from assible.module_utils.six import iteritems, string_types
+from assible.module_utils import basic
+from assible.module_utils.parsing.convert_bool import boolean
 
 # Backwards compatibility for 3rd party modules
-# TODO(pabelanger): With move to ansible.netcommon, we should clean this code
+# TODO(pabelanger): With move to assible.netcommon, we should clean this code
 # up and have modules import directly themself.
-from ansible.module_utils.common.network import (  # noqa: F401
+from assible.module_utils.common.network import (  # noqa: F401
     to_bits,
     is_netmask,
     is_masklen,
@@ -113,7 +113,7 @@ def sort_list(val):
 class Entity(object):
     """Transforms a dict to with an argument spec
 
-    This class will take a dict and apply an Ansible argument spec to the
+    This class will take a dict and apply an Assible argument spec to the
     values.  The resulting dict will contain all of the keys in the param
     with appropriate values set.
 
@@ -134,7 +134,7 @@ class Entity(object):
         * key - specifies how to map a single value to a dict
         * read_from - read and apply the argument_spec from the module
         * required - a value is required
-        * type - type of value (uses AnsibleModule type checker)
+        * type - type of value (uses AssibleModule type checker)
         * fallback - implements fallback function
         * choices - set of valid options
         * default - default value
@@ -218,7 +218,7 @@ class Entity(object):
                         value[name] = fallback_strategy(
                             *fallback_args, **fallback_kwargs
                         )
-                    except basic.AnsibleFallbackNotFound:
+                    except basic.AssibleFallbackNotFound:
                         continue
 
             if attr.get("required") and value.get(name) is None:
@@ -496,7 +496,7 @@ def _fallback(fallback):
             args = item
     try:
         return strategy(*args, **kwargs)
-    except basic.AnsibleFallbackNotFound:
+    except basic.AssibleFallbackNotFound:
         pass
 
 
@@ -621,15 +621,15 @@ def remove_empties(cfg_dict):
 
 def validate_config(spec, data):
     """
-    Validate if the input data against the AnsibleModule spec format
-    :param spec: Ansible argument spec
+    Validate if the input data against the AssibleModule spec format
+    :param spec: Assible argument spec
     :param data: Data to be validated
     :return:
     """
-    params = basic._ANSIBLE_ARGS
-    basic._ANSIBLE_ARGS = to_bytes(json.dumps({"ANSIBLE_MODULE_ARGS": data}))
-    validated_data = basic.AnsibleModule(spec).params
-    basic._ANSIBLE_ARGS = params
+    params = basic._ASSIBLE_ARGS
+    basic._ASSIBLE_ARGS = to_bytes(json.dumps({"ASSIBLE_MODULE_ARGS": data}))
+    validated_data = basic.AssibleModule(spec).params
+    basic._ASSIBLE_ARGS = params
     return validated_data
 
 

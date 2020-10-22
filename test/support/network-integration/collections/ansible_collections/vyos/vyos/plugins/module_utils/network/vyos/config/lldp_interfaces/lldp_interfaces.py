@@ -16,18 +16,18 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.cfg.base import (
     ConfigBase,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.facts import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.facts.facts import (
     Facts,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
     dict_diff,
 )
-from ansible.module_utils.six import iteritems
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.utils.utils import (
+from assible.module_utils.six import iteritems
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.utils.utils import (
     search_obj_in_list,
     search_dict_tv_in_list,
     key_value_in_dict,
@@ -63,7 +63,7 @@ class Lldp_interfaces(ConfigBase):
         facts, _warnings = Facts(self._module).get_facts(
             self.gather_subset, self.gather_network_resources
         )
-        lldp_interfaces_facts = facts["ansible_network_resources"].get(
+        lldp_interfaces_facts = facts["assible_network_resources"].get(
             "lldp_interfaces"
         )
         if not lldp_interfaces_facts:

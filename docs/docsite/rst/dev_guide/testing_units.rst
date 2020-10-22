@@ -7,7 +7,7 @@ Unit Tests
 **********
 
 Unit tests are small isolated tests that target a specific library or module.  Unit tests
-in Ansible are currently the only way of driving tests from python within Ansible's
+in Assible are currently the only way of driving tests from python within Assible's
 continuous integration process. This means that in some circumstances the tests may be a
 bit wider than just units.
 
@@ -17,8 +17,8 @@ Available Tests
 ===============
 
 Unit tests can be found in `test/units
-<https://github.com/ansible/ansible/tree/devel/test/units>`_. Notice that the directory
-structure of the tests matches that of ``lib/ansible/``.
+<https://github.com/assible/assible/tree/devel/test/units>`_. Notice that the directory
+structure of the tests matches that of ``lib/assible/``.
 
 Running Tests
 =============
@@ -27,37 +27,37 @@ Running Tests
    To run unit tests using docker, always use the default docker image
    by passing the ``--docker`` or ``--docker default`` argument.
 
-The Ansible unit tests can be run across the whole code base by doing:
+The Assible unit tests can be run across the whole code base by doing:
 
 .. code:: shell
 
-    cd /path/to/ansible/source
+    cd /path/to/assible/source
     source hacking/env-setup
-    ansible-test units --docker -v
+    assible-test units --docker -v
 
 Against a single file by doing:
 
 .. code:: shell
 
-   ansible-test units --docker -v apt
+   assible-test units --docker -v apt
 
 Or against a specific Python version by doing:
 
 .. code:: shell
 
-   ansible-test units --docker -v --python 2.7 apt
+   assible-test units --docker -v --python 2.7 apt
 
 If you are running unit tests against things other than modules, such as module utilities, specify the whole file path:
 
 .. code:: shell
 
-   ansible-test units --docker -v test/units/module_utils/basic/test_imports.py
+   assible-test units --docker -v test/units/module_utils/basic/test_imports.py
 
 For advanced usage see the online help::
 
-   ansible-test units --help
+   assible-test units --help
 
-You can also run tests in Ansible's continuous integration system by opening a pull
+You can also run tests in Assible's continuous integration system by opening a pull
 request.  This will automatically determine which tests to run based on the changes made
 in your pull request.
 
@@ -65,25 +65,25 @@ in your pull request.
 Installing dependencies
 =======================
 
-If you are running ``ansible-test`` with the ``--docker`` or ``--venv`` option you do not need to install dependencies manually.
+If you are running ``assible-test`` with the ``--docker`` or ``--venv`` option you do not need to install dependencies manually.
 
 Otherwise you can install dependencies using the ``--requirements`` option, which will
 install all the required dependencies needed for unit tests. For example:
 
 .. code:: shell
 
-   ansible-test units --python 2.7 --requirements apache2_module
+   assible-test units --python 2.7 --requirements apache2_module
 
 
 The list of unit test requirements can be found at `test/units/requirements.txt
-<https://github.com/ansible/ansible/tree/devel/test/units/requirements.txt>`_.
+<https://github.com/assible/assible/tree/devel/test/units/requirements.txt>`_.
 
-This does not include the list of unit test requirements for ``ansible-test`` itself,
-which can be found at `test/lib/ansible_test/_data/requirements/units.txt
-<https://github.com/ansible/ansible/tree/devel/test/lib/ansible_test/_data/requirements/units.txt>`_.
+This does not include the list of unit test requirements for ``assible-test`` itself,
+which can be found at `test/lib/assible_test/_data/requirements/units.txt
+<https://github.com/assible/assible/tree/devel/test/lib/assible_test/_data/requirements/units.txt>`_.
 
 See also the `constraints
-<https://github.com/ansible/ansible/blob/devel/test/lib/ansible_test/_data/requirements/constraints.txt>`_
+<https://github.com/assible/assible/blob/devel/test/lib/assible_test/_data/requirements/constraints.txt>`_
 applicable to all test commands.
 
 
@@ -100,7 +100,7 @@ Extending unit tests
 Structuring Unit Tests
 ``````````````````````
 
-Ansible drives unit tests through `pytest <https://docs.pytest.org/en/latest/>`_. This
+Assible drives unit tests through `pytest <https://docs.pytest.org/en/latest/>`_. This
 means that tests can either be written a simple functions which are included in any file
 name like ``test_<something>.py`` or as classes.
 
@@ -166,8 +166,8 @@ Fixtures files
 To mock out fetching results from devices, or provide other complex data structures that
 come from external libraries, you can use ``fixtures`` to read in pre-generated data.
 
-You can check how `fixtures <https://github.com/ansible/ansible/tree/devel/test/units/module_utils/facts/fixtures/cpuinfo>`_
-are used in `cpuinfo fact tests <https://github.com/ansible/ansible/blob/9f72ff80e3fe173baac83d74748ad87cb6e20e64/test/units/module_utils/facts/hardware/linux_data.py#L384>`_
+You can check how `fixtures <https://github.com/assible/assible/tree/devel/test/units/module_utils/facts/fixtures/cpuinfo>`_
+are used in `cpuinfo fact tests <https://github.com/assible/assible/blob/9f72ff80e3fe173baac83d74748ad87cb6e20e64/test/units/module_utils/facts/hardware/linux_data.py#L384>`_
 
 If you are simulating APIs you may find that Python placebo is useful.  See
 :ref:`testing_units_modules` for more information.
@@ -176,25 +176,25 @@ If you are simulating APIs you may find that Python placebo is useful.  See
 Code Coverage For New or Updated Unit Tests
 ```````````````````````````````````````````
 New code will be missing from the codecov.io coverage reports (see :ref:`developing_testing`), so
-local reporting is needed.  Most ``ansible-test`` commands allow you to collect code
+local reporting is needed.  Most ``assible-test`` commands allow you to collect code
 coverage; this is particularly useful when to indicate where to extend testing.
 
-To collect coverage data add the ``--coverage`` argument to your ``ansible-test`` command line:
+To collect coverage data add the ``--coverage`` argument to your ``assible-test`` command line:
 
 .. code:: shell
 
-   ansible-test units --coverage apt
-   ansible-test coverage html
+   assible-test units --coverage apt
+   assible-test coverage html
 
 Results will be written to ``test/results/reports/coverage/index.html``
 
 Reports can be generated in several different formats:
 
-* ``ansible-test coverage report`` - Console report.
-* ``ansible-test coverage html`` - HTML report.
-* ``ansible-test coverage xml`` - XML report.
+* ``assible-test coverage report`` - Console report.
+* ``assible-test coverage html`` - HTML report.
+* ``assible-test coverage xml`` - XML report.
 
-To clear data between test runs, use the ``ansible-test coverage erase`` command.  See
+To clear data between test runs, use the ``assible-test coverage erase`` command.  See
 :ref:`testing_running_locally` for more information about generating coverage
 reports.
 
@@ -210,4 +210,4 @@ reports.
    `Python 2 documentation - 25.3. unittest — Unit testing framework <https://docs.python.org/3/library/unittest.html>`_
        The documentation of the earliest supported unittest framework - from Python 2.6
    `pytest: helps you write better programs <https://docs.pytest.org/en/latest/>`_
-       The documentation of pytest - the framework actually used to run Ansible unit tests
+       The documentation of pytest - the framework actually used to run Assible unit tests

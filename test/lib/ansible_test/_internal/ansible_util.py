@@ -1,4 +1,4 @@
-"""Miscellaneous utility functions and classes specific to ansible cli tools."""
+"""Miscellaneous utility functions and classes specific to assible cli tools."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -16,10 +16,10 @@ from .util import (
     display,
     find_python,
     ApplicationError,
-    ANSIBLE_LIB_ROOT,
-    ANSIBLE_TEST_DATA_ROOT,
-    ANSIBLE_BIN_PATH,
-    ANSIBLE_SOURCE_ROOT,
+    ASSIBLE_LIB_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_BIN_PATH,
+    ASSIBLE_SOURCE_ROOT,
 )
 
 from .util_common import (
@@ -42,75 +42,75 @@ from .data import (
 CHECK_YAML_VERSIONS = {}
 
 
-def ansible_environment(args, color=True, ansible_config=None):
+def assible_environment(args, color=True, assible_config=None):
     """
     :type args: CommonConfig
     :type color: bool
-    :type ansible_config: str | None
+    :type assible_config: str | None
     :rtype: dict[str, str]
     """
     env = common_environment()
     path = env['PATH']
 
-    if not path.startswith(ANSIBLE_BIN_PATH + os.path.pathsep):
-        path = ANSIBLE_BIN_PATH + os.path.pathsep + path
+    if not path.startswith(ASSIBLE_BIN_PATH + os.path.pathsep):
+        path = ASSIBLE_BIN_PATH + os.path.pathsep + path
 
-    if not ansible_config:
+    if not assible_config:
         # use the default empty configuration unless one has been provided
-        ansible_config = args.get_ansible_config()
+        assible_config = args.get_assible_config()
 
-    if not args.explain and not os.path.exists(ansible_config):
-        raise ApplicationError('Configuration not found: %s' % ansible_config)
+    if not args.explain and not os.path.exists(assible_config):
+        raise ApplicationError('Configuration not found: %s' % assible_config)
 
-    ansible = dict(
-        ANSIBLE_PYTHON_MODULE_RLIMIT_NOFILE=str(SOFT_RLIMIT_NOFILE),
-        ANSIBLE_FORCE_COLOR='%s' % 'true' if args.color and color else 'false',
-        ANSIBLE_FORCE_HANDLERS='true',  # allow cleanup handlers to run when tests fail
-        ANSIBLE_HOST_PATTERN_MISMATCH='error',  # prevent tests from unintentionally passing when hosts are not found
-        ANSIBLE_INVENTORY='/dev/null',  # force tests to provide inventory
-        ANSIBLE_DEPRECATION_WARNINGS='false',
-        ANSIBLE_HOST_KEY_CHECKING='false',
-        ANSIBLE_RETRY_FILES_ENABLED='false',
-        ANSIBLE_CONFIG=ansible_config,
-        ANSIBLE_LIBRARY='/dev/null',
-        ANSIBLE_DEVEL_WARNING='false',  # Don't show warnings that CI is running devel
-        PYTHONPATH=get_ansible_python_path(),
+    assible = dict(
+        ASSIBLE_PYTHON_MODULE_RLIMIT_NOFILE=str(SOFT_RLIMIT_NOFILE),
+        ASSIBLE_FORCE_COLOR='%s' % 'true' if args.color and color else 'false',
+        ASSIBLE_FORCE_HANDLERS='true',  # allow cleanup handlers to run when tests fail
+        ASSIBLE_HOST_PATTERN_MISMATCH='error',  # prevent tests from unintentionally passing when hosts are not found
+        ASSIBLE_INVENTORY='/dev/null',  # force tests to provide inventory
+        ASSIBLE_DEPRECATION_WARNINGS='false',
+        ASSIBLE_HOST_KEY_CHECKING='false',
+        ASSIBLE_RETRY_FILES_ENABLED='false',
+        ASSIBLE_CONFIG=assible_config,
+        ASSIBLE_LIBRARY='/dev/null',
+        ASSIBLE_DEVEL_WARNING='false',  # Don't show warnings that CI is running devel
+        PYTHONPATH=get_assible_python_path(),
         PAGER='/bin/cat',
         PATH=path,
         # give TQM worker processes time to report code coverage results
         # without this the last task in a play may write no coverage file, an empty file, or an incomplete file
         # enabled even when not using code coverage to surface warnings when worker processes do not exit cleanly
-        ANSIBLE_WORKER_SHUTDOWN_POLL_COUNT='100',
-        ANSIBLE_WORKER_SHUTDOWN_POLL_DELAY='0.1',
+        ASSIBLE_WORKER_SHUTDOWN_POLL_COUNT='100',
+        ASSIBLE_WORKER_SHUTDOWN_POLL_DELAY='0.1',
     )
 
     if isinstance(args, IntegrationConfig) and args.coverage:
-        # standard path injection is not effective for ansible-connection, instead the location must be configured
-        # ansible-connection only requires the injector for code coverage
-        # the correct python interpreter is already selected using the sys.executable used to invoke ansible
-        ansible.update(dict(
-            ANSIBLE_CONNECTION_PATH=os.path.join(ANSIBLE_TEST_DATA_ROOT, 'injector', 'ansible-connection'),
+        # standard path injection is not effective for assible-connection, instead the location must be configured
+        # assible-connection only requires the injector for code coverage
+        # the correct python interpreter is already selected using the sys.executable used to invoke assible
+        assible.update(dict(
+            ASSIBLE_CONNECTION_PATH=os.path.join(ASSIBLE_TEST_DATA_ROOT, 'injector', 'assible-connection'),
         ))
 
     if isinstance(args, PosixIntegrationConfig):
-        ansible.update(dict(
-            ANSIBLE_PYTHON_INTERPRETER='/set/ansible_python_interpreter/in/inventory',  # force tests to set ansible_python_interpreter in inventory
+        assible.update(dict(
+            ASSIBLE_PYTHON_INTERPRETER='/set/assible_python_interpreter/in/inventory',  # force tests to set assible_python_interpreter in inventory
         ))
 
-    env.update(ansible)
+    env.update(assible)
 
     if args.debug:
         env.update(dict(
-            ANSIBLE_DEBUG='true',
-            ANSIBLE_LOG_PATH=os.path.join(ResultType.LOGS.name, 'debug.log'),
+            ASSIBLE_DEBUG='true',
+            ASSIBLE_LOG_PATH=os.path.join(ResultType.LOGS.name, 'debug.log'),
         ))
 
     if data_context().content.collection:
         env.update(dict(
-            ANSIBLE_COLLECTIONS_PATH=data_context().content.collection.root,
+            ASSIBLE_COLLECTIONS_PATH=data_context().content.collection.root,
         ))
 
-    if data_context().content.is_ansible:
+    if data_context().content.is_assible:
         env.update(configure_plugin_paths(args))
 
     return env
@@ -121,13 +121,13 @@ def configure_plugin_paths(args):  # type: (CommonConfig) -> t.Dict[str, str]
     if not isinstance(args, IntegrationConfig):
         return {}
 
-    support_path = os.path.join(ANSIBLE_SOURCE_ROOT, 'test', 'support', args.command)
+    support_path = os.path.join(ASSIBLE_SOURCE_ROOT, 'test', 'support', args.command)
 
     # provide private copies of collections for integration tests
     collection_root = os.path.join(support_path, 'collections')
 
     env = dict(
-        ANSIBLE_COLLECTIONS_PATH=collection_root,
+        ASSIBLE_COLLECTIONS_PATH=collection_root,
     )
 
     # provide private copies of plugins for integration tests
@@ -162,7 +162,7 @@ def configure_plugin_paths(args):  # type: (CommonConfig) -> t.Dict[str, str]
         module_utils='module_utils',
     )
 
-    env.update(dict(('ANSIBLE_%s' % key.upper(), os.path.join(plugin_root, value)) for key, value in plugin_map.items()))
+    env.update(dict(('ASSIBLE_%s' % key.upper(), os.path.join(plugin_root, value)) for key, value in plugin_map.items()))
 
     # only configure directories which exist
     env = dict((key, value) for key, value in env.items() if os.path.isdir(value))
@@ -170,24 +170,24 @@ def configure_plugin_paths(args):  # type: (CommonConfig) -> t.Dict[str, str]
     return env
 
 
-def get_ansible_python_path():  # type: () -> str
+def get_assible_python_path():  # type: () -> str
     """
-    Return a directory usable for PYTHONPATH, containing only the ansible package.
+    Return a directory usable for PYTHONPATH, containing only the assible package.
     If a temporary directory is required, it will be cached for the lifetime of the process and cleaned up at exit.
     """
-    if ANSIBLE_SOURCE_ROOT:
-        # when running from source there is no need for a temporary directory to isolate the ansible package
-        return os.path.dirname(ANSIBLE_LIB_ROOT)
+    if ASSIBLE_SOURCE_ROOT:
+        # when running from source there is no need for a temporary directory to isolate the assible package
+        return os.path.dirname(ASSIBLE_LIB_ROOT)
 
     try:
-        return get_ansible_python_path.python_path
+        return get_assible_python_path.python_path
     except AttributeError:
         pass
 
-    python_path = create_temp_dir(prefix='ansible-test-')
-    get_ansible_python_path.python_path = python_path
+    python_path = create_temp_dir(prefix='assible-test-')
+    get_assible_python_path.python_path = python_path
 
-    os.symlink(ANSIBLE_LIB_ROOT, os.path.join(python_path, 'ansible'))
+    os.symlink(ASSIBLE_LIB_ROOT, os.path.join(python_path, 'assible'))
 
     return python_path
 
@@ -205,7 +205,7 @@ def check_pyyaml(args, version, required=True, quiet=False):
         pass
 
     python = find_python(version)
-    stdout, _dummy = run_command(args, [python, os.path.join(ANSIBLE_TEST_DATA_ROOT, 'yamlcheck.py')],
+    stdout, _dummy = run_command(args, [python, os.path.join(ASSIBLE_TEST_DATA_ROOT, 'yamlcheck.py')],
                                  capture=True, always=True)
 
     result = json.loads(stdout)
@@ -245,7 +245,7 @@ def get_collection_detail(args, python):  # type: (EnvironmentConfig, str) -> Co
     collection = data_context().content.collection
     directory = os.path.join(collection.root, collection.directory)
 
-    stdout = run_command(args, [python, os.path.join(ANSIBLE_TEST_DATA_ROOT, 'collection_detail.py'), directory], capture=True, always=True)[0]
+    stdout = run_command(args, [python, os.path.join(ASSIBLE_TEST_DATA_ROOT, 'collection_detail.py'), directory], capture=True, always=True)[0]
     result = json.loads(stdout)
     error = result.get('error')
 

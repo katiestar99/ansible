@@ -1,33 +1,33 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.errors import AnsibleParserError
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.base import Base
-from ansible.playbook.conditional import Conditional
-from ansible.playbook.collectionsearch import CollectionSearch
-from ansible.playbook.helpers import load_list_of_tasks
-from ansible.playbook.role import Role
-from ansible.playbook.taggable import Taggable
-from ansible.utils.sentinel import Sentinel
+from assible.errors import AssibleParserError
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.base import Base
+from assible.playbook.conditional import Conditional
+from assible.playbook.collectionsearch import CollectionSearch
+from assible.playbook.helpers import load_list_of_tasks
+from assible.playbook.role import Role
+from assible.playbook.taggable import Taggable
+from assible.utils.sentinel import Sentinel
 
 
 class Block(Base, Conditional, CollectionSearch, Taggable):
@@ -130,7 +130,7 @@ class Block(Base, Conditional, CollectionSearch, Taggable):
                 use_handlers=self._use_handlers,
             )
         except AssertionError as e:
-            raise AnsibleParserError("A malformed block was encountered while loading a block", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed block was encountered while loading a block", obj=self._ds, orig_exc=e)
 
     def _load_rescue(self, attr, ds):
         try:
@@ -145,7 +145,7 @@ class Block(Base, Conditional, CollectionSearch, Taggable):
                 use_handlers=self._use_handlers,
             )
         except AssertionError as e:
-            raise AnsibleParserError("A malformed block was encountered while loading rescue.", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed block was encountered while loading rescue.", obj=self._ds, orig_exc=e)
 
     def _load_always(self, attr, ds):
         try:
@@ -160,11 +160,11 @@ class Block(Base, Conditional, CollectionSearch, Taggable):
                 use_handlers=self._use_handlers,
             )
         except AssertionError as e:
-            raise AnsibleParserError("A malformed block was encountered while loading always", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed block was encountered while loading always", obj=self._ds, orig_exc=e)
 
     def _validate_always(self, attr, name, value):
         if value and not self.block:
-            raise AnsibleParserError("'%s' keyword cannot be used without 'block'" % name, obj=self._ds)
+            raise AssibleParserError("'%s' keyword cannot be used without 'block'" % name, obj=self._ds)
 
     _validate_rescue = _validate_always
 
@@ -252,8 +252,8 @@ class Block(Base, Conditional, CollectionSearch, Taggable):
         '''
 
         # import is here to avoid import loops
-        from ansible.playbook.task_include import TaskInclude
-        from ansible.playbook.handler_task_include import HandlerTaskInclude
+        from assible.playbook.task_include import TaskInclude
+        from assible.playbook.handler_task_include import HandlerTaskInclude
 
         # we don't want the full set of attributes (the task lists), as that
         # would lead to a serialize/deserialize loop
@@ -406,7 +406,7 @@ class Block(Base, Conditional, CollectionSearch, Taggable):
         call their parents all_parents_static() method. Only Block objects in
         the chain check the statically_loaded value of the parent.
         '''
-        from ansible.playbook.task_include import TaskInclude
+        from assible.playbook.task_include import TaskInclude
         if self._parent:
             if isinstance(self._parent, TaskInclude) and not self._parent.statically_loaded:
                 return False
@@ -415,7 +415,7 @@ class Block(Base, Conditional, CollectionSearch, Taggable):
         return True
 
     def get_first_parent_include(self):
-        from ansible.playbook.task_include import TaskInclude
+        from assible.playbook.task_include import TaskInclude
         if self._parent:
             if isinstance(self._parent, TaskInclude):
                 return self._parent

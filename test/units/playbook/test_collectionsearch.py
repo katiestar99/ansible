@@ -1,28 +1,28 @@
-# (c) 2020 Ansible Project
+# (c) 2020 Assible Project
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.errors import AnsibleParserError
-from ansible.playbook.play import Play
-from ansible.playbook.task import Task
-from ansible.playbook.block import Block
-from ansible.playbook.collectionsearch import CollectionSearch
+from assible.errors import AssibleParserError
+from assible.playbook.play import Play
+from assible.playbook.task import Task
+from assible.playbook.block import Block
+from assible.playbook.collectionsearch import CollectionSearch
 
 import pytest
 
@@ -49,7 +49,7 @@ def test_collection_static_warning(capsys):
 def test_collection_invalid_data_play():
     """Test that collection as a dict at the play level fails with parser error"""
     collection_name = {'name': 'foo'}
-    with pytest.raises(AnsibleParserError):
+    with pytest.raises(AssibleParserError):
         Play.load(dict(
             name="test play",
             hosts=['foo'],
@@ -62,7 +62,7 @@ def test_collection_invalid_data_play():
 def test_collection_invalid_data_task():
     """Test that collection as a dict at the task level fails with parser error"""
     collection_name = {'name': 'foo'}
-    with pytest.raises(AnsibleParserError):
+    with pytest.raises(AssibleParserError):
         Task.load(dict(
             name="test task",
             collections=collection_name,
@@ -72,7 +72,7 @@ def test_collection_invalid_data_task():
 def test_collection_invalid_data_block():
     """Test that collection as a dict at the block level fails with parser error"""
     collection_name = {'name': 'foo'}
-    with pytest.raises(AnsibleParserError):
+    with pytest.raises(AssibleParserError):
         Block.load(dict(
             block=[dict(name="test task", collections=collection_name)]
         ))

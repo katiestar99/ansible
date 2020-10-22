@@ -1,15 +1,15 @@
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = """
     name: varnames
-    author: Ansible Core Team
+    author: Assible Core Team
     version_added: "2.8"
     short_description: Lookup matching variable names
     description:
-      - Retrieves a list of matching Ansible variable names.
+      - Retrieves a list of matching Assible variable names.
     options:
       _terms:
         description: List of Python regex patterns to search for in variable names.
@@ -45,10 +45,10 @@ _value:
 
 import re
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import string_types
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleError
+from assible.module_utils._text import to_native
+from assible.module_utils.six import string_types
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):
@@ -56,7 +56,7 @@ class LookupModule(LookupBase):
     def run(self, terms, variables=None, **kwargs):
 
         if variables is None:
-            raise AnsibleError('No variables available to search')
+            raise AssibleError('No variables available to search')
 
         # no options, yet
         # self.set_options(direct=kwargs)
@@ -66,12 +66,12 @@ class LookupModule(LookupBase):
         for term in terms:
 
             if not isinstance(term, string_types):
-                raise AnsibleError('Invalid setting identifier, "%s" is not a string, it is a %s' % (term, type(term)))
+                raise AssibleError('Invalid setting identifier, "%s" is not a string, it is a %s' % (term, type(term)))
 
             try:
                 name = re.compile(term)
             except Exception as e:
-                raise AnsibleError('Unable to use "%s" as a search parameter: %s' % (term, to_native(e)))
+                raise AssibleError('Unable to use "%s" as a search parameter: %s' % (term, to_native(e)))
 
             for varname in variable_names:
                 if name.search(varname):

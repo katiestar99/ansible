@@ -5,12 +5,12 @@ Packet.net Guide
 Introduction
 ============
 
-`Packet.net <https://packet.net>`_ is a bare metal infrastructure host that's supported by Ansible (>=2.3) via a dynamic inventory script and two cloud modules. The two modules are:
+`Packet.net <https://packet.net>`_ is a bare metal infrastructure host that's supported by Assible (>=2.3) via a dynamic inventory script and two cloud modules. The two modules are:
 
 - packet_sshkey: adds a public SSH key from file or value to the Packet infrastructure. Every subsequently-created device will have this public key installed in .ssh/authorized_keys.
 - packet_device: manages servers on Packet. You can use this module to create, restart and delete devices.
 
-Note, this guide assumes you are familiar with Ansible and how it works. If you're not, have a look at their :ref:`docs <ansible_documentation>` before getting started.
+Note, this guide assumes you are familiar with Assible and how it works. If you're not, have a look at their :ref:`docs <assible_documentation>` before getting started.
 
 Requirements
 ============
@@ -21,7 +21,7 @@ The Packet modules and inventory script connect to the Packet API using the pack
 
     $ pip install packet-python
 
-In order to check the state of devices created by Ansible on Packet, it's a good idea to install one of the `Packet CLI clients <https://www.packet.net/developers/integrations/>`_. Otherwise you can check them via the `Packet portal <https://app.packet.net/portal>`_.
+In order to check the state of devices created by Assible on Packet, it's a good idea to install one of the `Packet CLI clients <https://www.packet.net/developers/integrations/>`_. Otherwise you can check them via the `Packet portal <https://app.packet.net/portal>`_.
 
 To use the modules and inventory script you'll need a Packet API token. You can generate an API token via the Packet portal `here <https://app.packet.net/portal#/api-keys>`__. The simplest way to authenticate yourself is to set the Packet API token in an environment variable:
 
@@ -67,7 +67,7 @@ The following code block is a simple playbook that creates one `Type 0 <https://
           plan: baremetal_0
           facility: sjc1
 
-After running ``ansible-playbook playbook_create.yml``, you should have a server provisioned on Packet. You can verify via a CLI or in the `Packet portal <https://app.packet.net/portal#/projects/list/table>`__.
+After running ``assible-playbook playbook_create.yml``, you should have a server provisioned on Packet. You can verify via a CLI or in the `Packet portal <https://app.packet.net/portal#/projects/list/table>`__.
 
 If you get an error with the message "failed to set machine state present, error: Error 404: Not Found", please verify your project UUID.
 
@@ -132,7 +132,7 @@ The CoreOS cluster will use `etcd <https://etcd.io/>`_ for discovery of other se
 
     $ curl -w "\n" 'https://discovery.etcd.io/new?size=3'
 
-The following playbook will create an SSH key, 3 Packet servers, and then wait until SSH is ready (or until 5 minutes passed). Make sure to substitute the discovery token URL in 'user_data', and the 'project_id' before running ``ansible-playbook``. Also, feel free to change 'plan' and 'facility'.
+The following playbook will create an SSH key, 3 Packet servers, and then wait until SSH is ready (or until 5 minutes passed). Make sure to substitute the discovery token URL in 'user_data', and the 'project_id' before running ``assible-playbook``. Also, feel free to change 'plan' and 'facility'.
 
 .. code-block:: yaml
 
@@ -181,17 +181,17 @@ The following playbook will create an SSH key, 3 Packet servers, and then wait u
         loop: "{{ newhosts.results[0].devices }}"
 
 
-As with most Ansible modules, the default states of the Packet modules are idempotent, meaning the resources in your project will remain the same after re-runs of a playbook. Thus, we can keep the ``packet_sshkey`` module call in our playbook. If the public key is already in your Packet account, the call will have no effect.
+As with most Assible modules, the default states of the Packet modules are idempotent, meaning the resources in your project will remain the same after re-runs of a playbook. Thus, we can keep the ``packet_sshkey`` module call in our playbook. If the public key is already in your Packet account, the call will have no effect.
 
 The second module call provisions 3 Packet Type 0 (specified using the 'plan' parameter) servers in the project identified via the 'project_id' parameter. The servers are all provisioned with CoreOS beta (the 'operating_system' parameter) and are customized with cloud-config user data passed to the 'user_data' parameter.
 
-The ``packet_device`` module has a ``wait_for_public_IPv`` that is used to specify the version of the IP address to wait for (valid values are ``4`` or ``6`` for IPv4 or IPv6). If specified, Ansible will wait until the GET API call for a device contains an Internet-routeable IP address of the specified version. When referring to an IP address of a created device in subsequent module calls, it's wise to use the ``wait_for_public_IPv`` parameter, or ``state: active`` in the packet_device module call.
+The ``packet_device`` module has a ``wait_for_public_IPv`` that is used to specify the version of the IP address to wait for (valid values are ``4`` or ``6`` for IPv4 or IPv6). If specified, Assible will wait until the GET API call for a device contains an Internet-routeable IP address of the specified version. When referring to an IP address of a created device in subsequent module calls, it's wise to use the ``wait_for_public_IPv`` parameter, or ``state: active`` in the packet_device module call.
 
 Run the playbook:
 
 .. code-block:: bash
 
-    $ ansible-playbook playbook_coreos.yml
+    $ assible-playbook playbook_coreos.yml
 
 Once the playbook quits, your new devices should be reachable via SSH. Try to connect to one and check if etcd has started properly:
 
@@ -206,11 +206,11 @@ Once you create a couple of devices, you might appreciate the dynamic inventory 
 Dynamic Inventory Script
 ========================
 
-The dynamic inventory script queries the Packet API for a list of hosts, and exposes it to Ansible so you can easily identify and act on Packet devices.
+The dynamic inventory script queries the Packet API for a list of hosts, and exposes it to Assible so you can easily identify and act on Packet devices.
 
-You can find it in Ansible Community General Collection's git repo at `scripts/inventory/packet_net.py <https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/packet_net.py>`_.
+You can find it in Assible Community General Collection's git repo at `scripts/inventory/packet_net.py <https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/packet_net.py>`_.
 
-The inventory script is configurable via a `ini file <https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/packet_net.ini>`_.
+The inventory script is configurable via a `ini file <https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/packet_net.ini>`_.
 
 If you want to use the inventory script, you must first export your Packet API token to a PACKET_API_TOKEN environment variable.
 
@@ -218,11 +218,11 @@ You can either copy the inventory and ini config out from the cloned git repo, o
 
 .. code-block:: bash
 
-    $ wget https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/packet_net.py
+    $ wget https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/packet_net.py
     $ chmod +x packet_net.py
-    $ wget https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/packet_net.ini
+    $ wget https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/packet_net.ini
 
-In order to understand what the inventory script gives to Ansible you can run:
+In order to understand what the inventory script gives to Assible you can run:
 
 .. code-block:: bash
 
@@ -290,7 +290,7 @@ In the ``['_meta']['hostvars']`` key, there is a list of devices (uniquely ident
 
 In addition to the parameter groups, there are also one-item groups with the UUID or hostname of the device.
 
-You can now target groups in playbooks! The following playbook will install a role that supplies resources for an Ansible target into all devices in the "coreos_beta" group:
+You can now target groups in playbooks! The following playbook will install a role that supplies resources for an Assible target into all devices in the "coreos_beta" group:
 
 .. code-block:: yaml
 
@@ -305,7 +305,7 @@ Don't forget to supply the dynamic inventory in the ``-i`` argument!
 
 .. code-block:: bash
 
-    $ ansible-playbook -u core -i packet_net.py playbook_bootstrap.yml
+    $ assible-playbook -u core -i packet_net.py playbook_bootstrap.yml
 
 
 If you have any questions or comments let us know! help@packet.net

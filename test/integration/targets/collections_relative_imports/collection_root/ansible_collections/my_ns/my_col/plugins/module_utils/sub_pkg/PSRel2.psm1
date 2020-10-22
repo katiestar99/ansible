@@ -1,4 +1,4 @@
-#AnsibleRequires -PowerShell ansible_collections.my_ns.my_col2.plugins.module_utils.PSRel3
+#AssibleRequires -PowerShell assible_collections.my_ns.my_col2.plugins.module_utils.PSRel3
 
 Function Invoke-FromPSRel2 {
     <#

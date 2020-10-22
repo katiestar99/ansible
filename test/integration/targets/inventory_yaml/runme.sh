@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-# handle empty/commented out group keys correctly https://github.com/ansible/ansible/issues/47254
-ANSIBLE_VERBOSITY=0 diff -w <(ansible-inventory -i ./test.yml --list) success.json
+# handle empty/commented out group keys correctly https://github.com/assible/assible/issues/47254
+ASSIBLE_VERBOSITY=0 diff -w <(assible-inventory -i ./test.yml --list) success.json

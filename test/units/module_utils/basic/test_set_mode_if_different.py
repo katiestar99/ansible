@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# (c) 2016, Toshio Kuratomi <tkuratomi@ansible.com>
-# Copyright (c) 2017 Ansible Project
+# (c) 2016, Toshio Kuratomi <tkuratomi@assible.com>
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -40,7 +40,7 @@ def am_check_mode(am):
 
 @pytest.fixture
 def mock_lchmod(mocker):
-    m_lchmod = mocker.patch('ansible.module_utils.basic.os.lchmod', return_value=None, create=True)
+    m_lchmod = mocker.patch('assible.module_utils.basic.os.lchmod', return_value=None, create=True)
     yield m_lchmod
 
 

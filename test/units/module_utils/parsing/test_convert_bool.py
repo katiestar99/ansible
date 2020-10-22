@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2017 Ansible Project
+# Copyright: (c) 2017 Assible Project
 # License: GNU General Public License v3 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt )
 
 # Make coding more python3-ish
@@ -8,7 +8,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils.parsing.convert_bool import boolean
 
 
 class TestBoolean:

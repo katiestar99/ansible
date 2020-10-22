@@ -10,7 +10,7 @@ The ``dict.itervalues`` method has been removed in Python 3. There are two recom
 
 .. code-block:: python
 
-    from ansible.module_utils.six import itervalues
+    from assible.module_utils.six import itervalues
 
     for VALUE in itervalues(DICT):
         pass

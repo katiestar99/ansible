@@ -1,4 +1,4 @@
-#AnsibleRequires -PowerShell .sub_pkg.PSRel2
+#AssibleRequires -PowerShell .sub_pkg.PSRel2
 
 Function Invoke-FromPSRel1 {
     <#

@@ -15,14 +15,14 @@ about: Create a report to help us improve
 ##### COMPONENT NAME
 <!--- Write the short name of the module, plugin, task or feature below, use your best guess if unsure -->
 
-##### ANSIBLE VERSION
-<!--- Paste verbatim output from "ansible --version" between quotes -->
+##### ASSIBLE VERSION
+<!--- Paste verbatim output from "assible --version" between quotes -->
 ```paste below
 
 ```
 
 ##### CONFIGURATION
-<!--- Paste verbatim output from "ansible-config dump --only-changed" between quotes -->
+<!--- Paste verbatim output from "assible-config dump --only-changed" between quotes -->
 ```paste below
 
 ```

@@ -1,4 +1,4 @@
-# Copyright: (c) 2018 Ansible Project
+# Copyright: (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -9,11 +9,11 @@ import json
 import pkgutil
 import re
 
-from ansible import constants as C
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.distro import LinuxDistribution
-from ansible.utils.display import Display
-from ansible.utils.plugin_docs import get_versioned_doclink
+from assible import constants as C
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.distro import LinuxDistribution
+from assible.utils.display import Display
+from assible.utils.plugin_docs import get_versioned_doclink
 from distutils.version import LooseVersion
 from traceback import format_exc
 
@@ -89,7 +89,7 @@ def discover_interpreter(action, interpreter_name, discovery_mode, task_vars):
         if platform_type != 'linux':
             raise NotImplementedError('unsupported platform for extended discovery: {0}'.format(to_native(platform_type)))
 
-        platform_script = pkgutil.get_data('ansible.executor.discovery', 'python_target.py')
+        platform_script = pkgutil.get_data('assible.executor.discovery', 'python_target.py')
 
         # FUTURE: respect pipelining setting instead of just if the connection supports it?
         if action._connection.has_pipelining:
@@ -118,8 +118,8 @@ def discover_interpreter(action, interpreter_name, discovery_mode, task_vars):
                 if not is_silent:
                     action._discovery_deprecation_warnings.append(dict(
                         msg=u"Distribution {0} {1} on host {2} should use {3}, but is using "
-                            u"/usr/bin/python for backward compatibility with prior Ansible releases. "
-                            u"A future Ansible release will default to using the discovered platform "
+                            u"/usr/bin/python for backward compatibility with prior Assible releases. "
+                            u"A future Assible release will default to using the discovered platform "
                             u"python for this host. See {4} for more information"
                             .format(distro, version, host, platform_interpreter,
                                     get_versioned_doclink('reference_appendices/interpreter_discovery.html')),

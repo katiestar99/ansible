@@ -4,7 +4,7 @@ __metaclass__ = type
 import pytest
 
 from packaging.version import InvalidVersion
-from versionhelper.version_helper import AnsibleVersionMunger
+from versionhelper.version_helper import AssibleVersionMunger
 
 
 @pytest.mark.parametrize('version,revision,codename,output_propname,expected', [
@@ -38,7 +38,7 @@ from versionhelper.version_helper import AnsibleVersionMunger
 ])
 def test_output_values(version, revision, codename, output_propname, expected):
     try:
-        v = AnsibleVersionMunger(version, revision, codename)
+        v = AssibleVersionMunger(version, revision, codename)
         assert getattr(v, output_propname) == expected
     except Exception as ex:
         if isinstance(expected, type):

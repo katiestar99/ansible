@@ -5,9 +5,9 @@
 Module format and documentation
 *******************************
 
-If you want to contribute your module to most Ansible collections, you must write your module in Python and follow the standard format described below. (Unless you're writing a Windows module, in which case the :ref:`Windows guidelines <developing_modules_general_windows>` apply.) In addition to following this format, you should review our :ref:`submission checklist <developing_modules_checklist>`, :ref:`programming tips <developing_modules_best_practices>`, and :ref:`strategy for maintaining Python 2 and Python 3 compatibility <developing_python_3>`, as well as information about :ref:`testing <developing_testing>` before you open a pull request.
+If you want to contribute your module to most Assible collections, you must write your module in Python and follow the standard format described below. (Unless you're writing a Windows module, in which case the :ref:`Windows guidelines <developing_modules_general_windows>` apply.) In addition to following this format, you should review our :ref:`submission checklist <developing_modules_checklist>`, :ref:`programming tips <developing_modules_best_practices>`, and :ref:`strategy for maintaining Python 2 and Python 3 compatibility <developing_python_3>`, as well as information about :ref:`testing <developing_testing>` before you open a pull request.
 
-Every Ansible module written in Python must begin with seven standard sections in a particular order, followed by the code. The sections in order are:
+Every Assible module written in Python must begin with seven standard sections in a particular order, followed by the code. The sections in order are:
 
 .. contents::
    :depth: 1
@@ -19,14 +19,14 @@ Every Ansible module written in Python must begin with seven standard sections i
 
 .. warning:: **Copy old modules with care!**
 
-  Some older Ansible modules have ``imports`` at the bottom of the file, ``Copyright`` notices with the full GPL prefix, and/or ``DOCUMENTATION`` fields in the wrong order. These are legacy files that need updating - do not copy them into new modules. Over time we are updating and correcting older modules. Please follow the guidelines on this page!
+  Some older Assible modules have ``imports`` at the bottom of the file, ``Copyright`` notices with the full GPL prefix, and/or ``DOCUMENTATION`` fields in the wrong order. These are legacy files that need updating - do not copy them into new modules. Over time we are updating and correcting older modules. Please follow the guidelines on this page!
 
 .. _shebang:
 
 Python shebang & UTF-8 coding
 ===============================
 
-Begin your Ansible module with ``#!/usr/bin/python`` - this "shebang" allows ``ansible_python_interpreter`` to work. Follow the shebang immediately with ``# -*- coding: utf-8 -*-`` to clarify that the file is UTF-8 encoded.
+Begin your Assible module with ``#!/usr/bin/python`` - this "shebang" allows ``assible_python_interpreter`` to work. Follow the shebang immediately with ``# -*- coding: utf-8 -*-`` to clarify that the file is UTF-8 encoded.
 
 .. _copyright:
 
@@ -56,9 +56,9 @@ When adding a second copyright line for a significant feature or rewrite, add th
     # Copyright: (c) 2015, [Original Contributor(s)]
     # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-.. _ansible_metadata_block:
+.. _assible_metadata_block:
 
-ANSIBLE_METADATA block
+ASSIBLE_METADATA block
 ======================
 
 Since we moved to collections we have deprecated the METADATA functionality, it is no longer required for modules, but it will not break anything if present.
@@ -69,7 +69,7 @@ Since we moved to collections we have deprecated the METADATA functionality, it 
 DOCUMENTATION block
 ===================
 
-After the shebang, the UTF-8 coding, the copyright line, and the license section comes the ``DOCUMENTATION`` block. Ansible's online module documentation is generated from the ``DOCUMENTATION`` blocks in each module's source code. The ``DOCUMENTATION`` block must be valid YAML. You may find it easier to start writing your ``DOCUMENTATION`` string in an :ref:`editor with YAML syntax highlighting <other_tools_and_programs>` before you include it in your Python file. You can start by copying our `example documentation string <https://github.com/ansible/ansible/blob/devel/examples/DOCUMENTATION.yml>`_ into your module file and modifying it. If you run into syntax issues in your YAML, you can validate it on the `YAML Lint <http://www.yamllint.com/>`_ website.
+After the shebang, the UTF-8 coding, the copyright line, and the license section comes the ``DOCUMENTATION`` block. Assible's online module documentation is generated from the ``DOCUMENTATION`` blocks in each module's source code. The ``DOCUMENTATION`` block must be valid YAML. You may find it easier to start writing your ``DOCUMENTATION`` string in an :ref:`editor with YAML syntax highlighting <other_tools_and_programs>` before you include it in your Python file. You can start by copying our `example documentation string <https://github.com/assible/assible/blob/devel/examples/DOCUMENTATION.yml>`_ into your module file and modifying it. If you run into syntax issues in your YAML, you can validate it on the `YAML Lint <http://www.yamllint.com/>`_ website.
 
 Module documentation should briefly and accurately define what each module and option does, and how it works with others in the underlying system. Documentation should be written for broad audience--readable both by experts and non-experts.
     * Descriptions should always start with a capital letter and end with a full stop. Consistency always helps.
@@ -83,7 +83,7 @@ To create clear, concise, consistent, and useful documentation, follow the :ref:
 
 Each documentation field is described below. Before committing your module documentation, please test it at the command line and as HTML:
 
-* As long as your module file is :ref:`available locally <local_modules>`, you can use ``ansible-doc -t module my_module_name`` to view your module documentation at the command line. Any parsing errors will be obvious - you can view details by adding ``-vvv`` to the command.
+* As long as your module file is :ref:`available locally <local_modules>`, you can use ``assible-doc -t module my_module_name`` to view your module documentation at the command line. Any parsing errors will be obvious - you can view details by adding ``-vvv`` to the command.
 * You should also :ref:`test the HTML output <testing_module_documentation>` of your module documentation.
 
 Documentation fields
@@ -98,8 +98,8 @@ All fields in the ``DOCUMENTATION`` block are lower-case. All fields are require
 
 :short_description:
 
-  * A short description which is displayed on the :ref:`list_of_collections` page and ``ansible-doc -l``.
-  * The ``short_description`` is displayed by ``ansible-doc -l`` without any category grouping,
+  * A short description which is displayed on the :ref:`list_of_collections` page and ``assible-doc -l``.
+  * The ``short_description`` is displayed by ``assible-doc -l`` without any category grouping,
     so it needs enough detail to explain the module's purpose without the context of the directory structure in which it lives.
   * Unlike ``description:``, ``short_description`` should not have a trailing period/full stop.
 
@@ -113,7 +113,7 @@ All fields in the ``DOCUMENTATION`` block are lower-case. All fields are require
 
 :version_added:
 
-  * The version of Ansible when the module was added.
+  * The version of Assible when the module was added.
   * This is a string, and not a float, for example, ``version_added: '2.1'``
 
 :author:
@@ -156,7 +156,7 @@ All fields in the ``DOCUMENTATION`` block are lower-case. All fields are require
     * If ``required`` is false/missing, ``default`` may be specified (assumed 'null' if missing).
     * Ensure that the default value in the docs matches the default value in the code.
     * The default field must not be listed as part of the description, unless it requires additional information or conditions.
-    * If the option is a boolean value, you can use any of the boolean values recognized by Ansible:
+    * If the option is a boolean value, you can use any of the boolean values recognized by Assible:
       (such as true/false or yes/no).  Choose the one that reads better in the context of the option.
 
   :choices:
@@ -180,13 +180,13 @@ All fields in the ``DOCUMENTATION`` block are lower-case. All fields are require
 
   :version_added:
 
-    * Only needed if this option was extended after initial Ansible release, in other words, this is greater than the top level `version_added` field.
+    * Only needed if this option was extended after initial Assible release, in other words, this is greater than the top level `version_added` field.
     * This is a string, and not a float, for example, ``version_added: '2.3'``.
 
   :suboptions:
 
     * If this option takes a dict or list of dicts, you can define the structure here.
-    * See :ref:`ansible_collections.azure.azcollection.azure_rm_securitygroup_module`, :ref:`ansible_collections.azure.azcollection.azure_rm_azurefirewall_module`, and :ref:`ansible_collections.openstack.cloud.baremetal_node_action_module` for examples.
+    * See :ref:`assible_collections.azure.azcollection.azure_rm_securitygroup_module`, :ref:`assible_collections.azure.azcollection.azure_rm_azurefirewall_module`, and :ref:`assible_collections.openstack.cloud.baremetal_node_action_module` for examples.
 
 :requirements:
 
@@ -196,7 +196,7 @@ All fields in the ``DOCUMENTATION`` block are lower-case. All fields are require
 :seealso:
 
   * A list of references to other modules, documentation or Internet resources
-  * In Ansible 2.10 and later, references to modules must use  the FQCN or ``ansible.builtin`` for modules in ``ansible-base``.
+  * In Assible 2.10 and later, references to modules must use  the FQCN or ``assible.builtin`` for modules in ``assible-base``.
   * A reference can be one of the following formats:
 
 
@@ -213,7 +213,7 @@ All fields in the ``DOCUMENTATION`` block are lower-case. All fields are require
 
         # Reference by rST documentation anchor
         - ref: aci_guide
-          description: Detailed information on how to manage your ACI infrastructure using Ansible.
+          description: Detailed information on how to manage your ACI infrastructure using Assible.
 
         # Reference by Internet resource
         - name: APIC Management Information Model reference
@@ -229,12 +229,12 @@ All fields in the ``DOCUMENTATION`` block are lower-case. All fields are require
 Linking and other format macros within module documentation
 -----------------------------------------------------------
 
-You can link from your module documentation to other module docs, other resources on docs.ansible.com, and resources elsewhere on the internet with the help of some pre-defined macros. The correct formats for these macros are:
+You can link from your module documentation to other module docs, other resources on docs.assible.com, and resources elsewhere on the internet with the help of some pre-defined macros. The correct formats for these macros are:
 
-* ``L()`` for links with a heading. For example: ``See L(Ansible Tower,https://www.ansible.com/products/tower).`` As of Ansible 2.10, do not use ``L()`` for relative links between Ansible documentation and collection documentation.
-* ``U()`` for URLs. For example: ``See U(https://www.ansible.com/products/tower) for an overview.``
-* ``R()`` for cross-references with a heading (added in Ansible 2.10). For example: ``See R(Cisco IOS Platform Guide,ios_platform_options)``.  Use the RST anchor for the cross-reference. See :ref:`adding_anchors_rst` for details.
-* ``M()`` for module names. For example: ``See also M(ansible.builtin.yum) or M(community.general.apt_rpm)``.
+* ``L()`` for links with a heading. For example: ``See L(Assible Tower,https://www.assible.com/products/tower).`` As of Assible 2.10, do not use ``L()`` for relative links between Assible documentation and collection documentation.
+* ``U()`` for URLs. For example: ``See U(https://www.assible.com/products/tower) for an overview.``
+* ``R()`` for cross-references with a heading (added in Assible 2.10). For example: ``See R(Cisco IOS Platform Guide,ios_platform_options)``.  Use the RST anchor for the cross-reference. See :ref:`adding_anchors_rst` for details.
+* ``M()`` for module names. For example: ``See also M(assible.builtin.yum) or M(community.general.apt_rpm)``.
 
 There are also some macros which do not create links but we use them to display certain types of
 content in a uniform way:
@@ -247,7 +247,7 @@ content in a uniform way:
 
 .. note::
 
-  For links between modules and documentation within a collection, you can use any of the options above. For links outside of your collection, use ``R()`` if available. Otherwise, use ``U()`` or ``L()`` with full URLs (not relative links). For modules, use ``M()`` with the FQCN or ``ansible.builtin`` as shown in the example. If you are creating your own documentation site, you will need to use the `intersphinx extension <https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html>`_ to convert ``R()`` and ``M()`` to the correct links.
+  For links between modules and documentation within a collection, you can use any of the options above. For links outside of your collection, use ``R()`` if available. Otherwise, use ``U()`` or ``L()`` with full URLs (not relative links). For modules, use ``M()`` with the FQCN or ``assible.builtin`` as shown in the example. If you are creating your own documentation site, you will need to use the `intersphinx extension <https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html>`_ to convert ``R()`` and ``M()`` to the correct links.
 
 
 .. note::
@@ -266,7 +266,7 @@ content in a uniform way:
 Documentation fragments
 -----------------------
 
-If you are writing multiple related modules, they may share common documentation, such as authentication details, file mode settings, ``notes:`` or ``seealso:`` entries. Rather than duplicate that information in each module's ``DOCUMENTATION`` block, you can save it once as a doc_fragment plugin and use it in each module's documentation. In Ansible, shared documentation fragments are contained in a ``ModuleDocFragment`` class in `lib/ansible/plugins/doc_fragments/ <https://github.com/ansible/ansible/tree/devel/lib/ansible/plugins/doc_fragments>`_ or the equivalent directory in a collection. To include a documentation fragment, add ``extends_documentation_fragment: FRAGMENT_NAME`` in your module documentation. Use the fully qualified collection name for the FRAGMENT_NAME (for example, ``community.kubernetes.k8s_auth_options``).
+If you are writing multiple related modules, they may share common documentation, such as authentication details, file mode settings, ``notes:`` or ``seealso:`` entries. Rather than duplicate that information in each module's ``DOCUMENTATION`` block, you can save it once as a doc_fragment plugin and use it in each module's documentation. In Assible, shared documentation fragments are contained in a ``ModuleDocFragment`` class in `lib/assible/plugins/doc_fragments/ <https://github.com/assible/assible/tree/devel/lib/assible/plugins/doc_fragments>`_ or the equivalent directory in a collection. To include a documentation fragment, add ``extends_documentation_fragment: FRAGMENT_NAME`` in your module documentation. Use the fully qualified collection name for the FRAGMENT_NAME (for example, ``community.kubernetes.k8s_auth_options``).
 
 Modules should only use items from a doc fragment if the module will implement all of the interface documented there in a manner that behaves the same as the existing modules which import that fragment. The goal is that items imported from the doc fragment will behave identically when used in another module that imports the doc fragment.
 
@@ -305,11 +305,11 @@ Or use both :
       - example_fragment.other
 
 .. _note:
-  * Prior to Ansible 2.8, documentation fragments were kept in ``lib/ansible/utils/module_docs_fragments``.
+  * Prior to Assible 2.8, documentation fragments were kept in ``lib/assible/utils/module_docs_fragments``.
 
 .. versionadded:: 2.8
 
-Since Ansible 2.8, you can have user-supplied doc_fragments by using a ``doc_fragments`` directory adjacent to play or role, just like any other plugin.
+Since Assible 2.8, you can have user-supplied doc_fragments by using a ``doc_fragments`` directory adjacent to play or role, just like any other plugin.
 
 For example, all AWS modules should include:
 
@@ -339,7 +339,7 @@ Per playbook best practices, each example should include a ``name:`` line::
 
 The ``name:`` line should be capitalized and not include a trailing dot.
 
-Use a fully qualified collection name (FQCN) as a part of the module's name like in the example above. For modules in ``ansible-base``, use the ``ansible.builtin.`` identifier, for example ``ansible.builtin.debug``.
+Use a fully qualified collection name (FQCN) as a part of the module's name like in the example above. For modules in ``assible-base``, use the ``assible.builtin.`` identifier, for example ``assible.builtin.debug``.
 
 If your examples use boolean options, use yes/no values. Since the documentation generates boolean values as yes/no, having the examples use these values as well makes the module documentation more consistent.
 
@@ -369,7 +369,7 @@ Otherwise, for each value returned, provide the following fields. All fields are
   :sample:
     One or more examples.
   :version_added:
-    Only needed if this return was extended after initial Ansible release, in other words, this is greater than the top level `version_added` field.
+    Only needed if this return was extended after initial Assible release, in other words, this is greater than the top level `version_added` field.
     This is a string, and not a float, for example, ``version_added: '2.3'``.
   :contains:
     Optional. To describe nested return values, set ``type: complex``, ``type: dict``, or ``type: list``/``elements: dict`` and repeat the elements above for each sub-field.
@@ -386,7 +386,7 @@ Here are two example ``RETURN`` sections, one with three simple fields and one w
         description: Source file used for the copy on the target machine.
         returned: changed
         type: str
-        sample: /home/httpd/.ansible/tmp/ansible-tmp-1423796390.97-147729857856000/source
+        sample: /home/httpd/.assible/tmp/assible-tmp-1423796390.97-147729857856000/source
     md5sum:
         description: MD5 checksum of the file after running copy.
         returned: when supported
@@ -426,7 +426,7 @@ After the shebang, the UTF-8 coding, the copyright line, the license, and the se
 
 .. code-block:: python
 
-   from module_utils.basic import AnsibleModule
+   from module_utils.basic import AssibleModule
 
 The use of "wildcard" imports such as ``from module_utils.basic import *`` is no longer allowed.
 
@@ -435,4 +435,4 @@ The use of "wildcard" imports such as ``from module_utils.basic import *`` is no
 Testing module documentation
 ============================
 
-To test Ansible documentation locally please :ref:`follow instruction<testing_module_documentation>`.
+To test Assible documentation locally please :ref:`follow instruction<testing_module_documentation>`.

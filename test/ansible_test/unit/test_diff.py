@@ -6,12 +6,12 @@ import os
 import subprocess
 import pytest
 
-from ansible_test._internal.util import (
+from assible_test._internal.util import (
     to_text,
     to_bytes,
 )
 
-from ansible_test._internal.diff import (
+from assible_test._internal.diff import (
     parse_diff,
     FileDiff,
 )
@@ -77,7 +77,7 @@ RANGES_TO_TEST = (
 
 @pytest.mark.parametrize("base, head", RANGES_TO_TEST)
 def test_parse_diff(base, head):
-    """Integration test to verify parsing of ansible/ansible history."""
+    """Integration test to verify parsing of assible/assible history."""
     get_parsed_diff(base, head)
 
 
@@ -88,8 +88,8 @@ def test_parse_delete():
     deletes = [item for item in items if not item.new.exists]
 
     assert len(deletes) == 1
-    assert deletes[0].old.path == 'lib/ansible/plugins/connection/nspawn.py'
-    assert deletes[0].new.path == 'lib/ansible/plugins/connection/nspawn.py'
+    assert deletes[0].old.path == 'lib/assible/plugins/connection/nspawn.py'
+    assert deletes[0].new.path == 'lib/assible/plugins/connection/nspawn.py'
 
 
 def test_parse_rename():

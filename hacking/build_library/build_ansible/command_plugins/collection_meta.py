@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -11,8 +11,8 @@ import os.path
 import pathlib
 
 import yaml
-from ansible.module_utils.six import string_types
-from ansible.module_utils._text import to_bytes
+from assible.module_utils.six import string_types
+from assible.module_utils._text import to_bytes
 from antsibull.jinja2.environment import doc_environment
 
 # Pylint doesn't understand Python3 namespace modules.

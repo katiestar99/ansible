@@ -1,20 +1,20 @@
 #
-#  Copyright 2018 Red Hat | Ansible
+#  Copyright 2018 Red Hat | Assible
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import, division, print_function
 
@@ -25,11 +25,11 @@ import time
 import sys
 import traceback
 
-from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils.k8s.common import AUTH_ARG_SPEC, COMMON_ARG_SPEC
-from ansible.module_utils.six import string_types
-from ansible.module_utils.k8s.common import KubernetesAnsibleModule
-from ansible.module_utils.common.dict_transformations import dict_merge
+from assible.module_utils.basic import missing_required_lib
+from assible.module_utils.k8s.common import AUTH_ARG_SPEC, COMMON_ARG_SPEC
+from assible.module_utils.six import string_types
+from assible.module_utils.k8s.common import KubernetesAssibleModule
+from assible.module_utils.common.dict_transformations import dict_merge
 
 
 try:
@@ -62,7 +62,7 @@ except ImportError:
     HAS_K8S_APPLY = False
 
 
-class KubernetesRawModule(KubernetesAnsibleModule):
+class KubernetesRawModule(KubernetesAssibleModule):
 
     @property
     def validate_spec(self):
@@ -103,7 +103,7 @@ class KubernetesRawModule(KubernetesAnsibleModule):
             ('merge_type', 'apply'),
         ]
 
-        KubernetesAnsibleModule.__init__(self, *args,
+        KubernetesAssibleModule.__init__(self, *args,
                                          mutually_exclusive=mutually_exclusive,
                                          supports_check_mode=True,
                                          **kwargs)

@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2014, Ruggero Marchei <ruggero.marchei@daemonzone.net>
-# Copyright: (c) 2015, Brian Coca <bcoca@ansible.com>
+# Copyright: (c) 2015, Brian Coca <bcoca@assible.com>
 # Copyright: (c) 2016-2017, Konstantin Shalygin <k0ste@k0ste.ru>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -19,7 +19,7 @@ version_added: "2.0"
 short_description: Return a list of files based on specific criteria
 description:
     - Return a list of files based on specific criteria. Multiple criteria are AND'd together.
-    - For Windows targets, use the M(ansible.windows.win_find) module instead.
+    - For Windows targets, use the M(assible.windows.win_find) module instead.
 options:
     age:
         description:
@@ -76,7 +76,7 @@ options:
     file_type:
         description:
             - Type of file to select.
-            - The 'link' and 'any' choices were added in Ansible 2.3.
+            - The 'link' and 'any' choices were added in Assible 2.3.
         type: str
         choices: [ any, directory, file, link ]
         default: file
@@ -128,7 +128,7 @@ options:
         type: int
         version_added: "2.6"
 seealso:
-- module: ansible.windows.win_find
+- module: assible.windows.win_find
 '''
 
 
@@ -228,7 +228,7 @@ import re
 import stat
 import time
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def pfilter(f, patterns=None, excludes=None, use_regex=False):
@@ -370,7 +370,7 @@ def statinfo(st):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             paths=dict(type='list', required=True, aliases=['name', 'path'], elements='str'),
             patterns=dict(type='list', default=['*'], aliases=['pattern'], elements='str'),

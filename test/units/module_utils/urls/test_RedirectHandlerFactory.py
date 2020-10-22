@@ -6,8 +6,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible.module_utils.urls import HAS_SSLCONTEXT, RedirectHandlerFactory, urllib_request, urllib_error
-from ansible.module_utils.six import StringIO
+from assible.module_utils.urls import HAS_SSLCONTEXT, RedirectHandlerFactory, urllib_request, urllib_error
+from assible.module_utils.six import StringIO
 
 import pytest
 
@@ -15,7 +15,7 @@ import pytest
 @pytest.fixture
 def urllib_req():
     req = urllib_request.Request(
-        'https://ansible.com/'
+        'https://assible.com/'
     )
     return req
 
@@ -29,25 +29,25 @@ def test_no_redirs(urllib_req, request_body):
     handler = RedirectHandlerFactory('none', False)
     inst = handler()
     with pytest.raises(urllib_error.HTTPError):
-        inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
+        inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
 
 
 def test_urllib2_redir(urllib_req, request_body, mocker):
-    redir_request_mock = mocker.patch('ansible.module_utils.urls.urllib_request.HTTPRedirectHandler.redirect_request')
+    redir_request_mock = mocker.patch('assible.module_utils.urls.urllib_request.HTTPRedirectHandler.redirect_request')
 
     handler = RedirectHandlerFactory('urllib2', False)
     inst = handler()
-    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
+    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
 
-    redir_request_mock.assert_called_once_with(inst, urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
+    redir_request_mock.assert_called_once_with(inst, urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
 
 
 def test_all_redir(urllib_req, request_body, mocker):
-    req_mock = mocker.patch('ansible.module_utils.urls.RequestWithMethod')
+    req_mock = mocker.patch('assible.module_utils.urls.RequestWithMethod')
     handler = RedirectHandlerFactory('all', False)
     inst = handler()
-    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
-    req_mock.assert_called_once_with('https://docs.ansible.com/', data=None, headers={}, method='GET', origin_req_host='ansible.com', unverifiable=True)
+    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
+    req_mock.assert_called_once_with('https://docs.assible.com/', data=None, headers={}, method='GET', origin_req_host='assible.com', unverifiable=True)
 
 
 def test_all_redir_post(request_body, mocker):
@@ -55,17 +55,17 @@ def test_all_redir_post(request_body, mocker):
     inst = handler()
 
     req = urllib_request.Request(
-        'https://ansible.com/',
+        'https://assible.com/',
         'POST'
     )
 
-    req_mock = mocker.patch('ansible.module_utils.urls.RequestWithMethod')
-    inst.redirect_request(req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
-    req_mock.assert_called_once_with('https://docs.ansible.com/', data=None, headers={}, method='GET', origin_req_host='ansible.com', unverifiable=True)
+    req_mock = mocker.patch('assible.module_utils.urls.RequestWithMethod')
+    inst.redirect_request(req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
+    req_mock.assert_called_once_with('https://docs.assible.com/', data=None, headers={}, method='GET', origin_req_host='assible.com', unverifiable=True)
 
 
 def test_redir_headers_removal(urllib_req, request_body, mocker):
-    req_mock = mocker.patch('ansible.module_utils.urls.RequestWithMethod')
+    req_mock = mocker.patch('assible.module_utils.urls.RequestWithMethod')
     handler = RedirectHandlerFactory('all', False)
     inst = handler()
 
@@ -75,29 +75,29 @@ def test_redir_headers_removal(urllib_req, request_body, mocker):
         'Foo': 'bar',
     }
 
-    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
-    req_mock.assert_called_once_with('https://docs.ansible.com/', data=None, headers={'Foo': 'bar'}, method='GET', origin_req_host='ansible.com',
+    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
+    req_mock.assert_called_once_with('https://docs.assible.com/', data=None, headers={'Foo': 'bar'}, method='GET', origin_req_host='assible.com',
                                      unverifiable=True)
 
 
 def test_redir_url_spaces(urllib_req, request_body, mocker):
-    req_mock = mocker.patch('ansible.module_utils.urls.RequestWithMethod')
+    req_mock = mocker.patch('assible.module_utils.urls.RequestWithMethod')
     handler = RedirectHandlerFactory('all', False)
     inst = handler()
 
-    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/foo bar')
+    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/foo bar')
 
-    req_mock.assert_called_once_with('https://docs.ansible.com/foo%20bar', data=None, headers={}, method='GET', origin_req_host='ansible.com',
+    req_mock.assert_called_once_with('https://docs.assible.com/foo%20bar', data=None, headers={}, method='GET', origin_req_host='assible.com',
                                      unverifiable=True)
 
 
 def test_redir_safe(urllib_req, request_body, mocker):
-    req_mock = mocker.patch('ansible.module_utils.urls.RequestWithMethod')
+    req_mock = mocker.patch('assible.module_utils.urls.RequestWithMethod')
     handler = RedirectHandlerFactory('safe', False)
     inst = handler()
-    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
+    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
 
-    req_mock.assert_called_once_with('https://docs.ansible.com/', data=None, headers={}, method='GET', origin_req_host='ansible.com', unverifiable=True)
+    req_mock.assert_called_once_with('https://docs.assible.com/', data=None, headers={}, method='GET', origin_req_host='assible.com', unverifiable=True)
 
 
 def test_redir_safe_not_safe(request_body):
@@ -105,12 +105,12 @@ def test_redir_safe_not_safe(request_body):
     inst = handler()
 
     req = urllib_request.Request(
-        'https://ansible.com/',
+        'https://assible.com/',
         'POST'
     )
 
     with pytest.raises(urllib_error.HTTPError):
-        inst.redirect_request(req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
+        inst.redirect_request(req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
 
 
 def test_redir_no_error_on_invalid(urllib_req, request_body):
@@ -118,14 +118,14 @@ def test_redir_no_error_on_invalid(urllib_req, request_body):
     inst = handler()
 
     with pytest.raises(urllib_error.HTTPError):
-        inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
+        inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
 
 
 def test_redir_validate_certs(urllib_req, request_body, mocker):
-    opener_mock = mocker.patch('ansible.module_utils.urls.urllib_request._opener')
+    opener_mock = mocker.patch('assible.module_utils.urls.urllib_request._opener')
     handler = RedirectHandlerFactory('all', True)
     inst = handler()
-    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.ansible.com/')
+    inst.redirect_request(urllib_req, request_body, 301, '301 Moved Permanently', {}, 'https://docs.assible.com/')
 
     assert opener_mock.add_handler.call_count == int(not HAS_SSLCONTEXT)
 
@@ -135,4 +135,4 @@ def test_redir_http_error_308_urllib2(urllib_req, request_body):
     inst = handler()
 
     with pytest.raises(urllib_error.HTTPError):
-        inst.redirect_request(urllib_req, request_body, 308, '308 Permanent Redirect', {}, 'https://docs.ansible.com/')
+        inst.redirect_request(urllib_req, request_body, 308, '308 Permanent Redirect', {}, 'https://docs.assible.com/')

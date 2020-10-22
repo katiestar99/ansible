@@ -82,10 +82,10 @@ Module defaults groups
 
 .. versionadded:: 2.7
 
-Ansible 2.7 adds a preview-status feature to group together modules that share common sets of parameters. This makes it easier to author playbooks making heavy use of API-based modules such as cloud modules.
+Assible 2.7 adds a preview-status feature to group together modules that share common sets of parameters. This makes it easier to author playbooks making heavy use of API-based modules such as cloud modules.
 
 +---------+---------------------------+-----------------+
-| Group   | Purpose                   | Ansible Version |
+| Group   | Purpose                   | Assible Version |
 +=========+===========================+=================+
 | aws     | Amazon Web Services       | 2.7             |
 +---------+---------------------------+-----------------+

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -17,15 +17,15 @@ import time
 from io import BytesIO, StringIO
 from units.compat.mock import MagicMock
 
-from ansible import context
-from ansible.errors import AnsibleError
-from ansible.galaxy import api as galaxy_api
-from ansible.galaxy.api import CollectionVersionMetadata, GalaxyAPI, GalaxyError
-from ansible.galaxy.token import BasicAuthToken, GalaxyToken, KeycloakToken
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.six.moves.urllib import error as urllib_error
-from ansible.utils import context_objects as co
-from ansible.utils.display import Display
+from assible import context
+from assible.errors import AssibleError
+from assible.galaxy import api as galaxy_api
+from assible.galaxy.api import CollectionVersionMetadata, GalaxyAPI, GalaxyError
+from assible.galaxy.token import BasicAuthToken, GalaxyToken, KeycloakToken
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.six.moves.urllib import error as urllib_error
+from assible.utils import context_objects as co
+from assible.utils.display import Display
 
 
 @pytest.fixture(autouse='function')
@@ -66,22 +66,22 @@ def get_test_galaxy_api(url, version, token_ins=None, token_value=None):
 
 
 def test_api_no_auth():
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/")
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/")
     actual = {}
     api._add_auth_token(actual, "")
     assert actual == {}
 
 
 def test_api_no_auth_but_required():
-    expected = "No access token or username set. A token can be set with --api-key, with 'ansible-galaxy login', " \
-               "or set in ansible.cfg."
-    with pytest.raises(AnsibleError, match=expected):
-        GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/")._add_auth_token({}, "", required=True)
+    expected = "No access token or username set. A token can be set with --api-key, with 'assible-galaxy login', " \
+               "or set in assible.cfg."
+    with pytest.raises(AssibleError, match=expected):
+        GalaxyAPI(None, "test", "https://galaxy.assible.com/api/")._add_auth_token({}, "", required=True)
 
 
 def test_api_token_auth():
     token = GalaxyToken(token=u"my_token")
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=token)
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=token)
     actual = {}
     api._add_auth_token(actual, "", required=True)
     assert actual == {'Authorization': 'Token my_token'}
@@ -92,7 +92,7 @@ def test_api_token_auth_with_token_type(monkeypatch):
     mock_token_get = MagicMock()
     mock_token_get.return_value = 'my_token'
     monkeypatch.setattr(token, 'get', mock_token_get)
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=token)
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=token)
     actual = {}
     api._add_auth_token(actual, "", token_type="Bearer", required=True)
     assert actual == {'Authorization': 'Bearer my_token'}
@@ -103,24 +103,24 @@ def test_api_token_auth_with_v3_url(monkeypatch):
     mock_token_get = MagicMock()
     mock_token_get.return_value = 'my_token'
     monkeypatch.setattr(token, 'get', mock_token_get)
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=token)
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=token)
     actual = {}
-    api._add_auth_token(actual, "https://galaxy.ansible.com/api/v3/resource/name", required=True)
+    api._add_auth_token(actual, "https://galaxy.assible.com/api/v3/resource/name", required=True)
     assert actual == {'Authorization': 'Bearer my_token'}
 
 
 def test_api_token_auth_with_v2_url():
     token = GalaxyToken(token=u"my_token")
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=token)
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=token)
     actual = {}
     # Add v3 to random part of URL but response should only see the v2 as the full URI path segment.
-    api._add_auth_token(actual, "https://galaxy.ansible.com/api/v2/resourcev3/name", required=True)
+    api._add_auth_token(actual, "https://galaxy.assible.com/api/v2/resourcev3/name", required=True)
     assert actual == {'Authorization': 'Token my_token'}
 
 
 def test_api_basic_auth_password():
     token = BasicAuthToken(username=u"user", password=u"pass")
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=token)
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=token)
     actual = {}
     api._add_auth_token(actual, "", required=True)
     assert actual == {'Authorization': 'Basic dXNlcjpwYXNz'}
@@ -128,14 +128,14 @@ def test_api_basic_auth_password():
 
 def test_api_basic_auth_no_password():
     token = BasicAuthToken(username=u"user")
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=token)
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=token)
     actual = {}
     api._add_auth_token(actual, "", required=True)
     assert actual == {'Authorization': 'Basic dXNlcjo='}
 
 
 def test_api_dont_override_auth_header():
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/")
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/")
     actual = {'Authorization': 'Custom token'}
     api._add_auth_token(actual, "", required=True)
     assert actual == {'Authorization': 'Custom token'}
@@ -149,7 +149,7 @@ def test_initialise_galaxy(monkeypatch):
     ]
     monkeypatch.setattr(galaxy_api, 'open_url', mock_open)
 
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/")
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/")
     actual = api.authenticate("github_token")
 
     assert len(api.available_api_versions) == 2
@@ -157,10 +157,10 @@ def test_initialise_galaxy(monkeypatch):
     assert api.available_api_versions['v2'] == u'v2/'
     assert actual == {u'token': u'my token'}
     assert mock_open.call_count == 2
-    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.ansible.com/api/'
-    assert 'ansible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
-    assert mock_open.mock_calls[1][1][0] == 'https://galaxy.ansible.com/api/v1/tokens/'
-    assert 'ansible-galaxy' in mock_open.mock_calls[1][2]['http_agent']
+    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.assible.com/api/'
+    assert 'assible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
+    assert mock_open.mock_calls[1][1][0] == 'https://galaxy.assible.com/api/v1/tokens/'
+    assert 'assible-galaxy' in mock_open.mock_calls[1][2]['http_agent']
     assert mock_open.mock_calls[1][2]['data'] == 'github_token=github_token'
 
 
@@ -172,7 +172,7 @@ def test_initialise_galaxy_with_auth(monkeypatch):
     ]
     monkeypatch.setattr(galaxy_api, 'open_url', mock_open)
 
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=GalaxyToken(token='my_token'))
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=GalaxyToken(token='my_token'))
     actual = api.authenticate("github_token")
 
     assert len(api.available_api_versions) == 2
@@ -180,10 +180,10 @@ def test_initialise_galaxy_with_auth(monkeypatch):
     assert api.available_api_versions['v2'] == u'v2/'
     assert actual == {u'token': u'my token'}
     assert mock_open.call_count == 2
-    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.ansible.com/api/'
-    assert 'ansible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
-    assert mock_open.mock_calls[1][1][0] == 'https://galaxy.ansible.com/api/v1/tokens/'
-    assert 'ansible-galaxy' in mock_open.mock_calls[1][2]['http_agent']
+    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.assible.com/api/'
+    assert 'assible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
+    assert mock_open.mock_calls[1][1][0] == 'https://galaxy.assible.com/api/v1/tokens/'
+    assert 'assible-galaxy' in mock_open.mock_calls[1][2]['http_agent']
     assert mock_open.mock_calls[1][2]['data'] == 'github_token=github_token'
 
 
@@ -198,30 +198,30 @@ def test_initialise_automation_hub(monkeypatch):
     mock_token_get.return_value = 'my_token'
     monkeypatch.setattr(token, 'get', mock_token_get)
 
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=token)
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=token)
 
     assert len(api.available_api_versions) == 2
     assert api.available_api_versions['v2'] == u'v2/'
     assert api.available_api_versions['v3'] == u'v3/'
 
-    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.ansible.com/api/'
-    assert 'ansible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
+    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.assible.com/api/'
+    assert 'assible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
     assert mock_open.mock_calls[0][2]['headers'] == {'Authorization': 'Bearer my_token'}
 
 
 def test_initialise_unknown(monkeypatch):
     mock_open = MagicMock()
     mock_open.side_effect = [
-        urllib_error.HTTPError('https://galaxy.ansible.com/api/', 500, 'msg', {}, StringIO(u'{"msg":"raw error"}')),
-        urllib_error.HTTPError('https://galaxy.ansible.com/api/api/', 500, 'msg', {}, StringIO(u'{"msg":"raw error"}')),
+        urllib_error.HTTPError('https://galaxy.assible.com/api/', 500, 'msg', {}, StringIO(u'{"msg":"raw error"}')),
+        urllib_error.HTTPError('https://galaxy.assible.com/api/api/', 500, 'msg', {}, StringIO(u'{"msg":"raw error"}')),
     ]
     monkeypatch.setattr(galaxy_api, 'open_url', mock_open)
 
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/", token=GalaxyToken(token='my_token'))
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/", token=GalaxyToken(token='my_token'))
 
     expected = "Error when finding available api versions from test (%s) (HTTP Code: 500, Message: msg)" \
         % api.api_server
-    with pytest.raises(AnsibleError, match=re.escape(expected)):
+    with pytest.raises(AssibleError, match=re.escape(expected)):
         api.authenticate("github_token")
 
 
@@ -232,44 +232,44 @@ def test_get_available_api_versions(monkeypatch):
     ]
     monkeypatch.setattr(galaxy_api, 'open_url', mock_open)
 
-    api = GalaxyAPI(None, "test", "https://galaxy.ansible.com/api/")
+    api = GalaxyAPI(None, "test", "https://galaxy.assible.com/api/")
     actual = api.available_api_versions
     assert len(actual) == 2
     assert actual['v1'] == u'v1/'
     assert actual['v2'] == u'v2/'
 
     assert mock_open.call_count == 1
-    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.ansible.com/api/'
-    assert 'ansible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
+    assert mock_open.mock_calls[0][1][0] == 'https://galaxy.assible.com/api/'
+    assert 'assible-galaxy' in mock_open.mock_calls[0][2]['http_agent']
 
 
 def test_publish_collection_missing_file():
     fake_path = u'/fake/ÅÑŚÌβŁÈ/path'
     expected = to_native("The collection path specified '%s' does not exist." % fake_path)
 
-    api = get_test_galaxy_api("https://galaxy.ansible.com/api/", "v2")
-    with pytest.raises(AnsibleError, match=expected):
+    api = get_test_galaxy_api("https://galaxy.assible.com/api/", "v2")
+    with pytest.raises(AssibleError, match=expected):
         api.publish_collection(fake_path)
 
 
 def test_publish_collection_not_a_tarball():
-    expected = "The collection path specified '{0}' is not a tarball, use 'ansible-galaxy collection build' to " \
+    expected = "The collection path specified '{0}' is not a tarball, use 'assible-galaxy collection build' to " \
                "create a proper release artifact."
 
-    api = get_test_galaxy_api("https://galaxy.ansible.com/api/", "v2")
+    api = get_test_galaxy_api("https://galaxy.assible.com/api/", "v2")
     with tempfile.NamedTemporaryFile(prefix=u'ÅÑŚÌβŁÈ') as temp_file:
         temp_file.write(b"\x00")
         temp_file.flush()
-        with pytest.raises(AnsibleError, match=expected.format(to_native(temp_file.name))):
+        with pytest.raises(AssibleError, match=expected.format(to_native(temp_file.name))):
             api.publish_collection(temp_file.name)
 
 
 def test_publish_collection_unsupported_version():
     expected = "Galaxy action publish_collection requires API versions 'v2, v3' but only 'v1' are available on test " \
-               "https://galaxy.ansible.com/api/"
+               "https://galaxy.assible.com/api/"
 
-    api = get_test_galaxy_api("https://galaxy.ansible.com/api/", "v1")
-    with pytest.raises(AnsibleError, match=expected):
+    api = get_test_galaxy_api("https://galaxy.assible.com/api/", "v1")
+    with pytest.raises(AssibleError, match=expected):
         api.publish_collection("path")
 
 
@@ -278,7 +278,7 @@ def test_publish_collection_unsupported_version():
     ('v3', 'artifacts/collections'),
 ])
 def test_publish_collection(api_version, collection_url, collection_artifact, monkeypatch):
-    api = get_test_galaxy_api("https://galaxy.ansible.com/api/", api_version)
+    api = get_test_galaxy_api("https://galaxy.assible.com/api/", api_version)
 
     mock_call = MagicMock()
     mock_call.return_value = {'task': 'http://task.url/'}
@@ -287,7 +287,7 @@ def test_publish_collection(api_version, collection_url, collection_artifact, mo
     actual = api.publish_collection(collection_artifact)
     assert actual == 'http://task.url/'
     assert mock_call.call_count == 1
-    assert mock_call.mock_calls[0][1][0] == 'https://galaxy.ansible.com/api/%s/%s/' % (api_version, collection_url)
+    assert mock_call.mock_calls[0][1][0] == 'https://galaxy.assible.com/api/%s/%s/' % (api_version, collection_url)
     assert mock_call.mock_calls[0][2]['headers']['Content-length'] == len(mock_call.mock_calls[0][2]['args'])
     assert mock_call.mock_calls[0][2]['headers']['Content-type'].startswith(
         'multipart/form-data; boundary=')
@@ -475,7 +475,7 @@ def test_wait_import_task_with_failure(server_url, api_version, token_type, toke
     monkeypatch.setattr(Display, 'error', mock_err)
 
     expected = to_native(u'Galaxy import process failed: Becäuse I said so! (Code: GW001)')
-    with pytest.raises(AnsibleError, match=re.escape(expected)):
+    with pytest.raises(AssibleError, match=re.escape(expected)):
         api.wait_import_task(import_uri)
 
     assert mock_open.call_count == 1
@@ -548,7 +548,7 @@ def test_wait_import_task_with_failure_no_error(server_url, api_version, token_t
     monkeypatch.setattr(Display, 'error', mock_err)
 
     expected = 'Galaxy import process failed: Unknown error, see %s for more details \\(Code: UNKNOWN\\)' % full_import_uri
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         api.wait_import_task(import_uri)
 
     assert mock_open.call_count == 1
@@ -600,7 +600,7 @@ def test_wait_import_task_timeout(server_url, api_version, token_type, token_ins
     monkeypatch.setattr(time, 'sleep', MagicMock())
 
     expected = "Timeout while waiting for the Galaxy import process to finish, check progress at '%s'" % full_import_uri
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         api.wait_import_task(import_uri, 1)
 
     assert mock_open.call_count > 1

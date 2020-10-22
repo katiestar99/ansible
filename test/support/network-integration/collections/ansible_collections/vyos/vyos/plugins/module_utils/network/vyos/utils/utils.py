@@ -7,8 +7,8 @@
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
-from ansible.module_utils.six import iteritems
-from ansible_collections.ansible.netcommon.plugins.module_utils.compat import (
+from assible.module_utils.six import iteritems
+from assible_collections.assible.netcommon.plugins.module_utils.compat import (
     ipaddress,
 )
 

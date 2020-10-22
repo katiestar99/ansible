@@ -5,17 +5,17 @@
       include_role:
         name: setup_nobody
 
-    - name: verify AnsibleModule works when cwd is missing
+    - name: verify AssibleModule works when cwd is missing
       test_cwd_missing:
       register: missing
 
-    - name: verify AnsibleModule works when cwd is unreadable
+    - name: verify AssibleModule works when cwd is unreadable
       test_cwd_unreadable:
       register: unreadable
       become: yes
       become_user: nobody  # root can read cwd regardless of permissions, so a non-root user is required here
 
-    - name: verify AnsibleModule was able to adjust cwd as expected
+    - name: verify AssibleModule was able to adjust cwd as expected
       assert:
         that:
           - missing.before != missing.after

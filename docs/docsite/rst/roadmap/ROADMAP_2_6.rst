@@ -1,5 +1,5 @@
 ===========
-Ansible 2.6
+Assible 2.6
 ===========
 
 .. contents:: Topics
@@ -35,7 +35,7 @@ Engine improvements
 - Version 2.6 is largely going to be a stabilization release for Core code.
 - Some of the items covered in this release, but are not limited to are the following:
 
-  - ``ansible-inventory``
+  - ``assible-inventory``
   - ``import_*``
   - ``include_*``
   - Test coverage
@@ -57,7 +57,7 @@ Network
 Connection work
 ================
 
-* New connection plugin: eAPI `proposal#102 <https://github.com/ansible/proposals/issues/102>`_
+* New connection plugin: eAPI `proposal#102 <https://github.com/assible/proposals/issues/102>`_
 * New connection plugin: NX-API
 * Support for configurable options for network_cli & netconf
 
@@ -66,7 +66,7 @@ Modules
 
 * New ``net_get`` - platform agnostic module for pulling configuration via SCP/SFTP over network_cli
 * New ``net_put`` - platform agnostic module for pushing configuration via SCP/SFTP over network_cli
-* New ``netconf_get`` - Netconf module to fetch configuration and state data `proposal#104 <https://github.com/ansible/proposals/issues/104>`_
+* New ``netconf_get`` - Netconf module to fetch configuration and state data `proposal#104 <https://github.com/assible/proposals/issues/104>`_
 
 Other Features
 ================

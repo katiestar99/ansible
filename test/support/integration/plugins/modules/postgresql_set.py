@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
     'supported_by': 'community'
@@ -26,7 +26,7 @@ description:
      which is read in addition to postgresql.conf.
    - The module allows to reset parameter to boot_val (cluster initial value) by I(reset=yes) or remove parameter
      string from postgresql.auto.conf and reload I(value=default) (for settings with postmaster context restart is required).
-   - After change you can see in the ansible output the previous and
+   - After change you can see in the assible output the previous and
      the new parameter value and other information using returned values and M(debug) module.
 version_added: '2.8'
 options:
@@ -159,18 +159,18 @@ try:
     from psycopg2.extras import DictCursor
 except Exception:
     # psycopg2 is checked by connect_to_db()
-    # from ansible.module_utils.postgres
+    # from assible.module_utils.postgres
     pass
 
 from copy import deepcopy
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.postgres import (
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.postgres import (
     connect_to_db,
     get_conn_params,
     postgres_common_argument_spec,
 )
-from ansible.module_utils._text import to_native
+from assible.module_utils._text import to_native
 
 PG_REQ_VER = 90400
 
@@ -287,7 +287,7 @@ def main():
         reset=dict(type='bool'),
         session_role=dict(type='str'),
     )
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
     )

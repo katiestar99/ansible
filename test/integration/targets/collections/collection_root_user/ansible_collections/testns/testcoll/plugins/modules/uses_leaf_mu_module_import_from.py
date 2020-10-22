@@ -5,10 +5,10 @@ __metaclass__ = type
 import json
 import sys
 
-from ansible_collections.testns.testcoll.plugins.module_utils import leaf, secondary
+from assible_collections.testns.testcoll.plugins.module_utils import leaf, secondary
 # FIXME: this one needs pkginit synthesis to work
-# from ansible_collections.testns.testcoll.plugins.module_utils.subpkg import submod
-from ansible_collections.testns.testcoll.plugins.module_utils.subpkg_with_init import (thingtocall as spwi_thingtocall,
+# from assible_collections.testns.testcoll.plugins.module_utils.subpkg import submod
+from assible_collections.testns.testcoll.plugins.module_utils.subpkg_with_init import (thingtocall as spwi_thingtocall,
                                                                                        submod_thingtocall as spwi_submod_thingtocall,
                                                                                        cousin_submod_thingtocall as spwi_cousin_submod_thingtocall)
 

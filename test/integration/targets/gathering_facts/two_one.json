@@ -1,5 +1,5 @@
 {
-    "_ansible_facts_gathered": true,
+    "_assible_facts_gathered": true,
     "common_dict_fact": {
         "key_four": "from facts_two",
         "key_one": "from facts_one",

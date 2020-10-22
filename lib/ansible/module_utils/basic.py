@@ -1,5 +1,5 @@
 # Copyright (c), Michael DeHaan <michael.dehaan@gmail.com>, 2012-2013
-# Copyright (c), Toshio Kuratomi <tkuratomi@ansible.com> 2016
+# Copyright (c), Toshio Kuratomi <tkuratomi@assible.com> 2016
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import absolute_import, division, print_function
@@ -28,7 +28,7 @@ FILE_ATTRIBUTES = {
     'Z': 'compresseddirty',
 }
 
-# Ansible modules can be written in any language.
+# Assible modules can be written in any language.
 # The functions available here can be used to do many common tasks,
 # to simplify development of Python modules.
 
@@ -82,16 +82,16 @@ except ImportError:
 # Python2 & 3 way to get NoneType
 NoneType = type(None)
 
-from ansible.module_utils.compat import selectors
+from assible.module_utils.compat import selectors
 
 from ._text import to_native, to_bytes, to_text
-from ansible.module_utils.common.text.converters import (
+from assible.module_utils.common.text.converters import (
     jsonify,
     container_to_bytes as json_dict_unicode_to_bytes,
     container_to_text as json_dict_bytes_to_unicode,
 )
 
-from ansible.module_utils.common.text.formatters import (
+from assible.module_utils.common.text.formatters import (
     lenient_lowercase,
     bytes_to_human,
     human_to_bytes,
@@ -99,9 +99,9 @@ from ansible.module_utils.common.text.formatters import (
 )
 
 try:
-    from ansible.module_utils.common._json_compat import json
+    from assible.module_utils.common._json_compat import json
 except ImportError as e:
-    print('\n{{"msg": "Error: ansible requires the stdlib json: {0}", "failed": true}}'.format(to_native(e)))
+    print('\n{{"msg": "Error: assible requires the stdlib json: {0}", "failed": true}}'.format(to_native(e)))
     sys.exit(1)
 
 
@@ -134,14 +134,14 @@ except Exception:
     except Exception:
         pass
 
-from ansible.module_utils.common._collections_compat import (
+from assible.module_utils.common._collections_compat import (
     KeysView,
     Mapping, MutableMapping,
     Sequence, MutableSequence,
     Set, MutableSet,
 )
-from ansible.module_utils.common.process import get_bin_path
-from ansible.module_utils.common.file import (
+from assible.module_utils.common.process import get_bin_path
+from assible.module_utils.common.file import (
     _PERM_BITS as PERM_BITS,
     _EXEC_PERM_BITS as EXEC_PERM_BITS,
     _DEFAULT_PERM as DEFAULT_PERM,
@@ -149,13 +149,13 @@ from ansible.module_utils.common.file import (
     format_attributes,
     get_flags_from_attributes,
 )
-from ansible.module_utils.common.sys_info import (
+from assible.module_utils.common.sys_info import (
     get_distribution,
     get_distribution_version,
     get_platform_subclass,
 )
-from ansible.module_utils.pycompat24 import get_exception, literal_eval
-from ansible.module_utils.common.parameters import (
+from assible.module_utils.pycompat24 import get_exception, literal_eval
+from assible.module_utils.common.parameters import (
     handle_aliases,
     list_deprecations,
     list_no_log_values,
@@ -163,7 +163,7 @@ from ansible.module_utils.common.parameters import (
     PASS_BOOLS,
 )
 
-from ansible.module_utils.six import (
+from assible.module_utils.six import (
     PY2,
     PY3,
     b,
@@ -173,8 +173,8 @@ from ansible.module_utils.six import (
     string_types,
     text_type,
 )
-from ansible.module_utils.six.moves import map, reduce, shlex_quote
-from ansible.module_utils.common.validation import (
+from assible.module_utils.six.moves import map, reduce, shlex_quote
+from assible.module_utils.common.validation import (
     check_missing_parameters,
     check_mutually_exclusive,
     check_required_arguments,
@@ -196,9 +196,9 @@ from ansible.module_utils.common.validation import (
     check_type_str,
     safe_eval,
 )
-from ansible.module_utils.common._utils import get_all_subclasses as _get_all_subclasses
-from ansible.module_utils.parsing.convert_bool import BOOLEANS, BOOLEANS_FALSE, BOOLEANS_TRUE, boolean
-from ansible.module_utils.common.warnings import (
+from assible.module_utils.common._utils import get_all_subclasses as _get_all_subclasses
+from assible.module_utils.parsing.convert_bool import BOOLEANS, BOOLEANS_FALSE, BOOLEANS_TRUE, boolean
+from assible.module_utils.common.warnings import (
     deprecate,
     get_deprecation_messages,
     get_warning_messages,
@@ -232,10 +232,10 @@ _literal_eval = literal_eval
 # End of deprecated names
 
 # Internal global holding passed in params.  This is consulted in case
-# multiple AnsibleModules are created.  Otherwise each AnsibleModule would
+# multiple AssibleModules are created.  Otherwise each AssibleModule would
 # attempt to read from stdin.  Other code should not use this directly as it
 # is an internal implementation detail
-_ANSIBLE_ARGS = None
+_ASSIBLE_ARGS = None
 
 FILE_COMMON_ARGUMENTS = dict(
     # These are things we want. About setting metadata (mode, ownership, permissions in general) on
@@ -267,7 +267,7 @@ _PY_MIN = _PY3_MIN or _PY2_MIN
 if not _PY_MIN:
     print(
         '\n{"failed": true, '
-        '"msg": "Ansible requires a minimum of Python2 version 2.6 or Python3 version 3.5. Current version: %s"}' % ''.join(sys.version.splitlines())
+        '"msg": "Assible requires a minimum of Python2 version 2.6 or Python3 version 3.5. Current version: %s"}' % ''.join(sys.version.splitlines())
     )
     sys.exit(1)
 
@@ -295,13 +295,13 @@ def get_platform():
 #
 
 def load_platform_subclass(cls, *args, **kwargs):
-    """**Deprecated**: Use ansible.module_utils.common.sys_info.get_platform_subclass instead"""
+    """**Deprecated**: Use assible.module_utils.common.sys_info.get_platform_subclass instead"""
     platform_cls = get_platform_subclass(cls)
     return super(cls, platform_cls).__new__(platform_cls)
 
 
 def get_all_subclasses(cls):
-    """**Deprecated**: Use ansible.module_utils.common._utils.get_all_subclasses instead"""
+    """**Deprecated**: Use assible.module_utils.common._utils.get_all_subclasses instead"""
     return list(_get_all_subclasses(cls))
 
 
@@ -494,7 +494,7 @@ def sanitize_keys(obj, no_log_strings, ignore_keys=frozenset()):
 
         if isinstance(new_data, Mapping):
             for old_key, old_elem in old_data.items():
-                if old_key in ignore_keys or old_key.startswith('_ansible'):
+                if old_key in ignore_keys or old_key.startswith('_assible'):
                     new_data[old_key] = _sanitize_keys_conditions(old_elem, no_log_strings, ignore_keys, deferred_removals)
                 else:
                     # Sanitize the old key. We take advantage of the sanitizing code in
@@ -590,9 +590,9 @@ def _load_params():
     to call this function and consume its outputs than to implement the logic
     inside it as a copy in your own code.
     '''
-    global _ANSIBLE_ARGS
-    if _ANSIBLE_ARGS is not None:
-        buffer = _ANSIBLE_ARGS
+    global _ASSIBLE_ARGS
+    if _ASSIBLE_ARGS is not None:
+        buffer = _ASSIBLE_ARGS
     else:
         # debug overrides to read args from file or cmdline
 
@@ -613,7 +613,7 @@ def _load_params():
                 buffer = sys.stdin.read()
             else:
                 buffer = sys.stdin.buffer.read()
-        _ANSIBLE_ARGS = buffer
+        _ASSIBLE_ARGS = buffer
 
     try:
         params = json.loads(buffer.decode('utf-8'))
@@ -626,11 +626,11 @@ def _load_params():
         params = json_dict_unicode_to_bytes(params)
 
     try:
-        return params['ANSIBLE_MODULE_ARGS']
+        return params['ASSIBLE_MODULE_ARGS']
     except KeyError:
         # This helper does not have access to fail_json so we have to print
         # json output on our own.
-        print('\n{"msg": "Error: Module unable to locate ANSIBLE_MODULE_ARGS in json data from stdin.  Unable to figure out what parameters were passed", '
+        print('\n{"msg": "Error: Module unable to locate ASSIBLE_MODULE_ARGS in json data from stdin.  Unable to figure out what parameters were passed", '
               '"failed": true}')
         sys.exit(1)
 
@@ -640,7 +640,7 @@ def env_fallback(*args, **kwargs):
     for arg in args:
         if arg in os.environ:
             return os.environ[arg]
-    raise AnsibleFallbackNotFound
+    raise AssibleFallbackNotFound
 
 
 def missing_required_lib(library, reason=None, url=None):
@@ -652,23 +652,23 @@ def missing_required_lib(library, reason=None, url=None):
         msg += " See %s for more info." % url
 
     msg += (" Please read the module documentation and install it in the appropriate location."
-            " If the required library is installed, but Ansible is using the wrong Python interpreter,"
-            " please consult the documentation on ansible_python_interpreter")
+            " If the required library is installed, but Assible is using the wrong Python interpreter,"
+            " please consult the documentation on assible_python_interpreter")
     return msg
 
 
-class AnsibleFallbackNotFound(Exception):
+class AssibleFallbackNotFound(Exception):
     pass
 
 
-class AnsibleModule(object):
+class AssibleModule(object):
     def __init__(self, argument_spec, bypass_checks=False, no_log=False,
                  mutually_exclusive=None, required_together=None,
                  required_one_of=None, add_file_common_args=False,
                  supports_check_mode=False, required_if=None, required_by=None):
 
         '''
-        Common code for quickly building an ansible module in Python
+        Common code for quickly building an assible module in Python
         (although you can write modules with anything that can return JSON).
 
         See :ref:`developing_modules_general` for a general introduction
@@ -772,7 +772,7 @@ class AnsibleModule(object):
 
     @property
     def tmpdir(self):
-        # if _ansible_tmpdir was not set and we have a remote_tmp,
+        # if _assible_tmpdir was not set and we have a remote_tmp,
         # the module needs to create it and clean it up once finished.
         # otherwise we create our own module tmp dir from the system defaults
         if self._tmpdir is None:
@@ -795,7 +795,7 @@ class AnsibleModule(object):
                               "avoid this, create the remote_tmp dir with "
                               "the correct permissions manually" % basedir)
 
-            basefile = "ansible-moduletmp-%s-" % time.time()
+            basefile = "assible-moduletmp-%s-" % time.time()
             try:
                 tmpdir = tempfile.mkdtemp(prefix=basefile, dir=basedir)
             except (OSError, IOError) as e:
@@ -1543,8 +1543,8 @@ class AnsibleModule(object):
                 unsupported_parameters.add(k)
 
         for k in PASS_VARS:
-            # handle setting internal properties from internal ansible vars
-            param_key = '_ansible_%s' % k
+            # handle setting internal properties from internal assible vars
+            param_key = '_assible_%s' % k
             if param_key in param:
                 if k in PASS_BOOLS:
                     setattr(self, PASS_VARS[k][0], self.boolean(param[param_key]))
@@ -1963,7 +1963,7 @@ class AnsibleModule(object):
                         fallback_args = item
                 try:
                     param[k] = fallback_strategy(*fallback_args, **fallback_kwargs)
-                except AnsibleFallbackNotFound:
+                except AssibleFallbackNotFound:
                     continue
 
     def _load_params(self):
@@ -1978,7 +1978,7 @@ class AnsibleModule(object):
     def _log_to_syslog(self, msg):
         if HAS_SYSLOG:
             try:
-                module = 'ansible-%s' % self._name
+                module = 'assible-%s' % self._name
                 facility = getattr(syslog, self._syslog_facility, syslog.LOG_USER)
                 syslog.openlog(str(module), 0, facility)
                 syslog.syslog(syslog.LOG_INFO, msg)
@@ -1986,7 +1986,7 @@ class AnsibleModule(object):
                 self.fail_json(
                     msg='Failed to log to syslog (%s). To proceed anyway, '
                         'disable syslog logging by setting no_target_syslog '
-                        'to True in your Ansible config.' % to_native(e),
+                        'to True in your Assible config.' % to_native(e),
                     exception=traceback.format_exc(),
                     msg_to_log=msg,
                 )
@@ -2002,7 +2002,7 @@ class AnsibleModule(object):
             if log_args is None:
                 log_args = dict()
 
-            module = 'ansible-%s' % self._name
+            module = 'assible-%s' % self._name
             if isinstance(module, binary_type):
                 module = module.decode('utf-8', 'replace')
 
@@ -2048,7 +2048,7 @@ class AnsibleModule(object):
                 self._log_to_syslog(syslog_msg)
 
     def _log_invocation(self):
-        ''' log that ansible ran the module '''
+        ''' log that assible ran the module '''
         # TODO: generalize a separate log function and make log_invocation use it
         # Sanitize possible password argument when logging.
         log_args = dict()
@@ -2175,9 +2175,9 @@ class AnsibleModule(object):
                         self.deprecate(d['msg'], version=d.get('version'), date=d.get('date'),
                                        collection_name=d.get('collection_name'))
                     else:
-                        self.deprecate(d)  # pylint: disable=ansible-deprecated-no-version
+                        self.deprecate(d)  # pylint: disable=assible-deprecated-no-version
             else:
-                self.deprecate(kwargs['deprecations'])  # pylint: disable=ansible-deprecated-no-version
+                self.deprecate(kwargs['deprecations'])  # pylint: disable=assible-deprecated-no-version
 
         deprecations = get_deprecation_messages()
         if deprecations:
@@ -2385,7 +2385,7 @@ class AnsibleModule(object):
                 error_msg = None
                 tmp_dest_name = None
                 try:
-                    tmp_dest_fd, tmp_dest_name = tempfile.mkstemp(prefix=b'.ansible_tmp',
+                    tmp_dest_fd, tmp_dest_name = tempfile.mkstemp(prefix=b'.assible_tmp',
                                                                   dir=b_dest_dir, suffix=b_suffix)
                 except (OSError, IOError) as e:
                     error_msg = 'The destination directory (%s) is not writable by the current user. Error was: %s' % (os.path.dirname(dest), to_native(e))
@@ -2650,15 +2650,15 @@ class AnsibleModule(object):
             os.environ['PATH'] = "%s:%s" % (path_prefix, os.environ['PATH'])
 
         # If using test-module.py and explode, the remote lib path will resemble:
-        #   /tmp/test_module_scratch/debug_dir/ansible/module_utils/basic.py
-        # If using ansible or ansible-playbook with a remote system:
-        #   /tmp/ansible_vmweLQ/ansible_modlib.zip/ansible/module_utils/basic.py
+        #   /tmp/test_module_scratch/debug_dir/assible/module_utils/basic.py
+        # If using assible or assible-playbook with a remote system:
+        #   /tmp/assible_vmweLQ/assible_modlib.zip/assible/module_utils/basic.py
 
-        # Clean out python paths set by ansiballz
+        # Clean out python paths set by assiballz
         if 'PYTHONPATH' in os.environ:
             pypaths = os.environ['PYTHONPATH'].split(':')
             pypaths = [x for x in pypaths
-                       if not x.endswith('/ansible_modlib.zip') and
+                       if not x.endswith('/assible_modlib.zip') and
                        not x.endswith('/debug_dir')]
             os.environ['PYTHONPATH'] = ':'.join(pypaths)
             if not os.environ['PYTHONPATH']:

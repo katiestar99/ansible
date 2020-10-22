@@ -1,18 +1,18 @@
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -20,14 +20,14 @@ __metaclass__ = type
 
 from os.path import basename
 
-from ansible.errors import AnsibleParserError
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.block import Block
-from ansible.playbook.task_include import TaskInclude
-from ansible.playbook.role import Role
-from ansible.playbook.role.include import RoleInclude
-from ansible.utils.display import Display
-from ansible.module_utils.six import string_types
+from assible.errors import AssibleParserError
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.block import Block
+from assible.playbook.task_include import TaskInclude
+from assible.playbook.role import Role
+from assible.playbook.role.include import RoleInclude
+from assible.utils.display import Display
+from assible.module_utils.six import string_types
 
 __all__ = ['IncludeRole']
 
@@ -125,29 +125,29 @@ class IncludeRole(TaskInclude):
         # name is needed, or use role as alias
         ir._role_name = ir.args.get('name', ir.args.get('role'))
         if ir._role_name is None:
-            raise AnsibleParserError("'name' is a required field for %s." % ir.action, obj=data)
+            raise AssibleParserError("'name' is a required field for %s." % ir.action, obj=data)
 
         if 'public' in ir.args and ir.action != 'include_role':
-            raise AnsibleParserError('Invalid options for %s: public' % ir.action, obj=data)
+            raise AssibleParserError('Invalid options for %s: public' % ir.action, obj=data)
 
         # validate bad args, otherwise we silently ignore
         bad_opts = my_arg_names.difference(IncludeRole.VALID_ARGS)
         if bad_opts:
-            raise AnsibleParserError('Invalid options for %s: %s' % (ir.action, ','.join(list(bad_opts))), obj=data)
+            raise AssibleParserError('Invalid options for %s: %s' % (ir.action, ','.join(list(bad_opts))), obj=data)
 
         # build options for role includes
         for key in my_arg_names.intersection(IncludeRole.FROM_ARGS):
             from_key = key.replace('_from', '')
             args_value = ir.args.get(key)
             if not isinstance(args_value, string_types):
-                raise AnsibleParserError('Expected a string for %s but got %s instead' % (key, type(args_value)))
+                raise AssibleParserError('Expected a string for %s but got %s instead' % (key, type(args_value)))
             ir._from_files[from_key] = basename(args_value)
 
         apply_attrs = ir.args.get('apply', {})
         if apply_attrs and ir.action != 'include_role':
-            raise AnsibleParserError('Invalid options for %s: apply' % ir.action, obj=data)
+            raise AssibleParserError('Invalid options for %s: apply' % ir.action, obj=data)
         elif not isinstance(apply_attrs, dict):
-            raise AnsibleParserError('Expected a dict for apply but got %s instead' % type(apply_attrs), obj=data)
+            raise AssibleParserError('Expected a dict for apply but got %s instead' % type(apply_attrs), obj=data)
 
         # manual list as otherwise the options would set other task parameters we don't want.
         for option in my_arg_names.intersection(IncludeRole.OTHER_ARGS):
@@ -170,6 +170,6 @@ class IncludeRole(TaskInclude):
         v = super(IncludeRole, self).get_include_params()
         if self._parent_role:
             v.update(self._parent_role.get_role_params())
-            v.setdefault('ansible_parent_role_names', []).insert(0, self._parent_role.get_name())
-            v.setdefault('ansible_parent_role_paths', []).insert(0, self._parent_role._role_path)
+            v.setdefault('assible_parent_role_names', []).insert(0, self._parent_role.get_name())
+            v.setdefault('assible_parent_role_paths', []).insert(0, self._parent_role._role_path)
         return v

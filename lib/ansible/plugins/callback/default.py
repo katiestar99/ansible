@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -8,10 +8,10 @@ __metaclass__ = type
 DOCUMENTATION = '''
     name: default
     type: stdout
-    short_description: default Ansible screen output
+    short_description: default Assible screen output
     version_added: historical
     description:
-        - This is the default output callback for ansible-playbook.
+        - This is the default output callback for assible-playbook.
     extends_documentation_fragment:
       - default_callback
     requirements:
@@ -19,15 +19,15 @@ DOCUMENTATION = '''
 '''
 
 
-from ansible import constants as C
-from ansible import context
-from ansible.playbook.task_include import TaskInclude
-from ansible.plugins.callback import CallbackBase
-from ansible.utils.color import colorize, hostcolor
+from assible import constants as C
+from assible import context
+from assible.playbook.task_include import TaskInclude
+from assible.plugins.callback import CallbackBase
+from assible.utils.color import colorize, hostcolor
 
-# These values use ansible.constants for historical reasons, mostly to allow
+# These values use assible.constants for historical reasons, mostly to allow
 # unmodified derivative plugins to work. However, newer options added to the
-# plugin are not also added to ansible.constants, so authors of derivative
+# plugin are not also added to assible.constants, so authors of derivative
 # callback plugins will eventually need to add a reference to the common docs
 # fragment for the 'default' callback plugin
 
@@ -71,13 +71,13 @@ class CallbackModule(CallbackBase):
                 value = self.get_option(option)
             except (AttributeError, KeyError):
                 self._display.deprecated("'%s' is subclassing DefaultCallback without the corresponding doc_fragment." % self._load_name,
-                                         version='2.14', collection_name='ansible.builtin')
+                                         version='2.14', collection_name='assible.builtin')
                 value = constant
             setattr(self, option, value)
 
     def v2_runner_on_failed(self, result, ignore_errors=False):
 
-        delegated_vars = result._result.get('_ansible_delegated_vars', None)
+        delegated_vars = result._result.get('_assible_delegated_vars', None)
         self._clean_results(result._result, result._task.action)
 
         if self._last_task_banner != result._task._uuid:
@@ -91,7 +91,7 @@ class CallbackModule(CallbackBase):
 
         else:
             if delegated_vars:
-                self._display.display("fatal: [%s -> %s]: FAILED! => %s" % (result._host.get_name(), delegated_vars['ansible_host'],
+                self._display.display("fatal: [%s -> %s]: FAILED! => %s" % (result._host.get_name(), delegated_vars['assible_host'],
                                                                             self._dump_results(result._result)),
                                       color=C.COLOR_ERROR, stderr=self.display_failed_stderr)
             else:
@@ -103,7 +103,7 @@ class CallbackModule(CallbackBase):
 
     def v2_runner_on_ok(self, result):
 
-        delegated_vars = result._result.get('_ansible_delegated_vars', None)
+        delegated_vars = result._result.get('_assible_delegated_vars', None)
 
         if isinstance(result._task, TaskInclude):
             if self._last_task_banner != result._task._uuid:
@@ -114,7 +114,7 @@ class CallbackModule(CallbackBase):
                 self._print_task_banner(result._task)
 
             if delegated_vars:
-                msg = "changed: [%s -> %s]" % (result._host.get_name(), delegated_vars['ansible_host'])
+                msg = "changed: [%s -> %s]" % (result._host.get_name(), delegated_vars['assible_host'])
             else:
                 msg = "changed: [%s]" % result._host.get_name()
             color = C.COLOR_CHANGED
@@ -126,7 +126,7 @@ class CallbackModule(CallbackBase):
                 self._print_task_banner(result._task)
 
             if delegated_vars:
-                msg = "ok: [%s -> %s]" % (result._host.get_name(), delegated_vars['ansible_host'])
+                msg = "ok: [%s -> %s]" % (result._host.get_name(), delegated_vars['assible_host'])
             else:
                 msg = "ok: [%s]" % result._host.get_name()
             color = C.COLOR_OK
@@ -163,9 +163,9 @@ class CallbackModule(CallbackBase):
         if self._last_task_banner != result._task._uuid:
             self._print_task_banner(result._task)
 
-        delegated_vars = result._result.get('_ansible_delegated_vars', None)
+        delegated_vars = result._result.get('_assible_delegated_vars', None)
         if delegated_vars:
-            msg = "fatal: [%s -> %s]: UNREACHABLE! => %s" % (result._host.get_name(), delegated_vars['ansible_host'], self._dump_results(result._result))
+            msg = "fatal: [%s -> %s]: UNREACHABLE! => %s" % (result._host.get_name(), delegated_vars['assible_host'], self._dump_results(result._result))
         else:
             msg = "fatal: [%s]: UNREACHABLE! => %s" % (result._host.get_name(), self._dump_results(result._result))
         self._display.display(msg, color=C.COLOR_UNREACHABLE, stderr=self.display_failed_stderr)
@@ -275,7 +275,7 @@ class CallbackModule(CallbackBase):
 
     def v2_runner_item_on_ok(self, result):
 
-        delegated_vars = result._result.get('_ansible_delegated_vars', None)
+        delegated_vars = result._result.get('_assible_delegated_vars', None)
         if isinstance(result._task, TaskInclude):
             return
         elif result._result.get('changed', False):
@@ -295,7 +295,7 @@ class CallbackModule(CallbackBase):
             color = C.COLOR_OK
 
         if delegated_vars:
-            msg += ": [%s -> %s]" % (result._host.get_name(), delegated_vars['ansible_host'])
+            msg += ": [%s -> %s]" % (result._host.get_name(), delegated_vars['assible_host'])
         else:
             msg += ": [%s]" % result._host.get_name()
 
@@ -310,13 +310,13 @@ class CallbackModule(CallbackBase):
         if self._last_task_banner != result._task._uuid:
             self._print_task_banner(result._task)
 
-        delegated_vars = result._result.get('_ansible_delegated_vars', None)
+        delegated_vars = result._result.get('_assible_delegated_vars', None)
         self._clean_results(result._result, result._task.action)
         self._handle_exception(result._result)
 
         msg = "failed: "
         if delegated_vars:
-            msg += "[%s -> %s]" % (result._host.get_name(), delegated_vars['ansible_host'])
+            msg += "[%s -> %s]" % (result._host.get_name(), delegated_vars['assible_host'])
         else:
             msg += "[%s]" % (result._host.get_name())
 
@@ -425,7 +425,7 @@ class CallbackModule(CallbackBase):
 
     def v2_runner_on_async_poll(self, result):
         host = result._host.get_name()
-        jid = result._result.get('ansible_job_id')
+        jid = result._result.get('assible_job_id')
         started = result._result.get('started')
         finished = result._result.get('finished')
         self._display.display(

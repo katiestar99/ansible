@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 """Installed collections management package."""
 
@@ -32,19 +32,19 @@ try:
 except ImportError:
     import Queue as queue  # Python 2
 
-import ansible.constants as C
-from ansible.errors import AnsibleError
-from ansible.galaxy import get_collections_galaxy_meta_info
-from ansible.galaxy.api import CollectionVersionMetadata, GalaxyError
-from ansible.galaxy.user_agent import user_agent
-from ansible.module_utils import six
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.utils.collection_loader import AnsibleCollectionRef
-from ansible.utils.display import Display
-from ansible.utils.galaxy import scm_archive_collection
-from ansible.utils.hashing import secure_hash, secure_hash_s
-from ansible.utils.version import SemanticVersion
-from ansible.module_utils.urls import open_url
+import assible.constants as C
+from assible.errors import AssibleError
+from assible.galaxy import get_collections_galaxy_meta_info
+from assible.galaxy.api import CollectionVersionMetadata, GalaxyError
+from assible.galaxy.user_agent import user_agent
+from assible.module_utils import six
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.utils.collection_loader import AssibleCollectionRef
+from assible.utils.display import Display
+from assible.utils.galaxy import scm_archive_collection
+from assible.utils.hashing import secure_hash, secure_hash_s
+from assible.utils.version import SemanticVersion
+from assible.module_utils.urls import open_url
 
 urlparse = six.moves.urllib.parse.urlparse
 urldefrag = six.moves.urllib.parse.urldefrag
@@ -158,7 +158,7 @@ class CollectionRequirement:
                 try:
                     info[property_name] = json.loads(to_text(file_obj.read(), errors='surrogate_or_strict'))
                 except ValueError:
-                    raise AnsibleError("Collection file at '%s' does not contain a valid json string." % to_native(b_file_path))
+                    raise AssibleError("Collection file at '%s' does not contain a valid json string." % to_native(b_file_path))
         return info
 
     @staticmethod
@@ -192,7 +192,7 @@ class CollectionRequirement:
                 version = self.latest_version if self.latest_version != '*' else 'unknown'
                 msg = "Cannot meet requirement %s:%s as it is already installed at version '%s'. Use %s to overwrite" \
                       % (to_text(self), requirement, version, force_flag)
-                raise AnsibleError(msg)
+                raise AssibleError(msg)
             elif parent is None:
                 msg = "Cannot meet requirement %s for dependency %s" % (requirement, to_text(self))
             else:
@@ -214,7 +214,7 @@ class CollectionRequirement:
             else:
                 pre_release_msg = ''
 
-            raise AnsibleError(
+            raise AssibleError(
                 "%s from source '%s'. Available versions before last requirement added: %s\nRequirements from:\n%s%s"
                 % (msg, collection_source, versions, req_by, pre_release_msg)
             )
@@ -291,16 +291,16 @@ class CollectionRequirement:
     def install_scm(self, b_collection_output_path):
         """Install the collection from source control into given dir.
 
-        Generates the Ansible collection artifact data from a galaxy.yml and installs the artifact to a directory.
+        Generates the Assible collection artifact data from a galaxy.yml and installs the artifact to a directory.
         This should follow the same pattern as build_collection, but instead of creating an artifact, install it.
         :param b_collection_output_path: The installation directory for the collection artifact.
-        :raises AnsibleError: If no collection metadata found.
+        :raises AssibleError: If no collection metadata found.
         """
         b_collection_path = self.b_path
 
         b_galaxy_path = get_galaxy_metadata_path(b_collection_path)
         if not os.path.exists(b_galaxy_path):
-            raise AnsibleError("The collection galaxy.yml path '%s' does not exist." % to_native(b_galaxy_path))
+            raise AssibleError("The collection galaxy.yml path '%s' does not exist." % to_native(b_galaxy_path))
 
         info = CollectionRequirement.galaxy_metadata(b_collection_path)
 
@@ -429,7 +429,7 @@ class CollectionRequirement:
     @staticmethod
     def from_tar(b_path, force, parent=None):
         if not tarfile.is_tarfile(b_path):
-            raise AnsibleError("Collection artifact at '%s' is not a valid tar file." % to_native(b_path))
+            raise AssibleError("Collection artifact at '%s' is not a valid tar file." % to_native(b_path))
 
         info = {}
         with tarfile.open(b_path, mode='r') as collection_tar:
@@ -438,14 +438,14 @@ class CollectionRequirement:
                 try:
                     member = collection_tar.getmember(n_member_name)
                 except KeyError:
-                    raise AnsibleError("Collection at '%s' does not contain the required file %s."
+                    raise AssibleError("Collection at '%s' does not contain the required file %s."
                                        % (to_native(b_path), n_member_name))
 
                 with _tarfile_extract(collection_tar, member) as (dummy, member_obj):
                     try:
                         info[property_name] = json.loads(to_text(member_obj.read(), errors='surrogate_or_strict'))
                     except ValueError:
-                        raise AnsibleError("Collection tar file member %s does not contain a valid json string."
+                        raise AssibleError("Collection tar file member %s does not contain a valid json string."
                                            % n_member_name)
 
         meta = info['manifest_file']['collection_info']
@@ -542,7 +542,7 @@ class CollectionRequirement:
             display.vvv("Collection '%s' obtained from server %s %s" % (collection, api.name, api.api_server))
             break
         else:
-            raise AnsibleError("Failed to find collection %s:%s" % (collection, requirement))
+            raise AssibleError("Failed to find collection %s:%s" % (collection, requirement))
 
         req = CollectionRequirement(namespace, name, None, api, versions, requirement, force, parent=parent,
                                     metadata=galaxy_meta, allow_pre_releases=allow_pre_release)
@@ -550,7 +550,7 @@ class CollectionRequirement:
 
 
 def build_collection(collection_path, output_path, force):
-    """Creates the Ansible collection artifact in a .tar.gz file.
+    """Creates the Assible collection artifact in a .tar.gz file.
 
     :param collection_path: The path to the collection to build. This should be the directory that contains the
         galaxy.yml file.
@@ -561,7 +561,7 @@ def build_collection(collection_path, output_path, force):
     b_collection_path = to_bytes(collection_path, errors='surrogate_or_strict')
     b_galaxy_path = get_galaxy_metadata_path(b_collection_path)
     if not os.path.exists(b_galaxy_path):
-        raise AnsibleError("The collection galaxy.yml path '%s' does not exist." % to_native(b_galaxy_path))
+        raise AssibleError("The collection galaxy.yml path '%s' does not exist." % to_native(b_galaxy_path))
 
     info = CollectionRequirement.galaxy_metadata(b_collection_path)
 
@@ -576,10 +576,10 @@ def build_collection(collection_path, output_path, force):
     b_collection_output = to_bytes(collection_output, errors='surrogate_or_strict')
     if os.path.exists(b_collection_output):
         if os.path.isdir(b_collection_output):
-            raise AnsibleError("The output collection artifact '%s' already exists, "
+            raise AssibleError("The output collection artifact '%s' already exists, "
                                "but is a directory - aborting" % to_native(collection_output))
         elif not force:
-            raise AnsibleError("The file '%s' already exists. You can use --force to re-create "
+            raise AssibleError("The file '%s' already exists. You can use --force to re-create "
                                "the collection artifact." % to_native(collection_output))
 
     _build_collection_tar(b_collection_path, b_collection_output, collection_manifest, file_manifest)
@@ -587,7 +587,7 @@ def build_collection(collection_path, output_path, force):
 
 
 def download_collections(collections, output_path, apis, validate_certs, no_deps, allow_pre_release):
-    """Download Ansible collections as their tarball from a Galaxy server to the path specified and creates a requirements
+    """Download Assible collections as their tarball from a Galaxy server to the path specified and creates a requirements
     file of the downloaded requirements to be used for an install.
 
     :param collections: The collections to download, should be a list of tuples with (name, requirement, Galaxy Server).
@@ -634,7 +634,7 @@ def download_collections(collections, output_path, apis, validate_certs, no_deps
 
 
 def publish_collection(collection_path, api, wait, timeout):
-    """Publish an Ansible collection tarball into an Ansible Galaxy server.
+    """Publish an Assible collection tarball into an Assible Galaxy server.
 
     :param collection_path: The path to the collection tarball to publish.
     :param api: A GalaxyAPI to publish the collection to.
@@ -646,7 +646,7 @@ def publish_collection(collection_path, api, wait, timeout):
     if wait:
         # Galaxy returns a url fragment which differs between v2 and v3.  The second to last entry is
         # always the task_id, though.
-        # v2: {"task": "https://galaxy-dev.ansible.com/api/v2/collection-imports/35573/"}
+        # v2: {"task": "https://galaxy-dev.assible.com/api/v2/collection-imports/35573/"}
         # v3: {"task": "/api/automation-hub/v3/imports/collections/838d1308-a8f4-402c-95cb-7823f3806cd8/"}
         task_id = None
         for path_segment in reversed(import_uri.split('/')):
@@ -655,7 +655,7 @@ def publish_collection(collection_path, api, wait, timeout):
                 break
 
         if not task_id:
-            raise AnsibleError("Publishing the collection did not return valid task info. Cannot wait for task status. Returned task info: '%s'" % import_uri)
+            raise AssibleError("Publishing the collection did not return valid task info. Cannot wait for task status. Returned task info: '%s'" % import_uri)
 
         display.display("Collection has been published to the Galaxy server %s %s" % (api.name, api.api_server))
         with _display_progress():
@@ -670,7 +670,7 @@ def publish_collection(collection_path, api, wait, timeout):
 
 def install_collections(collections, output_path, apis, validate_certs, ignore_errors, no_deps, force, force_deps,
                         allow_pre_release=False):
-    """Install Ansible collections to the path specified.
+    """Install Assible collections to the path specified.
 
     :param collections: The collections to install, should be a list of tuples with (name, requirement, Galaxy server).
     :param output_path: The path to install the collections to.
@@ -695,7 +695,7 @@ def install_collections(collections, output_path, apis, validate_certs, ignore_e
             for collection in dependency_map.values():
                 try:
                     collection.install(output_path, b_temp_path)
-                except AnsibleError as err:
+                except AssibleError as err:
                     if ignore_errors:
                         display.warning("Failed to install collection %s but skipping due to --ignore-errors being set. "
                                         "Error: %s" % (to_text(collection), to_text(err)))
@@ -710,24 +710,24 @@ def validate_collection_name(name):
     :return: The input value, required for argparse validation.
     """
     collection, dummy, dummy = name.partition(':')
-    if AnsibleCollectionRef.is_valid_collection_name(collection):
+    if AssibleCollectionRef.is_valid_collection_name(collection):
         return name
 
-    raise AnsibleError("Invalid collection name '%s', "
+    raise AssibleError("Invalid collection name '%s', "
                        "name must be in the format <namespace>.<collection>. \n"
                        "Please make sure namespace and collection name contains "
                        "characters from [a-zA-Z0-9_] only." % name)
 
 
 def validate_collection_path(collection_path):
-    """Ensure a given path ends with 'ansible_collections'
+    """Ensure a given path ends with 'assible_collections'
 
-    :param collection_path: The path that should end in 'ansible_collections'
-    :return: collection_path ending in 'ansible_collections' if it does not already.
+    :param collection_path: The path that should end in 'assible_collections'
+    :return: collection_path ending in 'assible_collections' if it does not already.
     """
 
-    if os.path.split(collection_path)[1] != 'ansible_collections':
-        return os.path.join(collection_path, 'ansible_collections')
+    if os.path.split(collection_path)[1] != 'assible_collections':
+        return os.path.join(collection_path, 'assible_collections')
 
     return collection_path
 
@@ -743,7 +743,7 @@ def verify_collections(collections, search_paths, apis, validate_certs, ignore_e
                     b_collection = to_bytes(collection[0], errors='surrogate_or_strict')
 
                     if os.path.isfile(b_collection) or urlparse(collection[0]).scheme.lower() in ['http', 'https'] or len(collection[0].split('.')) != 2:
-                        raise AnsibleError(message="'%s' is not a valid collection name. The format namespace.name is expected." % collection[0])
+                        raise AssibleError(message="'%s' is not a valid collection name. The format namespace.name is expected." % collection[0])
 
                     collection_name = collection[0]
                     namespace, name = collection_name.split('.')
@@ -754,22 +754,22 @@ def verify_collections(collections, search_paths, apis, validate_certs, ignore_e
                         b_search_path = to_bytes(os.path.join(search_path, namespace, name), errors='surrogate_or_strict')
                         if os.path.isdir(b_search_path):
                             if not os.path.isfile(os.path.join(to_text(b_search_path, errors='surrogate_or_strict'), 'MANIFEST.json')):
-                                raise AnsibleError(
+                                raise AssibleError(
                                     message="Collection %s does not appear to have a MANIFEST.json. " % collection_name +
-                                            "A MANIFEST.json is expected if the collection has been built and installed via ansible-galaxy."
+                                            "A MANIFEST.json is expected if the collection has been built and installed via assible-galaxy."
                                 )
                             local_collection = CollectionRequirement.from_path(b_search_path, False)
                             break
                     if local_collection is None:
-                        raise AnsibleError(message='Collection %s is not installed in any of the collection paths.' % collection_name)
+                        raise AssibleError(message='Collection %s is not installed in any of the collection paths.' % collection_name)
 
                     # Download collection on a galaxy server for comparison
                     try:
                         remote_collection = CollectionRequirement.from_name(collection_name, apis, collection_version, False, parent=None,
                                                                             allow_pre_release=allow_pre_release)
-                    except AnsibleError as e:
+                    except AssibleError as e:
                         if e.message == 'Failed to find collection %s:%s' % (collection[0], collection[1]):
-                            raise AnsibleError('Failed to find remote collection %s:%s on any of the galaxy servers' % (collection[0], collection[1]))
+                            raise AssibleError('Failed to find remote collection %s:%s on any of the galaxy servers' % (collection[0], collection[1]))
                         raise
 
                     download_url = remote_collection.metadata.download_url
@@ -779,7 +779,7 @@ def verify_collections(collections, search_paths, apis, validate_certs, ignore_e
 
                     local_collection.verify(remote_collection, search_path, b_temp_tar_path)
 
-                except AnsibleError as err:
+                except AssibleError as err:
                     if ignore_errors:
                         display.warning("Failed to verify collection %s but skipping due to --ignore-errors being set. "
                                         "Error: %s" % (collection[0], to_text(err)))
@@ -891,13 +891,13 @@ def _get_galaxy_yml(b_galaxy_yml_path):
         with open(b_galaxy_yml_path, 'rb') as g_yaml:
             galaxy_yml = yaml.safe_load(g_yaml)
     except YAMLError as err:
-        raise AnsibleError("Failed to parse the galaxy.yml at '%s' with the following error:\n%s"
+        raise AssibleError("Failed to parse the galaxy.yml at '%s' with the following error:\n%s"
                            % (to_native(b_galaxy_yml_path), to_native(err)))
 
     set_keys = set(galaxy_yml.keys())
     missing_keys = mandatory_keys.difference(set_keys)
     if missing_keys:
-        raise AnsibleError("The collection galaxy.yml at '%s' is missing the following mandatory keys: %s"
+        raise AssibleError("The collection galaxy.yml at '%s' is missing the following mandatory keys: %s"
                            % (to_native(b_galaxy_yml_path), ", ".join(sorted(missing_keys))))
 
     extra_keys = set_keys.difference(all_keys)
@@ -938,7 +938,7 @@ def _build_files_manifest(b_collection_path, namespace, name, ignore_patterns):
         b'.git',
         b'*.pyc',
         b'*.retry',
-        b'tests/output',  # Ignore ansible-test result output directory.
+        b'tests/output',  # Ignore assible-test result output directory.
         to_bytes('{0}-{1}-*.tar.gz'.format(namespace, name)),  # Ignores previously built artifacts in the root dir.
     ]
     b_ignore_patterns += [to_bytes(p) for p in ignore_patterns]
@@ -1218,7 +1218,7 @@ def _collections_from_scm(collection, requirement, b_temp_path, force, parent=No
     :param b_temp_path: The temporary path to the archive of a collection
     :param force: Whether to overwrite an existing collection or fail
     :param parent: The name of the parent collection
-    :raises AnsibleError: if nothing found
+    :raises AssibleError: if nothing found
     :return: List of CollectionRequirement objects
     :rtype: list
     """
@@ -1243,7 +1243,7 @@ def _collections_from_scm(collection, requirement, b_temp_path, force, parent=No
         return [CollectionRequirement.from_path(b_collection_path, force, parent, fallback_metadata=True, skip=False)]
 
     if not os.path.isdir(b_collection_path) or not os.listdir(b_collection_path):
-        raise AnsibleError(err)
+        raise AssibleError(err)
 
     for b_possible_collection in os.listdir(b_collection_path):
         b_collection = os.path.join(b_collection_path, b_possible_collection)
@@ -1254,7 +1254,7 @@ def _collections_from_scm(collection, requirement, b_temp_path, force, parent=No
         if os.path.exists(b_galaxy):
             reqs.append(CollectionRequirement.from_path(b_collection, force, parent, fallback_metadata=True, skip=False))
     if not reqs:
-        raise AnsibleError(err)
+        raise AssibleError(err)
 
     return reqs
 
@@ -1291,7 +1291,7 @@ def _get_collection_info(dep_map, existing_collections, collection, requirement,
         try:
             b_tar_path = _download_file(collection, b_temp_path, None, validate_certs)
         except urllib_error.URLError as err:
-            raise AnsibleError("Failed to download collection tar from '%s': %s"
+            raise AssibleError("Failed to download collection tar from '%s': %s"
                                % (to_native(collection), to_native(err)))
 
     if is_scm:
@@ -1399,7 +1399,7 @@ def _download_file(url, b_path, expected_hash, validate_certs, headers=None):
     if expected_hash:
         display.vvvv("Validating downloaded file hash %s with expected hash %s" % (actual_hash, expected_hash))
         if expected_hash != actual_hash:
-            raise AnsibleError("Mismatch artifact hash with downloaded file")
+            raise AssibleError("Mismatch artifact hash with downloaded file")
 
     return b_file_path
 
@@ -1421,7 +1421,7 @@ def _extract_tar_dir(tar, dirname, b_dest):
         break
     else:
         # If we still can't find the member, raise a nice error.
-        raise AnsibleError("Unable to extract '%s' from collection" % to_native(member, errors='surrogate_or_strict'))
+        raise AssibleError("Unable to extract '%s' from collection" % to_native(member, errors='surrogate_or_strict'))
 
     b_dir_path = os.path.join(b_dest, to_bytes(dirname, errors='surrogate_or_strict'))
 
@@ -1435,7 +1435,7 @@ def _extract_tar_dir(tar, dirname, b_dest):
     if tar_member.type == tarfile.SYMTYPE:
         b_link_path = to_bytes(tar_member.linkname, errors='surrogate_or_strict')
         if not _is_child_path(b_link_path, b_dest, link_name=b_dir_path):
-            raise AnsibleError("Cannot extract symlink '%s' in collection: path points to location outside of "
+            raise AssibleError("Cannot extract symlink '%s' in collection: path points to location outside of "
                                "collection '%s'" % (to_native(dirname), b_link_path))
 
         os.symlink(b_link_path, b_dir_path)
@@ -1456,13 +1456,13 @@ def _extract_tar_file(tar, filename, b_dest, b_temp_path, expected_hash=None):
                 actual_hash = _consume_file(tar_obj, tmpfile_obj)
 
         if expected_hash and actual_hash != expected_hash:
-            raise AnsibleError("Checksum mismatch for '%s' inside collection at '%s'"
+            raise AssibleError("Checksum mismatch for '%s' inside collection at '%s'"
                                % (to_native(filename, errors='surrogate_or_strict'), to_native(tar.name)))
 
         b_dest_filepath = os.path.abspath(os.path.join(b_dest, to_bytes(filename, errors='surrogate_or_strict')))
         b_parent_dir = os.path.dirname(b_dest_filepath)
         if not _is_child_path(b_parent_dir, b_dest):
-            raise AnsibleError("Cannot extract tar entry '%s' as it will be placed outside the collection directory"
+            raise AssibleError("Cannot extract tar entry '%s' as it will be placed outside the collection directory"
                                % to_native(filename, errors='surrogate_or_strict'))
 
         if not os.path.exists(b_parent_dir):
@@ -1473,7 +1473,7 @@ def _extract_tar_file(tar, filename, b_dest, b_temp_path, expected_hash=None):
         if tar_member.type == tarfile.SYMTYPE:
             b_link_path = to_bytes(tar_member.linkname, errors='surrogate_or_strict')
             if not _is_child_path(b_link_path, b_dest, link_name=b_dest_filepath):
-                raise AnsibleError("Cannot extract symlink '%s' in collection: path points to location outside of "
+                raise AssibleError("Cannot extract symlink '%s' in collection: path points to location outside of "
                                    "collection '%s'" % (to_native(filename), b_link_path))
 
             os.symlink(b_link_path, b_dest_filepath)
@@ -1495,7 +1495,7 @@ def _get_tar_file_member(tar, filename):
     try:
         member = tar.getmember(n_filename)
     except KeyError:
-        raise AnsibleError("Collection tar at '%s' does not contain the expected file '%s'." % (
+        raise AssibleError("Collection tar at '%s' does not contain the expected file '%s'." % (
             to_native(tar.name),
             n_filename))
 

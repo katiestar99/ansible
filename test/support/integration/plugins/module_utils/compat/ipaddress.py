@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file, and this file only, is based on
 # Lib/ipaddress.py of cpython
 # It is licensed under the PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2

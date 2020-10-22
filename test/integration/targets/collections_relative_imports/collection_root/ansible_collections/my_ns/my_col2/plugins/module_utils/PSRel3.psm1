@@ -1,4 +1,4 @@
-#AnsibleRequires -CSharpUtil .sub_pkg.CSRel4
+#AssibleRequires -CSharpUtil .sub_pkg.CSRel4
 
 Function Invoke-FromPSRel3 {
     <#

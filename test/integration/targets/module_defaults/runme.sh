@@ -2,4 +2,4 @@
 
 set -eux
 
-ansible-playbook test_defaults.yml "$@"
+assible-playbook test_defaults.yml "$@"

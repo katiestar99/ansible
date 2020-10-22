@@ -1,7 +1,7 @@
 .. _playbooks_reuse:
 
 **************************
-Re-using Ansible artifacts
+Re-using Assible artifacts
 **************************
 
 You can write a simple playbook in one very large file, and most users learn the one-file approach first. However, breaking tasks up into different files is an excellent way to organize complex sets of tasks and reuse them. Smaller, more distributed artifacts let you re-use the same variables, tasks, and plays in multiple playbooks to address different use cases. You can use distributed artifacts across multiple parent playbooks or even multiple times within one playbook. For example, you might want to update your customer database as part of several different playbooks. If you put all the tasks related to updating your database in a tasks file, you can re-use them in many playbooks while only maintaining them in one place.
@@ -12,12 +12,12 @@ You can write a simple playbook in one very large file, and most users learn the
 Creating re-usable files and roles
 ==================================
 
-Ansible offers four distributed, re-usable artifacts: variables files, task files, playbooks, and roles.
+Assible offers four distributed, re-usable artifacts: variables files, task files, playbooks, and roles.
 
   - A variables file contains only variables.
   - A task file contains only tasks.
   - A playbook contains at least one play, and may contain variables, tasks, and other content. You can re-use tightly focused playbooks, but you can only re-use them statically, not dynamically.
-  - A role contains a set of related tasks, variables, defaults, handlers, and even modules or other plugins in a defined file-tree. Unlike variables files, task files, or playbooks, roles can be easily uploaded and shared via Ansible Galaxy. See :ref:`playbooks_reuse_roles` for details about creating and using roles.
+  - A role contains a set of related tasks, variables, defaults, handlers, and even modules or other plugins in a defined file-tree. Unlike variables files, task files, or playbooks, roles can be easily uploaded and shared via Assible Galaxy. See :ref:`playbooks_reuse_roles` for details about creating and using roles.
 
 .. versionadded:: 2.4
 
@@ -31,12 +31,12 @@ You can incorporate multiple playbooks into a master playbook. However, you can 
     - import_playbook: webservers.yml
     - import_playbook: databases.yml
 
-Importing incorporates playbooks in other playbooks statically. Ansible runs the plays and tasks in each imported playbook in the order they are listed, just as if they had been defined directly in the master playbook.
+Importing incorporates playbooks in other playbooks statically. Assible runs the plays and tasks in each imported playbook in the order they are listed, just as if they had been defined directly in the master playbook.
 
 Re-using files and roles
 ========================
 
-Ansible offers two ways to re-use files and roles in a playbook: dynamic and static.
+Assible offers two ways to re-use files and roles in a playbook: dynamic and static.
 
   - For dynamic re-use, add an ``include_*`` task in the tasks section of a play:
 
@@ -56,16 +56,16 @@ You can still use the bare :ref:`roles <roles_keyword>` keyword at the play leve
 Includes: dynamic re-use
 ------------------------
 
-Including roles, tasks, or variables adds them to a playbook dynamically. Ansible processes included files and roles as they come up in a playbook, so included tasks can be affected by the results of earlier tasks within the top-level playbook. Included roles and tasks are similar to handlers - they may or may not run, depending on the results of other tasks in the top-level playbook.
+Including roles, tasks, or variables adds them to a playbook dynamically. Assible processes included files and roles as they come up in a playbook, so included tasks can be affected by the results of earlier tasks within the top-level playbook. Included roles and tasks are similar to handlers - they may or may not run, depending on the results of other tasks in the top-level playbook.
 
 The primary advantage of using ``include_*`` statements is looping. When a loop is used with an include, the included tasks or role will be executed once for each item in the loop.
 
-You can pass variables into includes. See :ref:`ansible_variable_precedence` for more details on variable inheritance and precedence.
+You can pass variables into includes. See :ref:`assible_variable_precedence` for more details on variable inheritance and precedence.
 
 Imports: static re-use
 ----------------------
 
-Importing roles, tasks, or playbooks adds them to a playbook statically. Ansible pre-processes imported files and roles before it runs any tasks in a playbook, so imported content is never affected by other tasks within the top-level playbook.
+Importing roles, tasks, or playbooks adds them to a playbook statically. Assible pre-processes imported files and roles before it runs any tasks in a playbook, so imported content is never affected by other tasks within the top-level playbook.
 
 You can pass variables to imports. You must pass variables if you want to run an imported file more than once in a playbook. For example:
 
@@ -84,14 +84,14 @@ You can pass variables to imports. You must pass variables if you want to run an
       vars:
         wp_user: bob
 
-See :ref:`ansible_variable_precedence` for more details on variable inheritance and precedence.
+See :ref:`assible_variable_precedence` for more details on variable inheritance and precedence.
 
 .. _dynamic_vs_static:
 
 Comparing includes and imports: dynamic and static re-use
 ------------------------------------------------------------
 
-Each approach to re-using distributed Ansible artifacts has advantages and limitations. You may choose dynamic re-use for some playbooks and static re-use for others. Although you can use both dynamic and static re-use in a single playbook, it is best to select one approach per playbook. Mixing static and dynamic re-use can introduce difficult-to-diagnose bugs into your playbooks. This table summarizes the main differences so you can choose the best approach for each playbook you create.
+Each approach to re-using distributed Assible artifacts has advantages and limitations. You may choose dynamic re-use for some playbooks and static re-use for others. Although you can use both dynamic and static re-use in a single playbook, it is best to select one approach per playbook. Mixing static and dynamic re-use can introduce difficult-to-diagnose bugs into your playbooks. This table summarizes the main differences so you can choose the best approach for each playbook you create.
 
 .. table::
    :class: documentation-table
@@ -134,12 +134,12 @@ You can also use includes and imports in the :ref:`handlers` section of a playbo
 
    # restarts.yml
    - name: Restart apache
-     ansible.builtin.service:
+     assible.builtin.service:
        name: apache
        state: restarted
 
    - name: Restart mysql
-     ansible.builtin.service:
+     assible.builtin.service:
        name: mysql
        state: restarted
 
@@ -193,9 +193,9 @@ Imports are processed before the play begins, so the name of the import no longe
        Loops in playbooks
    :ref:`playbooks_best_practices`
        Tips and tricks for playbooks
-   :ref:`ansible_galaxy`
+   :ref:`assible_galaxy`
        How to share roles on galaxy, role management
-   `GitHub Ansible examples <https://github.com/ansible/ansible-examples>`_
+   `GitHub Assible examples <https://github.com/assible/assible-examples>`_
        Complete playbook files from the GitHub project source
-   `Mailing List <https://groups.google.com/group/ansible-project>`_
+   `Mailing List <https://groups.google.com/group/assible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups

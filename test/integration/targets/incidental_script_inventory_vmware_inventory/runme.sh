@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[[ -n "$DEBUG" || -n "$ANSIBLE_DEBUG" ]] && set -x
+[[ -n "$DEBUG" || -n "$ASSIBLE_DEBUG" ]] && set -x
 
 set -euo pipefail
 
@@ -8,7 +8,7 @@ contrib_dir=$(pwd)
 
 echo "DEBUG: using ${contrib_dir}"
 
-export ANSIBLE_CONFIG=ansible.cfg
+export ASSIBLE_CONFIG=assible.cfg
 export VMWARE_SERVER="${VCENTER_HOSTNAME}"
 export VMWARE_USERNAME="${VCENTER_USERNAME}"
 export VMWARE_PASSWORD="${VCENTER_PASSWORD}"
@@ -53,6 +53,6 @@ echo "Debugging new instances"
 curl "http://${VCENTER_HOSTNAME}:5000/govc_find"
 
 # Get inventory
-ansible-playbook -i ./vmware_inventory.sh "./test_vmware_inventory.yml" --connection=local "$@"
+assible-playbook -i ./vmware_inventory.sh "./test_vmware_inventory.yml" --connection=local "$@"
 
 echo "DEBUG: Done"

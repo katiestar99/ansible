@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -32,23 +32,23 @@ __metaclass__ = type
 import fnmatch
 import sys
 
-from ansible.module_utils.facts import timeout
-from ansible.module_utils.facts import collector
-from ansible.module_utils.common.collections import is_string
+from assible.module_utils.facts import timeout
+from assible.module_utils.facts import collector
+from assible.module_utils.common.collections import is_string
 
 
-class AnsibleFactCollector(collector.BaseFactCollector):
-    '''A FactCollector that returns results under 'ansible_facts' top level key.
+class AssibleFactCollector(collector.BaseFactCollector):
+    '''A FactCollector that returns results under 'assible_facts' top level key.
 
        If a namespace if provided, facts will be collected under that namespace.
-       For ex, a ansible.module_utils.facts.namespace.PrefixFactNamespace(prefix='ansible_')
+       For ex, a assible.module_utils.facts.namespace.PrefixFactNamespace(prefix='assible_')
 
        Has a 'from_gather_subset() constructor that populates collectors based on a
        gather_subset specifier.'''
 
     def __init__(self, collectors=None, namespace=None, filter_spec=None):
 
-        super(AnsibleFactCollector, self).__init__(collectors=collectors,
+        super(AssibleFactCollector, self).__init__(collectors=collectors,
                                                    namespace=namespace)
 
         self.filter_spec = filter_spec
@@ -108,7 +108,7 @@ class CollectorMetaDataCollector(collector.BaseFactCollector):
         return meta_facts
 
 
-def get_ansible_collector(all_collector_classes,
+def get_assible_collector(all_collector_classes,
                           namespace=None,
                           filter_spec=None,
                           gather_subset=None,
@@ -139,7 +139,7 @@ def get_ansible_collector(all_collector_classes,
     collectors.append(collector_meta_data_collector)
 
     fact_collector = \
-        AnsibleFactCollector(collectors=collectors,
+        AssibleFactCollector(collectors=collectors,
                              filter_spec=filter_spec,
                              namespace=namespace)
 

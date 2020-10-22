@@ -1,12 +1,12 @@
-# This is the configuration template for ansible-test Vultr integration tests.
+# This is the configuration template for assible-test Vultr integration tests.
 #
 # You do not need this template if you are:
 #
-# 1) Running integration tests without using ansible-test.
+# 1) Running integration tests without using assible-test.
 #
 # If you want to test against the Vultr public API,
 # fill in the values below and save this file without the .template extension.
-# This will cause ansible-test to use the given configuration.
+# This will cause assible-test to use the given configuration.
 
 [default]
 key = @KEY

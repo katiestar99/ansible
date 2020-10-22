@@ -1,5 +1,5 @@
-# Copyright: (c) 2017, Brian Coca <bcoca@ansible.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2017, Brian Coca <bcoca@assible.com>
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -10,29 +10,29 @@ import sys
 import argparse
 from operator import attrgetter
 
-from ansible import constants as C
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.errors import AnsibleError, AnsibleOptionsError
-from ansible.module_utils._text import to_bytes, to_native
-from ansible.utils.vars import combine_vars
-from ansible.utils.display import Display
-from ansible.vars.plugins import get_vars_from_inventory_sources, get_vars_from_path
+from assible import constants as C
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.errors import AssibleError, AssibleOptionsError
+from assible.module_utils._text import to_bytes, to_native
+from assible.utils.vars import combine_vars
+from assible.utils.display import Display
+from assible.vars.plugins import get_vars_from_inventory_sources, get_vars_from_path
 
 display = Display()
 
-INTERNAL_VARS = frozenset(['ansible_diff_mode',
-                           'ansible_config_file',
-                           'ansible_facts',
-                           'ansible_forks',
-                           'ansible_inventory_sources',
-                           'ansible_limit',
-                           'ansible_playbook_python',
-                           'ansible_run_tags',
-                           'ansible_skip_tags',
-                           'ansible_verbosity',
-                           'ansible_version',
+INTERNAL_VARS = frozenset(['assible_diff_mode',
+                           'assible_config_file',
+                           'assible_facts',
+                           'assible_forks',
+                           'assible_inventory_sources',
+                           'assible_limit',
+                           'assible_playbook_python',
+                           'assible_run_tags',
+                           'assible_skip_tags',
+                           'assible_verbosity',
+                           'assible_version',
                            'inventory_dir',
                            'inventory_file',
                            'inventory_hostname',
@@ -44,7 +44,7 @@ INTERNAL_VARS = frozenset(['ansible_diff_mode',
 
 
 class InventoryCLI(CLI):
-    ''' used to display or dump the configured inventory as Ansible sees it '''
+    ''' used to display or dump the configured inventory as Assible sees it '''
 
     ARGUMENTS = {'host': 'The name of a host to match in the inventory, relevant when using --list',
                  'group': 'The name of a group in the inventory, relevant when using --graph', }
@@ -59,7 +59,7 @@ class InventoryCLI(CLI):
     def init_parser(self):
         super(InventoryCLI, self).init_parser(
             usage='usage: %prog [options] [host|group]',
-            epilog='Show Ansible inventory information, by default it uses the inventory script JSON format')
+            epilog='Show Assible inventory information, by default it uses the inventory script JSON format')
 
         opt_help.add_inventory_options(self.parser)
         opt_help.add_vault_options(self.parser)
@@ -91,7 +91,7 @@ class InventoryCLI(CLI):
         # list
         self.parser.add_argument("--export", action="store_true", default=C.INVENTORY_EXPORT, dest='export',
                                  help="When doing an --list, represent in a way that is optimized for export,"
-                                      "not as an accurate representation of how Ansible has processed it")
+                                      "not as an accurate representation of how Assible has processed it")
         self.parser.add_argument('--output', default=None, dest='output_file',
                                  help="When doing --list, send the inventory to a file instead of to the screen")
         # self.parser.add_argument("--ignore-vars-plugins", action="store_true", default=False, dest='ignore_vars_plugins',
@@ -109,9 +109,9 @@ class InventoryCLI(CLI):
             if opt:
                 used += 1
         if used == 0:
-            raise AnsibleOptionsError("No action selected, at least one of --host, --graph or --list needs to be specified.")
+            raise AssibleOptionsError("No action selected, at least one of --host, --graph or --list needs to be specified.")
         elif used > 1:
-            raise AnsibleOptionsError("Conflicting options used, only one of --host, --graph or --list can be used at the same time.")
+            raise AssibleOptionsError("Conflicting options used, only one of --host, --graph or --list can be used at the same time.")
 
         # set host pattern to default if not supplied
         if options.args:
@@ -132,7 +132,7 @@ class InventoryCLI(CLI):
         if context.CLIARGS['host']:
             hosts = self.inventory.get_hosts(context.CLIARGS['host'])
             if len(hosts) != 1:
-                raise AnsibleOptionsError("You must pass a single valid host to --host parameter")
+                raise AssibleOptionsError("You must pass a single valid host to --host parameter")
 
             myvars = self._get_host_variables(host=hosts[0])
 
@@ -161,7 +161,7 @@ class InventoryCLI(CLI):
                     with open(to_bytes(outfile), 'wt') as f:
                         f.write(results)
                 except (OSError, IOError) as e:
-                    raise AnsibleError('Unable to write to destination file (%s): %s' % (to_native(outfile), to_native(e)))
+                    raise AssibleError('Unable to write to destination file (%s): %s' % (to_native(outfile), to_native(e)))
             sys.exit(0)
 
         sys.exit(1)
@@ -171,19 +171,19 @@ class InventoryCLI(CLI):
 
         if context.CLIARGS['yaml']:
             import yaml
-            from ansible.parsing.yaml.dumper import AnsibleDumper
-            results = yaml.dump(stuff, Dumper=AnsibleDumper, default_flow_style=False)
+            from assible.parsing.yaml.dumper import AssibleDumper
+            results = yaml.dump(stuff, Dumper=AssibleDumper, default_flow_style=False)
         elif context.CLIARGS['toml']:
-            from ansible.plugins.inventory.toml import toml_dumps, HAS_TOML
+            from assible.plugins.inventory.toml import toml_dumps, HAS_TOML
             if not HAS_TOML:
-                raise AnsibleError(
+                raise AssibleError(
                     'The python "toml" library is required when using the TOML output format'
                 )
             results = toml_dumps(stuff)
         else:
             import json
-            from ansible.parsing.ajson import AnsibleJSONEncoder
-            results = json.dumps(stuff, cls=AnsibleJSONEncoder, sort_keys=True, indent=4, preprocess_unsafe=True)
+            from assible.parsing.ajson import AssibleJSONEncoder
+            results = json.dumps(stuff, cls=AssibleJSONEncoder, sort_keys=True, indent=4, preprocess_unsafe=True)
 
         return results
 
@@ -198,7 +198,7 @@ class InventoryCLI(CLI):
             res = combine_vars(res, get_vars_from_path(self.loader, context.CLIARGS['basedir'], [group], 'all'))
 
         if group.priority != 1:
-            res['ansible_group_priority'] = group.priority
+            res['assible_group_priority'] = group.priority
 
         return self._remove_internal(res)
 
@@ -275,7 +275,7 @@ class InventoryCLI(CLI):
         if start_at:
             return '\n'.join(self._graph_group(start_at))
         else:
-            raise AnsibleOptionsError("Pattern must be valid group name when using --graph")
+            raise AssibleOptionsError("Pattern must be valid group name when using --graph")
 
     def json_inventory(self, top):
 

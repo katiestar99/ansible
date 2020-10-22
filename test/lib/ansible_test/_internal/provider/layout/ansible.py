@@ -1,4 +1,4 @@
-"""Layout provider for Ansible source."""
+"""Layout provider for Assible source."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -12,20 +12,20 @@ from . import (
 )
 
 
-class AnsibleLayout(LayoutProvider):
-    """Layout provider for Ansible source."""
+class AssibleLayout(LayoutProvider):
+    """Layout provider for Assible source."""
     @staticmethod
     def is_content_root(path):  # type: (str) -> bool
         """Return True if the given path is a content root for this provider."""
-        return os.path.exists(os.path.join(path, 'setup.py')) and os.path.exists(os.path.join(path, 'bin/ansible-test'))
+        return os.path.exists(os.path.join(path, 'setup.py')) and os.path.exists(os.path.join(path, 'bin/assible-test'))
 
     def create(self, root, paths):  # type: (str, t.List[str]) -> ContentLayout
         """Create a Layout using the given root and paths."""
-        plugin_paths = dict((p, os.path.join('lib/ansible/plugins', p)) for p in self.PLUGIN_TYPES)
+        plugin_paths = dict((p, os.path.join('lib/assible/plugins', p)) for p in self.PLUGIN_TYPES)
 
         plugin_paths.update(dict(
-            modules='lib/ansible/modules',
-            module_utils='lib/ansible/module_utils',
+            modules='lib/assible/modules',
+            module_utils='lib/assible/module_utils',
         ))
 
         return ContentLayout(root,

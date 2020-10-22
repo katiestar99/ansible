@@ -4,7 +4,7 @@
 FRR Platform Options
 ***************************************
 
-The `FRR <https://galaxy.ansible.com/frr/frr>`_ collection supports the ``ansible.netcommon.network_cli`` connection. This section provides details on how to use this connection for Free Range Routing (FRR).
+The `FRR <https://galaxy.assible.com/frr/frr>`_ collection supports the ``assible.netcommon.network_cli`` connection. This section provides details on how to use this connection for Free Range Routing (FRR).
 
 .. contents::
   :local:
@@ -26,7 +26,7 @@ Connections available
 
     Indirect Access       via a bastion (jump host)
 
-    Connection Settings   ``ansible_connection: ansible.netcommon.network_cli``
+    Connection Settings   ``assible_connection: assible.netcommon.network_cli``
 
     |enable_mode|         not supported
 
@@ -36,7 +36,7 @@ Connections available
 .. |enable_mode| replace:: Enable Mode |br| (Privilege Escalation)
 
 
-Using CLI in Ansible
+Using CLI in Assible
 ====================
 
 Example CLI ``group_vars/frr.yml``
@@ -44,15 +44,15 @@ Example CLI ``group_vars/frr.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.network_cli
-   ansible_network_os: frr.frr.frr
-   ansible_user: frruser
-   ansible_password: !vault...
-   ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection: assible.netcommon.network_cli
+   assible_network_os: frr.frr.frr
+   assible_user: frruser
+   assible_password: !vault...
+   assible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
-- The ``ansible_user`` should be a part of the ``frrvty`` group and should have the default shell set to ``/bin/vtysh``.
-- If you are using SSH keys (including an ssh-agent) you can remove the ``ansible_password`` configuration.
-- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``ansible_ssh_common_args`` configuration.
+- The ``assible_user`` should be a part of the ``frrvty`` group and should have the default shell set to ``/bin/vtysh``.
+- If you are using SSH keys (including an ssh-agent) you can remove the ``assible_password`` configuration.
+- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``assible_ssh_common_args`` configuration.
 - If you are accessing your host through a bastion/jump host, you cannot include your SSH password in the ``ProxyCommand`` directive. To prevent secrets from leaking out (for example in ``ps`` output), SSH does not support providing passwords via environment variables.
 
 Example CLI task

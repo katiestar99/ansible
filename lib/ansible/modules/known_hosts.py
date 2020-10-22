@@ -13,9 +13,9 @@ module: known_hosts
 short_description: Add or remove a host from the C(known_hosts) file
 description:
    - The C(known_hosts) module lets you add or remove a host keys from the C(known_hosts) file.
-   - Starting at Ansible 2.2, multiple entries per host are allowed, but only one for each key type supported by ssh.
-     This is useful if you're going to want to use the M(ansible.builtin.git) module over ssh, for example.
-   - If you have a very large number of host keys to manage, you will find the M(ansible.builtin.template) module more useful.
+   - Starting at Assible 2.2, multiple entries per host are allowed, but only one for each key type supported by ssh.
+     This is useful if you're going to want to use the M(assible.builtin.git) module over ssh, for example.
+   - If you have a very large number of host keys to manage, you will find the M(assible.builtin.template) module more useful.
 version_added: "1.9"
 options:
   name:
@@ -101,9 +101,9 @@ import os.path
 import re
 import tempfile
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.file import FileLock
-from ansible.module_utils._text import to_bytes, to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.file import FileLock
+from assible.module_utils._text import to_bytes, to_native
 
 
 def enforce_state(module, params):
@@ -332,7 +332,7 @@ def compute_diff(path, found_line, replace_or_add, state, key):
 
 def main():
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(required=True, type='str', aliases=['host']),
             key=dict(required=False, type='str'),

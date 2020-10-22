@@ -1,11 +1,11 @@
 OS := $(shell uname -s)
 SITELIB = $(shell python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"):
-PLUGIN_FORMATTER=../../hacking/build-ansible.py docs-build
+PLUGIN_FORMATTER=../../hacking/build-assible.py docs-build
 TESTING_FORMATTER=../bin/testing_formatter.sh
-KEYWORD_DUMPER=../../hacking/build-ansible.py document-keywords
-CONFIG_DUMPER=../../hacking/build-ansible.py document-config
-GENERATE_CLI=../../hacking/build-ansible.py generate-man
-COLLECTION_DUMPER=../../hacking/build-ansible.py collection-meta
+KEYWORD_DUMPER=../../hacking/build-assible.py document-keywords
+CONFIG_DUMPER=../../hacking/build-assible.py document-config
+GENERATE_CLI=../../hacking/build-assible.py generate-man
+COLLECTION_DUMPER=../../hacking/build-assible.py collection-meta
 ifeq ($(shell echo $(OS) | egrep -ic 'Darwin|FreeBSD|OpenBSD|DragonFly'),1)
 CPUS ?= $(shell sysctl hw.ncpu|awk '{print $$2}')
 else
@@ -102,18 +102,18 @@ clean:
 .PHONY: docs clean
 
 collections_meta: ../templates/collections_galaxy_meta.rst.j2
-	$(COLLECTION_DUMPER) --template-file=../templates/collections_galaxy_meta.rst.j2 --output-dir=rst/dev_guide/ ../../lib/ansible/galaxy/data/collections_galaxy_meta.yml
+	$(COLLECTION_DUMPER) --template-file=../templates/collections_galaxy_meta.rst.j2 --output-dir=rst/dev_guide/ ../../lib/assible/galaxy/data/collections_galaxy_meta.yml
 
 # TODO: make generate_man output dir cli option
 cli:
 	mkdir -p rst/cli
-	$(GENERATE_CLI) --template-file=../templates/cli_rst.j2 --output-dir=rst/cli/ --output-format rst ../../lib/ansible/cli/*.py
+	$(GENERATE_CLI) --template-file=../templates/cli_rst.j2 --output-dir=rst/cli/ --output-format rst ../../lib/assible/cli/*.py
 
 keywords: ../templates/playbooks_keywords.rst.j2
 	$(KEYWORD_DUMPER) --template-dir=../templates --output-dir=rst/reference_appendices/ ./keyword_desc.yml
 
 config: ../templates/config.rst.j2
-	$(CONFIG_DUMPER) --template-file=../templates/config.rst.j2 --output-dir=rst/reference_appendices/ ../../lib/ansible/config/base.yml
+	$(CONFIG_DUMPER) --template-file=../templates/config.rst.j2 --output-dir=rst/reference_appendices/ ../../lib/assible/config/base.yml
 
 # For now, if we're building on devel, just build base docs.  In the future we'll want to build docs that
 # are the latest versions on galaxy (using a different antsibull-docs subcommand)
@@ -124,7 +124,7 @@ plugins:
 		$(PLUGIN_FORMATTER) full -o rst $(PLUGIN_ARGS);\
 	fi
 
-# This only builds the plugin docs included with ansible-base
+# This only builds the plugin docs included with assible-base
 base_plugins:
 	$(PLUGIN_FORMATTER) base -o rst $(PLUGIN_ARGS);\
 

@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -50,7 +50,7 @@ class ReleaseAnnouncementCommand(Command):
                             description="Generate email and twitter announcements from template")
 
         parser.add_argument("--version", dest="versions", type=str, required=True, action='append',
-                            help="Versions of Ansible to announce")
+                            help="Versions of Assible to announce")
         parser.add_argument("--name", type=str, required=True, help="Real name to use on emails")
         parser.add_argument("--email-out", type=str, default="-",
                             help="Filename to place the email announcement into")

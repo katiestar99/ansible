@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Wrapper around yamllint that supports YAML embedded in Ansible modules."""
+"""Wrapper around yamllint that supports YAML embedded in Assible modules."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -29,7 +29,7 @@ def main():
 
 
 class TestConstructor(SafeConstructor):
-    """Yaml Safe Constructor that knows about Ansible tags"""
+    """Yaml Safe Constructor that knows about Assible tags"""
 
 
 TestConstructor.add_constructor(
@@ -55,7 +55,7 @@ class TestLoader(CParser, TestConstructor, Resolver):
 
 
 class YamlChecker:
-    """Wrapper around yamllint that supports YAML embedded in Ansible modules."""
+    """Wrapper around yamllint that supports YAML embedded in Assible modules."""
     def __init__(self):
         self.messages = []
 
@@ -86,7 +86,7 @@ class YamlChecker:
             if extension in ('.yml', '.yaml'):
                 self.check_yaml(yaml_conf, path, contents)
             elif extension == '.py':
-                if path.startswith('lib/ansible/modules/') or path.startswith('plugins/modules/'):
+                if path.startswith('lib/assible/modules/') or path.startswith('plugins/modules/'):
                     conf = module_conf
                 else:
                     conf = plugin_conf
@@ -210,8 +210,8 @@ class YamlChecker:
         if not module_ast:
             return {}
 
-        is_plugin = path.startswith('lib/ansible/modules/') or path.startswith('lib/ansible/plugins/') or path.startswith('plugins/')
-        is_doc_fragment = path.startswith('lib/ansible/plugins/doc_fragments/') or path.startswith('plugins/doc_fragments/')
+        is_plugin = path.startswith('lib/assible/modules/') or path.startswith('lib/assible/plugins/') or path.startswith('plugins/')
+        is_doc_fragment = path.startswith('lib/assible/plugins/doc_fragments/') or path.startswith('plugins/doc_fragments/')
 
         if is_plugin and not is_doc_fragment:
             for body_statement in module_ast.body:

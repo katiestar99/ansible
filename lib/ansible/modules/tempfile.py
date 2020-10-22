@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2016, Krzysztof Magosa <krzysztof@magosa.pl>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -17,8 +17,8 @@ short_description: Creates temporary files and directories
 description:
   - The C(tempfile) module creates temporary files and directories. C(mktemp) command takes different parameters on various systems, this module helps
     to avoid troubles related to that. Files/directories created by module are accessible only by creator. In case you need to make them world-accessible
-    you need to use M(ansible.builtin.file) module.
-  - For Windows targets, use the M(ansible.windows.win_tempfile) module instead.
+    you need to use M(assible.builtin.file) module.
+  - For Windows targets, use the M(assible.windows.win_tempfile) module instead.
 options:
   state:
     description:
@@ -35,15 +35,15 @@ options:
     description:
       - Prefix of file/directory name created by module.
     type: str
-    default: ansible.
+    default: assible.
   suffix:
     description:
       - Suffix of file/directory name created by module.
     type: str
     default: ""
 seealso:
-- module: ansible.builtin.file
-- module: ansible.windows.win_tempfile
+- module: assible.builtin.file
+- module: assible.windows.win_tempfile
 author:
   - Krzysztof Magosa (@krzysztof-magosa)
 '''
@@ -72,23 +72,23 @@ path:
   description: Path to created file or directory
   returned: success
   type: str
-  sample: "/tmp/ansible.bMlvdk"
+  sample: "/tmp/assible.bMlvdk"
 '''
 
 from os import close
 from tempfile import mkstemp, mkdtemp
 from traceback import format_exc
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(type='str', default='file', choices=['file', 'directory']),
             path=dict(type='path'),
-            prefix=dict(type='str', default='ansible.'),
+            prefix=dict(type='str', default='assible.'),
             suffix=dict(type='str', default=''),
         ),
     )

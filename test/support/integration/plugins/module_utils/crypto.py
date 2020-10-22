@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-# (c) 2016, Yanis Guenane <yanis+ansible@guenane.org>
+# (c) 2016, Yanis Guenane <yanis+assible@guenane.org>
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 # ----------------------------------------------------------------------
 # A clearly marked portion of this file is licensed under the BSD license
@@ -130,8 +130,8 @@ import os
 import re
 import tempfile
 
-from ansible.module_utils import six
-from ansible.module_utils._text import to_native, to_bytes, to_text
+from assible.module_utils import six
+from assible.module_utils._text import to_native, to_bytes, to_text
 
 
 class OpenSSLObjectError(Exception):
@@ -161,7 +161,7 @@ def get_fingerprint_of_bytes(source):
             h = f(source)
         except ValueError:
             # This can happen for hash algorithms not supported in FIPS mode
-            # (https://github.com/ansible/ansible/issues/67213)
+            # (https://github.com/assible/assible/issues/67213)
             continue
         try:
             # Certain hash functions have a hexdigest() which expects a length parameter
@@ -423,12 +423,12 @@ def write_file(module, content, default_mode=None, path=None):
     if file_args['mode'] is None:
         file_args['mode'] = default_mode
     # Create tempfile name
-    tmp_fd, tmp_name = tempfile.mkstemp(prefix=b'.ansible_tmp')
+    tmp_fd, tmp_name = tempfile.mkstemp(prefix=b'.assible_tmp')
     try:
         os.close(tmp_fd)
     except Exception as dummy:
         pass
-    module.add_cleanup_file(tmp_name)  # if we fail, let Ansible try to remove the file
+    module.add_cleanup_file(tmp_name)  # if we fail, let Assible try to remove the file
     try:
         try:
             # Create tempfile
@@ -1994,7 +1994,7 @@ def quick_is_not_prime(n):
 
 python_version = (sys.version_info[0], sys.version_info[1])
 if python_version >= (2, 7) or python_version >= (3, 1):
-    # Ansible still supports Python 2.6 on remote nodes
+    # Assible still supports Python 2.6 on remote nodes
     def count_bits(no):
         no = abs(no)
         if no == 0:

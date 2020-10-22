@@ -3,7 +3,7 @@
 # Copyright: (c) 2017, Dag Wieers (@dagwieers) <dag@wieers.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
+#AssibleRequires -CSharpUtil Assible.Basic
 
 Function New-TempFile {
     Param ([string]$path, [string]$prefix, [string]$suffix, [string]$type, [bool]$checkmode)
@@ -43,13 +43,13 @@ $spec = @{
     options = @{
         path = @{ type='path'; default='%TEMP%'; aliases=@( 'dest' ) }
         state = @{ type='str'; default='file'; choices=@( 'directory', 'file') }
-        prefix = @{ type='str'; default='ansible.' }
+        prefix = @{ type='str'; default='assible.' }
         suffix = @{ type='str' }
     }
     supports_check_mode = $true
 }
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 
 $path = $module.Params.path
 $state = $module.Params.state

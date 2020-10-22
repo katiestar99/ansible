@@ -1,4 +1,4 @@
-# Copyright (c) 2018, Ansible Project
+# Copyright (c) 2018, Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import (absolute_import, division, print_function)
@@ -17,8 +17,8 @@ import fcntl
 import sys
 
 from contextlib import contextmanager
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.six import b, binary_type
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.six import b, binary_type
 
 try:
     import selinux
@@ -150,7 +150,7 @@ class FileLock:
             Default is None, wait indefinitely until lock is released.
         :returns: True
         '''
-        lock_path = os.path.join(tmpdir, 'ansible-{0}.lock'.format(os.path.basename(path)))
+        lock_path = os.path.join(tmpdir, 'assible-{0}.lock'.format(os.path.basename(path)))
         l_wait = 0.1
         r_exception = IOError
         if sys.version_info[0] == 3:

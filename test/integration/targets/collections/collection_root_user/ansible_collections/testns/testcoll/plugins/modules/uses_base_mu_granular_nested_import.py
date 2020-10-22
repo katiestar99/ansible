@@ -5,7 +5,7 @@ __metaclass__ = type
 import json
 import sys
 
-from ansible_collections.testns.testcoll.plugins.module_utils.base import thingtocall
+from assible_collections.testns.testcoll.plugins.module_utils.base import thingtocall
 
 
 def main():

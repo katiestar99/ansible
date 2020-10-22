@@ -93,8 +93,8 @@ if ($manifest.Contains('ps_utils')) {
     }
 }
 
-Add-CSharpType -References @(Get-Content -LiteralPath $manifest.ansible_basic -Raw)
-[Ansible.Basic.AnsibleModule]::_DebugArgSpec = $true
+Add-CSharpType -References @(Get-Content -LiteralPath $manifest.assible_basic -Raw)
+[Assible.Basic.AssibleModule]::_DebugArgSpec = $true
 
 $powershell.AddScript($module_code) > $null
 $powershell.Invoke() > $null
@@ -104,7 +104,7 @@ if ($powershell.HadErrors) {
     exit 1
 }
 
-$arg_spec = $powershell.Runspace.SessionStateProxy.GetVariable('ansibleTestArgSpec')
+$arg_spec = $powershell.Runspace.SessionStateProxy.GetVariable('assibleTestArgSpec')
 Resolve-CircularReference -Hash $arg_spec
 
 ConvertTo-Json -InputObject $arg_spec -Compress -Depth 99

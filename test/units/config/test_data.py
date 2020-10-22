@@ -4,8 +4,8 @@ __metaclass__ = type
 
 from units.compat import unittest
 
-from ansible.config.data import ConfigData
-from ansible.config.manager import Setting
+from assible.config.data import ConfigData
+from assible.config.manager import Setting
 
 
 mykey = Setting('mykey', 'myvalue', 'test', 'string')

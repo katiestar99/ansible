@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
-__requires__ = ['ansible_base']
+__requires__ = ['assible_base']
 
 
 import fcntl
@@ -20,18 +20,18 @@ import json
 
 from contextlib import contextmanager
 
-from ansible import constants as C
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.module_utils.six import PY3
-from ansible.module_utils.six.moves import cPickle, StringIO
-from ansible.module_utils.connection import Connection, ConnectionError, send_data, recv_data
-from ansible.module_utils.service import fork_process
-from ansible.parsing.ajson import AnsibleJSONEncoder, AnsibleJSONDecoder
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.loader import connection_loader
-from ansible.utils.path import unfrackpath, makedirs_safe
-from ansible.utils.display import Display
-from ansible.utils.jsonrpc import JsonRpcServer
+from assible import constants as C
+from assible.module_utils._text import to_bytes, to_text
+from assible.module_utils.six import PY3
+from assible.module_utils.six.moves import cPickle, StringIO
+from assible.module_utils.connection import Connection, ConnectionError, send_data, recv_data
+from assible.module_utils.service import fork_process
+from assible.parsing.ajson import AssibleJSONEncoder, AssibleJSONDecoder
+from assible.playbook.play_context import PlayContext
+from assible.plugins.loader import connection_loader
+from assible.utils.path import unfrackpath, makedirs_safe
+from assible.utils.display import Display
+from assible.utils.jsonrpc import JsonRpcServer
 
 
 def read_stream(byte_stream):
@@ -71,7 +71,7 @@ class ConnectionProcess(object):
     The connection process wraps around a Connection object that manages
     the connection to a remote device that persists over the playbook
     '''
-    def __init__(self, fd, play_context, socket_path, original_path, task_uuid=None, ansible_playbook_pid=None):
+    def __init__(self, fd, play_context, socket_path, original_path, task_uuid=None, assible_playbook_pid=None):
         self.play_context = play_context
         self.socket_path = socket_path
         self.original_path = original_path
@@ -84,7 +84,7 @@ class ConnectionProcess(object):
         self.sock = None
 
         self.connection = None
-        self._ansible_playbook_pid = ansible_playbook_pid
+        self._assible_playbook_pid = assible_playbook_pid
 
     def start(self, variables):
         try:
@@ -99,7 +99,7 @@ class ConnectionProcess(object):
             if self.play_context.private_key_file and self.play_context.private_key_file[0] not in '~/':
                 self.play_context.private_key_file = os.path.join(self.original_path, self.play_context.private_key_file)
             self.connection = connection_loader.get(self.play_context.connection, self.play_context, '/dev/null',
-                                                    task_uuid=self._task_uuid, ansible_playbook_pid=self._ansible_playbook_pid)
+                                                    task_uuid=self._task_uuid, assible_playbook_pid=self._assible_playbook_pid)
             self.connection.set_options(var_options=variables)
 
             self.connection._socket_path = self.socket_path
@@ -116,7 +116,7 @@ class ConnectionProcess(object):
             result['exception'] = traceback.format_exc()
         finally:
             result['messages'] = messages
-            self.fd.write(json.dumps(result, cls=AnsibleJSONEncoder))
+            self.fd.write(json.dumps(result, cls=AssibleJSONEncoder))
             self.fd.close()
 
     def run(self):
@@ -190,7 +190,7 @@ class ConnectionProcess(object):
     def shutdown(self):
         """ Shuts down the local domain socket
         """
-        lock_path = unfrackpath("%s/.ansible_pc_lock_%s" % os.path.split(self.socket_path))
+        lock_path = unfrackpath("%s/.assible_pc_lock_%s" % os.path.split(self.socket_path))
         if os.path.exists(self.socket_path):
             try:
                 if self.sock:
@@ -257,16 +257,16 @@ def main():
 
     if rc == 0:
         ssh = connection_loader.get('ssh', class_only=True)
-        ansible_playbook_pid = sys.argv[1]
+        assible_playbook_pid = sys.argv[1]
         task_uuid = sys.argv[2]
-        cp = ssh._create_control_path(play_context.remote_addr, play_context.port, play_context.remote_user, play_context.connection, ansible_playbook_pid)
+        cp = ssh._create_control_path(play_context.remote_addr, play_context.port, play_context.remote_user, play_context.connection, assible_playbook_pid)
         # create the persistent connection dir if need be and create the paths
         # which we will be using later
         tmp_path = unfrackpath(C.PERSISTENT_CONTROL_PATH_DIR)
         makedirs_safe(tmp_path)
 
         socket_path = unfrackpath(cp % dict(directory=tmp_path))
-        lock_path = unfrackpath("%s/.ansible_pc_lock_%s" % os.path.split(socket_path))
+        lock_path = unfrackpath("%s/.assible_pc_lock_%s" % os.path.split(socket_path))
 
         with file_lock(lock_path):
             if not os.path.exists(socket_path):
@@ -279,7 +279,7 @@ def main():
                     try:
                         os.close(r)
                         wfd = os.fdopen(w, 'w')
-                        process = ConnectionProcess(wfd, play_context, socket_path, original_path, task_uuid, ansible_playbook_pid)
+                        process = ConnectionProcess(wfd, play_context, socket_path, original_path, task_uuid, assible_playbook_pid)
                         process.start(variables)
                     except Exception:
                         messages.append(('error', traceback.format_exc()))
@@ -295,7 +295,7 @@ def main():
                 else:
                     os.close(w)
                     rfd = os.fdopen(r, 'r')
-                    data = json.loads(rfd.read(), cls=AnsibleJSONDecoder)
+                    data = json.loads(rfd.read(), cls=AssibleJSONDecoder)
                     messages.extend(data.pop('messages'))
                     result.update(data)
 
@@ -329,10 +329,10 @@ def main():
     sys.stdout = saved_stdout
     if 'exception' in result:
         rc = 1
-        sys.stderr.write(json.dumps(result, cls=AnsibleJSONEncoder))
+        sys.stderr.write(json.dumps(result, cls=AssibleJSONEncoder))
     else:
         rc = 0
-        sys.stdout.write(json.dumps(result, cls=AnsibleJSONEncoder))
+        sys.stdout.write(json.dumps(result, cls=AssibleJSONEncoder))
 
     sys.exit(rc)
 

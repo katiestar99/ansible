@@ -2,42 +2,42 @@
 
 Setting up a Windows Host
 =========================
-This document discusses the setup that is required before Ansible can communicate with a Microsoft Windows host.
+This document discusses the setup that is required before Assible can communicate with a Microsoft Windows host.
 
 .. contents::
    :local:
 
 Host Requirements
 `````````````````
-For Ansible to communicate to a Windows host and use Windows modules, the
+For Assible to communicate to a Windows host and use Windows modules, the
 Windows host must meet these requirements:
 
-* Ansible can generally manage Windows versions under current
-  and extended support from Microsoft. Ansible can manage desktop OSs including
+* Assible can generally manage Windows versions under current
+  and extended support from Microsoft. Assible can manage desktop OSs including
   Windows 7, 8.1, and 10, and server OSs including Windows Server 2008,
   2008 R2, 2012, 2012 R2, 2016, and 2019.
 
-* Ansible requires PowerShell 3.0 or newer and at least .NET 4.0 to be
+* Assible requires PowerShell 3.0 or newer and at least .NET 4.0 to be
   installed on the Windows host.
 
 * A WinRM listener should be created and activated. More details for this can be
   found below.
 
-.. Note:: While these are the base requirements for Ansible connectivity, some Ansible
+.. Note:: While these are the base requirements for Assible connectivity, some Assible
     modules have additional requirements, such as a newer OS or PowerShell
     version. Please consult the module's documentation page
     to determine whether a host meets those requirements.
 
 Upgrading PowerShell and .NET Framework
 ---------------------------------------
-Ansible requires PowerShell version 3.0 and .NET Framework 4.0 or newer to function on older operating systems like Server 2008 and Windows 7. The base image does not meet this
-requirement. You can use the `Upgrade-PowerShell.ps1 <https://github.com/jborean93/ansible-windows/blob/master/scripts/Upgrade-PowerShell.ps1>`_ script to update these.
+Assible requires PowerShell version 3.0 and .NET Framework 4.0 or newer to function on older operating systems like Server 2008 and Windows 7. The base image does not meet this
+requirement. You can use the `Upgrade-PowerShell.ps1 <https://github.com/jborean93/assible-windows/blob/master/scripts/Upgrade-PowerShell.ps1>`_ script to update these.
 
 This is an example of how to run this script from PowerShell:
 
 .. code-block:: powershell
 
-    $url = "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Upgrade-PowerShell.ps1"
+    $url = "https://raw.githubusercontent.com/jborean93/assible-windows/master/scripts/Upgrade-PowerShell.ps1"
     $file = "$env:temp\Upgrade-PowerShell.ps1"
     $username = "Administrator"
     $password = "Password"
@@ -87,15 +87,15 @@ WinRM Memory Hotfix
 -------------------
 When running on PowerShell v3.0, there is a bug with the WinRM service that
 limits the amount of memory available to WinRM. Without this hotfix installed,
-Ansible will fail to execute certain commands on the Windows host. These
+Assible will fail to execute certain commands on the Windows host. These
 hotfixes should be installed as part of the system bootstrapping or
-imaging process. The script `Install-WMF3Hotfix.ps1 <https://github.com/jborean93/ansible-windows/blob/master/scripts/Install-WMF3Hotfix.ps1>`_ can be used to install the hotfix on affected hosts.
+imaging process. The script `Install-WMF3Hotfix.ps1 <https://github.com/jborean93/assible-windows/blob/master/scripts/Install-WMF3Hotfix.ps1>`_ can be used to install the hotfix on affected hosts.
 
 The following PowerShell command will install the hotfix:
 
 .. code-block:: powershell
 
-    $url = "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Install-WMF3Hotfix.ps1"
+    $url = "https://raw.githubusercontent.com/jborean93/assible-windows/master/scripts/Install-WMF3Hotfix.ps1"
     $file = "$env:temp\Install-WMF3Hotfix.ps1"
 
     (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
@@ -106,12 +106,12 @@ For more details, please refer to the `Hotfix document <https://support.microsof
 WinRM Setup
 ```````````
 Once Powershell has been upgraded to at least version 3.0, the final step is for the
-WinRM service to be configured so that Ansible can connect to it. There are two
-main components of the WinRM service that governs how Ansible can interface with
+WinRM service to be configured so that Assible can connect to it. There are two
+main components of the WinRM service that governs how Assible can interface with
 the Windows host: the ``listener`` and the ``service`` configuration settings.
 
 Details about each component can be read below, but the script
-`ConfigureRemotingForAnsible.ps1 <https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1>`_
+`ConfigureRemotingForAssible.ps1 <https://github.com/assible/assible/blob/devel/examples/scripts/ConfigureRemotingForAssible.ps1>`_
 can be used to set up the basics. This script sets up both HTTP and HTTPS
 listeners with a self-signed certificate and enables the ``Basic``
 authentication option on the service.
@@ -120,8 +120,8 @@ To use this script, run the following in PowerShell:
 
 .. code-block:: powershell
 
-    $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-    $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
+    $url = "https://raw.githubusercontent.com/assible/assible/devel/examples/scripts/ConfigureRemotingForAssible.ps1"
+    $file = "$env:temp\ConfigureRemotingForAssible.ps1"
 
     (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
 
@@ -131,7 +131,7 @@ There are different switches and parameters (like ``-EnableCredSSP`` and
 ``-ForceNewSSLCert``) that can be set alongside this script. The documentation
 for these options are located at the top of the script itself.
 
-.. Note:: The ConfigureRemotingForAnsible.ps1 script is intended for training and
+.. Note:: The ConfigureRemotingForAssible.ps1 script is intended for training and
     development purposes only and should not be used in a
     production environment, since it enables settings (like ``Basic`` authentication)
     that can be inherently insecure.
@@ -182,10 +182,10 @@ the key options that are useful to understand are:
 
 * ``Port``: The port the listener runs on, by default it is ``5985`` for HTTP
   and ``5986`` for HTTPS. This port can be changed to whatever is required and
-  corresponds to the host var ``ansible_port``.
+  corresponds to the host var ``assible_port``.
 
 * ``URLPrefix``: The URL prefix to listen on, by default it is ``wsman``. If
-  this is changed, the host var ``ansible_winrm_path`` must be set to the same
+  this is changed, the host var ``assible_winrm_path`` must be set to the same
   value.
 
 * ``CertificateThumbprint``: If running over an HTTPS listener, this is the
@@ -302,7 +302,7 @@ options are:
 
 * ``Service\AllowUnencrypted``: This option defines whether WinRM will allow
   traffic that is run over HTTP without message encryption. Message level
-  encryption is only possible when ``ansible_winrm_transport`` is ``ntlm``,
+  encryption is only possible when ``assible_winrm_transport`` is ``ntlm``,
   ``kerberos`` or ``credssp``. By default this is ``false`` and should only be
   set to ``true`` when debugging WinRM messages.
 
@@ -349,7 +349,7 @@ To modify a setting under the ``Winrs`` key in PowerShell::
 Common WinRM Issues
 -------------------
 Because WinRM has a wide range of configuration options, it can be difficult
-to setup and configure. Because of this complexity, issues that are shown by Ansible
+to setup and configure. Because of this complexity, issues that are shown by Assible
 could in fact be issues with the host setup instead.
 
 One easy way to determine whether a problem is a host issue is to
@@ -378,17 +378,17 @@ A HTTP 401 error indicates the authentication process failed during the initial
 connection. Some things to check for this are:
 
 * Verify that the credentials are correct and set properly in your inventory with
-  ``ansible_user`` and ``ansible_password``
+  ``assible_user`` and ``assible_password``
 
 * Ensure that the user is a member of the local Administrators group or has been explicitly
   granted access (a connection test with the ``winrs`` command can be used to
   rule this out).
 
-* Make sure that the authentication option set by ``ansible_winrm_transport`` is enabled under
+* Make sure that the authentication option set by ``assible_winrm_transport`` is enabled under
   ``Service\Auth\*``
 
 * If running over HTTP and not HTTPS, use ``ntlm``, ``kerberos`` or ``credssp``
-  with ``ansible_winrm_message_encryption: auto`` to enable message encryption.
+  with ``assible_winrm_message_encryption: auto`` to enable message encryption.
   If using another authentication option or if the installed pywinrm version cannot be
   upgraded, the ``Service\AllowUnencrypted`` can be set to ``true`` but this is
   only recommended for troubleshooting
@@ -415,7 +415,7 @@ to check for include:
 Timeout Errors
 +++++++++++++++
 These usually indicate an error with the network connection where
-Ansible is unable to reach the host. Some things to check for include:
+Assible is unable to reach the host. Some things to check for include:
 
 * Make sure the firewall is not set to block the configured WinRM listener ports
 * Ensure that a WinRM listener is enabled on the port and path set by the host vars
@@ -441,7 +441,7 @@ Failure to Load Builtin Modules
 If powershell fails with an error message similar to ``The 'Out-String' command was found in the module 'Microsoft.PowerShell.Utility', but the module could not be loaded.``
 then there could be a problem trying to access all the paths specified by the ``PSModulePath`` environment variable.
 A common cause of this issue is that the ``PSModulePath`` environment variable contains a UNC path to a file share and
-because of the double hop/credential delegation issue the Ansible process cannot access these folders. The way around
+because of the double hop/credential delegation issue the Assible process cannot access these folders. The way around
 this problems is to either:
 
 * Remove the UNC path from the ``PSModulePath`` environment variable, or
@@ -452,7 +452,7 @@ See `KB4076842 <https://support.microsoft.com/en-us/help/4076842>`_ for more inf
 
 Windows SSH Setup
 `````````````````
-Ansible 2.8 has added an experimental SSH connection for Windows managed nodes.
+Assible 2.8 has added an experimental SSH connection for Windows managed nodes.
 
 .. warning::
     Use this feature at your own risk!
@@ -465,8 +465,8 @@ Installing Win32-OpenSSH
 The first step to using SSH with Windows is to install the `Win32-OpenSSH <https://github.com/PowerShell/Win32-OpenSSH>`_
 service on the Windows host. Microsoft offers a way to install ``Win32-OpenSSH`` through a Windows
 capability but currently the version that is installed through this process is
-too old to work with Ansible. To install ``Win32-OpenSSH`` for use with
-Ansible, select one of these three installation options:
+too old to work with Assible. To install ``Win32-OpenSSH`` for use with
+Assible, select one of these three installation options:
 
 * Manually install the service, following the `install instructions <https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH>`_
   from Microsoft.
@@ -483,10 +483,10 @@ Ansible, select one of these three installation options:
         package_params: /SSHServerFeature
         state: present
 
-* Use an existing Ansible Galaxy role like `jborean93.win_openssh <https://galaxy.ansible.com/jborean93/win_openssh>`_::
+* Use an existing Assible Galaxy role like `jborean93.win_openssh <https://galaxy.assible.com/jborean93/win_openssh>`_::
 
     # Make sure the role has been downloaded first
-    ansible-galaxy install jborean93.win_openssh
+    assible-galaxy install jborean93.win_openssh
 
     # main.yml
     - name: install Win32-OpenSSH service
@@ -505,7 +505,7 @@ Configuring the Win32-OpenSSH shell
 -----------------------------------
 
 By default ``Win32-OpenSSH`` will use ``cmd.exe`` as a shell. To configure a
-different shell, use an Ansible task to define the registry setting::
+different shell, use an Assible task to define the registry setting::
 
     - name: set the default shell to PowerShell
       win_regedit:
@@ -531,22 +531,22 @@ in the ``.ssh`` folder of the user's profile directory, and configure the
 service using the ``sshd_config`` file used by the SSH service as you would on
 a Unix/Linux host.
 
-When using SSH key authentication with Ansible, the remote session won't have access to the
+When using SSH key authentication with Assible, the remote session won't have access to the
 user's credentials and will fail when attempting to access a network resource.
 This is also known as the double-hop or credential delegation issue. There are
 two ways to work around this issue:
 
-* Use plaintext password auth by setting ``ansible_password``
+* Use plaintext password auth by setting ``assible_password``
 * Use ``become`` on the task with the credentials of the user that needs access to the remote resource
 
-Configuring Ansible for SSH on Windows
+Configuring Assible for SSH on Windows
 --------------------------------------
-To configure Ansible to use SSH for Windows hosts, you must set two connection variables:
+To configure Assible to use SSH for Windows hosts, you must set two connection variables:
 
-* set ``ansible_connection`` to ``ssh``
-* set ``ansible_shell_type`` to ``cmd`` or ``powershell``
+* set ``assible_connection`` to ``ssh``
+* set ``assible_shell_type`` to ``cmd`` or ``powershell``
 
-The ``ansible_shell_type`` variable should reflect the ``DefaultShell``
+The ``assible_shell_type`` variable should reflect the ``DefaultShell``
 configured on the Windows host. Set to ``cmd`` for the default shell or set to
 ``powershell`` if the ``DefaultShell`` has been changed to PowerShell.
 
@@ -567,7 +567,7 @@ Here are the known ones:
        Tips and tricks for playbooks
    :ref:`List of Windows Modules <windows_modules>`
        Windows specific module list, all implemented in PowerShell
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

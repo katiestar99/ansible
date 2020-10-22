@@ -3,7 +3,7 @@
 # # Copyright: (c) 2012, Red Hat, Inc
 # Written by Seth Vidal <skvidal at fedoraproject.org>
 # Contributing Authors:
-#    - Ansible Core Team
+#    - Assible Core Team
 #    - Eduard Snesarev (@verm666)
 #    - Berend De Schouwer (@berenddeschouwer)
 #    - Abhijeet Kasurde (@Akasurde)
@@ -18,8 +18,8 @@ import glob
 import tempfile
 from abc import ABCMeta, abstractmethod
 
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import with_metaclass
+from assible.module_utils._text import to_native
+from assible.module_utils.six import with_metaclass
 
 yumdnf_argument_spec = dict(
     argument_spec=dict(
@@ -103,7 +103,7 @@ class YumDnf(with_metaclass(ABCMeta, object)):
         self.exclude = self.listify_comma_sep_strings_in_list(self.exclude)
 
         # Fail if someone passed a space separated string
-        # https://github.com/ansible/ansible/issues/46301
+        # https://github.com/assible/assible/issues/46301
         for name in self.names:
             if ' ' in name and not any(spec in name for spec in ['@', '>', '<', '=']):
                 module.fail_json(

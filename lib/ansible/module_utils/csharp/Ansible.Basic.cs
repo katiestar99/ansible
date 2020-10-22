@@ -28,9 +28,9 @@ using System.Web.Script.Serialization;
 
 //AssemblyReference -Name System.Web.Extensions.dll -CLR Framework
 
-namespace Ansible.Basic
+namespace Assible.Basic
 {
-    public class AnsibleModule
+    public class AssibleModule
     {
         public delegate void ExitHandler(int rc);
         public static ExitHandler Exit = new ExitHandler(ExitModule);
@@ -53,7 +53,7 @@ namespace Ansible.Basic
 
         private Dictionary<string, string> passVars = new Dictionary<string, string>()
         {
-            // null values means no mapping, not used in Ansible.Basic.AnsibleModule
+            // null values means no mapping, not used in Assible.Basic.AssibleModule
             { "check_mode", "CheckMode" },
             { "debug", "DebugMode" },
             { "diff", "DiffMode" },
@@ -68,7 +68,7 @@ namespace Ansible.Basic
             { "syslog_facility", null },
             { "tmpdir", "tmpdir" },
             { "verbosity", "Verbosity" },
-            { "version", "AnsibleVersion" },
+            { "version", "AssibleVersion" },
         };
         private List<string> passBools = new List<string>() { "check_mode", "debug", "diff", "keep_remote_files", "no_log" };
         private List<string> passInts = new List<string>() { "verbosity" };
@@ -120,7 +120,7 @@ namespace Ansible.Basic
         public string ModuleName { get; private set; }
         public bool NoLog { get; private set; }
         public int Verbosity { get; private set; }
-        public string AnsibleVersion { get; private set; }
+        public string AssibleVersion { get; private set; }
 
         public string Tmpdir
         {
@@ -171,7 +171,7 @@ namespace Ansible.Basic
                     }
 
                     string dateTime = DateTime.Now.ToFileTime().ToString();
-                    string dirName = String.Format("ansible-moduletmp-{0}-{1}", dateTime, new Random().Next(0, int.MaxValue));
+                    string dirName = String.Format("assible-moduletmp-{0}-{1}", dateTime, new Random().Next(0, int.MaxValue));
                     string newTmpdir = Path.Combine(baseDir, dirName);
 #if CORECLR
                     DirectoryInfo tmpdirInfo = Directory.CreateDirectory(newTmpdir);
@@ -188,7 +188,7 @@ namespace Ansible.Basic
             }
         }
 
-        public AnsibleModule(string[] args, IDictionary argumentSpec, IDictionary[] fragments = null)
+        public AssibleModule(string[] args, IDictionary argumentSpec, IDictionary[] fragments = null)
         {
             // NoLog is not set yet, we cannot rely on FailJson to sanitize the output
             // Do the minimum amount to get this running before we actually parse the params
@@ -207,18 +207,18 @@ namespace Ansible.Basic
                     }
                 }
 
-                // Used by ansible-test to retrieve the module argument spec, not designed for public use.
+                // Used by assible-test to retrieve the module argument spec, not designed for public use.
                 if (_DebugArgSpec)
                 {
                     // Cannot call exit here because it will be caught with the catch (Exception e) below. Instead
                     // just throw a new exception with a specific message and the exception block will handle it.
-                    ScriptBlock.Create("Set-Variable -Name ansibleTestArgSpec -Value $args[0] -Scope Global"
+                    ScriptBlock.Create("Set-Variable -Name assibleTestArgSpec -Value $args[0] -Scope Global"
                         ).Invoke(argumentSpec);
-                    throw new Exception("ansible-test validate-modules check");
+                    throw new Exception("assible-test validate-modules check");
                 }
 
                 // Now make sure all the metadata keys are set to their defaults, this must be done after we've
-                // potentially output the arg spec for ansible-test.
+                // potentially output the arg spec for assible-test.
                 SetArgumentSpecDefaults(argumentSpec);
 
                 Params = GetParams(args);
@@ -227,7 +227,7 @@ namespace Ansible.Basic
             }
             catch (Exception e)
             {
-                if (e.Message == "ansible-test validate-modules check")
+                if (e.Message == "assible-test validate-modules check")
                     Exit(0);
 
                 Dictionary<string, object> result = new Dictionary<string, object>
@@ -250,12 +250,12 @@ namespace Ansible.Basic
             Verbosity = 0;
             AppDomain.CurrentDomain.ProcessExit += CleanupFiles;
 
-            List<string> legalInputs = passVars.Keys.Select(v => "_ansible_" + v).ToList();
+            List<string> legalInputs = passVars.Keys.Select(v => "_assible_" + v).ToList();
             legalInputs.AddRange(((IDictionary)argumentSpec["options"]).Keys.Cast<string>().ToList());
             legalInputs.AddRange(aliases.Keys.Cast<string>().ToList());
             CheckArguments(argumentSpec, Params, legalInputs);
 
-            // Set a Ansible friendly invocation value in the result object
+            // Set a Assible friendly invocation value in the result object
             Dictionary<string, object> invocation = new Dictionary<string, object>() { { "module_args", Params } };
             Result["invocation"] = RemoveNoLogValues(invocation, noLogValues);
 
@@ -263,9 +263,9 @@ namespace Ansible.Basic
                 LogEvent(String.Format("Invoked with:\r\n  {0}", FormatLogData(Params, 2)), sanitise: false);
         }
 
-        public static AnsibleModule Create(string[] args, IDictionary argumentSpec, IDictionary[] fragments = null)
+        public static AssibleModule Create(string[] args, IDictionary argumentSpec, IDictionary[] fragments = null)
         {
-            return new AnsibleModule(args, argumentSpec, fragments);
+            return new AssibleModule(args, argumentSpec, fragments);
         }
 
         public void Debug(string message)
@@ -339,7 +339,7 @@ namespace Ansible.Basic
             if (NoLog)
                 return;
 
-            string logSource = "Ansible";
+            string logSource = "Assible";
             bool logSourceExists = false;
             try
             {
@@ -428,9 +428,9 @@ namespace Ansible.Basic
             {
                 string inputJson = File.ReadAllText(args[0]);
                 Dictionary<string, object> rawParams = FromJson<Dictionary<string, object>>(inputJson);
-                if (!rawParams.ContainsKey("ANSIBLE_MODULE_ARGS"))
-                    throw new ArgumentException("Module was unable to get ANSIBLE_MODULE_ARGS value from the argument path json");
-                return (IDictionary)rawParams["ANSIBLE_MODULE_ARGS"];
+                if (!rawParams.ContainsKey("ASSIBLE_MODULE_ARGS"))
+                    throw new ArgumentException("Module was unable to get ASSIBLE_MODULE_ARGS value from the argument path json");
+                return (IDictionary)rawParams["ASSIBLE_MODULE_ARGS"];
             }
             else
             {
@@ -956,7 +956,7 @@ namespace Ansible.Basic
                             // For backwards compatibility with Legacy.psm1 we need to be matching choices that are not case sensitive.
                             // We will warn the user it was case insensitive and tell them this will become case sensitive in the future.
                             string msg = String.Format(
-                                "value of {0} was a case insensitive match of {1}: {2}. Checking of choices will be case sensitive in a future Ansible release. Case insensitive matches were: {3}",
+                                "value of {0} was a case insensitive match of {1}: {2}. Checking of choices will be case sensitive in a future Assible release. Case insensitive matches were: {3}",
                                 k, choiceMsg, String.Join(", ", choices), String.Join(", ", caseDiffList.Select(x => RemoveNoLogValues(x, noLogValues)))
                             );
                             Warn(FormatOptionsContext(msg));
@@ -996,12 +996,12 @@ namespace Ansible.Basic
                     unsupportedParameters.Add(paramKey);
                 else if (!legalInputs.Contains(paramKey))
                     // For backwards compatibility we do not care about the case but we need to warn the users as this will
-                    // change in a future Ansible release.
+                    // change in a future Assible release.
                     caseUnsupportedParameters.Add(paramKey);
-                else if (paramKey.StartsWith("_ansible_"))
+                else if (paramKey.StartsWith("_assible_"))
                 {
                     removedParameters.Add(paramKey);
-                    string key = paramKey.Replace("_ansible_", "");
+                    string key = paramKey.Replace("_assible_", "");
                     // skip setting NoLog if NoLog is already set to true (set by the module)
                     // or there's no mapping for this key
                     if ((key == "no_log" && NoLog == true) || (passVars[key] == null))
@@ -1014,14 +1014,14 @@ namespace Ansible.Basic
                         value = ParseInt(value);
 
                     string propertyName = passVars[key];
-                    PropertyInfo property = typeof(AnsibleModule).GetProperty(propertyName);
-                    FieldInfo field = typeof(AnsibleModule).GetField(propertyName, BindingFlags.NonPublic | BindingFlags.Instance);
+                    PropertyInfo property = typeof(AssibleModule).GetProperty(propertyName);
+                    FieldInfo field = typeof(AssibleModule).GetField(propertyName, BindingFlags.NonPublic | BindingFlags.Instance);
                     if (property != null)
                         property.SetValue(this, value, null);
                     else if (field != null)
                         field.SetValue(this, value);
                     else
-                        FailJson(String.Format("implementation error: unknown AnsibleModule property {0}", propertyName));
+                        FailJson(String.Format("implementation error: unknown AssibleModule property {0}", propertyName));
                 }
             }
             foreach (string parameter in removedParameters)
@@ -1029,7 +1029,7 @@ namespace Ansible.Basic
 
             if (unsupportedParameters.Count > 0)
             {
-                legalInputs.RemoveAll(x => passVars.Keys.Contains(x.Replace("_ansible_", "")));
+                legalInputs.RemoveAll(x => passVars.Keys.Contains(x.Replace("_assible_", "")));
                 string msg = String.Format("Unsupported parameters for ({0}) module: {1}", ModuleName, String.Join(", ", unsupportedParameters));
                 msg = String.Format("{0}. Supported parameters include: {1}", FormatOptionsContext(msg), String.Join(", ", legalInputs));
                 FailJson(msg);
@@ -1039,9 +1039,9 @@ namespace Ansible.Basic
             // Uncomment when we want to start warning users around options that are not a case sensitive match to the spec
             if (caseUnsupportedParameters.Count > 0)
             {
-                legalInputs.RemoveAll(x => passVars.Keys.Contains(x.Replace("_ansible_", "")));
+                legalInputs.RemoveAll(x => passVars.Keys.Contains(x.Replace("_assible_", "")));
                 string msg = String.Format("Parameters for ({0}) was a case insensitive match: {1}", ModuleName, String.Join(", ", caseUnsupportedParameters));
-                msg = String.Format("{0}. Module options will become case sensitive in a future Ansible release. Supported parameters include: {1}",
+                msg = String.Format("{0}. Module options will become case sensitive in a future Assible release. Supported parameters include: {1}",
                     FormatOptionsContext(msg), String.Join(", ", legalInputs));
                 Warn(msg);
             }*/

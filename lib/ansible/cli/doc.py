@@ -1,5 +1,5 @@
 # Copyright: (c) 2014, James Tanner <tanner.jc@gmail.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -13,25 +13,25 @@ import textwrap
 import traceback
 import yaml
 
-import ansible.plugins.loader as plugin_loader
+import assible.plugins.loader as plugin_loader
 
-from ansible import constants as C
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.collections.list import list_collection_dirs
-from ansible.errors import AnsibleError, AnsibleOptionsError
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common._collections_compat import Container, Sequence
-from ansible.module_utils.common.json import AnsibleJSONEncoder
-from ansible.module_utils.six import string_types
-from ansible.parsing.plugin_docs import read_docstub
-from ansible.parsing.yaml.dumper import AnsibleDumper
-from ansible.plugins.loader import action_loader, fragment_loader
-from ansible.utils.collection_loader import AnsibleCollectionConfig
-from ansible.utils.collection_loader._collection_finder import _get_collection_name_from_path
-from ansible.utils.display import Display
-from ansible.utils.plugin_docs import (
+from assible import constants as C
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.collections.list import list_collection_dirs
+from assible.errors import AssibleError, AssibleOptionsError
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common._collections_compat import Container, Sequence
+from assible.module_utils.common.json import AssibleJSONEncoder
+from assible.module_utils.six import string_types
+from assible.parsing.plugin_docs import read_docstub
+from assible.parsing.yaml.dumper import AssibleDumper
+from assible.plugins.loader import action_loader, fragment_loader
+from assible.utils.collection_loader import AssibleCollectionConfig
+from assible.utils.collection_loader._collection_finder import _get_collection_name_from_path
+from assible.utils.display import Display
+from assible.utils.plugin_docs import (
     BLACKLIST,
     remove_current_collection_from_versions_and_dates,
     get_docstring,
@@ -43,9 +43,9 @@ display = Display()
 
 def jdump(text):
     try:
-        display.display(json.dumps(text, cls=AnsibleJSONEncoder, sort_keys=True, indent=4))
+        display.display(json.dumps(text, cls=AssibleJSONEncoder, sort_keys=True, indent=4))
     except TypeError as e:
-        raise AnsibleError('We could not convert all the documentation into JSON as there was a conversion issue: %s' % to_native(e))
+        raise AssibleError('We could not convert all the documentation into JSON as there was a conversion issue: %s' % to_native(e))
 
 
 def add_collection_plugins(plugin_list, plugin_type, coll_filter=None):
@@ -64,7 +64,7 @@ class PluginNotFound(Exception):
 
 
 class DocCLI(CLI):
-    ''' displays information on modules installed in Ansible libraries.
+    ''' displays information on modules installed in Assible libraries.
         It displays a terse listing of plugins and their short descriptions,
         provides a printout of their DOCUMENTATION strings,
         and it can create a short "snippet" which can be pasted into a playbook.  '''
@@ -73,7 +73,7 @@ class DocCLI(CLI):
     IGNORE = ('module', 'docuri', 'version_added', 'short_description', 'now_date', 'plainexamples', 'returndocs', 'collection')
 
     # Warning: If you add more elements here, you also need to add it to the docsite build (in the
-    # ansible-community/antsibull repo)
+    # assible-community/antsibull repo)
     _ITALIC = re.compile(r"\bI\(([^)]+)\)")
     _BOLD = re.compile(r"\bB\(([^)]+)\)")
     _MODULE = re.compile(r"\bM\(([^)]+)\)")
@@ -108,7 +108,7 @@ class DocCLI(CLI):
 
         super(DocCLI, self).init_parser(
             desc="plugin documentation tool",
-            epilog="See man pages for Ansible CLI options or website for tutorials https://docs.ansible.com"
+            epilog="See man pages for Assible CLI options or website for tutorials https://docs.assible.com"
         )
         opt_help.add_module_options(self.parser)
         opt_help.add_basedir_options(self.parser)
@@ -182,12 +182,12 @@ class DocCLI(CLI):
         if plugin_type in C.DOCUMENTABLE_PLUGINS:
             loader = getattr(plugin_loader, '%s_loader' % plugin_type)
         else:
-            raise AnsibleOptionsError("Unknown or undocumentable plugin type: %s" % plugin_type)
+            raise AssibleOptionsError("Unknown or undocumentable plugin type: %s" % plugin_type)
 
         # add to plugin paths from command line
         basedir = context.CLIARGS['basedir']
         if basedir:
-            AnsibleCollectionConfig.playbook_paths = basedir
+            AssibleCollectionConfig.playbook_paths = basedir
             loader.add_directory(basedir, with_subdir=True)
 
         if context.CLIARGS['module_path']:
@@ -239,7 +239,7 @@ class DocCLI(CLI):
         else:
             # display specific plugin docs
             if len(context.CLIARGS['args']) == 0:
-                raise AnsibleOptionsError("Incorrect options passed")
+                raise AssibleOptionsError("Incorrect options passed")
 
             # get the docs for plugins in the command line list
             plugin_docs = {}
@@ -251,7 +251,7 @@ class DocCLI(CLI):
                     continue
                 except Exception as e:
                     display.vvv(traceback.format_exc())
-                    raise AnsibleError("%s %s missing documentation (or could not parse"
+                    raise AssibleError("%s %s missing documentation (or could not parse"
                                        " documentation): %s\n" %
                                        (plugin_type, plugin, to_native(e)))
 
@@ -297,7 +297,7 @@ class DocCLI(CLI):
         loader = getattr(plugin_loader, '%s_loader' % plugin_type)
         result = loader.find_plugin_with_context(plugin_name, mod_type='.py', ignore_deprecated=True, check_aliases=True)
         if not result.resolved:
-            raise AnsibleError("unable to load {0} plugin named {1} ".format(plugin_type, plugin_name))
+            raise AssibleError("unable to load {0} plugin named {1} ".format(plugin_type, plugin_name))
         filename = result.plugin_resolved_path
         collection_name = result.plugin_resolved_collection
 
@@ -306,7 +306,7 @@ class DocCLI(CLI):
                                             collection_name=collection_name, is_module=(plugin_type == 'module'))
         except Exception:
             display.vvv(traceback.format_exc())
-            raise AnsibleError("%s %s at %s has a documentation formatting error or is missing documentation." % (plugin_type, plugin_name, filename))
+            raise AssibleError("%s %s at %s has a documentation formatting error or is missing documentation." % (plugin_type, plugin_name, filename))
 
         if doc is None:
             # Removed plugins don't have any documentation
@@ -387,13 +387,13 @@ class DocCLI(CLI):
             try:
                 text = DocCLI.get_man_text(doc, collection_name, plugin_type)
             except Exception as e:
-                raise AnsibleError("Unable to retrieve documentation from '%s' due to: %s" % (plugin, to_native(e)))
+                raise AssibleError("Unable to retrieve documentation from '%s' due to: %s" % (plugin, to_native(e)))
 
         return text
 
     @staticmethod
     def find_plugins(path, internal, ptype, collection=None):
-        # if internal, collection could be set to `ansible.builtin`
+        # if internal, collection could be set to `assible.builtin`
 
         display.vvvv("Searching %s for plugins" % path)
 
@@ -481,7 +481,7 @@ class DocCLI(CLI):
                 pfiles[plugin] = filename
 
             except Exception as e:
-                raise AnsibleError("Failed reading docs at %s: %s" % (plugin, to_native(e)), orig_exc=e)
+                raise AssibleError("Failed reading docs at %s: %s" % (plugin, to_native(e)), orig_exc=e)
 
         return pfiles
 
@@ -530,7 +530,7 @@ class DocCLI(CLI):
     def _dump_yaml(struct, indent):
         return DocCLI.tty_ify('\n'.join([indent + line for line in
                                          yaml.dump(struct, default_flow_style=False,
-                                                   Dumper=AnsibleDumper).split('\n')]))
+                                                   Dumper=AssibleDumper).split('\n')]))
 
     @staticmethod
     def add_fields(text, fields, limit, opt_indent, return_values=False, base_indent=''):
@@ -541,7 +541,7 @@ class DocCLI(CLI):
 
             required = opt.pop('required', False)
             if not isinstance(required, bool):
-                raise AnsibleError("Incorrect value for 'Required', a boolean is needed.: %s" % required)
+                raise AssibleError("Incorrect value for 'Required', a boolean is needed.: %s" % required)
             if required:
                 opt_leadin = "="
             else:
@@ -550,15 +550,15 @@ class DocCLI(CLI):
             text.append("%s%s %s" % (base_indent, opt_leadin, o))
 
             if 'description' not in opt:
-                raise AnsibleError("All (sub-)options and return values must have a 'description' field")
+                raise AssibleError("All (sub-)options and return values must have a 'description' field")
             if isinstance(opt['description'], list):
                 for entry_idx, entry in enumerate(opt['description'], 1):
                     if not isinstance(entry, string_types):
-                        raise AnsibleError("Expected string in description of %s at index %s, got %s" % (o, entry_idx, type(entry)))
+                        raise AssibleError("Expected string in description of %s at index %s, got %s" % (o, entry_idx, type(entry)))
                     text.append(textwrap.fill(DocCLI.tty_ify(entry), limit, initial_indent=opt_indent, subsequent_indent=opt_indent))
             else:
                 if not isinstance(opt['description'], string_types):
-                    raise AnsibleError("Expected string in description of %s, got %s" % (o, type(opt['description'])))
+                    raise AssibleError("Expected string in description of %s, got %s" % (o, type(opt['description'])))
                 text.append(textwrap.fill(DocCLI.tty_ify(opt['description']), limit, initial_indent=opt_indent, subsequent_indent=opt_indent))
             del opt['description']
 
@@ -653,7 +653,7 @@ class DocCLI(CLI):
                 else:
                     if 'version' in doc['deprecated'] and 'removed_in' not in doc['deprecated']:
                         doc['deprecated']['removed_in'] = doc['deprecated']['version']
-                    text.append("\tReason: %(why)s\n\tWill be removed in: Ansible %(removed_in)s\n\tAlternatives: %(alternative)s" % doc.pop('deprecated'))
+                    text.append("\tReason: %(why)s\n\tWill be removed in: Assible %(removed_in)s\n\tAlternatives: %(alternative)s" % doc.pop('deprecated'))
             else:
                 text.append("%s" % doc.pop('deprecated'))
             text.append("\n")
@@ -693,7 +693,7 @@ class DocCLI(CLI):
                     text.append(textwrap.fill(DocCLI.tty_ify(item['link']),
                                 limit - 6, initial_indent=opt_indent + '   ', subsequent_indent=opt_indent + '   '))
                 elif 'ref' in item and 'description' in item:
-                    text.append(textwrap.fill(DocCLI.tty_ify('Ansible documentation [%s]' % item['ref']),
+                    text.append(textwrap.fill(DocCLI.tty_ify('Assible documentation [%s]' % item['ref']),
                                 limit - 6, initial_indent=opt_indent[:-2] + "* ", subsequent_indent=opt_indent))
                     text.append(textwrap.fill(DocCLI.tty_ify(item['description']),
                                 limit - 6, initial_indent=opt_indent + '   ', subsequent_indent=opt_indent + '   '))

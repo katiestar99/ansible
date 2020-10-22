@@ -1,5 +1,5 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -8,32 +8,32 @@ __metaclass__ = type
 import os
 import stat
 
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.errors import AnsibleError
-from ansible.executor.playbook_executor import PlaybookExecutor
-from ansible.module_utils._text import to_bytes
-from ansible.playbook.block import Block
-from ansible.utils.display import Display
-from ansible.utils.collection_loader import AnsibleCollectionConfig
-from ansible.utils.collection_loader._collection_finder import _get_collection_name_from_path
-from ansible.plugins.loader import add_all_plugin_dirs
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.errors import AssibleError
+from assible.executor.playbook_executor import PlaybookExecutor
+from assible.module_utils._text import to_bytes
+from assible.playbook.block import Block
+from assible.utils.display import Display
+from assible.utils.collection_loader import AssibleCollectionConfig
+from assible.utils.collection_loader._collection_finder import _get_collection_name_from_path
+from assible.plugins.loader import add_all_plugin_dirs
 
 
 display = Display()
 
 
 class PlaybookCLI(CLI):
-    ''' the tool to run *Ansible playbooks*, which are a configuration and multinode deployment system.
-        See the project home page (https://docs.ansible.com) for more information. '''
+    ''' the tool to run *Assible playbooks*, which are a configuration and multinode deployment system.
+        See the project home page (https://docs.assible.com) for more information. '''
 
     def init_parser(self):
 
         # create parser for CLI options
         super(PlaybookCLI, self).init_parser(
             usage="%prog [options] playbook.yml [playbook2 ...]",
-            desc="Runs Ansible playbooks, executing the defined tasks on the targeted hosts.")
+            desc="Runs Assible playbooks, executing the defined tasks on the targeted hosts.")
 
         opt_help.add_connect_options(self.parser)
         opt_help.add_meta_options(self.parser)
@@ -46,7 +46,7 @@ class PlaybookCLI(CLI):
         opt_help.add_fork_options(self.parser)
         opt_help.add_module_options(self.parser)
 
-        # ansible playbook specific opts
+        # assible playbook specific opts
         self.parser.add_argument('--list-tasks', dest='listtasks', action='store_true',
                                  help="list all tasks that would be executed")
         self.parser.add_argument('--list-tags', dest='listtags', action='store_true',
@@ -81,9 +81,9 @@ class PlaybookCLI(CLI):
         b_playbook_dirs = []
         for playbook in context.CLIARGS['args']:
             if not os.path.exists(playbook):
-                raise AnsibleError("the playbook: %s could not be found" % playbook)
+                raise AssibleError("the playbook: %s could not be found" % playbook)
             if not (os.path.isfile(playbook) or stat.S_ISFIFO(os.stat(playbook).st_mode)):
-                raise AnsibleError("the playbook: %s does not appear to be a file" % playbook)
+                raise AssibleError("the playbook: %s does not appear to be a file" % playbook)
 
             b_playbook_dir = os.path.dirname(os.path.abspath(to_bytes(playbook, errors='surrogate_or_strict')))
             # load plugins from all playbooks in case they add callbacks/inventory/etc
@@ -91,13 +91,13 @@ class PlaybookCLI(CLI):
 
             b_playbook_dirs.append(b_playbook_dir)
 
-        AnsibleCollectionConfig.playbook_paths = b_playbook_dirs
+        AssibleCollectionConfig.playbook_paths = b_playbook_dirs
 
         playbook_collection = _get_collection_name_from_path(b_playbook_dirs[0])
 
         if playbook_collection:
             display.warning("running playbook inside collection {0}".format(playbook_collection))
-            AnsibleCollectionConfig.default_collection = playbook_collection
+            AssibleCollectionConfig.default_collection = playbook_collection
 
         # don't deal with privilege escalation or passwords when we don't need to
         if not (context.CLIARGS['listhosts'] or context.CLIARGS['listtasks'] or

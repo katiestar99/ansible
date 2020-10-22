@@ -1,39 +1,39 @@
 #!powershell
 
 # Copyright: (c) 2015, Jon Hawkesworth (@jhawkesworth) <figs@unity.demon.co.uk>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.Backup
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Backup
 
 $ErrorActionPreference = 'Stop'
 
 $params = Parse-Args -arguments $args -supports_check_mode $true
-$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
-$diff_mode = Get-AnsibleParam -obj $params -name "_ansible_diff" -type "bool" -default $false
+$check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -type "bool" -default $false
+$diff_mode = Get-AssibleParam -obj $params -name "_assible_diff" -type "bool" -default $false
 
 # there are 4 modes to win_copy which are driven by the action plugins:
 #   explode: src is a zip file which needs to be extracted to dest, for use with multiple files
 #   query: win_copy action plugin wants to get the state of remote files to check whether it needs to send them
 #   remote: all copy action is happening remotely (remote_src=True)
 #   single: a single file has been copied, also used with template
-$copy_mode = Get-AnsibleParam -obj $params -name "_copy_mode" -type "str" -default "single" -validateset "explode","query","remote","single"
+$copy_mode = Get-AssibleParam -obj $params -name "_copy_mode" -type "str" -default "single" -validateset "explode","query","remote","single"
 
 # used in explode, remote and single mode
-$src = Get-AnsibleParam -obj $params -name "src" -type "path" -failifempty ($copy_mode -in @("explode","process","single"))
-$dest = Get-AnsibleParam -obj $params -name "dest" -type "path" -failifempty $true
-$backup = Get-AnsibleParam -obj $params -name "backup" -type "bool" -default $false
+$src = Get-AssibleParam -obj $params -name "src" -type "path" -failifempty ($copy_mode -in @("explode","process","single"))
+$dest = Get-AssibleParam -obj $params -name "dest" -type "path" -failifempty $true
+$backup = Get-AssibleParam -obj $params -name "backup" -type "bool" -default $false
 
 # used in single mode
-$original_basename = Get-AnsibleParam -obj $params -name "_original_basename" -type "str"
+$original_basename = Get-AssibleParam -obj $params -name "_original_basename" -type "str"
 
 # used in query and remote mode
-$force = Get-AnsibleParam -obj $params -name "force" -type "bool" -default $true
+$force = Get-AssibleParam -obj $params -name "force" -type "bool" -default $true
 
 # used in query mode, contains the local files/directories/symlinks that are to be copied
-$files = Get-AnsibleParam -obj $params -name "files" -type "list"
-$directories = Get-AnsibleParam -obj $params -name "directories" -type "list"
+$files = Get-AssibleParam -obj $params -name "files" -type "list"
+$directories = Get-AssibleParam -obj $params -name "directories" -type "list"
 
 $result = @{
     changed = $false
@@ -363,7 +363,7 @@ if ($copy_mode -eq "query") {
     }
 } elseif ($copy_mode -eq "single") {
     # a single file is located in src and we need to copy to dest, this will
-    # always result in a change as the calculation is done on the Ansible side
+    # always result in a change as the calculation is done on the Assible side
     # before this is run. This should also never run in check mode
     if (-not (Test-Path -LiteralPath $src -PathType Leaf)) {
         Fail-Json -obj $result -message "Cannot copy src file: '$src' as it does not exist"

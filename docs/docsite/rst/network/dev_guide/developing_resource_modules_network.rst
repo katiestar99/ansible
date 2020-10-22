@@ -12,7 +12,7 @@ Developing network resource modules
 Understanding network and security resource modules
 ===================================================
 
-Network and security devices separate configuration into sections (such as interfaces, VLANs, and so on) that apply to a network or security service. Ansible resource modules take advantage of this to allow users to configure subsections or resources within the device configuration. Resource modules provide a consistent experience across different network and security devices. For example, a network resource module may only update the configuration for a specific portion of the network interfaces, VLANs, ACLs, and so on for a network device. The resource module:
+Network and security devices separate configuration into sections (such as interfaces, VLANs, and so on) that apply to a network or security service. Assible resource modules take advantage of this to allow users to configure subsections or resources within the device configuration. Resource modules provide a consistent experience across different network and security devices. For example, a network resource module may only update the configuration for a specific portion of the network interfaces, VLANs, ACLs, and so on for a network device. The resource module:
 
 #. Fetches a piece of the configuration (fact gathering), for example, the interfaces configuration.
 #. Converts the returned configuration into key-value pairs.
@@ -30,28 +30,28 @@ The resource module has two top-level keys - ``config`` and ``state``:
 The ``state`` for a new resource module should support the following values (as applicable for the devices that support them):
 
 merged
-  Ansible merges the on-device configuration with the provided configuration in the task.
+  Assible merges the on-device configuration with the provided configuration in the task.
 
 replaced
-  Ansible replaces the on-device configuration subsection with the provided configuration subsection in the task.
+  Assible replaces the on-device configuration subsection with the provided configuration subsection in the task.
 
 overridden
-  Ansible overrides the on-device configuration for the resource with the provided configuration in the task. Use caution with this state as you could remove your access to the device (for example, by overriding the management interface configuration).
+  Assible overrides the on-device configuration for the resource with the provided configuration in the task. Use caution with this state as you could remove your access to the device (for example, by overriding the management interface configuration).
 
 deleted
-  Ansible deletes the on-device configuration subsection and restores any default settings.
+  Assible deletes the on-device configuration subsection and restores any default settings.
 
 gathered
-  Ansible displays the resource details gathered from the network device and accessed with the ``gathered`` key in the result.
+  Assible displays the resource details gathered from the network device and accessed with the ``gathered`` key in the result.
 
 rendered
-  Ansible renders the provided configuration in the task in the device-native format (for example, Cisco IOS CLI). Ansible returns this rendered configuration in the ``rendered`` key in the result. Note this state does not communicate with the network device and can be used offline.
+  Assible renders the provided configuration in the task in the device-native format (for example, Cisco IOS CLI). Assible returns this rendered configuration in the ``rendered`` key in the result. Note this state does not communicate with the network device and can be used offline.
 
 parsed
-  Ansible parses the configuration from the ``running_configuration`` option into Ansible structured data in the ``parsed`` key in the result. Note this does not gather the configuration from the network device so this state can be used offline.
+  Assible parses the configuration from the ``running_configuration`` option into Assible structured data in the ``parsed`` key in the result. Note this does not gather the configuration from the network device so this state can be used offline.
 
 
-Modules in Ansible-maintained collections must support these state values. If you develop a module with only "present" and "absent" for state, you may submit it to a community collection.
+Modules in Assible-maintained collections must support these state values. If you develop a module with only "present" and "absent" for state, you may submit it to a community collection.
 
 .. note::
 
@@ -59,20 +59,20 @@ Modules in Ansible-maintained collections must support these state values. If yo
 
 .. seealso::
 
-  `Deep Dive on VLANs Resource Modules for Network Automation <https://www.ansible.com/blog/deep-dive-on-vlans-resource-modules-for-network-automation>`_
+  `Deep Dive on VLANs Resource Modules for Network Automation <https://www.assible.com/blog/deep-dive-on-vlans-resource-modules-for-network-automation>`_
 	   Walkthrough of how state values are implemented for VLANs.
 
 
 Developing network and security resource modules
 =================================================
 
-The Ansible Engineering team ensures the module design and code pattern  within Ansible-maintained collections is uniform across resources and across platforms to give a vendor-agnostic feel and deliver good quality code. We recommend you use the `resource module builder <https://github.com/ansible-network/resource_module_builder>`_ to  develop a resource module.
+The Assible Engineering team ensures the module design and code pattern  within Assible-maintained collections is uniform across resources and across platforms to give a vendor-agnostic feel and deliver good quality code. We recommend you use the `resource module builder <https://github.com/assible-network/resource_module_builder>`_ to  develop a resource module.
 
 
 The highlevel process for developing a resource module is:
 
-#. Create and share a resource model design in the `resource module models repository <https://github.com/ansible-network/resource_module_models>`_ as a PR for review.
-#. Download the latest version of the `resource module builder <https://github.com/ansible-network/resource_module_builder>`_.
+#. Create and share a resource model design in the `resource module models repository <https://github.com/assible-network/resource_module_models>`_ as a PR for review.
+#. Download the latest version of the `resource module builder <https://github.com/assible-network/resource_module_builder>`_.
 #. Run the ``resource module builder`` to create a collection scaffold from your approved resource model.
 #. Write the code to implement your resource module.
 #. Develop integration and unit tests to verify your resource module.
@@ -82,12 +82,12 @@ The highlevel process for developing a resource module is:
 Understanding the model and resource module builder
 -----------------------------------------------------
 
-The resource module builder is an Ansible Playbook that helps developers scaffold and maintain an Ansible resource module. It uses a model as the single source of truth for the module. This model is a ``yaml`` file that is used for the module DOCUMENTATION section and the argument spec.
+The resource module builder is an Assible Playbook that helps developers scaffold and maintain an Assible resource module. It uses a model as the single source of truth for the module. This model is a ``yaml`` file that is used for the module DOCUMENTATION section and the argument spec.
 
 The resource module builder has the following capabilities:
 
 - Uses a defined model to scaffold a resource module directory layout and initial class files.
-- Scaffolds either an Ansible role or a collection.
+- Scaffolds either an Assible role or a collection.
 - Subsequent uses of the resource module builder will only replace the module arspec and file containing the module docstring.
 - Allows you to store complex examples along side the model in the same directory.
 - Maintains the model as the source of truth for the module and use resource module builder to update the source files as needed.
@@ -102,7 +102,7 @@ To access the resource module builder:
 
   .. code-block:: bash
 
-    git clone https://github.com/ansible-network/resource_module_builder.git
+    git clone https://github.com/assible-network/resource_module_builder.git
 
 2. Install the requirements:
 
@@ -138,7 +138,7 @@ For example, the resource model builder includes the ``myos_interfaces.yml`` sam
     version_added: 1.0.0
     short_description: 'Manages <xxxx> attributes of <network_os> <resource>'
     description: 'Manages <xxxx> attributes of <network_os> <resource>.'
-    author: Ansible Network Engineer
+    author: Assible Network Engineer
    notes:
       - 'Tested against <network_os> <version>'
     options:
@@ -195,7 +195,7 @@ For example, the resource model builder includes the ``myos_interfaces.yml`` sam
 
 Notice that you should include examples for each of the states that the resource supports. The resource module builder also includes these in the sample model.
 
-Share this model as a PR for review at `resource module models repository <https://github.com/ansible-network/resource_module_models>`_. You can also see more model examples at that location.
+Share this model as a PR for review at `resource module models repository <https://github.com/assible-network/resource_module_models>`_. You can also see more model examples at that location.
 
 
 Creating a collection scaffold from a resource model
@@ -205,7 +205,7 @@ To use the resource module builder to create a collection scaffold from your app
 
 .. code-block:: bash
 
-  ansible-playbook -e rm_dest=<destination for modules and module utils> \
+  assible-playbook -e rm_dest=<destination for modules and module utils> \
                    -e structure=collection \
                    -e collection_org=<collection_org> \
                    -e collection_name=<collection_name> \
@@ -228,7 +228,7 @@ To use the resource module builder to create a role scaffold:
 
 .. code-block:: bash
 
-  ansible-playbook -e rm_dest=<destination for modules and module utils> \
+  assible-playbook -e rm_dest=<destination for modules and module utils> \
                    -e structure=role \
                    -e model=<model> \
                    site.yml
@@ -246,7 +246,7 @@ This example shows the directory layout for the following:
 
 .. code-block:: bash
 
-  ansible-playbook -e rm_dest=~/github/rm_example \
+  assible-playbook -e rm_dest=~/github/rm_example \
                    -e structure=collection \
                    -e collection_org=cidrblock \
                    -e collection_name=my_collection \
@@ -308,7 +308,7 @@ This example displays the role directory layout for the following:
 
 .. code-block:: bash
 
-  ansible-playbook -e rm_dest=~/github/rm_example/roles/my_role \
+  assible-playbook -e rm_dest=~/github/rm_example/roles/my_role \
                    -e structure=role \
                    -e model=models/myos/interfaces/myos_interfaces.yml \
                    site.yml
@@ -371,7 +371,7 @@ This example shows how to use the generated collection in a playbook:
            var: result
        - cidrblock.my_collection.myos_facts:
        - debug:
-           var: ansible_network_resources
+           var: assible_network_resources
 
 
 Using the role
@@ -395,7 +395,7 @@ This example shows how to use the generated role in a playbook:
           var: result
       - myos_facts:
       - debug:
-          var: ansible_network_resources
+          var: assible_network_resources
 
 
 Resource module structure and workflow
@@ -404,7 +404,7 @@ Resource module structure and workflow
 The resource module structure includes the following components:
 
 Module
-    * ``library/<ansible_network_os>_<resource>.py``.
+    * ``library/<assible_network_os>_<resource>.py``.
     * Imports the ``module_utils`` resource package and calls ``execute_module`` API:
 
     .. code-block:: text
@@ -413,36 +413,36 @@ Module
           result = <resource_package>(module).execute_module()
 
 Module argspec
-    * ``module_utils/<ansible_network_os>/argspec/<resource>/``.
+    * ``module_utils/<assible_network_os>/argspec/<resource>/``.
     * Argspec for the resource.
 
 Facts
-    * ``module_utils/<ansible_network_os>/facts/<resource>/``.
+    * ``module_utils/<assible_network_os>/facts/<resource>/``.
     * Populate facts for the resource.
-    * Entry in ``module_utils/<ansible_network_os>/facts/facts.py`` for ``get_facts`` API to keep ``<ansible_network_os>_facts`` module and facts gathered for the resource module in sync for every subset.
-    *  Entry of Resource subset in FACTS_RESOURCE_SUBSETS list in ``module_utils/<ansible_network_os>/facts/facts.py`` to make facts collection work.
+    * Entry in ``module_utils/<assible_network_os>/facts/facts.py`` for ``get_facts`` API to keep ``<assible_network_os>_facts`` module and facts gathered for the resource module in sync for every subset.
+    *  Entry of Resource subset in FACTS_RESOURCE_SUBSETS list in ``module_utils/<assible_network_os>/facts/facts.py`` to make facts collection work.
 
 Module package in module_utils
-    * ``module_utils/<ansible_network_os>/<config>/<resource>/``.
+    * ``module_utils/<assible_network_os>/<config>/<resource>/``.
     * Implement ``execute_module`` API that loads the configuration to device and generates the result with ``changed``, ``commands``, ``before`` and ``after`` keys.
     * Call ``get_facts`` API that returns the ``<resource>`` configuration facts or return the difference if the device has onbox diff support.
     * Compare facts gathered and given key-values if diff is not supported.
     * Generate final configuration.
 
 Utils
-    * ``module_utils/<ansible_network_os>/utils``.
-    * Utilities for the ``<ansible_network_os>`` platform.
+    * ``module_utils/<assible_network_os>/utils``.
+    * Utilities for the ``<assible_network_os>`` platform.
 
 .. _tox_resource_modules:
 
-Running  ``ansible-test sanity`` and ``tox`` on resource modules
+Running  ``assible-test sanity`` and ``tox`` on resource modules
 ================================================================
 
-You should run ``ansible-test sanity`` and ``tox -elinters`` from the collection root directory before pushing your PR to an Ansible-maintained collection. The CI runs both and will fail if these tests fail. See :ref:`developing_testing` for details on ``ansible-test sanity``.
+You should run ``assible-test sanity`` and ``tox -elinters`` from the collection root directory before pushing your PR to an Assible-maintained collection. The CI runs both and will fail if these tests fail. See :ref:`developing_testing` for details on ``assible-test sanity``.
 
 To install the necessary packages:
 
-#. Ensure you have a valid Ansible development environment configured. See :ref:`environment_setup` for details.
+#. Ensure you have a valid Assible development environment configured. See :ref:`environment_setup` for details.
 #. Run ``pip install -r requirements.txt`` from the collection root directory.
 
 
@@ -460,7 +460,7 @@ The tests rely on a role generated by the resource module builder. After changes
 .. code-block:: bash
 
   rm -rf rmb_tests/roles/my_role
-  ansible-playbook -e rm_dest=./rmb_tests/roles/my_role \
+  assible-playbook -e rm_dest=./rmb_tests/roles/my_role \
                    -e structure=role \
                    -e model=models/myos/interfaces/myos_interfaces.yml \
                    site.yml
@@ -483,11 +483,11 @@ High-level integration test requirements for new resource modules are as follows
 We use Zuul as the CI to run the integration test.
 
 * To view the report, click :guilabel:`Details` on the CI comment in the PR
-* To view a failure report,  click :guilabel:`ansible/check` and select the failed test.
-* To view logs while the test is running, check for your PR number in the `Zull status board <https://dashboard.zuul.ansible.com/t/ansible/status>`_.
+* To view a failure report,  click :guilabel:`assible/check` and select the failed test.
+* To view logs while the test is running, check for your PR number in the `Zull status board <https://dashboard.zuul.assible.com/t/assible/status>`_.
 * To fix static test failure locally, run the  :command:`tox -e black` **inside the root folder of collection**.
 
-To view The Ansible run logs and debug test failures:
+To view The Assible run logs and debug test failures:
 
 #. Click the failed job to get the summary, and click :guilabel:`Logs` for the log.
 #. Click :guilabel:`console` and scroll down to find the failed test.
@@ -511,7 +511,7 @@ For platforms that support ``connection: local`` *and* ``connection: network_cli
 * Name the :file:`targets/` directories after the module name.
 * The :file:`main.yaml` file should just reference the transport.
 
-The following example walks through the integration tests for the ``vyos.vyos.vyos_l3_interfaces`` module in the `vyos.vyos <https://github.com/ansible-collections/vyos.vyos/tree/master/tests/integration>`_ collection:
+The following example walks through the integration tests for the ``vyos.vyos.vyos_l3_interfaces`` module in the `vyos.vyos <https://github.com/assible-collections/vyos.vyos/tree/master/tests/integration>`_ collection:
 
 ``test/integration/targets/vyos_l3_interfaces/tasks/main.yaml``
 
@@ -538,13 +538,13 @@ The following example walks through the integration tests for the ``vyos.vyos.vy
      set_fact: test_items="{{ test_cases.files | map(attribute='path') | list }}"
 
    - name: run test cases (connection=network_cli)
-     include: "{{ test_case_to_run }} ansible_connection=network_cli"
+     include: "{{ test_case_to_run }} assible_connection=network_cli"
      with_items: "{{ test_items }}"
      loop_control:
        loop_var: test_case_to_run
 
    - name: run test case (connection=local)
-     include: "{{ test_case_to_run }} ansible_connection=local ansible_become=no"
+     include: "{{ test_case_to_run }} assible_connection=local assible_become=no"
      with_first_found: "{{ test_items }}"
      loop_control:
        loop_var: test_case_to_run
@@ -555,7 +555,7 @@ The following example walks through the integration tests for the ``vyos.vyos.vy
 
   ---
   - debug:
-   msg: START vyos_l3_interfaces merged integration tests on connection={{ ansible_connection
+   msg: START vyos_l3_interfaces merged integration tests on connection={{ assible_connection
      }}
 
   - include_tasks: _remove_config.yaml
@@ -626,7 +626,7 @@ For example:
 .. code-block:: yaml
 
   - name: Collect interface list
-    connection: ansible.netcommon.network_cli
+    connection: assible.netcommon.network_cli
     register: intout
     cisco.nxos.nxos_command:
       commands:
@@ -645,13 +645,13 @@ For example:
       nxos_int3: '{{ intdataraw[3].interface }}'
 
 
-See the complete test example of this at https://github.com/ansible-collections/cisco.nxos/blob/master/tests/integration/targets/prepare_nxos_tests/tasks/main.yml.
+See the complete test example of this at https://github.com/assible-collections/cisco.nxos/blob/master/tests/integration/targets/prepare_nxos_tests/tasks/main.yml.
 
 
 Running network integration tests
 ..................................
 
-Ansible uses Zuul to run an integration test suite on every PR, including new tests introduced by that PR. To find and fix problems in network modules, run the network integration test locally before you submit a PR.
+Assible uses Zuul to run an integration test suite on every PR, including new tests introduced by that PR. To find and fix problems in network modules, run the network integration test locally before you submit a PR.
 
 
 First, create an inventory file that points to your test machines. The inventory group should match the platform name (for example, ``eos``, ``ios``):
@@ -663,12 +663,12 @@ First, create an inventory file that points to your test machines. The inventory
    ${EDITOR:-vi} inventory.networking
    # Add in machines for the platform(s) you wish to test
 
-To run these network integration tests, use ``ansible-test network-integration --inventory </path/to/inventory> <tests_to_run>``:
+To run these network integration tests, use ``assible-test network-integration --inventory </path/to/inventory> <tests_to_run>``:
 
 .. code-block:: console
 
-   ansible-test network-integration  --inventory ~/myinventory -vvv vyos_facts
-   ansible-test network-integration  --inventory ~/myinventory -vvv vyos_.*
+   assible-test network-integration  --inventory ~/myinventory -vvv vyos_facts
+   assible-test network-integration  --inventory ~/myinventory -vvv vyos_.*
 
 
 
@@ -676,7 +676,7 @@ To run all network tests for a particular platform:
 
 .. code-block:: bash
 
-   ansible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking vyos_.*
+   assible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking vyos_.*
 
 This example will run against all ``vyos`` modules. Note that ``vyos_.*`` is a regex match, not a bash wildcard - include the `.` if you modify this example.
 
@@ -684,34 +684,34 @@ To run integration tests for a specific module:
 
 .. code-block:: bash
 
-  ansible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking vyos_l3_interfaces
+  assible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking vyos_l3_interfaces
 
 To run a single test case on a specific module:
 
 .. code-block:: bash
 
    # Only run vyos_l3_interfaces/tests/cli/gathered.yaml
-   ansible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking vyos_l3_interfaces --testcase gathered
+   assible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking vyos_l3_interfaces --testcase gathered
 
 To run integration tests for a specific transport:
 
 .. code-block:: bash
 
    # Only run nxapi test
-  ansible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking  --tags="nxapi" nxos_.*
+  assible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking  --tags="nxapi" nxos_.*
 
   # Skip any cli tests
-   ansible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking  --skip-tags="cli" nxos_.*
+   assible-test network-integration --inventory  /path/to-collection-module/test/integration/inventory.networking  --skip-tags="cli" nxos_.*
 
-See `test/integration/targets/nxos_bgp/tasks/main.yaml <https://github.com/ansible-collections/cisco.nxos/blob/master/tests/integration/targets/nxos_bgp/tasks/main.yaml>`_ for how this is implemented in the tests.
+See `test/integration/targets/nxos_bgp/tasks/main.yaml <https://github.com/assible-collections/cisco.nxos/blob/master/tests/integration/targets/nxos_bgp/tasks/main.yaml>`_ for how this is implemented in the tests.
 
 For more options:
 
 .. code-block:: bash
 
-  ansible-test network-integration --help
+  assible-test network-integration --help
 
-If you need additional help or feedback, reach out in ``#ansible-network`` on Freenode.
+If you need additional help or feedback, reach out in ``#assible-network`` on Freenode.
 
 Unit test requirements
 -----------------------
@@ -731,57 +731,57 @@ See  :ref:`unit module testing <testing_units_modules>` for general unit test de
 .. end of cut n .. parsed-literal::
 
 
-Example: Unit testing Ansible network resource modules
+Example: Unit testing Assible network resource modules
 ======================================================
 
 
-This section walks through an example of how to develop unit tests for Ansible resource
+This section walks through an example of how to develop unit tests for Assible resource
 modules.
 
-See :ref:`testing_units` and :ref:`testing_units_modules` for general documentation on Ansible unit tests for modules.
+See :ref:`testing_units` and :ref:`testing_units_modules` for general documentation on Assible unit tests for modules.
 Please read those pages first to understand unit tests and why and when you should use them.
 
 
-Using mock objects to unit test Ansible network resource modules
+Using mock objects to unit test Assible network resource modules
 ----------------------------------------------------------------
 
 
 `Mock objects <https://docs.python.org/3/library/unittest.mock.html>`_ can be very
 useful in building unit tests for special or difficult cases, but they can also
 lead to complex and confusing coding situations.  One good use for mocks would be to
-simulate an API. The ``mock`` Python package is bundled with Ansible (use
+simulate an API. The ``mock`` Python package is bundled with Assible (use
 ``import units.compat.mock``).
 
 You can mock the device connection and output from the device as follows:
 
 .. code-block:: python
 
-  self.mock_get_config = patch( "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network.Config.get_config"
+  self.mock_get_config = patch( "assible_collections.assible.netcommon.plugins.module_utils.network.common.network.Config.get_config"
   )
   self.get_config = self.mock_get_config.start()
 
   self.mock_load_config = patch(
-  "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network.Config.load_config"
+  "assible_collections.assible.netcommon.plugins.module_utils.network.common.network.Config.load_config"
   )
   self.load_config = self.mock_load_config.start()
 
   self.mock_get_resource_connection_config = patch(
-  "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base.get_resource_connection"
+  "assible_collections.assible.netcommon.plugins.module_utils.network.common.cfg.base.get_resource_connection"
   )
   self.get_resource_connection_config = (self.mock_get_resource_connection_config.start())
 
   self.mock_get_resource_connection_facts = patch(
-  "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts.get_resource_connection"
+  "assible_collections.assible.netcommon.plugins.module_utils.network.common.facts.facts.get_resource_connection"
   )
   self.get_resource_connection_facts = (self.mock_get_resource_connection_facts.start())
 
   self.mock_edit_config = patch(
-  "ansible_collections.arista.eos.plugins.module_utils.network.eos.providers.providers.CliProvider.edit_config"
+  "assible_collections.arista.eos.plugins.module_utils.network.eos.providers.providers.CliProvider.edit_config"
   )
   self.edit_config = self.mock_edit_config.start()
 
   self.mock_execute_show_command = patch(
-  "ansible_collections.arista.eos.plugins.module_utils.network.eos.facts.l2_interfaces.l2_interfaces.L2_interfacesFacts.get_device_data"
+  "assible_collections.arista.eos.plugins.module_utils.network.eos.facts.l2_interfaces.l2_interfaces.L2_interfacesFacts.get_device_data"
   )
   self.execute_show_command = self.mock_execute_show_command.start()
 
@@ -793,7 +793,7 @@ Mocking device data
 -----------------------
 
 To mock fetching results from devices or provide other complex data structures that
-come from external libraries, you can use ``fixtures`` to read in pre-generated data. The text files for this pre-generated data live in ``test/units/modules/network/PLATFORM/fixtures/``. See for example the `eos_l2_interfaces.cfg file <https://github.com/ansible-collections/arista.eos/blob/master/tests/unit/modules/network/eos/fixtures/eos_l2_interfaces_config.cfg>`_.
+come from external libraries, you can use ``fixtures`` to read in pre-generated data. The text files for this pre-generated data live in ``test/units/modules/network/PLATFORM/fixtures/``. See for example the `eos_l2_interfaces.cfg file <https://github.com/assible-collections/arista.eos/blob/master/tests/unit/modules/network/eos/fixtures/eos_l2_interfaces_config.cfg>`_.
 
 Load data using the ``load_fixture`` method and set this data as the return value of the
 ``get_device_data`` method in the facts file:
@@ -805,14 +805,14 @@ Load data using the ``load_fixture`` method and set this data as the return valu
             return load_fixture('eos_l2_interfaces_config.cfg')
         self.execute_show_command.side_effect = load_from_file
 
-See the unit test file `test_eos_l2_interfaces <https://github.com/ansible-collections/arista.eos/blob/master/tests/unit/modules/network/eos/test_eos_l2_interfaces.py>`_
+See the unit test file `test_eos_l2_interfaces <https://github.com/assible-collections/arista.eos/blob/master/tests/unit/modules/network/eos/test_eos_l2_interfaces.py>`_
 for a practical example.
 
 
 .. seealso::
 
    :ref:`testing_units`
-       Deep dive into developing unit tests for Ansible modules
+       Deep dive into developing unit tests for Assible modules
    :ref:`testing_running_locally`
        Running tests locally including gathering and reporting coverage data
    :ref:`developing_modules_general`

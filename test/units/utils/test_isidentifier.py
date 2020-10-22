@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2020 Ansible Project
+# Copyright: (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -8,7 +8,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.utils.vars import isidentifier
+from assible.utils.vars import isidentifier
 
 
 # Originally posted at: http://stackoverflow.com/a/29586366

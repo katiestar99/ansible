@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -18,10 +18,10 @@ DOCUMENTATION = '''
 module: tower_receive
 author: "John Westcott IV (@john-westcott-iv)"
 version_added: "2.8"
-short_description: Receive assets from Ansible Tower.
+short_description: Receive assets from Assible Tower.
 description:
-    - Receive assets from Ansible Tower. See
-      U(https://www.ansible.com/tower) for an overview.
+    - Receive assets from Assible Tower. See
+      U(https://www.assible.com/tower) for an overview.
 options:
     all:
       description:
@@ -74,7 +74,7 @@ options:
       default: []
 
 requirements:
-  - "ansible-tower-cli >= 3.3.0"
+  - "assible-tower-cli >= 3.3.0"
 
 notes:
   - Specifying a name of "all" for any asset type will export all items of that asset type.
@@ -109,7 +109,7 @@ assets:
     sample: [ {}, {} ]
 '''
 
-from ansible.module_utils.ansible_tower import TowerModule, tower_auth_config, HAS_TOWER_CLI
+from assible.module_utils.assible_tower import TowerModule, tower_auth_config, HAS_TOWER_CLI
 
 try:
     from tower_cli.cli.transfer.receive import Receiver
@@ -141,10 +141,10 @@ def main():
     module = TowerModule(argument_spec=argument_spec, supports_check_mode=False)
 
     if not HAS_TOWER_CLI:
-        module.fail_json(msg='ansible-tower-cli required for this module')
+        module.fail_json(msg='assible-tower-cli required for this module')
 
     if not TOWER_CLI_HAS_EXPORT:
-        module.fail_json(msg='ansible-tower-cli version does not support export')
+        module.fail_json(msg='assible-tower-cli version does not support export')
 
     export_all = module.params.get('all')
     assets_to_export = {}

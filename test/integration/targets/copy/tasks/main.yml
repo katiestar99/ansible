@@ -1,7 +1,7 @@
 - block:
 
     - name: Create a local temporary directory
-      shell: mktemp -d /tmp/ansible_test.XXXXXXXXX
+      shell: mktemp -d /tmp/assible_test.XXXXXXXXX
       register: tempfile_result
       delegate_to: localhost
 
@@ -9,12 +9,12 @@
         local_temp_dir: '{{ tempfile_result.stdout }}'
         remote_dir: '{{ output_dir }}'
         symlinks:
-          ansible-test-abs-link: /tmp/ansible-test-abs-link
-          ansible-test-abs-link-dir: /tmp/ansible-test-abs-link-dir
+          assible-test-abs-link: /tmp/assible-test-abs-link
+          assible-test-abs-link-dir: /tmp/assible-test-abs-link-dir
           circles: ../
           invalid: invalid
           invalid2: ../invalid
-          out_of_tree_circle: /tmp/ansible-test-link-dir/out_of_tree_circle
+          out_of_tree_circle: /tmp/assible-test-link-dir/out_of_tree_circle
           subdir3: ../subdir2/subdir3
 
     - file: path={{local_temp_dir}} state=directory
@@ -72,19 +72,19 @@
       remote_user: '{{ remote_unprivileged_user }}'
 
     - import_tasks: acls.yml
-      when: ansible_system == 'Linux'
+      when: assible_system == 'Linux'
 
     - import_tasks: selinux.yml
-      when: ansible_os_family == 'RedHat' and ansible_selinux.get('mode') == 'enforcing'
+      when: assible_os_family == 'RedHat' and assible_selinux.get('mode') == 'enforcing'
 
     - import_tasks: no_log.yml
 
     - import_tasks: check_mode.yml
 
-    # https://github.com/ansible/ansible/issues/57618
+    # https://github.com/assible/assible/issues/57618
     - name: Test diff contents
       copy:
-        content: 'Ansible managed\n'
+        content: 'Assible managed\n'
         dest: "{{ local_temp_dir }}/file.txt"
       diff: yes
       register: diff_output
@@ -92,7 +92,7 @@
     - assert:
         that:
           - 'diff_output.diff[0].before == ""'
-          - '"Ansible managed" in diff_output.diff[0].after'
+          - '"Assible managed" in diff_output.diff[0].after'
 
   always:
     - name: Cleaning

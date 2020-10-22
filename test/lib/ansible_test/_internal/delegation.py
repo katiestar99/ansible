@@ -35,7 +35,7 @@ from .config import (
 )
 
 from .core_ci import (
-    AnsibleCoreCI,
+    AssibleCoreCI,
 )
 
 from .manage_ci import (
@@ -47,10 +47,10 @@ from .util import (
     ApplicationError,
     common_environment,
     display,
-    ANSIBLE_BIN_PATH,
-    ANSIBLE_TEST_DATA_ROOT,
-    ANSIBLE_LIB_ROOT,
-    ANSIBLE_TEST_ROOT,
+    ASSIBLE_BIN_PATH,
+    ASSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_LIB_ROOT,
+    ASSIBLE_TEST_ROOT,
     tempdir,
 )
 
@@ -165,7 +165,7 @@ def delegate_venv(args,  # type: EnvironmentConfig
                   require,  # type: t.List[str]
                   integration_targets,  # type: t.Tuple[IntegrationTarget, ...]
                   ):  # type: (...) -> None
-    """Delegate ansible-test execution to a virtual environment using venv or virtualenv."""
+    """Delegate assible-test execution to a virtual environment using venv or virtualenv."""
     if args.python:
         versions = (args.python_version,)
     else:
@@ -199,7 +199,7 @@ def delegate_venv(args,  # type: EnvironmentConfig
 
         python_interpreter = os.path.join(inject_path, 'python%s' % args.python_version)
 
-        cmd = generate_command(args, python_interpreter, ANSIBLE_BIN_PATH, data_context().content.root, options, exclude, require)
+        cmd = generate_command(args, python_interpreter, ASSIBLE_BIN_PATH, data_context().content.root, options, exclude, require)
 
         if isinstance(args, TestConfig):
             if args.coverage and not args.coverage_label:
@@ -208,9 +208,9 @@ def delegate_venv(args,  # type: EnvironmentConfig
         env = common_environment()
 
         with tempdir() as library_path:
-            # expose ansible and ansible_test to the virtual environment (only required when running from an install)
-            os.symlink(ANSIBLE_LIB_ROOT, os.path.join(library_path, 'ansible'))
-            os.symlink(ANSIBLE_TEST_ROOT, os.path.join(library_path, 'ansible_test'))
+            # expose assible and assible_test to the virtual environment (only required when running from an install)
+            os.symlink(ASSIBLE_LIB_ROOT, os.path.join(library_path, 'assible'))
+            os.symlink(ASSIBLE_TEST_ROOT, os.path.join(library_path, 'assible_test'))
 
             env.update(
                 PATH=inject_path + os.path.pathsep + env['PATH'],
@@ -253,16 +253,16 @@ def delegate_docker(args, exclude, require, integration_targets):
     python_interpreter = get_python_interpreter(args, get_docker_completion(), args.docker_raw)
 
     pwd = '/root'
-    ansible_root = os.path.join(pwd, 'ansible')
+    assible_root = os.path.join(pwd, 'assible')
 
     if data_context().content.collection:
         content_root = os.path.join(pwd, data_context().content.collection.directory)
     else:
-        content_root = ansible_root
+        content_root = assible_root
 
     remote_results_root = os.path.join(content_root, data_context().content.results_path)
 
-    cmd = generate_command(args, python_interpreter, os.path.join(ansible_root, 'bin'), content_root, options, exclude, require)
+    cmd = generate_command(args, python_interpreter, os.path.join(assible_root, 'bin'), content_root, options, exclude, require)
 
     if isinstance(args, TestConfig):
         if args.coverage and not args.coverage_label:
@@ -279,7 +279,7 @@ def delegate_docker(args, exclude, require, integration_targets):
     if isinstance(args, ShellConfig) or (isinstance(args, IntegrationConfig) and args.debug_strategy):
         cmd_options.append('-it')
 
-    with tempfile.NamedTemporaryFile(prefix='ansible-source-', suffix='.tgz') as local_source_fd:
+    with tempfile.NamedTemporaryFile(prefix='assible-source-', suffix='.tgz') as local_source_fd:
         try:
             create_payload(args, local_source_fd.name)
 
@@ -328,7 +328,7 @@ def delegate_docker(args, exclude, require, integration_targets):
                 test_id = test_id.strip()
 
             # write temporary files to /root since /tmp isn't ready immediately on container start
-            docker_put(args, test_id, os.path.join(ANSIBLE_TEST_DATA_ROOT, 'setup', 'docker.sh'), '/root/docker.sh')
+            docker_put(args, test_id, os.path.join(ASSIBLE_TEST_DATA_ROOT, 'setup', 'docker.sh'), '/root/docker.sh')
             docker_exec(args, test_id, ['/bin/bash', '/root/docker.sh'])
             docker_put(args, test_id, local_source_fd.name, '/root/test.tgz')
             docker_exec(args, test_id, ['tar', 'oxzf', '/root/test.tgz', '-C', '/root'])
@@ -381,7 +381,7 @@ def delegate_docker(args, exclude, require, integration_targets):
 
                 make_dirs(local_test_root)  # make sure directory exists for collections which have no tests
 
-                with tempfile.NamedTemporaryFile(prefix='ansible-result-', suffix='.tgz') as local_result_fd:
+                with tempfile.NamedTemporaryFile(prefix='assible-result-', suffix='.tgz') as local_result_fd:
                     docker_exec(args, test_id, ['tar', 'czf', remote_temp_file, '--exclude', ResultType.TMP.name, '-C', remote_test_root, remote_results_name])
                     docker_get(args, test_id, remote_temp_file, local_result_fd.name)
                     run_command(args, ['tar', 'oxzf', local_result_fd.name, '-C', local_test_root])
@@ -403,7 +403,7 @@ def delegate_remote(args, exclude, require, integration_targets):
     """
     remote = args.parsed_remote
 
-    core_ci = AnsibleCoreCI(args, remote.platform, remote.version, stage=args.remote_stage, provider=args.remote_provider, arch=remote.arch)
+    core_ci = AssibleCoreCI(args, remote.platform, remote.version, stage=args.remote_stage, provider=args.remote_provider, arch=remote.arch)
     success = False
     raw = False
 
@@ -432,7 +432,7 @@ def delegate_remote(args, exclude, require, integration_targets):
         python_version = get_python_version(args, get_remote_completion(), args.remote)
 
         if remote.platform == 'windows':
-            # Windows doesn't need the ansible-test fluff, just run the SSH command
+            # Windows doesn't need the assible-test fluff, just run the SSH command
             manage = ManageWindowsCI(core_ci)
             manage.setup(python_version)
 
@@ -452,14 +452,14 @@ def delegate_remote(args, exclude, require, integration_targets):
 
             python_interpreter = get_python_interpreter(args, get_remote_completion(), args.remote)
 
-            ansible_root = os.path.join(pwd, 'ansible')
+            assible_root = os.path.join(pwd, 'assible')
 
             if data_context().content.collection:
                 content_root = os.path.join(pwd, data_context().content.collection.directory)
             else:
-                content_root = ansible_root
+                content_root = assible_root
 
-            cmd = generate_command(args, python_interpreter, os.path.join(ansible_root, 'bin'), content_root, options, exclude, require)
+            cmd = generate_command(args, python_interpreter, os.path.join(assible_root, 'bin'), content_root, options, exclude, require)
 
             if httptester_id:
                 cmd += ['--inject-httptester', '--httptester-krb5-password', args.httptester_krb5_password]
@@ -516,11 +516,11 @@ def delegate_remote(args, exclude, require, integration_targets):
             docker_rm(args, httptester_id)
 
 
-def generate_command(args, python_interpreter, ansible_bin_path, content_root, options, exclude, require):
+def generate_command(args, python_interpreter, assible_bin_path, content_root, options, exclude, require):
     """
     :type args: EnvironmentConfig
     :type python_interpreter: str | None
-    :type ansible_bin_path: str
+    :type assible_bin_path: str
     :type content_root: str
     :type options: dict[str, int]
     :type exclude: list[str]
@@ -529,18 +529,18 @@ def generate_command(args, python_interpreter, ansible_bin_path, content_root, o
     """
     options['--color'] = 1
 
-    cmd = [os.path.join(ansible_bin_path, 'ansible-test')]
+    cmd = [os.path.join(assible_bin_path, 'assible-test')]
 
     if python_interpreter:
         cmd = [python_interpreter] + cmd
 
     # Force the encoding used during delegation.
-    # This is only needed because ansible-test relies on Python's file system encoding.
+    # This is only needed because assible-test relies on Python's file system encoding.
     # Environments that do not have the locale configured are thus unable to work with unicode file paths.
     # Examples include FreeBSD and some Linux containers.
     env_vars = dict(
         LC_ALL='en_US.UTF-8',
-        ANSIBLE_TEST_CONTENT_ROOT=content_root,
+        ASSIBLE_TEST_CONTENT_ROOT=content_root,
     )
 
     env_args = ['%s=%s' % (key, env_vars[key]) for key in sorted(env_vars)]

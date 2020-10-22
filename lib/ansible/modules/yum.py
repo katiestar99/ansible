@@ -18,14 +18,14 @@ version_added: historical
 short_description: Manages packages with the I(yum) package manager
 description:
      - Installs, upgrade, downgrades, removes, and lists packages and groups with the I(yum) package manager.
-     - This module only works on Python 2. If you require Python 3 support see the M(ansible.builtin.dnf) module.
+     - This module only works on Python 2. If you require Python 3 support see the M(assible.builtin.dnf) module.
 options:
   use_backend:
     description:
       - This module supports C(yum) (as it always has), this is known as C(yum3)/C(YUM3)/C(yum-deprecated) by
-        upstream yum developers. As of Ansible 2.7+, this module also supports C(YUM4), which is the
+        upstream yum developers. As of Assible 2.7+, this module also supports C(YUM4), which is the
         "new yum" and it has an C(dnf) backend.
-      - By default, this module will select the backend based on the C(ansible_pkg_mgr) fact.
+      - By default, this module will select the backend based on the C(assible_pkg_mgr) fact.
     default: "auto"
     choices: [ auto, yum, yum4, dnf ]
     type: str
@@ -68,7 +68,7 @@ options:
       - I(Repoid) of repositories to enable for the install/update operation.
         These repos will not persist beyond the transaction.
         When specifying multiple repos, separate them with a C(",").
-      - As of Ansible 2.7, this can alternatively be a list instead of C(",")
+      - As of Assible 2.7, this can alternatively be a list instead of C(",")
         separated string
     type: list
     elements: str
@@ -78,7 +78,7 @@ options:
       - I(Repoid) of repositories to disable for the install/update operation.
         These repos will not persist beyond the transaction.
         When specifying multiple repos, separate them with a C(",").
-      - As of Ansible 2.7, this can alternatively be a list instead of C(",")
+      - As of Assible 2.7, this can alternatively be a list instead of C(",")
         separated string
     type: list
     elements: str
@@ -249,7 +249,7 @@ notes:
   - 'Yum itself has two types of groups.  "Package groups" are specified in the
     rpm itself while "environment groups" are specified in a separate file
     (usually by the distribution).  Unfortunately, this division becomes
-    apparent to ansible users because ansible needs to operate on the group
+    apparent to assible users because assible needs to operate on the group
     of packages in a single transaction and yum requires groups to be specified
     in different ways when used in that way.  Package groups are specified as
     "@development-tools" and environment groups are "@^gnome-desktop-environment".
@@ -258,12 +258,12 @@ notes:
   - 'The yum module does not support clearing yum cache in an idempotent way, so it
     was decided not to implement it, the only method is to use command and call the yum
     command directly, namely "command: yum clean all"
-    https://github.com/ansible/ansible/pull/31450#issuecomment-352889579'
+    https://github.com/assible/assible/pull/31450#issuecomment-352889579'
 # informational: requirements for nodes
 requirements:
 - yum
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Seth Vidal (@skvidal)
     - Eduard Snesarev (@verm666)
     - Berend De Schouwer (@berenddeschouwer)
@@ -340,9 +340,9 @@ EXAMPLES = '''
     name: "@^gnome-desktop-environment"
     state: present
 
-- name: List ansible packages and register result to print with debug later
+- name: List assible packages and register result to print with debug later
   yum:
-    list: ansible
+    list: assible
   register: result
 
 - name: Install package with multiple repos enabled
@@ -363,10 +363,10 @@ EXAMPLES = '''
     download_only: true
 '''
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.urls import fetch_url
-from ansible.module_utils.yumdnf import YumDnf, yumdnf_argument_spec
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.urls import fetch_url
+from assible.module_utils.yumdnf import YumDnf, yumdnf_argument_spec
 
 import errno
 import os
@@ -393,7 +393,7 @@ except ImportError:
     transaction_helpers = False
 
 from contextlib import contextmanager
-from ansible.module_utils.urls import fetch_file
+from assible.module_utils.urls import fetch_file
 
 def_qf = "%{epoch}:%{name}-%{version}-%{release}.%{arch}"
 rpmbin = None
@@ -401,7 +401,7 @@ rpmbin = None
 
 class YumModule(YumDnf):
     """
-    Yum Ansible module back-end implementation
+    Yum Assible module back-end implementation
     """
 
     def __init__(self, module):
@@ -1195,7 +1195,7 @@ class YumModule(YumDnf):
                 if installed:
                     # Return a message so it's obvious to the user why yum failed
                     # and which package couldn't be removed. More details:
-                    # https://github.com/ansible/ansible/issues/35672
+                    # https://github.com/assible/assible/issues/35672
                     res['msg'] = "Package '%s' couldn't be removed!" % pkg
                     self.module.fail_json(**res)
 
@@ -1553,7 +1553,7 @@ class YumModule(YumDnf):
                         for i in new_repos:
                             if i not in current_repos:
                                 rid = self.yum_base.repos.getRepo(i)
-                                a = rid.repoXML.repoid  # nopep8 - https://github.com/ansible/ansible/pull/21475#pullrequestreview-22404868
+                                a = rid.repoXML.repoid  # nopep8 - https://github.com/assible/assible/pull/21475#pullrequestreview-22404868
                         current_repos = new_repos
                     except yum.Errors.YumBaseError as e:
                         self.module.fail_json(msg="Error setting/accessing repos: %s" % to_native(e))
@@ -1574,7 +1574,7 @@ class YumModule(YumDnf):
         elif self.state in ('removed', 'absent'):
             res = self.remove(pkgs, repoq)
         else:
-            # should be caught by AnsibleModule argument_spec
+            # should be caught by AssibleModule argument_spec
             self.module.fail_json(
                 msg="we should never get here unless this all failed",
                 changed=False,
@@ -1594,9 +1594,9 @@ class YumModule(YumDnf):
 
         error_msgs = []
         if not HAS_RPM_PYTHON:
-            error_msgs.append('The Python 2 bindings for rpm are needed for this module. If you require Python 3 support use the `dnf` Ansible module instead.')
+            error_msgs.append('The Python 2 bindings for rpm are needed for this module. If you require Python 3 support use the `dnf` Assible module instead.')
         if not HAS_YUM_PYTHON:
-            error_msgs.append('The Python 2 yum module is needed for this module. If you require Python 3 support use the `dnf` Ansible module instead.')
+            error_msgs.append('The Python 2 yum module is needed for this module. If you require Python 3 support use the `dnf` Assible module instead.')
 
         self.wait_for_lock()
 
@@ -1704,7 +1704,7 @@ def main():
 
     yumdnf_argument_spec['argument_spec']['use_backend'] = dict(default='auto', choices=['auto', 'yum', 'yum4', 'dnf'])
 
-    module = AnsibleModule(
+    module = AssibleModule(
         **yumdnf_argument_spec
     )
 

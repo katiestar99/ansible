@@ -1,4 +1,4 @@
-"""Galaxy (ansible-galaxy) plugin for integration tests."""
+"""Galaxy (assible-galaxy) plugin for integration tests."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -31,9 +31,9 @@ from ..docker_util import (
 # We add BasicAuthentication, to make the tasks that deal with
 # direct API access easier to deal with across galaxy_ng and pulp
 SETTINGS = b'''
-CONTENT_ORIGIN = 'http://ansible-ci-pulp:80'
-ANSIBLE_API_HOSTNAME = 'http://ansible-ci-pulp:80'
-ANSIBLE_CONTENT_HOSTNAME = 'http://ansible-ci-pulp:80/pulp/content'
+CONTENT_ORIGIN = 'http://assible-ci-pulp:80'
+ASSIBLE_API_HOSTNAME = 'http://assible-ci-pulp:80'
+ASSIBLE_CONTENT_HOSTNAME = 'http://assible-ci-pulp:80/pulp/content'
 TOKEN_AUTH_DISABLED = True
 GALAXY_REQUIRE_CONTENT_APPROVAL = False
 GALAXY_AUTHENTICATION_CLASSES = [
@@ -59,7 +59,7 @@ foreground {
 class GalaxyProvider(CloudProvider):
     """Galaxy plugin.
 
-    Sets up pulp (ansible-galaxy) servers for tests.
+    Sets up pulp (assible-galaxy) servers for tests.
 
     The pulp source itself resides at: https://github.com/pulp/pulp-oci-images
     """
@@ -71,7 +71,7 @@ class GalaxyProvider(CloudProvider):
         super(GalaxyProvider, self).__init__(args)
 
         self.pulp = os.environ.get(
-            'ANSIBLE_PULP_CONTAINER',
+            'ASSIBLE_PULP_CONTAINER',
             'docker.io/pulp/pulp-galaxy-ng@sha256:69b4c4cba4908539b56c5592f40d282f938dd1bdf4de5a81e0a8d04ac3e6e326'
         )
 
@@ -106,13 +106,13 @@ class GalaxyProvider(CloudProvider):
         if container_id:
             display.info('Running in docker container: %s' % container_id, verbosity=1)
 
-        p_results = docker_inspect(self.args, 'ansible-ci-pulp')
+        p_results = docker_inspect(self.args, 'assible-ci-pulp')
 
         if p_results and not p_results[0].get('State', {}).get('Running'):
-            docker_rm(self.args, 'ansible-ci-pulp')
+            docker_rm(self.args, 'assible-ci-pulp')
             p_results = []
 
-        display.info('%s ansible-ci-pulp docker container.'
+        display.info('%s assible-ci-pulp docker container.'
                      % ('Using the existing' if p_results else 'Starting a new'),
                      verbosity=1)
 
@@ -133,7 +133,7 @@ class GalaxyProvider(CloudProvider):
             stdout, _dummy = docker_run(
                 self.args,
                 self.pulp,
-                ['--name', 'ansible-ci-pulp'] + publish_ports,
+                ['--name', 'assible-ci-pulp'] + publish_ports,
                 create_only=True
             )
 
@@ -156,14 +156,14 @@ class GalaxyProvider(CloudProvider):
                 os.unlink(admin_pass.name)
 
             # Start the container
-            docker_start(self.args, 'ansible-ci-pulp', [])
+            docker_start(self.args, 'assible-ci-pulp', [])
 
-            self.containers.append('ansible-ci-pulp')
+            self.containers.append('assible-ci-pulp')
 
         if self.args.docker:
-            pulp_host = 'ansible-ci-pulp'
+            pulp_host = 'assible-ci-pulp'
         elif container_id:
-            pulp_host = self._get_simulator_address('ansible-ci-pulp')
+            pulp_host = self._get_simulator_address('assible-ci-pulp')
             display.info('Found Galaxy simulator container address: %s' % pulp_host, verbosity=1)
         else:
             pulp_host = 'localhost'
@@ -178,7 +178,7 @@ class GalaxyProvider(CloudProvider):
 
         :rtype: list[str]
         """
-        return ['--link', 'ansible-ci-pulp']  # if self.managed else []
+        return ['--link', 'assible-ci-pulp']  # if self.managed else []
 
     def cleanup(self):
         """Clean up the resource and temporary configs files after tests."""
@@ -208,19 +208,19 @@ class GalaxyEnvironment(CloudEnvironment):
         pulp_port = self._get_cloud_config('PULP_PORT')
 
         return CloudEnvironmentConfig(
-            ansible_vars=dict(
+            assible_vars=dict(
                 pulp_user=pulp_user,
                 pulp_password=pulp_password,
-                pulp_v2_server='http://%s:%s/pulp_ansible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
-                pulp_v3_server='http://%s:%s/pulp_ansible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
+                pulp_v2_server='http://%s:%s/pulp_assible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
+                pulp_v3_server='http://%s:%s/pulp_assible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
                 pulp_api='http://%s:%s' % (pulp_host, pulp_port),
                 galaxy_ng_server='http://%s:%s/api/galaxy/' % (pulp_host, pulp_port),
             ),
             env_vars=dict(
                 PULP_USER=pulp_user,
                 PULP_PASSWORD=pulp_password,
-                PULP_V2_SERVER='http://%s:%s/pulp_ansible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
-                PULP_V3_SERVER='http://%s:%s/pulp_ansible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
+                PULP_V2_SERVER='http://%s:%s/pulp_assible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
+                PULP_V3_SERVER='http://%s:%s/pulp_assible/galaxy/automation-hub/api/' % (pulp_host, pulp_port),
                 GALAXY_NG_SERVER='http://%s:%s/api/galaxy/' % (pulp_host, pulp_port),
             ),
         )

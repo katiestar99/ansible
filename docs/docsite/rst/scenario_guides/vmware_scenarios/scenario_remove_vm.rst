@@ -9,16 +9,16 @@ Remove an existing VMware virtual machine
 Introduction
 ============
 
-This guide will show you how to utilize Ansible to remove an existing VMware virtual machine.
+This guide will show you how to utilize Assible to remove an existing VMware virtual machine.
 
 Scenario Requirements
 =====================
 
 * Software
 
-    * Ansible 2.5 or later must be installed.
+    * Assible 2.5 or later must be installed.
 
-    * The Python module ``Pyvmomi`` must be installed on the Ansible control node (or Target host if not executing against localhost).
+    * The Python module ``Pyvmomi`` must be installed on the Assible control node (or Target host if not executing against localhost).
 
     * We recommend installing the latest version with pip: ``pip install Pyvmomi`` (as the OS packages are usually out of date and incompatible).
 
@@ -30,7 +30,7 @@ Scenario Requirements
 
 * Access / Credentials
 
-    * Ansible (or the target server) must have network access to the either vCenter server or the ESXi server
+    * Assible (or the target server) must have network access to the either vCenter server or the ESXi server
 
     * Username and Password for vCenter or ESXi server
 
@@ -50,7 +50,7 @@ Caveats
 Example Description
 ===================
 
-In this use case / example, user will be removing a virtual machine using name. The following Ansible playbook showcases the basic parameters that are needed for this.
+In this use case / example, user will be removing a virtual machine using name. The following Assible playbook showcases the basic parameters that are needed for this.
 
 .. code-block:: yaml
 
@@ -60,7 +60,7 @@ In this use case / example, user will be removing a virtual machine using name. 
       vars_files:
         - vcenter_vars.yml
       vars:
-        ansible_python_interpreter: "/usr/bin/env python3"
+        assible_python_interpreter: "/usr/bin/env python3"
       hosts: localhost
       tasks:
         - set_fact:
@@ -80,7 +80,7 @@ In this use case / example, user will be removing a virtual machine using name. 
           register: facts
 
 
-Since Ansible utilizes the VMware API to perform actions, in this use case it will be connecting directly to the API from localhost.
+Since Assible utilizes the VMware API to perform actions, in this use case it will be connecting directly to the API from localhost.
 
 This means that playbooks will not be running from the vCenter or ESXi Server.
 
@@ -94,9 +94,9 @@ Before you begin, make sure you have:
 - Username and password for the ESXi or vCenter server
 - Name of the existing Virtual Machine you want to remove
 
-For now, you will be entering these directly, but in a more advanced playbook this can be abstracted out and stored in a more secure fashion using :ref:`ansible-vault` or using `Ansible Tower credentials <https://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html>`_.
+For now, you will be entering these directly, but in a more advanced playbook this can be abstracted out and stored in a more secure fashion using :ref:`assible-vault` or using `Assible Tower credentials <https://docs.assible.com/assible-tower/latest/html/userguide/credentials.html>`_.
 
-If your vCenter or ESXi server is not setup with proper CA certificates that can be verified from the Ansible server, then it is necessary to disable validation of these certificates by using the ``validate_certs`` parameter. To do this you need to set ``validate_certs=False`` in your playbook.
+If your vCenter or ESXi server is not setup with proper CA certificates that can be verified from the Assible server, then it is necessary to disable validation of these certificates by using the ``validate_certs`` parameter. To do this you need to set ``validate_certs=False`` in your playbook.
 
 The name of existing virtual machine will be used as input for ``vmware_guest`` module via ``name`` parameter.
 

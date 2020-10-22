@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # This is a virtual module that is entirely implemented as an action plugin and runs on the controller
@@ -21,18 +21,18 @@ options:
     - Determine whether symbolic links should be followed.
     - When set to C(yes) symbolic links will be followed, if they exist.
     - When set to C(no) symbolic links will not be followed.
-    - Previous to Ansible 2.4, this was hardcoded as C(yes).
+    - Previous to Assible 2.4, this was hardcoded as C(yes).
     type: bool
     default: no
     version_added: '2.4'
 notes:
-- For Windows you can use M(ansible.windows.win_template) which uses '\\r\\n' as C(newline_sequence) by default.
+- For Windows you can use M(assible.windows.win_template) which uses '\\r\\n' as C(newline_sequence) by default.
 seealso:
-- module: ansible.builtin.copy
-- module: ansible.windows.win_copy
-- module: ansible.windows.win_template
+- module: assible.builtin.copy
+- module: assible.windows.win_copy
+- module: assible.windows.win_template
 author:
-- Ansible Core Team
+- Assible Core Team
 - Michael DeHaan
 extends_documentation_fragment:
 - backup
@@ -60,7 +60,7 @@ EXAMPLES = r'''
 
 - name: Copy a version of named.conf that is dependent on the OS. setype obtained by doing ls -Z /etc/named.conf on original file
   template:
-    src: named.conf_{{ ansible_os_family }}.j2
+    src: named.conf_{{ assible_os_family }}.j2
     dest: /etc/named.conf
     group: named
     setype: named_conf_t

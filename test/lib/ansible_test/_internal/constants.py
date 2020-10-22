@@ -1,4 +1,4 @@
-"""Constants used by ansible-test. Imports should not be used in this file."""
+"""Constants used by assible-test. Imports should not be used in this file."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -6,5 +6,5 @@ __metaclass__ = type
 # This will affect all Python subprocesses. It will also affect the current Python process if set before subprocess is imported for the first time.
 SOFT_RLIMIT_NOFILE = 1024
 
-# File used to track the ansible-test test execution timeout.
-TIMEOUT_PATH = '.ansible-test-timeout.json'
+# File used to track the assible-test test execution timeout.
+TIMEOUT_PATH = '.assible-test-timeout.json'

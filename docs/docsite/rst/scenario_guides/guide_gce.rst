@@ -6,11 +6,11 @@ Google Cloud Platform Guide
 Introduction
 --------------------------
 
-Ansible + Google have been working together on a set of auto-generated
-Ansible modules designed to consistently and comprehensively cover the entirety
+Assible + Google have been working together on a set of auto-generated
+Assible modules designed to consistently and comprehensively cover the entirety
 of the Google Cloud Platform (GCP).
 
-Ansible contains modules for managing Google Cloud Platform resources,
+Assible contains modules for managing Google Cloud Platform resources,
 including creating instances, controlling network access, working with
 persistent disks, managing load balancers, and a lot more.
 
@@ -20,16 +20,16 @@ name. Please use gcp_compute_target_proxy and gcp_compute_url_map instead).
 
 Additionally, the gcp_compute inventory plugin can discover all
 Google Compute Engine (GCE) instances
-and make them automatically available in your Ansible inventory.
+and make them automatically available in your Assible inventory.
 
 You may see a collection of other GCP modules that do not conform to this
 naming convention. These are the original modules primarily developed by the
-Ansible community. You will find some overlapping functionality such as with
+Assible community. You will find some overlapping functionality such as with
 the "gce" module and the new "gcp_compute_instance" module. Either can be
 used, but you may experience issues trying to use them together.
 
 While the community GCP modules are not going away, Google is investing effort
-into the new "gcp_*" modules. Google is committed to ensuring the Ansible
+into the new "gcp_*" modules. Google is committed to ensuring the Assible
 community has a great experience with GCP and therefore recommends adopting
 these new modules if possible.
 
@@ -52,11 +52,11 @@ available to satisfy ``requests`` libraries.
 
 Credentials
 -----------
-It's easy to create a GCP account with credentials for Ansible. You have multiple options to
+It's easy to create a GCP account with credentials for Assible. You have multiple options to
 get your credentials - here are two of the most common options:
 
 * Service Accounts (Recommended): Use JSON service accounts with specific permissions.
-* Machine Accounts: Use the permissions associated with the GCP Instance you're using Ansible on.
+* Machine Accounts: Use the permissions associated with the GCP Instance you're using Assible on.
 
 For the following examples, we'll be using service account credentials.
 
@@ -66,7 +66,7 @@ JSON format:
 1. `Create a Service Account <https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount>`_
 2. `Download JSON credentials <https://support.google.com/cloud/answer/6158849?hl=en&ref_topic=6262490#serviceaccounts>`_
 
-Once you have your credentials, there are two different ways to provide them to Ansible:
+Once you have your credentials, there are two different ways to provide them to Assible:
 
 * by specifying them directly as module parameters
 * by setting environment variables
@@ -113,7 +113,7 @@ you can use the following configuration:
 Providing Credentials as Environment Variables
 ``````````````````````````````````````````````
 
-Set the following environment variables before running Ansible in order to configure your credentials:
+Set the following environment variables before running Assible in order to configure your credentials:
 
 .. code-block:: bash
 
@@ -125,9 +125,9 @@ Set the following environment variables before running Ansible in order to confi
 GCE Dynamic Inventory
 ---------------------
 
-The best way to interact with your hosts is to use the gcp_compute inventory plugin, which dynamically queries GCE and tells Ansible what nodes can be managed.
+The best way to interact with your hosts is to use the gcp_compute inventory plugin, which dynamically queries GCE and tells Assible what nodes can be managed.
 
-To be able to use this GCE dynamic inventory plugin, you need to enable it first by specifying the following in the ``ansible.cfg`` file:
+To be able to use this GCE dynamic inventory plugin, you need to enable it first by specifying the following in the ``assible.cfg`` file:
 
 .. code-block:: ini
 
@@ -149,7 +149,7 @@ Here's an example of a valid inventory file:
     service_account_file: /home/alexstephen/my_account.json
 
 
-Executing ``ansible-inventory --list -i <filename>.gcp.yml`` will create a list of GCP instances that are ready to be configured using Ansible.
+Executing ``assible-inventory --list -i <filename>.gcp.yml`` will create a list of GCP instances that are ready to be configured using Assible.
 
 Create an instance
 ``````````````````
@@ -249,7 +249,7 @@ Migration Guides
 
 gce.py -> gcp_compute_instance.py
 `````````````````````````````````
-As of Ansible 2.8, we're encouraging everyone to move from the ``gce`` module to the
+As of Assible 2.8, we're encouraging everyone to move from the ``gce`` module to the
 ``gcp_compute_instance`` module. The ``gcp_compute_instance`` module has better
 support for all of GCP's features, fewer dependencies, more flexibility, and
 better supports GCP's authentication systems.
@@ -265,14 +265,14 @@ module (and more!). Below is a mapping of ``gce`` fields over to
  image                        disks[].initialize_params.source_image      You'll need to create a single disk using the disks[] parameter and set it to be the boot disk (disks[].boot = true)
  image_family                 disks[].initialize_params.source_image      See above.
  external_projects            disks[].initialize_params.source_image      The name of the source_image will include the name of the project.
- instance_names               Use a loop or multiple tasks.               Using loops is a more Ansible-centric way of creating multiple instances and gives you the most flexibility.
+ instance_names               Use a loop or multiple tasks.               Using loops is a more Assible-centric way of creating multiple instances and gives you the most flexibility.
  service_account_email        service_accounts[].email                    This is the service_account email address that you want the instance to be associated with. It is not the service_account email address that is used for the credentials necessary to create the instance.
  service_account_permissions  service_accounts[].scopes                   These are the permissions you want to grant to the instance.
  pem_file                     Not supported.                              We recommend using JSON service account credentials instead of PEM files.
  credentials_file             service_account_file
  project_id                   project
  name                         name                                        This field does not accept an array of names. Use a loop to create multiple instances.
- num_instances                Use a loop                                  For maximum flexibility, we're encouraging users to use Ansible features to create multiple instances, rather than letting the module do it for you.
+ num_instances                Use a loop                                  For maximum flexibility, we're encouraging users to use Assible features to create multiple instances, rather than letting the module do it for you.
  network                      network_interfaces[].network
  subnetwork                   network_interfaces[].subnetwork
  persistent_boot_disk         disks[].type = 'PERSISTENT'

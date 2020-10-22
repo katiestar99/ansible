@@ -37,10 +37,10 @@ class VcenterProvider(CloudProvider):
         super(VcenterProvider, self).__init__(args)
 
         # The simulator must be pinned to a specific version to guarantee CI passes with the version used.
-        if os.environ.get('ANSIBLE_VCSIM_CONTAINER'):
-            self.image = os.environ.get('ANSIBLE_VCSIM_CONTAINER')
+        if os.environ.get('ASSIBLE_VCSIM_CONTAINER'):
+            self.image = os.environ.get('ASSIBLE_VCSIM_CONTAINER')
         else:
-            self.image = 'quay.io/ansible/vcenter-test-container:1.7.0'
+            self.image = 'quay.io/assible/vcenter-test-container:1.7.0'
         self.container_name = ''
 
         # VMware tests can be run on govcsim or BYO with a static config file.
@@ -135,7 +135,7 @@ class VcenterProvider(CloudProvider):
             else:
                 publish_ports = []
 
-            if not os.environ.get('ANSIBLE_VCSIM_CONTAINER'):
+            if not os.environ.get('ASSIBLE_VCSIM_CONTAINER'):
                 docker_pull(self.args, self.image)
 
             docker_run(
@@ -190,10 +190,10 @@ class VcenterEnvironment(CloudEnvironment):
             parser.read(self.config_path)  # static
 
             env_vars = dict()
-            ansible_vars = dict(
+            assible_vars = dict(
                 resource_prefix=self.resource_prefix,
             )
-            ansible_vars.update(dict(parser.items('DEFAULT', raw=True)))
+            assible_vars.update(dict(parser.items('DEFAULT', raw=True)))
         except KeyError:  # govcsim
             env_vars = dict(
                 VCENTER_HOSTNAME=self._get_cloud_config('vcenter_hostname'),
@@ -201,31 +201,31 @@ class VcenterEnvironment(CloudEnvironment):
                 VCENTER_PASSWORD='pass',
             )
 
-            ansible_vars = dict(
+            assible_vars = dict(
                 vcsim=self._get_cloud_config('vcenter_hostname'),
                 vcenter_hostname=self._get_cloud_config('vcenter_hostname'),
                 vcenter_username='user',
                 vcenter_password='pass',
             )
-            # Shippable starts ansible-test from withing an existing container,
+            # Shippable starts assible-test from withing an existing container,
             # and in this case, we don't have to change the vcenter port.
             if not self.args.docker and not get_docker_container_id():
-                ansible_vars['vcenter_port'] = '1443'
+                assible_vars['vcenter_port'] = '1443'
 
-        for key, value in ansible_vars.items():
+        for key, value in assible_vars.items():
             if key.endswith('_password'):
                 display.sensitive.add(value)
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
             module_defaults={
                 'group/vmware': {
-                    'hostname': ansible_vars['vcenter_hostname'],
-                    'username': ansible_vars['vcenter_username'],
-                    'password': ansible_vars['vcenter_password'],
-                    'port': ansible_vars.get('vcenter_port', '443'),
-                    'validate_certs': ansible_vars.get('vmware_validate_certs', 'no'),
+                    'hostname': assible_vars['vcenter_hostname'],
+                    'username': assible_vars['vcenter_username'],
+                    'password': assible_vars['vcenter_password'],
+                    'port': assible_vars.get('vcenter_port', '443'),
+                    'validate_certs': assible_vars.get('vmware_validate_certs', 'no'),
                 },
             },
         )

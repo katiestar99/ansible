@@ -35,8 +35,8 @@ from ..util_common import (
     ResultType,
 )
 
-from ..ansible_util import (
-    ansible_environment,
+from ..assible_util import (
+    assible_environment,
 )
 
 from ..executor import (
@@ -88,7 +88,7 @@ class ImportTest(SanityMultipleVersion):
 
         paths = [target.path for target in targets.include]
 
-        env = ansible_environment(args, color=False)
+        env = assible_environment(args, color=False)
 
         temp_root = os.path.join(ResultType.TMP.path, 'sanity', 'import')
 

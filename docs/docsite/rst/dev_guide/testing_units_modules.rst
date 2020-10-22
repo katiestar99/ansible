@@ -3,7 +3,7 @@
 .. _testing_units_modules:
 
 ****************************
-Unit Testing Ansible Modules
+Unit Testing Assible Modules
 ****************************
 
 .. highlight:: python
@@ -13,23 +13,23 @@ Unit Testing Ansible Modules
 Introduction
 ============
 
-This document explains why, how and when you should use unit tests for Ansible modules.
-The document doesn't apply to other parts of Ansible for which the recommendations are
-normally closer to the Python standard. There is basic documentation for Ansible unit
+This document explains why, how and when you should use unit tests for Assible modules.
+The document doesn't apply to other parts of Assible for which the recommendations are
+normally closer to the Python standard. There is basic documentation for Assible unit
 tests in the developer guide :ref:`testing_units`. This document should
-be readable for a new Ansible module author. If you find it incomplete or confusing,
-please open a bug or ask for help on Ansible IRC.
+be readable for a new Assible module author. If you find it incomplete or confusing,
+please open a bug or ask for help on Assible IRC.
 
 What Are Unit Tests?
 ====================
 
-Ansible includes a set of unit tests in the :file:`test/units` directory. These tests primarily cover the
-internals but can also cover Ansible modules. The structure of the unit tests matches
+Assible includes a set of unit tests in the :file:`test/units` directory. These tests primarily cover the
+internals but can also cover Assible modules. The structure of the unit tests matches
 the structure of the code base, so the tests that reside in the :file:`test/units/modules/` directory
 are organized by module groups.
 
 Integration tests can be used for most modules, but there are situations where
-cases cannot be verified using integration tests. This means that Ansible unit test cases
+cases cannot be verified using integration tests. This means that Assible unit test cases
 may extend beyond testing only minimal units and in some cases will include some
 level of functional testing.
 
@@ -37,10 +37,10 @@ level of functional testing.
 Why Use Unit Tests?
 ===================
 
-Ansible unit tests have advantages and disadvantages. It is important to understand these.
+Assible unit tests have advantages and disadvantages. It is important to understand these.
 Advantages include:
 
-* Most unit tests are much faster than most Ansible integration tests. The complete suite
+* Most unit tests are much faster than most Assible integration tests. The complete suite
   of unit tests can be run regularly by a developer on their local system.
 * Unit tests can be run by developers who don't have access to the system which the module is
   designed to work on, allowing a level of verification that changes to core functions
@@ -61,7 +61,7 @@ implementation
 * Even if the internal feature is working correctly it is possible that there will be a
   problem between the internal code tested and the actual result delivered to the user
 
-Normally the Ansible integration tests (which are written in Ansible YAML) provide better
+Normally the Assible integration tests (which are written in Assible YAML) provide better
 testing for most module functionality. If those tests already test a feature and perform
 well there may be little point in providing a unit test covering the same area as well.
 
@@ -75,7 +75,7 @@ with integration tests, such as:
 * Forcing rare / strange / random situations that can't be forced, such as specific network
   failures and exceptions
 * Extensive testing of slow configuration APIs
-* Situations where the integration tests cannot be run as part of the main Ansible
+* Situations where the integration tests cannot be run as part of the main Assible
   continuous integration running in Shippable.
 
 
@@ -131,7 +131,7 @@ better to simply leave out the test case altogether and test for a real valuable
 of the code, such as installing all of the packages supplied as arguments to the module.
 
 
-How to unit test Ansible modules
+How to unit test Assible modules
 ================================
 
 There are a number of techniques for unit testing modules. Beware that most
@@ -159,7 +159,7 @@ Use of Mocks
 Mock objects (from https://docs.python.org/3/library/unittest.mock.html) can be very
 useful in building unit tests for special / difficult cases, but they can also
 lead to complex and confusing coding situations. One good use for mocks would be in
-simulating an API. As for 'six', the 'mock' python package is bundled with Ansible (use
+simulating an API. As for 'six', the 'mock' python package is bundled with Assible (use
 ``import units.compat.mock``).
 
 Ensuring failure cases are visible with mock objects
@@ -187,14 +187,14 @@ the module and create any module attributes needed by the function you are testi
 you do this, beware that the module exit functions need special handling as mentioned
 above, either by throwing an exception or ensuring that they haven't been called. For example::
 
-    class AnsibleExitJson(Exception):
+    class AssibleExitJson(Exception):
         """Exception class to be raised by module.exit_json and caught by the test case"""
         pass
 
     # you may also do the same to fail json
     module = MagicMock()
-    module.exit_json.side_effect = AnsibleExitJson(Exception)
-    with self.assertRaises(AnsibleExitJson) as result:
+    module.exit_json.side_effect = AssibleExitJson(Exception)
+    with self.assertRaises(AssibleExitJson) as result:
         return = my_module.test_this_function(module, argument)
     module.fail_json.assert_not_called()
     assert return["changed"] == True
@@ -202,7 +202,7 @@ above, either by throwing an exception or ensuring that they haven't been called
 API definition with unit test cases
 -----------------------------------
 
-API interaction is usually best tested with the function tests defined in Ansible's
+API interaction is usually best tested with the function tests defined in Assible's
 integration testing section, which run against the actual API. There are several cases
 where the unit tests are likely to work better.
 
@@ -210,7 +210,7 @@ Defining a module against an API specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This case is especially important for modules interacting with web services, which provide
-an API that Ansible uses but which are beyond the control of the user.
+an API that Assible uses but which are beyond the control of the user.
 
 By writing a custom emulation of the calls that return data from the API, we can ensure
 that only the features which are clearly defined in the specification of the API are
@@ -264,12 +264,12 @@ By using previously stored data from various versions of an API we can ensure th
 code is tested against the actual data which will be sent from that version of the system
 even when the version is very obscure and unlikely to be available during testing.
 
-Ansible special cases for unit testing
+Assible special cases for unit testing
 ======================================
 
-There are a number of special cases for unit testing the environment of an Ansible module.
+There are a number of special cases for unit testing the environment of an Assible module.
 The most common are documented below, and suggestions for others can be found by looking
-at the source code of the existing unit tests or asking on the Ansible IRC channel or mailing
+at the source code of the existing unit tests or asking on the Assible IRC channel or mailing
 lists.
 
 Module argument processing
@@ -285,18 +285,18 @@ There are two problems with running the main function of a module:
 Passing Arguments
 -----------------
 
-.. This section should be updated once https://github.com/ansible/ansible/pull/31456 is
+.. This section should be updated once https://github.com/assible/assible/pull/31456 is
    closed since the function below will be provided in a library file.
 
 To pass arguments to a module correctly, use the ``set_module_args`` method which accepts a dictionary
 as its parameter. Module creation and argument processing is
-handled through the :class:`AnsibleModule` object in the basic section of the utilities. Normally
+handled through the :class:`AssibleModule` object in the basic section of the utilities. Normally
 this accepts input on ``STDIN``, which is not convenient for unit testing. When the special
 variable is set it will be treated as if the input came on ``STDIN`` to the module. Simply call that function before setting up your module::
 
     import json
     from units.modules.utils import set_module_args
-    from ansible.module_utils._text import to_bytes
+    from assible.module_utils._text import to_bytes
 
     def test_already_registered(self):
         set_module_args({
@@ -308,7 +308,7 @@ variable is set it will be treated as if the input came on ``STDIN`` to the modu
 Handling exit correctly
 -----------------------
 
-.. This section should be updated once https://github.com/ansible/ansible/pull/31456 is
+.. This section should be updated once https://github.com/assible/assible/pull/31456 is
    closed since the exit and failure functions below will be provided in a library file.
 
 The :meth:`module.exit_json` function won't work properly in a testing environment since it
@@ -319,7 +319,7 @@ a function that raises an exception::
     def exit_json(*args, **kwargs):
         if 'changed' not in kwargs:
             kwargs['changed'] = False
-        raise AnsibleExitJson(kwargs)
+        raise AssibleExitJson(kwargs)
 
 Now you can ensure that the first function called is the one you expected simply by
 testing for the correct exception::
@@ -331,7 +331,7 @@ testing for the correct exception::
             'password': 'pass',
         })
 
-        with self.assertRaises(AnsibleExitJson) as result:
+        with self.assertRaises(AssibleExitJson) as result:
             my_module.main()
 
 The same technique can be used to replace :meth:`module.fail_json` (which is used for failure
@@ -346,10 +346,10 @@ the arguments as above, set up the appropriate exit exception and then run the m
 
     # This test is based around pytest's features for individual test functions
     import pytest
-    import ansible.modules.module.group.my_module as my_module
+    import assible.modules.module.group.my_module as my_module
 
     def test_main_function(monkeypatch):
-        monkeypatch.setattr(my_module.AnsibleModule, "exit_json", fake_exit_json)
+        monkeypatch.setattr(my_module.AssibleModule, "exit_json", fake_exit_json)
         set_module_args({
             'activationkey': 'key',
             'username': 'user',
@@ -361,14 +361,14 @@ the arguments as above, set up the appropriate exit exception and then run the m
 Handling calls to external executables
 --------------------------------------
 
-Module must use :meth:`AnsibleModule.run_command` in order to execute an external command. This
+Module must use :meth:`AssibleModule.run_command` in order to execute an external command. This
 method needs to be mocked:
 
-Here is a simple mock of :meth:`AnsibleModule.run_command` (taken from :file:`test/units/modules/packaging/os/test_rhn_register.py`)::
+Here is a simple mock of :meth:`AssibleModule.run_command` (taken from :file:`test/units/modules/packaging/os/test_rhn_register.py`)::
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.return_value = 0, '', ''  # successful execution, no output
-                with self.assertRaises(AnsibleExitJson) as result:
+                with self.assertRaises(AssibleExitJson) as result:
                     self.module.main()
                 self.assertFalse(result.exception.args[0]['changed'])
         # Check that run_command has been called
@@ -381,29 +381,29 @@ A Complete Example
 ------------------
 
 The following example is a complete skeleton that reuses the mocks explained above and adds a new
-mock for :meth:`Ansible.get_bin_path`::
+mock for :meth:`Assible.get_bin_path`::
 
     import json
 
     from units.compat import unittest
     from units.compat.mock import patch
-    from ansible.module_utils import basic
-    from ansible.module_utils._text import to_bytes
-    from ansible.modules.namespace import my_module
+    from assible.module_utils import basic
+    from assible.module_utils._text import to_bytes
+    from assible.modules.namespace import my_module
 
 
     def set_module_args(args):
         """prepare arguments so that they will be picked up during module creation"""
-        args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
-        basic._ANSIBLE_ARGS = to_bytes(args)
+        args = json.dumps({'ASSIBLE_MODULE_ARGS': args})
+        basic._ASSIBLE_ARGS = to_bytes(args)
 
 
-    class AnsibleExitJson(Exception):
+    class AssibleExitJson(Exception):
         """Exception class to be raised by module.exit_json and caught by the test case"""
         pass
 
 
-    class AnsibleFailJson(Exception):
+    class AssibleFailJson(Exception):
         """Exception class to be raised by module.fail_json and caught by the test case"""
         pass
 
@@ -412,17 +412,17 @@ mock for :meth:`Ansible.get_bin_path`::
         """function to patch over exit_json; package return data into an exception"""
         if 'changed' not in kwargs:
             kwargs['changed'] = False
-        raise AnsibleExitJson(kwargs)
+        raise AssibleExitJson(kwargs)
 
 
     def fail_json(*args, **kwargs):
         """function to patch over fail_json; package return data into an exception"""
         kwargs['failed'] = True
-        raise AnsibleFailJson(kwargs)
+        raise AssibleFailJson(kwargs)
 
 
     def get_bin_path(self, arg, required=False):
-        """Mock AnsibleModule.get_bin_path"""
+        """Mock AssibleModule.get_bin_path"""
         if arg.endswith('my_command'):
             return '/usr/bin/my_command'
         else:
@@ -433,7 +433,7 @@ mock for :meth:`Ansible.get_bin_path`::
     class TestMyModule(unittest.TestCase):
 
         def setUp(self):
-            self.mock_module_helper = patch.multiple(basic.AnsibleModule,
+            self.mock_module_helper = patch.multiple(basic.AssibleModule,
                                                      exit_json=exit_json,
                                                      fail_json=fail_json,
                                                      get_bin_path=get_bin_path)
@@ -441,7 +441,7 @@ mock for :meth:`Ansible.get_bin_path`::
             self.addCleanup(self.mock_module_helper.stop)
 
         def test_module_fail_when_required_args_missing(self):
-            with self.assertRaises(AnsibleFailJson):
+            with self.assertRaises(AssibleFailJson):
                 set_module_args({})
                 self.module.main()
 
@@ -452,13 +452,13 @@ mock for :meth:`Ansible.get_bin_path`::
                 'param2': 'test',
             })
 
-            with patch.object(basic.AnsibleModule, 'run_command') as mock_run_command:
+            with patch.object(basic.AssibleModule, 'run_command') as mock_run_command:
                 stdout = 'configuration updated'
                 stderr = ''
                 rc = 0
                 mock_run_command.return_value = rc, stdout, stderr  # successful execution
 
-                with self.assertRaises(AnsibleExitJson) as result:
+                with self.assertRaises(AssibleExitJson) as result:
                     my_module.main()
                 self.assertFalse(result.exception.args[0]['changed']) # ensure result is changed
 
@@ -483,7 +483,7 @@ moving module configuration and initialization into a separate function. For exa
     )
 
     def setup_module_object():
-        module = AnsibleAWSModule(
+        module = AssibleAWSModule(
             argument_spec=argument_spec,
             required_if=required_if,
             mutually_exclusive=[['old_instance_id', 'source_db_instance_identifier',
@@ -507,7 +507,7 @@ This now makes it possible to run tests against the module initiation function::
             'apply_immediately': 'True',
          })
 
-        with self.assertRaises(AnsibleFailJson) as result:
+        with self.assertRaises(AssibleFailJson) as result:
             self.module.setup_json
 
 See also ``test/units/module_utils/aws/test_rds.py``
@@ -528,7 +528,7 @@ succeed even if the code is broken when run on older versions of Python.
 
 A helpful development approach to this should be to ensure that all of the tests have been
 run under Python 2.6 and that each assertion in the test cases has been checked to work by breaking
-the code in Ansible to trigger that failure.
+the code in Assible to trigger that failure.
 
 .. warning:: Maintain Python 2.6 compatibility
 
@@ -539,7 +539,7 @@ the code in Ansible to trigger that failure.
 .. seealso::
 
    :ref:`testing_units`
-       Ansible unit tests documentation
+       Assible unit tests documentation
    :ref:`testing_running_locally`
        Running tests locally including gathering and reporting coverage data
    :ref:`developing_modules_general`
@@ -549,8 +549,8 @@ the code in Ansible to trigger that failure.
    `Python 2 documentation - 25.3. unittest — Unit testing framework <https://docs.python.org/3/library/unittest.html>`_
        The documentation of the earliest supported unittest framework - from Python 2.6
    `pytest: helps you write better programs <https://docs.pytest.org/en/latest/>`_
-       The documentation of pytest - the framework actually used to run Ansible unit tests
-   `Development Mailing List <https://groups.google.com/group/ansible-devel>`_
+       The documentation of pytest - the framework actually used to run Assible unit tests
+   `Development Mailing List <https://groups.google.com/group/assible-devel>`_
        Mailing list for development topics
    `Testing Your Code (from The Hitchhiker's Guide to Python!) <https://docs.python-guide.org/writing/tests/>`_
        General advice on testing Python code

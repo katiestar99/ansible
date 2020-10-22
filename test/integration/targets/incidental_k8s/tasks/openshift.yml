@@ -36,7 +36,7 @@
                 - mountPath: /usr/share/elasticsearch/data
                   name: elastic-volume
                 command: ['elasticsearch']
-                image: 'ansible/galaxy-elasticsearch:2.4.6'
+                image: 'assible/galaxy-elasticsearch:2.4.6'
             volumes:
             - name: elastic-volume
               persistentVolumeClaim:

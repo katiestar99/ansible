@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -eux
 
-export ANSIBLE_CONNECTION_PLUGINS=./fake_connectors
+export ASSIBLE_CONNECTION_PLUGINS=./fake_connectors
 # use fake connectors that raise srrors at different stages
-ansible-playbook test_with_bad_plugins.yml -i inventory -v "$@"
-unset ANSIBLE_CONNECTION_PLUGINS
+assible-playbook test_with_bad_plugins.yml -i inventory -v "$@"
+unset ASSIBLE_CONNECTION_PLUGINS
 
-ansible-playbook test_cannot_connect.yml -i inventory -v "$@"
+assible-playbook test_cannot_connect.yml -i inventory -v "$@"
 
-if ansible-playbook test_base_cannot_connect.yml -i inventory -v "$@"; then
+if assible-playbook test_base_cannot_connect.yml -i inventory -v "$@"; then
     echo "Playbook intended to fail succeeded. Connection succeeded to nonexistent host"
     exit 99
 else

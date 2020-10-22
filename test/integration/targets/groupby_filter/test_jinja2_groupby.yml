@@ -15,11 +15,11 @@
   tasks:
     - name: show python interpreter
       debug:
-         msg: "{{ ansible_python['executable'] }}"
+         msg: "{{ assible_python['executable'] }}"
 
     - name: show jinja2 version
       debug:
-         msg: "{{ lookup('pipe', '{{ ansible_python[\"executable\"] }} -c \"import jinja2; print(jinja2.__version__)\"') }}"
+         msg: "{{ lookup('pipe', '{{ assible_python[\"executable\"] }} -c \"import jinja2; print(jinja2.__version__)\"') }}"
 
     - set_fact:
         result: "{{ fruits | groupby('enjoy') }}"

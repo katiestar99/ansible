@@ -132,7 +132,7 @@
       - "waitfor.msg == 'fail with custom message'"
 
 - name: setup start SimpleHTTPServer
-  shell: sleep 3 && cd {{ files_dir }} && {{ ansible_python.executable }} {{ output_dir}}/testserver.py {{ http_port }}
+  shell: sleep 3 && cd {{ files_dir }} && {{ assible_python.executable }} {{ output_dir}}/testserver.py {{ http_port }}
   async: 120 # this test set can take ~1m to run on FreeBSD (via Shippable)
   poll: 0
 
@@ -151,7 +151,7 @@
 - name: install psutil using pip (non-Linux only)
   pip:
     name: psutil
-  when: ansible_system != 'Linux'
+  when: assible_system != 'Linux'
 
 - name: test wait for port drained
   wait_for:

@@ -13,13 +13,13 @@ Requirements
 
 The collection depends on:
 
-- Ansible >=2.9.10 or greater
+- Assible >=2.9.10 or greater
 - Python 3.6 or greater
 
 aiohttp
 =======
 
-aiohttp_ is the only dependency of the collection. You can install it with ``pip`` if you use a virtualenv to run Ansible.
+aiohttp_ is the only dependency of the collection. You can install it with ``pip`` if you use a virtualenv to run Assible.
 
 .. code-block:: shell
 
@@ -36,9 +36,9 @@ Or using an RPM.
 Installation
 ============
 
-The best option to install the collection is to use the ``ansible-galaxy`` command:
+The best option to install the collection is to use the ``assible-galaxy`` command:
 
 .. code-block:: shell
 
 
-    $ ansible-galaxy collection install vmware.vmware_rest
+    $ assible-galaxy collection install vmware.vmware_rest

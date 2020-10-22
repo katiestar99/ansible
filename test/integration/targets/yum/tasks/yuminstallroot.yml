@@ -1,6 +1,6 @@
 # make a installroot
 - name: Create installroot
-  command: mktemp -d "{{ remote_tmp_dir }}/ansible.test.XXXXXX"
+  command: mktemp -d "{{ remote_tmp_dir }}/assible.test.XXXXXX"
   register: yumroot
 
 #- name: Populate directory
@@ -11,7 +11,7 @@
 #
 #- name: Populate directory2
 #  copy:
-#    content: "[main]\ndistropkgver={{ ansible_distribution_version }}\n"
+#    content: "[main]\ndistropkgver={{ assible_distribution_version }}\n"
 #    dest: "/{{ yumroot.stdout }}/etc/yum.conf"
 
 - name: Make a necessary directory
@@ -21,7 +21,7 @@
     mode: 0755
 
 - name: get yum releasever
-  command: "{{ ansible_python_interpreter }} -c 'import yum; yb = yum.YumBase(); print(yb.conf.yumvar[\"releasever\"])'"
+  command: "{{ assible_python_interpreter }} -c 'import yum; yb = yum.YumBase(); print(yb.conf.yumvar[\"releasever\"])'"
   register: releasever
   ignore_errors: yes
 
@@ -63,18 +63,18 @@
 
 # Test for releasever working correctly
 #
-# Bugfix: https://github.com/ansible/ansible/issues/67050
+# Bugfix: https://github.com/assible/assible/issues/67050
 #
 # This test case is based on a reproducer originally reported on Reddit:
-#   https://www.reddit.com/r/ansible/comments/g2ps32/ansible_yum_module_throws_up_an_error_when/
+#   https://www.reddit.com/r/assible/comments/g2ps32/assible_yum_module_throws_up_an_error_when/
 #
-# NOTE: For the Ansible upstream CI we can only run this for RHEL7 because the
+# NOTE: For the Assible upstream CI we can only run this for RHEL7 because the
 #       containerized runtimes in shippable don't allow the nested mounting of
 #       buildah container volumes.
 - name: perform yuminstallroot in a buildah mount with releasever
   when:
-    - ansible_facts["distribution_major_version"] == "7"
-    - ansible_facts["distribution"] == "RedHat"
+    - assible_facts["distribution_major_version"] == "7"
+    - assible_facts["distribution"] == "RedHat"
   block:
     # Need to enable this RHUI repo for RHEL7 testing in AWS, CentOS has Extras
     # enabled by default and this is not needed there.

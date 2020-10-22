@@ -1,6 +1,6 @@
 ---
 # Generated certificate with: https://github.com/michaelklishin/tls-gen
-# ~/tls-gen/basic# make PASSWORD=bunnies CN=ansible.tls.tests
+# ~/tls-gen/basic# make PASSWORD=bunnies CN=assible.tls.tests
 # verify with: make info
 
 - name: ensure target directory is present

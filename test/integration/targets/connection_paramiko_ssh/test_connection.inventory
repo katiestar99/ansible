@@ -1,7 +1,7 @@
 [paramiko_ssh]
-paramiko_ssh-pipelining    ansible_ssh_pipelining=true
-paramiko_ssh-no-pipelining ansible_ssh_pipelining=false
+paramiko_ssh-pipelining    assible_ssh_pipelining=true
+paramiko_ssh-no-pipelining assible_ssh_pipelining=false
 [paramiko_ssh:vars]
-ansible_host=localhost
-ansible_connection=paramiko_ssh
-ansible_python_interpreter="{{ ansible_playbook_python }}"
+assible_host=localhost
+assible_connection=paramiko_ssh
+assible_python_interpreter="{{ assible_playbook_python }}"

@@ -153,10 +153,10 @@ fi
 export PS1='\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 EOF
 
-# Make sure ~/ansible/ is the starting directory for interactive shells.
+# Make sure ~/assible/ is the starting directory for interactive shells.
 if [ "${platform}" = "osx" ]; then
-    echo "cd ~/ansible/" >> ~/.bashrc
+    echo "cd ~/assible/" >> ~/.bashrc
 elif [ "${platform}" = "macos" ] ; then
     echo "export BASH_SILENCE_DEPRECATION_WARNING=1" >> ~/.bashrc
-    echo "cd ~/ansible/" >> ~/.bashrc
+    echo "cd ~/assible/" >> ~/.bashrc
 fi

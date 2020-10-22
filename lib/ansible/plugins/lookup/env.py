@@ -1,5 +1,5 @@
 # (c) 2012, Jan-Piet Mens <jpmens(at)gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -11,7 +11,7 @@ DOCUMENTATION = """
     short_description: Read the value of environment variables
     description:
       - Allows you to query the environment variables available on the
-        controller when you invoked Ansible.
+        controller when you invoked Assible.
     options:
       _terms:
         description:
@@ -45,8 +45,8 @@ RETURN = """
 """
 
 
-from ansible.plugins.lookup import LookupBase
-from ansible.utils import py3compat
+from assible.plugins.lookup import LookupBase
+from assible.utils import py3compat
 
 
 class LookupModule(LookupBase):

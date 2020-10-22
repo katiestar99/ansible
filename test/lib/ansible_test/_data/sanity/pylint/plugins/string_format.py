@@ -24,19 +24,19 @@ _PY3K = sys.version_info[:2] >= (3, 0)
 MSGS = {
     'E9305': ("Format string contains automatic field numbering "
               "specification",
-              "ansible-format-automatic-specification",
+              "assible-format-automatic-specification",
               "Used when a PEP 3101 format string contains automatic "
               "field numbering (e.g. '{}').",
               {'minversion': (2, 6)}),
     'E9390': ("bytes object has no .format attribute",
-              "ansible-no-format-on-bytestring",
+              "assible-no-format-on-bytestring",
               "Used when a bytestring was used as a PEP 3101 format string "
               "as Python3 bytestrings do not have a .format attribute",
               {'minversion': (3, 0)}),
 }
 
 
-class AnsibleStringFormatChecker(BaseChecker):
+class AssibleStringFormatChecker(BaseChecker):
     """Checks string formatting operations to ensure that the format string
     is valid and the arguments match the format string.
     """
@@ -67,7 +67,7 @@ class AnsibleStringFormatChecker(BaseChecker):
             return
 
         if _PY3K and isinstance(strnode.value, six.binary_type):
-            self.add_message('ansible-no-format-on-bytestring', node=node)
+            self.add_message('assible-no-format-on-bytestring', node=node)
             return
         if not isinstance(strnode.value, six.string_types):
             return
@@ -80,11 +80,11 @@ class AnsibleStringFormatChecker(BaseChecker):
             return
 
         if num_args:
-            self.add_message('ansible-format-automatic-specification',
+            self.add_message('assible-format-automatic-specification',
                              node=node)
             return
 
 
 def register(linter):
     """required method to auto register this checker """
-    linter.register_checker(AnsibleStringFormatChecker(linter))
+    linter.register_checker(AssibleStringFormatChecker(linter))

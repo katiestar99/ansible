@@ -1,5 +1,5 @@
 # (c) 2012, Daniel Hokka Zakrisson <daniel@hozac.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -16,8 +16,8 @@ DOCUMENTATION = r"""
         description: command(s) to run.
         required: True
     notes:
-      - Like all lookups this runs on the Ansible controller and is unaffected by other keywords, such as become,
-        so if you need to different permissions you must change the command or run Ansible as another user.
+      - Like all lookups this runs on the Assible controller and is unaffected by other keywords, such as become,
+        so if you need to different permissions you must change the command or run Assible as another user.
       - Alternatively you can use a shell/command task that runs against localhost and registers the result.
       - Pipe lookup internally invokes Popen with shell=True (this is required and intentional).
         This type of invocation is considered as security issue if appropriate care is not taken to sanitize any user provided or variable input.
@@ -46,8 +46,8 @@ RETURN = r"""
 
 import subprocess
 
-from ansible.errors import AnsibleError
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleError
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):
@@ -63,7 +63,7 @@ class LookupModule(LookupBase):
             shell as the program to execute. If shell is True, it is recommended to pass
             args as a string rather than as a sequence
 
-            https://github.com/ansible/ansible/issues/6550
+            https://github.com/assible/assible/issues/6550
             '''
             term = str(term)
 
@@ -72,5 +72,5 @@ class LookupModule(LookupBase):
             if p.returncode == 0:
                 ret.append(stdout.decode("utf-8").rstrip())
             else:
-                raise AnsibleError("lookup_plugin.pipe(%s) returned %d" % (term, p.returncode))
+                raise AssibleError("lookup_plugin.pipe(%s) returned %d" % (term, p.returncode))
         return ret

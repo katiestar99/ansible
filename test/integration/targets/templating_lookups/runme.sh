@@ -2,11 +2,11 @@
 
 set -eux
 
-ANSIBLE_ROLES_PATH=./ UNICODE_VAR=café ansible-playbook runme.yml "$@"
+ASSIBLE_ROLES_PATH=./ UNICODE_VAR=café assible-playbook runme.yml "$@"
 
-ansible-playbook template_lookup_vaulted/playbook.yml --vault-password-file template_lookup_vaulted/test_vault_pass "$@"
+assible-playbook template_lookup_vaulted/playbook.yml --vault-password-file template_lookup_vaulted/test_vault_pass "$@"
 
-ansible-playbook template_deepcopy/playbook.yml -i template_deepcopy/hosts "$@"
+assible-playbook template_deepcopy/playbook.yml -i template_deepcopy/hosts "$@"
 
-# https://github.com/ansible/ansible/issues/66943
-ANSIBLE_JINJA2_NATIVE=0 ansible-playbook template_lookup_safe_eval_unicode/playbook.yml "$@"
+# https://github.com/assible/assible/issues/66943
+ASSIBLE_JINJA2_NATIVE=0 assible-playbook template_lookup_safe_eval_unicode/playbook.yml "$@"

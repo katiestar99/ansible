@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-# (c) 2015, Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2015, Toshio Kuratomi <tkuratomi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -33,12 +33,12 @@ from units.mock.loader import DictDataLoader
 
 from units.compat import unittest
 from units.compat.mock import mock_open, patch
-from ansible.errors import AnsibleError
-from ansible.module_utils.six import text_type
-from ansible.module_utils.six.moves import builtins
-from ansible.module_utils._text import to_bytes
-from ansible.plugins.loader import PluginLoader
-from ansible.plugins.lookup import password
+from assible.errors import AssibleError
+from assible.module_utils.six import text_type
+from assible.module_utils.six.moves import builtins
+from assible.module_utils._text import to_bytes
+from assible.plugins.loader import PluginLoader
+from assible.plugins.lookup import password
 
 
 DEFAULT_CHARS = sorted([u'ascii_letters', u'digits', u".,:-_"])
@@ -62,8 +62,8 @@ old_style_params_data = (
         candidate_chars=DEFAULT_CANDIDATE_CHARS,
     ),
     dict(
-        term=u'/path/with/equals/cn=com.ansible',
-        filename=u'/path/with/equals/cn=com.ansible',
+        term=u'/path/with/equals/cn=com.assible',
+        filename=u'/path/with/equals/cn=com.assible',
         params=dict(length=password.DEFAULT_LENGTH, encrypt=None, chars=DEFAULT_CHARS),
         candidate_chars=DEFAULT_CANDIDATE_CHARS,
     ),
@@ -179,8 +179,8 @@ old_style_params_data = (
         candidate_chars=u'abc=def',
     ),
     dict(
-        term=u'/path/with/equals/cn=com.ansible chars=abc=def',
-        filename=u'/path/with/equals/cn=com.ansible',
+        term=u'/path/with/equals/cn=com.assible chars=abc=def',
+        filename=u'/path/with/equals/cn=com.assible',
         params=dict(length=password.DEFAULT_LENGTH, encrypt=None, chars=[u'abc=def']),
         candidate_chars=u'abc=def',
     ),
@@ -206,14 +206,14 @@ class TestParseParameters(unittest.TestCase):
                         filename=u'/path/to/file',
                         params=dict(length=password.DEFAULT_LENGTH, encrypt=None, chars=[u'くらとみ']),
                         candidate_chars=u'くらとみ')
-        self.assertRaises(AnsibleError, password._parse_parameters, testcase['term'])
+        self.assertRaises(AssibleError, password._parse_parameters, testcase['term'])
 
     def test_invalid_params(self):
         testcase = dict(term=u'/path/to/file chars=くらとみi  somethign_invalid=123',
                         filename=u'/path/to/file',
                         params=dict(length=password.DEFAULT_LENGTH, encrypt=None, chars=[u'くらとみ']),
                         candidate_chars=u'くらとみ')
-        self.assertRaises(AnsibleError, password._parse_parameters, testcase['term'])
+        self.assertRaises(AssibleError, password._parse_parameters, testcase['term'])
 
 
 class TestReadPasswordFile(unittest.TestCase):
@@ -389,7 +389,7 @@ class BaseTestLookupModule(unittest.TestCase):
 
 class TestLookupModuleWithoutPasslib(BaseTestLookupModule):
     @patch.object(PluginLoader, '_get_paths')
-    @patch('ansible.plugins.lookup.password._write_password_file')
+    @patch('assible.plugins.lookup.password._write_password_file')
     def test_no_encrypt(self, mock_get_paths, mock_write_file):
         mock_get_paths.return_value = ['/path/one', '/path/two', '/path/three']
 
@@ -401,7 +401,7 @@ class TestLookupModuleWithoutPasslib(BaseTestLookupModule):
             assert isinstance(result, text_type)
 
     @patch.object(PluginLoader, '_get_paths')
-    @patch('ansible.plugins.lookup.password._write_password_file')
+    @patch('assible.plugins.lookup.password._write_password_file')
     def test_password_already_created_no_encrypt(self, mock_get_paths, mock_write_file):
         mock_get_paths.return_value = ['/path/one', '/path/two', '/path/three']
         password.os.path.exists = lambda x: x == to_bytes('/path/to/somewhere')
@@ -413,7 +413,7 @@ class TestLookupModuleWithoutPasslib(BaseTestLookupModule):
             self.assertEqual(result, u'hunter42')
 
     @patch.object(PluginLoader, '_get_paths')
-    @patch('ansible.plugins.lookup.password._write_password_file')
+    @patch('assible.plugins.lookup.password._write_password_file')
     def test_only_a(self, mock_get_paths, mock_write_file):
         mock_get_paths.return_value = ['/path/one', '/path/two', '/path/three']
 
@@ -430,7 +430,7 @@ class TestLookupModuleWithoutPasslib(BaseTestLookupModule):
                 # should timeout here
                 results = self.password_lookup.run([u'/path/to/somewhere chars=anything'], None)
                 self.fail("Lookup didn't timeout when lock already been held")
-        except AnsibleError:
+        except AssibleError:
             pass
 
     def test_lock_not_been_held(self):
@@ -440,7 +440,7 @@ class TestLookupModuleWithoutPasslib(BaseTestLookupModule):
             with patch.object(builtins, 'open', mock_open(read_data=b'hunter42 salt=87654321\n')) as m:
                 # should not timeout here
                 results = self.password_lookup.run([u'/path/to/somewhere chars=anything'], None)
-        except AnsibleError:
+        except AssibleError:
             self.fail('Lookup timeouts when lock is free')
 
         for result in results:
@@ -463,7 +463,7 @@ class TestLookupModuleWithPasslib(BaseTestLookupModule):
         passlib.registry.register_crypt_handler(self.sha256, force=True)
 
     @patch.object(PluginLoader, '_get_paths')
-    @patch('ansible.plugins.lookup.password._write_password_file')
+    @patch('assible.plugins.lookup.password._write_password_file')
     def test_encrypt(self, mock_get_paths, mock_write_file):
         mock_get_paths.return_value = ['/path/one', '/path/two', '/path/three']
 
@@ -490,7 +490,7 @@ class TestLookupModuleWithPasslib(BaseTestLookupModule):
             self.assertIsInstance(result, text_type)
 
     @patch.object(PluginLoader, '_get_paths')
-    @patch('ansible.plugins.lookup.password._write_password_file')
+    @patch('assible.plugins.lookup.password._write_password_file')
     def test_password_already_created_encrypt(self, mock_get_paths, mock_write_file):
         mock_get_paths.return_value = ['/path/one', '/path/two', '/path/three']
         password.os.path.exists = lambda x: x == to_bytes('/path/to/somewhere')

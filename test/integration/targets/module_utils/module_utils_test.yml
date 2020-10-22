@@ -33,7 +33,7 @@
     test_override:
     register: result
 
-  - name: Make sure the we used the local facts.py, not the one shipped with ansible
+  - name: Make sure the we used the local facts.py, not the one shipped with assible
     assert:
       that:
         - result["data"] == "overridden facts.py"
@@ -48,7 +48,7 @@
     assert:
       that:
         - result is failed
-        - result['msg'] == "Could not find imported module support code for ansible.modules.test_failure.  Looked for (['ansible.module_utils.zebra.foo', 'ansible.module_utils.zebra'])"
+        - result['msg'] == "Could not find imported module support code for assible.modules.test_failure.  Looked for (['assible.module_utils.zebra.foo', 'assible.module_utils.zebra'])"
 
   - name: Test that alias deprecation works
     test_alias_deprecation:

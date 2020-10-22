@@ -1,6 +1,6 @@
 {
     "prefixes": [
-        "lib/ansible/modules/",
+        "lib/assible/modules/",
         "plugins/modules/"
     ],
     "extensions": [

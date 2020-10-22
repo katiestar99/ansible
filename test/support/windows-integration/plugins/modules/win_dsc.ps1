@@ -1,16 +1,16 @@
 #!powershell
 
 # Copyright: (c) 2015, Trond Hindenes <trond@hindenes.com>, and others
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
+#AssibleRequires -CSharpUtil Assible.Basic
 #Requires -Version 5
 
 Function ConvertTo-ArgSpecType {
     <#
     .SYNOPSIS
-    Converts the DSC parameter type to the arg spec type required for Ansible.
+    Converts the DSC parameter type to the arg spec type required for Assible.
     #>
     param(
         [Parameter(Mandatory=$true)][String]$CimType
@@ -132,7 +132,7 @@ Function Add-PropertyOption {
 Function Get-OptionSpec {
     <#
     .SYNOPSIS
-    Generates the specifiec used in AnsibleModule for a CIM MOF resource name.
+    Generates the specifiec used in AssibleModule for a CIM MOF resource name.
 
     .NOTES
     This won't be able to retrieve the default values for an option as that is not defined in the MOF for a resource.
@@ -165,7 +165,7 @@ Function ConvertTo-CimInstance {
         [Parameter(Mandatory=$true)][String]$Name,
         [Parameter(Mandatory=$true)][String]$ClassName,
         [Parameter(Mandatory=$true)][System.Collections.IDictionary]$Value,
-        [Parameter(Mandatory=$true)][Ansible.Basic.AnsibleModule]$Module,
+        [Parameter(Mandatory=$true)][Assible.Basic.AssibleModule]$Module,
         [Switch]$Recurse
     )
 
@@ -201,7 +201,7 @@ Function ConvertTo-DscProperty {
     param(
         [Parameter(Mandatory=$true)][String]$ClassName,
         [Parameter(Mandatory=$true)][System.Collections.IDictionary]$Params,
-        [Parameter(Mandatory=$true)][Ansible.Basic.AnsibleModule]$Module
+        [Parameter(Mandatory=$true)][Assible.Basic.AssibleModule]$Module
     )
     $properties = Get-DscCimClassProperties -ClassName $ClassName
 
@@ -271,7 +271,7 @@ Function Invoke-DscMethod {
     for futher debugging.
     #>
     param(
-        [Parameter(Mandatory=$true)][Ansible.Basic.AnsibleModule]$Module,
+        [Parameter(Mandatory=$true)][Assible.Basic.AssibleModule]$Module,
         [Parameter(Mandatory=$true)][String]$Method,
         [Parameter(Mandatory=$true)][Hashtable]$Arguments
     )
@@ -283,12 +283,12 @@ Function Invoke-DscMethod {
 
     $result = $ps.Invoke()
 
-    # Pass the warnings through to the AnsibleModule return result
+    # Pass the warnings through to the AssibleModule return result
     foreach ($warning in $ps.Streams.Warning) {
         $Module.Warn($warning.Message)
     }
 
-    # If running at a high enough verbosity, add the verbose output to the AnsibleModule return result
+    # If running at a high enough verbosity, add the verbose output to the AssibleModule return result
     if ($Module.Verbosity -ge 3) {
         $verbose_logs = [System.Collections.Generic.List`1[String]]@()
         foreach ($verbosity in $ps.Streams.Verbose) {
@@ -307,7 +307,7 @@ Function Invoke-DscMethod {
 }
 
 # win_dsc is unique in that is builds the arg spec based on DSC Resource input. To get this info
-# we need to read the resource_name and module_version value which is done outside of Ansible.Basic
+# we need to read the resource_name and module_version value which is done outside of Assible.Basic
 if ($args.Length -gt 0) {
     $params = Get-Content -Path $args[0] | ConvertFrom-Json
 } else {
@@ -378,7 +378,7 @@ $spec.supports_check_mode = $true
 $spec.options.module_version = @{ type = "str"; default = "latest" }
 $spec.options.resource_name = @{ type = "str"; required = $true }
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 $module.Result.reboot_required = $false
 $module.Result.module_version = $module_version
 

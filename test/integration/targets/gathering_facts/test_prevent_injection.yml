@@ -9,6 +9,6 @@
       assert:
         that:
             - "'touch' not in discovered_interpreter_python|default('')"
-            - "'touch' not in ansible_facts.get('discovered_interpreter_python', '')"
-            - "'touch' not in ansible_facts.get('ansible_facts', {}).get('discovered_interpreter_python', '')"
+            - "'touch' not in assible_facts.get('discovered_interpreter_python', '')"
+            - "'touch' not in assible_facts.get('assible_facts', {}).get('discovered_interpreter_python', '')"
             - bogus_overwrite is undefined

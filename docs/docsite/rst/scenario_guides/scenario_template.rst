@@ -3,7 +3,7 @@
 .. _scenario_template:
 
 *************************************
-Sample scenario for Ansible platforms
+Sample scenario for Assible platforms
 *************************************
 
 *Use this ``rst`` file as a starting point to create a scenario guide for your platform. The sections below are suggestions on what should be in a scenario guide.*

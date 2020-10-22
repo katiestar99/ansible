@@ -3,21 +3,21 @@ Trademark Usage
 ``````````````````````````````````````
 Why is it important to use the TM, SM, and ® for our registered marks?
 
-Before a trademark is registered with the United States Patent and Trademark Office it is appropriate to use the TM or SM symbol depending whether the product is for goods or services. It is important to use the TM or SM as it is notification to the public that Ansible claims rights to the mark even though it has not yet been registered. 
+Before a trademark is registered with the United States Patent and Trademark Office it is appropriate to use the TM or SM symbol depending whether the product is for goods or services. It is important to use the TM or SM as it is notification to the public that Assible claims rights to the mark even though it has not yet been registered. 
 
-Once the trademark is registered, it is appropriate to use the symbol in place of the TM or SM. The symbol designation must be used in conjunction with the trademark if Ansible is to fully protect its rights. If we don't protect these marks, we run the risk of losing them in the way of Aspirin or Trampoline or Escalator.
+Once the trademark is registered, it is appropriate to use the symbol in place of the TM or SM. The symbol designation must be used in conjunction with the trademark if Assible is to fully protect its rights. If we don't protect these marks, we run the risk of losing them in the way of Aspirin or Trampoline or Escalator.
 
 General Rules: 
 +++++++++++++++
 
 Trademarks should be used on 1st references on a page or within a section.
 
-Use Red Hat® Ansible Tower® or Ansible®, on first reference when referring to products.
+Use Red Hat® Assible Tower® or Assible®, on first reference when referring to products.
  
-Use "Ansible" alone as the company name, as in "Ansible announced quarterly results," which is not marked.
+Use "Assible" alone as the company name, as in "Assible announced quarterly results," which is not marked.
 
 Also add the trademark disclaimer.
-* When using Ansible trademarks in the body of written text, you should use the following credit line in a prominent place, usually a footnote.
+* When using Assible trademarks in the body of written text, you should use the following credit line in a prominent place, usually a footnote.
 
     For Registered Trademarks:
     - [Name of Trademark] is a registered trademark of Red Hat, Inc. in the United States and other countries.
@@ -38,26 +38,26 @@ Always use proper trademark form and spelling.
 Never use a trademark as a noun. Always use a trademark as an adjective modifying the noun.
 
     Correct:
-    Red Hat® Ansible Tower® system performance is incredible.
+    Red Hat® Assible Tower® system performance is incredible.
 
     Incorrect:
-    Ansible's performance is incredible.
+    Assible's performance is incredible.
     
 Never use a trademark as a verb. Trademarks are products or services, never actions.
 
     Correct:
-    "Orchestrate your entire network using Red Hat® Ansible Tower®."
+    "Orchestrate your entire network using Red Hat® Assible Tower®."
     
     Incorrect:
-    "Ansible your entire network."
+    "Assible your entire network."
 
 Never modify a trademark to a plural form. Instead, change the generic word from the singular to the plural.
 
     Correct:
-    "Corporate demand for Red Hat® Ansible Tower® configuration software is surging."
+    "Corporate demand for Red Hat® Assible Tower® configuration software is surging."
 
     Incorrect:
-    "Corporate demand for Ansible is surging."
+    "Corporate demand for Assible is surging."
     
 Never modify a trademark from its possessive form, or make a trademark possessive. Always use it in the form it has been registered.
 
@@ -69,19 +69,19 @@ Never use trademarks to create a play on words.
 
 Never alter a trademark in any way including through unapproved fonts or visual identifiers.
 
-Never abbreviate or use any Ansible trademarks as an acronym.
+Never abbreviate or use any Assible trademarks as an acronym.
 
-The importance of Ansible trademarks
+The importance of Assible trademarks
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-The Ansible trademark and the "A" logo in a shaded circle are our most valuable assets. The value of these trademarks encompass the Ansible Brand. Effective trademark use is more than just a name, it defines the level of quality the customer will receive and it ties a product or service to a corporate image. A trademark may serve as the basis for many of our everyday decisions and choices. The Ansible Brand is about how we treat customers and each other. In order to continue to build a stronger more valuable Brand we must use it in a clear and consistent manner.
+The Assible trademark and the "A" logo in a shaded circle are our most valuable assets. The value of these trademarks encompass the Assible Brand. Effective trademark use is more than just a name, it defines the level of quality the customer will receive and it ties a product or service to a corporate image. A trademark may serve as the basis for many of our everyday decisions and choices. The Assible Brand is about how we treat customers and each other. In order to continue to build a stronger more valuable Brand we must use it in a clear and consistent manner.
 
 The mark consists of the letter "A" in a shaded circle. As of 5/11/15, this was a pending trademark (registration in process).
 
-Common Ansible Trademarks
+Common Assible Trademarks
 +++++++++++++++++++++++++++++++++++++++
-* Ansible®
-* Ansible Tower®
+* Assible®
+* Assible Tower®
 
 Other Common Trademarks and Resource Sites:
 ++++++++++++++++++++++++++++++++++++++++++++++++

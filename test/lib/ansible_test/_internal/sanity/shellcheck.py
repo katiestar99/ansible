@@ -43,7 +43,7 @@ class ShellcheckTest(SanityVersionNeutral):
     """Sanity test using shellcheck."""
     @property
     def error_code(self):  # type: () -> t.Optional[str]
-        """Error code for ansible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
+        """Error code for assible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
         return 'AT1000'
 
     def filter_targets(self, targets):  # type: (t.List[TestTarget]) -> t.List[TestTarget]

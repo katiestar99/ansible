@@ -2,13 +2,13 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 from ..module_utils.my_util2 import two
 from ..module_utils import my_util3
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(),
         supports_check_mode=True
     )

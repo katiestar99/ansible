@@ -1,28 +1,28 @@
 # Copyright 2018 Alan Rominger <arominge@redhat.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from units.compat import unittest
 
-from ansible.inventory.group import Group
-from ansible.inventory.host import Host
-from ansible.errors import AnsibleError
+from assible.inventory.group import Group
+from assible.inventory.host import Host
+from assible.errors import AssibleError
 
 
 class TestGroup(unittest.TestCase):
@@ -67,7 +67,7 @@ class TestGroup(unittest.TestCase):
         A.parent_groups.append(B)
         B.child_groups.append(A)
         # can't update depths of groups, because of loop
-        with self.assertRaises(AnsibleError):
+        with self.assertRaises(AssibleError):
             B._check_children_depth()
 
     def test_loop_detection(self):
@@ -76,7 +76,7 @@ class TestGroup(unittest.TestCase):
         C = Group('C')
         A.add_child_group(B)
         B.add_child_group(C)
-        with self.assertRaises(AnsibleError):
+        with self.assertRaises(AssibleError):
             C.add_child_group(A)
 
     def test_direct_host_ordering(self):

@@ -1,7 +1,7 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2015 Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2015 Toshio Kuratomi <tkuratomi@assible.com>
 # (c) 2017, Peter Sprygada <psprygad@redhat.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -12,12 +12,12 @@ import shlex
 from abc import abstractmethod, abstractproperty
 from functools import wraps
 
-from ansible import constants as C
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.plugins import AnsiblePlugin
-from ansible.utils.display import Display
-from ansible.plugins.loader import connection_loader, get_shell_plugin
-from ansible.utils.path import unfrackpath
+from assible import constants as C
+from assible.module_utils._text import to_bytes, to_text
+from assible.plugins import AssiblePlugin
+from assible.utils.display import Display
+from assible.plugins.loader import connection_loader, get_shell_plugin
+from assible.utils.path import unfrackpath
 
 display = Display()
 
@@ -36,7 +36,7 @@ def ensure_connect(func):
     return wrapped
 
 
-class ConnectionBase(AnsiblePlugin):
+class ConnectionBase(AssiblePlugin):
     '''
     A base class for connections to contain common code.
     '''
@@ -149,7 +149,7 @@ class ConnectionBase(AnsiblePlugin):
         When a command is executed, it goes through multiple commands to get
         there.  It looks approximately like this::
 
-            [LocalShell] ConnectionCommand [UsersLoginShell (*)] ANSIBLE_SHELL_EXECUTABLE [(BecomeCommand ANSIBLE_SHELL_EXECUTABLE)] Command
+            [LocalShell] ConnectionCommand [UsersLoginShell (*)] ASSIBLE_SHELL_EXECUTABLE [(BecomeCommand ASSIBLE_SHELL_EXECUTABLE)] Command
         :LocalShell: Is optional.  It is run locally to invoke the
             ``Connection Command``.  In most instances, the
             ``ConnectionCommand`` can be invoked directly instead.  The ssh
@@ -159,42 +159,42 @@ class ConnectionBase(AnsiblePlugin):
             processed on the remote machine, not on the local machine so no
             shell is needed on the local machine.  (Example, ``/bin/sh``)
         :ConnectionCommand: This is the command that connects us to the remote
-            machine to run the rest of the command.  ``ansible_user``,
-            ``ansible_ssh_host`` and so forth are fed to this piece of the
+            machine to run the rest of the command.  ``assible_user``,
+            ``assible_ssh_host`` and so forth are fed to this piece of the
             command to connect to the correct host (Examples ``ssh``,
             ``chroot``)
         :UsersLoginShell: This shell may or may not be created depending on
             the ConnectionCommand used by the connection plugin.  This is the
-            shell that the ``ansible_user`` has configured as their login
+            shell that the ``assible_user`` has configured as their login
             shell.  In traditional UNIX parlance, this is the last field of
             a user's ``/etc/passwd`` entry   We do not specifically try to run
             the ``UsersLoginShell`` when we connect.  Instead it is implicit
             in the actions that the ``ConnectionCommand`` takes when it
-            connects to a remote machine.  ``ansible_shell_type`` may be set
-            to inform ansible of differences in how the ``UsersLoginShell``
+            connects to a remote machine.  ``assible_shell_type`` may be set
+            to inform assible of differences in how the ``UsersLoginShell``
             handles things like quoting if a shell has different semantics
             than the Bourne shell.
-        :ANSIBLE_SHELL_EXECUTABLE: This is the shell set via the inventory var
-            ``ansible_shell_executable`` or via
+        :ASSIBLE_SHELL_EXECUTABLE: This is the shell set via the inventory var
+            ``assible_shell_executable`` or via
             ``constants.DEFAULT_EXECUTABLE`` if the inventory var is not set.
             We explicitly invoke this shell so that we have predictable
-            quoting rules at this point.  ``ANSIBLE_SHELL_EXECUTABLE`` is only
+            quoting rules at this point.  ``ASSIBLE_SHELL_EXECUTABLE`` is only
             settable by the user because some sudo setups may only allow
             invoking a specific shell.  (For instance, ``/bin/bash`` may be
             allowed but ``/bin/sh``, our default, may not).  We invoke this
             twice, once after the ``ConnectionCommand`` and once after the
             ``BecomeCommand``.  After the ConnectionCommand, this is run by
             the ``UsersLoginShell``.  After the ``BecomeCommand`` we specify
-            that the ``ANSIBLE_SHELL_EXECUTABLE`` is being invoked directly.
-        :BecomeComand ANSIBLE_SHELL_EXECUTABLE: Is the command that performs
+            that the ``ASSIBLE_SHELL_EXECUTABLE`` is being invoked directly.
+        :BecomeComand ASSIBLE_SHELL_EXECUTABLE: Is the command that performs
             privilege escalation.  Setting this up is performed by the action
             plugin prior to running ``exec_command``. So we just get passed
             :param:`cmd` which has the BecomeCommand already added.
             (Examples: sudo, su)  If we have a BecomeCommand then we will
-            invoke a ANSIBLE_SHELL_EXECUTABLE shell inside of it so that we
+            invoke a ASSIBLE_SHELL_EXECUTABLE shell inside of it so that we
             have a consistent view of quoting.
         :Command: Is the command we're actually trying to run remotely.
-            (Examples: mkdir -p $HOME/.ansible, python $HOME/.ansible/tmp-script-file)
+            (Examples: mkdir -p $HOME/.assible, python $HOME/.assible/tmp-script-file)
         """
         pass
 
@@ -237,28 +237,28 @@ class ConnectionBase(AnsiblePlugin):
     def check_become_success(self, b_output):
         display.deprecated(
             "Connection.check_become_success is deprecated, calling code should be using become plugins instead",
-            version="2.12", collection_name='ansible.builtin'
+            version="2.12", collection_name='assible.builtin'
         )
         return self.become.check_success(b_output)
 
     def check_password_prompt(self, b_output):
         display.deprecated(
             "Connection.check_password_prompt is deprecated, calling code should be using become plugins instead",
-            version="2.12", collection_name='ansible.builtin'
+            version="2.12", collection_name='assible.builtin'
         )
         return self.become.check_password_prompt(b_output)
 
     def check_incorrect_password(self, b_output):
         display.deprecated(
             "Connection.check_incorrect_password is deprecated, calling code should be using become plugins instead",
-            version="2.12", collection_name='ansible.builtin'
+            version="2.12", collection_name='assible.builtin'
         )
         return self.become.check_incorrect_password(b_output)
 
     def check_missing_password(self, b_output):
         display.deprecated(
             "Connection.check_missing_password is deprecated, calling code should be using become plugins instead",
-            version="2.12", collection_name='ansible.builtin'
+            version="2.12", collection_name='assible.builtin'
         )
         return self.become.check_missing_password(b_output)
 
@@ -286,7 +286,7 @@ class NetworkConnectionBase(ConnectionBase):
         self._cached_variables = (None, None, None)
 
         # reconstruct the socket_path and set instance values accordingly
-        self._ansible_playbook_pid = kwargs.get('ansible_playbook_pid')
+        self._assible_playbook_pid = kwargs.get('assible_playbook_pid')
         self._update_connection_state()
 
     def __getattr__(self, name):
@@ -368,7 +368,7 @@ class NetworkConnectionBase(ConnectionBase):
         control_path = ssh._create_control_path(
             self._play_context.remote_addr, self._play_context.port,
             self._play_context.remote_user, self._play_context.connection,
-            self._ansible_playbook_pid
+            self._assible_playbook_pid
         )
 
         tmp_path = unfrackpath(C.PERSISTENT_CONTROL_PATH_DIR)

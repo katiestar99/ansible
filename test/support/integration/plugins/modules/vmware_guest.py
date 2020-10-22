@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -43,7 +43,7 @@ notes:
     - Uses SysPrep for Windows VM (depends on 'guest_id' parameter match 'win') with PyVmomi.
     - In order to change the VM's parameters (e.g. number of CPUs), the VM must be powered off unless the hot-add
       support is enabled and the C(state=present) must be used to apply the changes.
-    - "For additional information please visit Ansible VMware community wiki - U(https://github.com/ansible/community/wiki/VMware)."
+    - "For additional information please visit Assible VMware community wiki - U(https://github.com/assible/community/wiki/VMware)."
 options:
   state:
     description:
@@ -515,7 +515,7 @@ EXAMPLES = r'''
       domain: my_domain
       password: new_vm_password
       runonce:
-      - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+      - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAssible.ps1 -ForceNewSSLCert -EnableCredSSP
   delegate_to: localhost
 
 - name:  Clone a virtual machine from Linux template and customize
@@ -660,10 +660,10 @@ except ImportError:
     pass
 
 from random import randint
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.network import is_mac
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.vmware import (find_obj, gather_vm_facts, get_all_objs,
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.network import is_mac
+from assible.module_utils._text import to_text, to_native
+from assible.module_utils.vmware import (find_obj, gather_vm_facts, get_all_objs,
                                          compile_folder_path_for_object, serialize_spec,
                                          vmware_argument_spec, set_vm_power_state, PyVmomi,
                                          find_dvs_by_name, find_dvspg_by_name, wait_for_vm_ip,
@@ -2822,7 +2822,7 @@ def main():
         delete_from_inventory=dict(type='bool', default=False),
     )
 
-    module = AnsibleModule(argument_spec=argument_spec,
+    module = AssibleModule(argument_spec=argument_spec,
                            supports_check_mode=True,
                            mutually_exclusive=[
                                ['cluster', 'esxi_hostname'],

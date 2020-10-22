@@ -1,4 +1,4 @@
-- name: Tests for ANSIBLE_COMMON_REMOTE_GROUP functionality
+- name: Tests for ASSIBLE_COMMON_REMOTE_GROUP functionality
   hosts: ssh
   gather_facts: yes
   remote_user: unpriv1
@@ -18,11 +18,11 @@
 
     - set_fact:
         stat_cmd: stat -c '%U %G' {{ tmpdir.tmpdir }}/*
-      when: ansible_distribution not in ['MacOSX', 'FreeBSD']
+      when: assible_distribution not in ['MacOSX', 'FreeBSD']
 
     - set_fact:
         stat_cmd: stat -f '%Su %Sg' {{ tmpdir.tmpdir }}/*
-      when: ansible_distribution in ['MacOSX', 'FreeBSD']
+      when: assible_distribution in ['MacOSX', 'FreeBSD']
 
     - name: Ensure we tested the right fallback
       shell: "{{ stat_cmd }}"

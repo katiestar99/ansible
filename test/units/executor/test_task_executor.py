@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -23,12 +23,12 @@ import mock
 
 from units.compat import unittest
 from units.compat.mock import patch, MagicMock
-from ansible.errors import AnsibleError
-from ansible.executor.task_executor import TaskExecutor, remove_omit
-from ansible.plugins.loader import action_loader, lookup_loader
-from ansible.parsing.yaml.objects import AnsibleUnicode
-from ansible.utils.unsafe_proxy import AnsibleUnsafeText, AnsibleUnsafeBytes
-from ansible.module_utils.six import text_type
+from assible.errors import AssibleError
+from assible.executor.task_executor import TaskExecutor, remove_omit
+from assible.plugins.loader import action_loader, lookup_loader
+from assible.parsing.yaml.objects import AssibleUnicode
+from assible.utils.unsafe_proxy import AssibleUnsafeText, AssibleUnsafeBytes
+from assible.module_utils.six import text_type
 
 from units.mock.loader import DictDataLoader
 
@@ -93,7 +93,7 @@ class TestTaskExecutor(unittest.TestCase):
         te._run_loop = MagicMock(return_value=[dict(item='a', changed=True), dict(item='b', failed=True), dict(item='c')])
         res = te.run()
 
-        te._get_loop_items = MagicMock(side_effect=AnsibleError(""))
+        te._get_loop_items = MagicMock(side_effect=AssibleError(""))
         res = te.run()
         self.assertIn("failed", res)
 
@@ -103,8 +103,8 @@ class TestTaskExecutor(unittest.TestCase):
         te._run_loop = MagicMock(
             return_value=[
                 {
-                    'unsafe_bytes': AnsibleUnsafeBytes(b'{{ $bar }}'),
-                    'unsafe_text': AnsibleUnsafeText(u'{{ $bar }}'),
+                    'unsafe_bytes': AssibleUnsafeBytes(b'{{ $bar }}'),
+                    'unsafe_text': AssibleUnsafeText(u'{{ $bar }}'),
                     'bytes': b'bytes',
                     'text': u'text',
                     'int': 1,
@@ -113,8 +113,8 @@ class TestTaskExecutor(unittest.TestCase):
         )
         res = te.run()
         data = res['results'][0]
-        self.assertIsInstance(data['unsafe_bytes'], AnsibleUnsafeText)
-        self.assertIsInstance(data['unsafe_text'], AnsibleUnsafeText)
+        self.assertIsInstance(data['unsafe_bytes'], AssibleUnsafeText)
+        self.assertIsInstance(data['unsafe_text'], AssibleUnsafeText)
         self.assertIsInstance(data['bytes'], text_type)
         self.assertIsInstance(data['text'], text_type)
         self.assertIsInstance(data['int'], int)
@@ -291,7 +291,7 @@ class TestTaskExecutor(unittest.TestCase):
                                                    mock.call(module_prefix, collection_list=te._task.collections)])
 
         action_loader.get.assert_called_once_with(
-            'ansible.legacy.normal', task=te._task, connection=mock_connection,
+            'assible.legacy.normal', task=te._task, connection=mock_connection,
             play_context=te._play_context, loader=te._loader,
             templar=mock_templar, shared_loader_obj=te._shared_loader_obj,
             collection_list=None)
@@ -346,14 +346,14 @@ class TestTaskExecutor(unittest.TestCase):
         te._get_connection = MagicMock(return_value=mock_connection)
         te._get_action_handler = MagicMock(return_value=mock_action)
 
-        mock_action.run.return_value = dict(ansible_facts=dict())
+        mock_action.run.return_value = dict(assible_facts=dict())
         res = te._execute()
 
-        mock_task.changed_when = MagicMock(return_value=AnsibleUnicode("1 == 1"))
+        mock_task.changed_when = MagicMock(return_value=AssibleUnicode("1 == 1"))
         res = te._execute()
 
         mock_task.changed_when = None
-        mock_task.failed_when = MagicMock(return_value=AnsibleUnicode("1 == 1"))
+        mock_task.failed_when = MagicMock(return_value=AssibleUnicode("1 == 1"))
         res = te._execute()
 
         mock_task.failed_when = None
@@ -411,7 +411,7 @@ class TestTaskExecutor(unittest.TestCase):
             mock_templar = MagicMock()
             res = te._poll_async_result(result=dict(), templar=mock_templar)
             self.assertIn('failed', res)
-            res = te._poll_async_result(result=dict(ansible_job_id=1), templar=mock_templar)
+            res = te._poll_async_result(result=dict(assible_job_id=1), templar=mock_templar)
             self.assertIn('failed', res)
 
         def _get(*args, **kwargs):
@@ -422,7 +422,7 @@ class TestTaskExecutor(unittest.TestCase):
         # now testing with good values
         with patch.object(action_loader, 'get', _get):
             mock_templar = MagicMock()
-            res = te._poll_async_result(result=dict(ansible_job_id=1), templar=mock_templar)
+            res = te._poll_async_result(result=dict(assible_job_id=1), templar=mock_templar)
             self.assertEqual(res, dict(finished=1))
 
     def test_recursive_remove_omit(self):

@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -14,7 +14,7 @@ short_description: module1 Test module
 description:
     - module1 Test module
 author:
-    - Ansible Core Team
+    - Assible Core Team
 '''
 
 EXAMPLES = '''
@@ -24,11 +24,11 @@ RETURN = '''
 '''
 
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             desc=dict(type='str'),
         ),

@@ -10,7 +10,7 @@ short_description: Test module with YAML anchors in docs
 description:
     - Test module
 author:
-    - Ansible Core Team
+    - Assible Core Team
 options:
   at_the_top: &toplevel_anchor
     description:
@@ -47,11 +47,11 @@ RETURN = '''
 '''
 
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             at_the_top=dict(type='str', default='some string'),
             last_one=dict(type='str', default='some string'),

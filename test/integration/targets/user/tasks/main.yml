@@ -1,42 +1,42 @@
 # Test code for the user module.
 # (c) 2017, James Tanner <tanner.jc@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 - name: skip broken distros
   meta: end_host
-  when: ansible_distribution == 'Alpine'
+  when: assible_distribution == 'Alpine'
 
 ## user add
 
 - name: remove the test user
   user:
-    name: ansibulluser
+    name: assibulluser
     state: absent
 
 - name: try to create a user
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
   register: user_test0_0
 
 - name: create the user again
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
   register: user_test0_1
 
@@ -45,7 +45,7 @@
     verbosity: 2
 
 - name: make a list of users
-  script: userlist.sh {{ ansible_facts.distribution }}
+  script: userlist.sh {{ assible_facts.distribution }}
   register: user_names
 
 - debug:
@@ -57,38 +57,38 @@
     that:
       - user_test0_0 is changed
       - user_test0_1 is not changed
-      - '"ansibulluser" in user_names.stdout_lines'
+      - '"assibulluser" in user_names.stdout_lines'
 
 # create system user
 
 - name: remove user
   user:
-    name: ansibulluser
+    name: assibulluser
     state: absent
 
 - name: create system user
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     system: yes
 
 # test adding user with uid
-# https://github.com/ansible/ansible/issues/62969
+# https://github.com/assible/assible/issues/62969
 - name: remove the test user
   user:
-    name: ansibulluser
+    name: assibulluser
     state: absent
 
 - name: try to create a user with uid
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     uid: 572
   register: user_test01_0
 
 - name: create the user again
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     uid: 572
   register: user_test01_1
@@ -102,7 +102,7 @@
 # test user add with password
 - name: add an encrypted password for user
   user:
-    name: ansibulluser
+    name: assibulluser
     password: "$6$rounds=656000$TT4O7jz2M57npccl$33LF6FcUMSW11qrESXL1HX0BS.bsiT6aenFLLiVpsQh6hDtI9pJh5iY7x8J7ePkN4fP8hmElidHXaeD51pbGS."
     state: present
     update_password: always
@@ -112,10 +112,10 @@
   assert:
     that: "'warnings' not in test_user_encrypt0"
 
-# https://github.com/ansible/ansible/issues/65711
+# https://github.com/assible/assible/issues/65711
 - name: Test updating password only on creation
   user:
-    name: ansibulluser
+    name: assibulluser
     password: '*'
     update_password: on_create
   register: test_user_update_password
@@ -126,22 +126,22 @@
       - test_user_update_password is not changed
 
 - name: Verify password hash for Linux
-  when: ansible_facts.os_family in ['RedHat', 'Debian', 'Suse']
+  when: assible_facts.os_family in ['RedHat', 'Debian', 'Suse']
   block:
-    - name: LINUX | Get shadow entry for ansibulluser
+    - name: LINUX | Get shadow entry for assibulluser
       getent:
         database: shadow
-        key: ansibulluser
+        key: assibulluser
 
     - name: LINUX | Ensure password hash was not removed
       assert:
         that:
-          - getent_shadow['ansibulluser'][1] != '*'
+          - getent_shadow['assibulluser'][1] != '*'
 
 - block:
     - name: add an plaintext password for user
       user:
-        name: ansibulluser
+        name: assibulluser
         password: "plaintextpassword"
         state: present
         update_password: always
@@ -153,7 +153,7 @@
 
     - name: add an invalid hashed password
       user:
-        name: ansibulluser
+        name: assibulluser
         password: "$6$rounds=656000$tgK3gYTyRLUmhyv2$lAFrYUQwn7E6VsjPOwQwoSx30lmpiU9r/E0Al7tzKrR9mkodcMEZGe9OXD0H/clOn6qdsUnaL4zefy5fG+++++"
         state: present
         update_password: always
@@ -165,19 +165,19 @@
 
     - name: change password to '!'
       user:
-        name: ansibulluser
+        name: assibulluser
         password: '!'
       register: test_user_encrypt3
 
     - name: change password to '*'
       user:
-        name: ansibulluser
+        name: assibulluser
         password: '*'
       register: test_user_encrypt4
 
     - name: change password to '*************'
       user:
-        name: ansibulluser
+        name: assibulluser
         password: '*************'
       register: test_user_encrypt5
 
@@ -187,38 +187,38 @@
           - "'warnings' not in test_user_encrypt3"
           - "'warnings' not in test_user_encrypt4"
           - "'warnings' not in test_user_encrypt5"
-  when: ansible_facts.system != 'Darwin'
+  when: assible_facts.system != 'Darwin'
 
 
-# https://github.com/ansible/ansible/issues/42484
+# https://github.com/assible/assible/issues/42484
 # Skipping macOS for now since there is a bug when changing home directory
 - block:
     - name: create user specifying home
       user:
-        name: ansibulluser
+        name: assibulluser
         state: present
-        home: "{{ user_home_prefix[ansible_facts.system] }}/ansibulluser"
+        home: "{{ user_home_prefix[assible_facts.system] }}/assibulluser"
       register: user_test3_0
 
     - name: create user again specifying home
       user:
-        name: ansibulluser
+        name: assibulluser
         state: present
-        home: "{{ user_home_prefix[ansible_facts.system] }}/ansibulluser"
+        home: "{{ user_home_prefix[assible_facts.system] }}/assibulluser"
       register: user_test3_1
 
     - name: change user home
       user:
-        name: ansibulluser
+        name: assibulluser
         state: present
-        home: "{{ user_home_prefix[ansible_facts.system] }}/ansibulluser-mod"
+        home: "{{ user_home_prefix[assible_facts.system] }}/assibulluser-mod"
       register: user_test3_2
 
     - name: change user home back
       user:
-        name: ansibulluser
+        name: assibulluser
         state: present
-        home: "{{ user_home_prefix[ansible_facts.system] }}/ansibulluser"
+        home: "{{ user_home_prefix[assible_facts.system] }}/assibulluser"
       register: user_test3_3
 
     - name: validate results for testcase 3
@@ -228,71 +228,71 @@
           - user_test3_1 is not changed
           - user_test3_2 is changed
           - user_test3_3 is changed
-  when: ansible_facts.system != 'Darwin'
+  when: assible_facts.system != 'Darwin'
 
-# https://github.com/ansible/ansible/issues/41393
+# https://github.com/assible/assible/issues/41393
 # Create a new user account with a path that has parent directories that do not exist
 - name: Create user with home path that has parents that do not exist
   user:
-    name: ansibulluser2
+    name: assibulluser2
     state: present
-    home: "{{ user_home_prefix[ansible_facts.system] }}/in2deep/ansibulluser2"
+    home: "{{ user_home_prefix[assible_facts.system] }}/in2deep/assibulluser2"
   register: create_home_with_no_parent_1
 
 - name: Create user with home path that has parents that do not exist again
   user:
-    name: ansibulluser2
+    name: assibulluser2
     state: present
-    home: "{{ user_home_prefix[ansible_facts.system] }}/in2deep/ansibulluser2"
+    home: "{{ user_home_prefix[assible_facts.system] }}/in2deep/assibulluser2"
   register: create_home_with_no_parent_2
 
 - name: Check the created home directory
   stat:
-    path: "{{ user_home_prefix[ansible_facts.system] }}/in2deep/ansibulluser2"
+    path: "{{ user_home_prefix[assible_facts.system] }}/in2deep/assibulluser2"
   register: home_with_no_parent_3
 
 - name: Ensure user with non-existing parent paths was created successfully
   assert:
     that:
       - create_home_with_no_parent_1 is changed
-      - create_home_with_no_parent_1.home == user_home_prefix[ansible_facts.system] ~ '/in2deep/ansibulluser2'
+      - create_home_with_no_parent_1.home == user_home_prefix[assible_facts.system] ~ '/in2deep/assibulluser2'
       - create_home_with_no_parent_2 is not changed
       - home_with_no_parent_3.stat.uid == create_home_with_no_parent_1.uid
-      - home_with_no_parent_3.stat.gr_name == default_user_group[ansible_facts.distribution] | default('ansibulluser2')
+      - home_with_no_parent_3.stat.gr_name == default_user_group[assible_facts.distribution] | default('assibulluser2')
 
 - name: Cleanup test account
   user:
-    name: ansibulluser2
-    home: "{{ user_home_prefix[ansible_facts.system] }}/in2deep/ansibulluser2"
+    name: assibulluser2
+    home: "{{ user_home_prefix[assible_facts.system] }}/in2deep/assibulluser2"
     state: absent
     remove: yes
 
 - name: Remove testing dir
   file:
-    path: "{{ user_home_prefix[ansible_facts.system] }}/in2deep/"
+    path: "{{ user_home_prefix[assible_facts.system] }}/in2deep/"
     state: absent
 
 
-# https://github.com/ansible/ansible/issues/60307
+# https://github.com/assible/assible/issues/60307
 # Make sure we can create a user when the home directory is missing
 - name: Create user with home path that does not exist
   user:
-    name: ansibulluser3
+    name: assibulluser3
     state: present
-    home: "{{ user_home_prefix[ansible_facts.system] }}/nosuchdir"
+    home: "{{ user_home_prefix[assible_facts.system] }}/nosuchdir"
     createhome: no
 
 - name: Cleanup test account
   user:
-    name: ansibulluser3
+    name: assibulluser3
     state: absent
     remove: yes
 
-# https://github.com/ansible/ansible/issues/70589
+# https://github.com/assible/assible/issues/70589
 # Create user with create_home: no and parent directory does not exist.
 - name: "Check if parent dir for home dir for user exists (before)"
   stat:
-    path: "{{ user_home_prefix[ansible_facts.system] }}/thereisnodir"
+    path: "{{ user_home_prefix[assible_facts.system] }}/thereisnodir"
   register: create_user_no_create_home_with_no_parent_parent_dir_before
 
 - name: "Create user with create_home == no and home path parent dir does not exist"
@@ -300,17 +300,17 @@
     name: randomuser
     state: present
     create_home: false
-    home: "{{ user_home_prefix[ansible_facts.system] }}/thereisnodir/randomuser"
+    home: "{{ user_home_prefix[assible_facts.system] }}/thereisnodir/randomuser"
   register: create_user_no_create_home_with_no_parent
 
 - name: "Check if parent dir for home dir for user exists (after)"
   stat:
-    path: "{{ user_home_prefix[ansible_facts.system] }}/thereisnodir"
+    path: "{{ user_home_prefix[assible_facts.system] }}/thereisnodir"
   register: create_user_no_create_home_with_no_parent_parent_dir_after
 
 - name: "Check if home for user is created"
   stat:
-    path: "{{ user_home_prefix[ansible_facts.system] }}/thereisnodir/randomuser"
+    path: "{{ user_home_prefix[assible_facts.system] }}/thereisnodir/randomuser"
   register: create_user_no_create_home_with_no_parent_home_dir
 
 - name: "Ensure user with non-existing parent paths with create_home: no was created successfully"
@@ -365,13 +365,13 @@
 
 - name: try to delete the user
   user:
-    name: ansibulluser
+    name: assibulluser
     state: absent
     force: true
   register: user_test2
 
 - name: make a new list of users
-  script: userlist.sh {{ ansible_facts.distribution }}
+  script: userlist.sh {{ assible_facts.distribution }}
   register: user_names2
 
 - debug:
@@ -381,7 +381,7 @@
 - name: validate results for testcase 2
   assert:
     that:
-      - '"ansibulluser" not in user_names2.stdout_lines'
+      - '"assibulluser" not in user_names2.stdout_lines'
 
 
 ## create user without home and test fallback home dir create
@@ -389,23 +389,23 @@
 - block:
     - name: create the user
       user:
-        name: ansibulluser
+        name: assibulluser
 
     - name: delete the user and home dir
       user:
-        name: ansibulluser
+        name: assibulluser
         state: absent
         force: true
         remove: true
 
     - name: create the user without home
       user:
-        name: ansibulluser
+        name: assibulluser
         create_home: no
 
     - name: create the user home dir
       user:
-        name: ansibulluser
+        name: assibulluser
       register: user_create_home_fallback
 
     - name: stat home dir
@@ -427,7 +427,7 @@
         mode = oct(0o777 & ~umask)
         print(str(mode).replace('o', ''))
       args:
-        executable: "{{ ansible_python_interpreter }}"
+        executable: "{{ assible_python_interpreter }}"
       register: user_login_defs_umask
 
     - name: validate that user home dir is created
@@ -436,9 +436,9 @@
           - user_create_home_fallback is changed
           - user_create_home_fallback_dir.stat.exists
           - user_create_home_fallback_dir.stat.isdir
-          - user_create_home_fallback_dir.stat.pw_name == 'ansibulluser'
+          - user_create_home_fallback_dir.stat.pw_name == 'assibulluser'
           - user_create_home_fallback_dir.stat.mode == user_login_defs_umask.stdout
-  when: ansible_facts.system != 'Darwin'
+  when: assible_facts.system != 'Darwin'
 
 - block:
     - name: create non-system user on macOS to test the shell is set to /bin/bash
@@ -487,14 +487,14 @@
       user:
         name: macosuser
         state: absent
-  when: ansible_facts.distribution == "MacOSX"
+  when: assible_facts.distribution == "MacOSX"
 
 
 ## user expires
 # Date is March 3, 2050
 - name: Set user expiration
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: 2529881062
   register: user_test_expires1
@@ -503,7 +503,7 @@
 
 - name: Set user expiration again to ensure no change is made
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: 2529881062
   register: user_test_expires2
@@ -518,22 +518,22 @@
 
 - name: Verify expiration date for Linux
   block:
-    - name: LINUX | Get expiration date for ansibulluser
+    - name: LINUX | Get expiration date for assibulluser
       getent:
         database: shadow
-        key: ansibulluser
+        key: assibulluser
 
     - name: LINUX | Ensure proper expiration date was set
       assert:
         that:
-          - getent_shadow['ansibulluser'][6] == '29281'
-  when: ansible_facts.os_family in ['RedHat', 'Debian', 'Suse']
+          - getent_shadow['assibulluser'][6] == '29281'
+  when: assible_facts.os_family in ['RedHat', 'Debian', 'Suse']
 
 
 - name: Verify expiration date for BSD
   block:
-    - name: BSD | Get expiration date for ansibulluser
-      shell: 'grep ansibulluser /etc/master.passwd | cut -d: -f 7'
+    - name: BSD | Get expiration date for assibulluser
+      shell: 'grep assibulluser /etc/master.passwd | cut -d: -f 7'
       changed_when: no
       register: bsd_account_expiration
 
@@ -541,7 +541,7 @@
       assert:
         that:
           - bsd_account_expiration.stdout == '2529881062'
-  when: ansible_facts.os_family == 'FreeBSD'
+  when: assible_facts.os_family == 'FreeBSD'
 
 - name: Change timezone
   timezone:
@@ -554,7 +554,7 @@
   block:
     - name: Create user with expiration again to ensure no change is made in a new timezone
       user:
-        name: ansibulluser
+        name: assibulluser
         state: present
         expires: 2529881062
       register: user_test_different_tz
@@ -589,30 +589,30 @@
 
 - name: Unexpire user
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: -1
   register: user_test_expires3
 
 - name: Verify un expiration date for Linux
   block:
-    - name: LINUX | Get expiration date for ansibulluser
+    - name: LINUX | Get expiration date for assibulluser
       getent:
         database: shadow
-        key: ansibulluser
+        key: assibulluser
 
     - name: LINUX | Ensure proper expiration date was set
       assert:
-        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['ansibulluser'][6] }}"
+        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['assibulluser'][6] }}"
         that:
-          - not getent_shadow['ansibulluser'][6] or getent_shadow['ansibulluser'][6] | int < 0
-  when: ansible_facts.os_family in ['RedHat', 'Debian', 'Suse']
+          - not getent_shadow['assibulluser'][6] or getent_shadow['assibulluser'][6] | int < 0
+  when: assible_facts.os_family in ['RedHat', 'Debian', 'Suse']
 
 - name: Verify un expiration date for Linux/BSD
   block:
     - name: Unexpire user again to check for change
       user:
-        name: ansibulluser
+        name: assibulluser
         state: present
         expires: -1
       register: user_test_expires4
@@ -623,12 +623,12 @@
         that:
           - user_test_expires3 is changed
           - user_test_expires4 is not changed
-  when: ansible_facts.os_family in ['RedHat', 'Debian', 'Suse', 'FreeBSD']
+  when: assible_facts.os_family in ['RedHat', 'Debian', 'Suse', 'FreeBSD']
 
 - name: Verify un expiration date for BSD
   block:
-    - name: BSD | Get expiration date for ansibulluser
-      shell: 'grep ansibulluser /etc/master.passwd | cut -d: -f 7'
+    - name: BSD | Get expiration date for assibulluser
+      shell: 'grep assibulluser /etc/master.passwd | cut -d: -f 7'
       changed_when: no
       register: bsd_account_expiration
 
@@ -637,25 +637,25 @@
         msg: "expiry is supposed to be '0', not {{ bsd_account_expiration.stdout }}"
         that:
           - bsd_account_expiration.stdout == '0'
-  when: ansible_facts.os_family == 'FreeBSD'
+  when: assible_facts.os_family == 'FreeBSD'
 
 # Test setting no expiration when creating a new account
-# https://github.com/ansible/ansible/issues/44155
-- name: Remove ansibulluser
+# https://github.com/assible/assible/issues/44155
+- name: Remove assibulluser
   user:
-    name: ansibulluser
+    name: assibulluser
     state: absent
 
 - name: Create user account without expiration
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: -1
   register: user_test_create_no_expires_1
 
 - name: Create user account without expiration again
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: -1
   register: user_test_create_no_expires_2
@@ -669,22 +669,22 @@
 
 - name: Verify un expiration date for Linux
   block:
-    - name: LINUX | Get expiration date for ansibulluser
+    - name: LINUX | Get expiration date for assibulluser
       getent:
         database: shadow
-        key: ansibulluser
+        key: assibulluser
 
     - name: LINUX | Ensure proper expiration date was set
       assert:
-        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['ansibulluser'][6] }}"
+        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['assibulluser'][6] }}"
         that:
-          - not getent_shadow['ansibulluser'][6] or getent_shadow['ansibulluser'][6] | int < 0
-  when: ansible_facts.os_family in ['RedHat', 'Debian', 'Suse']
+          - not getent_shadow['assibulluser'][6] or getent_shadow['assibulluser'][6] | int < 0
+  when: assible_facts.os_family in ['RedHat', 'Debian', 'Suse']
 
 - name: Verify un expiration date for BSD
   block:
-    - name: BSD | Get expiration date for ansibulluser
-      shell: 'grep ansibulluser /etc/master.passwd | cut -d: -f 7'
+    - name: BSD | Get expiration date for assibulluser
+      shell: 'grep assibulluser /etc/master.passwd | cut -d: -f 7'
       changed_when: no
       register: bsd_account_expiration
 
@@ -693,38 +693,38 @@
         msg: "expiry is supposed to be '0', not {{ bsd_account_expiration.stdout }}"
         that:
           - bsd_account_expiration.stdout == '0'
-  when: ansible_facts.os_family == 'FreeBSD'
+  when: assible_facts.os_family == 'FreeBSD'
 
 # Test setting epoch 0 expiration when creating a new account, then removing the expiry
-# https://github.com/ansible/ansible/issues/47114
-- name: Remove ansibulluser
+# https://github.com/assible/assible/issues/47114
+- name: Remove assibulluser
   user:
-    name: ansibulluser
+    name: assibulluser
     state: absent
 
 - name: Create user account with epoch 0 expiration
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: 0
   register: user_test_expires_create0_1
 
 - name: Create user account with epoch 0 expiration again
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: 0
   register: user_test_expires_create0_2
 
 - name: Change the user account to remove the expiry time
   user:
-    name: ansibulluser
+    name: assibulluser
     expires: -1
   register: user_test_remove_expires_1
 
 - name: Change the user account to remove the expiry time again
   user:
-    name: ansibulluser
+    name: assibulluser
     expires: -1
   register: user_test_remove_expires_2
 
@@ -740,17 +740,17 @@
           - user_test_remove_expires_1 is changed
           - user_test_remove_expires_2 is not changed
 
-    - name: LINUX | Get expiration date for ansibulluser
+    - name: LINUX | Get expiration date for assibulluser
       getent:
         database: shadow
-        key: ansibulluser
+        key: assibulluser
 
     - name: LINUX | Ensure proper expiration date was set
       assert:
-        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['ansibulluser'][6] }}"
+        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['assibulluser'][6] }}"
         that:
-          - not getent_shadow['ansibulluser'][6] or getent_shadow['ansibulluser'][6] | int < 0
-  when: ansible_facts.os_family in ['RedHat', 'Debian', 'Suse']
+          - not getent_shadow['assibulluser'][6] or getent_shadow['assibulluser'][6] | int < 0
+  when: assible_facts.os_family in ['RedHat', 'Debian', 'Suse']
 
 
 - name: Verify proper expiration behavior for BSD
@@ -763,13 +763,13 @@
           - user_test_expires_create0_2 is not changed
           - user_test_remove_expires_1 is not changed
           - user_test_remove_expires_2 is not changed
-  when: ansible_facts.os_family == 'FreeBSD'
+  when: assible_facts.os_family == 'FreeBSD'
 
 # Test expiration with a very large negative number. This should have the same
 # result as setting -1.
 - name: Set expiration date using very long negative number
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     expires: -2529881062
   register: user_test_expires5
@@ -781,22 +781,22 @@
 
 - name: Verify un expiration date for Linux
   block:
-    - name: LINUX | Get expiration date for ansibulluser
+    - name: LINUX | Get expiration date for assibulluser
       getent:
         database: shadow
-        key: ansibulluser
+        key: assibulluser
 
     - name: LINUX | Ensure proper expiration date was set
       assert:
-        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['ansibulluser'][6] }}"
+        msg: "expiry is supposed to be empty or -1, not {{ getent_shadow['assibulluser'][6] }}"
         that:
-          - not getent_shadow['ansibulluser'][6] or getent_shadow['ansibulluser'][6] | int < 0
-  when: ansible_facts.os_family in ['RedHat', 'Debian', 'Suse']
+          - not getent_shadow['assibulluser'][6] or getent_shadow['assibulluser'][6] | int < 0
+  when: assible_facts.os_family in ['RedHat', 'Debian', 'Suse']
 
 - name: Verify un expiration date for BSD
   block:
-    - name: BSD | Get expiration date for ansibulluser
-      shell: 'grep ansibulluser /etc/master.passwd | cut -d: -f 7'
+    - name: BSD | Get expiration date for assibulluser
+      shell: 'grep assibulluser /etc/master.passwd | cut -d: -f 7'
       changed_when: no
       register: bsd_account_expiration
 
@@ -805,14 +805,14 @@
         msg: "expiry is supposed to be '0', not {{ bsd_account_expiration.stdout }}"
         that:
           - bsd_account_expiration.stdout == '0'
-  when: ansible_facts.os_family == 'FreeBSD'
+  when: assible_facts.os_family == 'FreeBSD'
 
 
 ## shadow backup
 - block:
     - name: Create a user to test shadow file backup
       user:
-        name: ansibulluser
+        name: assibulluser
         state: present
       register: result
 
@@ -828,18 +828,18 @@
         that:
           - result.bakup
           - shadow_backups.files | map(attribute='path') | list | length > 0
-  when: ansible_facts.os_family == 'Solaris'
+  when: assible_facts.os_family == 'Solaris'
 
 
 # Test creating ssh key with passphrase
-- name: Remove ansibulluser
+- name: Remove assibulluser
   user:
-    name: ansibulluser
+    name: assibulluser
     state: absent
 
 - name: Create user with ssh key
   user:
-    name: ansibulluser
+    name: assibulluser
     state: present
     generate_ssh_key: yes
     force: yes
@@ -859,37 +859,37 @@
   file:
     path: "{{ output_dir }}/test_id_rsa"
     state: absent
-  when: ansible_os_family == 'FreeBSD'
+  when: assible_os_family == 'FreeBSD'
 
 
 ## password lock
 - block:
-    - name: Set password for ansibulluser
+    - name: Set password for assibulluser
       user:
-        name: ansibulluser
+        name: assibulluser
         password: "$6$rounds=656000$TT4O7jz2M57npccl$33LF6FcUMSW11qrESXL1HX0BS.bsiT6aenFLLiVpsQh6hDtI9pJh5iY7x8J7ePkN4fP8hmElidHXaeD51pbGS."
 
     - name: Lock account
       user:
-        name: ansibulluser
+        name: assibulluser
         password_lock: yes
       register: password_lock_1
 
     - name: Lock account again
       user:
-        name: ansibulluser
+        name: assibulluser
         password_lock: yes
       register: password_lock_2
 
     - name: Unlock account
       user:
-        name: ansibulluser
+        name: assibulluser
         password_lock: no
       register: password_lock_3
 
     - name: Unlock account again
       user:
-        name: ansibulluser
+        name: assibulluser
         password_lock: no
       register: password_lock_4
 
@@ -904,22 +904,22 @@
 
     - name: Lock account
       user:
-        name: ansibulluser
+        name: assibulluser
         password_lock: yes
 
     - name: Verify account lock for BSD
       block:
         - name: BSD | Get account status
-          shell: "{{ status_command[ansible_facts['system']] }}"
+          shell: "{{ status_command[assible_facts['system']] }}"
           register: account_status_locked
 
         - name: Unlock account
           user:
-            name: ansibulluser
+            name: assibulluser
             password_lock: no
 
         - name: BSD | Get account status
-          shell: "{{ status_command[ansible_facts['system']] }}"
+          shell: "{{ status_command[assible_facts['system']] }}"
           register: account_status_unlocked
 
         - name: FreeBSD | Ensure account is locked
@@ -927,59 +927,59 @@
             that:
               - "'LOCKED' in account_status_locked.stdout"
               - "'LOCKED' not in account_status_unlocked.stdout"
-          when: ansible_facts['system'] == 'FreeBSD'
+          when: assible_facts['system'] == 'FreeBSD'
 
-      when: ansible_facts['system'] in ['FreeBSD', 'OpenBSD']
+      when: assible_facts['system'] in ['FreeBSD', 'OpenBSD']
 
     - name: Verify account lock for Linux
       block:
         - name: LINUX | Get account status
           getent:
             database: shadow
-            key: ansibulluser
+            key: assibulluser
 
         - name: LINUX | Ensure account is locked
           assert:
             that:
-              - getent_shadow['ansibulluser'][0].startswith('!')
+              - getent_shadow['assibulluser'][0].startswith('!')
 
         - name: Unlock account
           user:
-            name: ansibulluser
+            name: assibulluser
             password_lock: no
 
         - name: LINUX | Get account status
           getent:
             database: shadow
-            key: ansibulluser
+            key: assibulluser
 
         - name: LINUX | Ensure account is unlocked
           assert:
             that:
-              - not getent_shadow['ansibulluser'][0].startswith('!')
+              - not getent_shadow['assibulluser'][0].startswith('!')
 
-      when: ansible_facts['system'] == 'Linux'
+      when: assible_facts['system'] == 'Linux'
 
   always:
     - name: Unlock account
       user:
-        name: ansibulluser
+        name: assibulluser
         password_lock: no
 
-  when: ansible_facts['system'] in ['FreeBSD', 'OpenBSD', 'Linux']
+  when: assible_facts['system'] in ['FreeBSD', 'OpenBSD', 'Linux']
 
 
   ## Check local mode
   # Even if we don't have a system that is bound to a directory, it's useful
   # to run with local: true to exercise the code path that reads through the local
   # user database file.
-  # https://github.com/ansible/ansible/issues/50947
+  # https://github.com/assible/assible/issues/50947
 
 - name: Create /etc/gshadow
   file:
     path: /etc/gshadow
     state: touch
-  when: ansible_facts.os_family == 'Suse'
+  when: assible_facts.os_family == 'Suse'
   tags:
     - user_test_local_mode
 
@@ -988,17 +988,17 @@
     path: /etc/libuser.conf
     state: touch
   when:
-    - ansible_facts.distribution == 'Ubuntu'
-    - ansible_facts.distribution_major_version is version_compare('16', '==')
+    - assible_facts.distribution == 'Ubuntu'
+    - assible_facts.distribution_major_version is version_compare('16', '==')
   tags:
     - user_test_local_mode
 
 - name: Ensure luseradd is present
-  action: "{{ ansible_facts.pkg_mgr }}"
+  action: "{{ assible_facts.pkg_mgr }}"
   args:
     name: libuser
     state: present
-  when: ansible_facts.system in ['Linux']
+  when: assible_facts.system in ['Linux']
   tags:
     - user_test_local_mode
 
@@ -1010,27 +1010,27 @@
   tags:
     - user_test_local_mode
 
-- name: Create local_ansibulluser
+- name: Create local_assibulluser
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: present
     local: yes
   register: local_user_test_1
   tags:
     - user_test_local_mode
 
-- name: Create local_ansibulluser again
+- name: Create local_assibulluser again
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: present
     local: yes
   register: local_user_test_2
   tags:
     - user_test_local_mode
 
-- name: Remove local_ansibulluser
+- name: Remove local_assibulluser
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: absent
     remove: yes
     local: yes
@@ -1038,9 +1038,9 @@
   tags:
     - user_test_local_mode
 
-- name: Remove local_ansibulluser again
+- name: Remove local_assibulluser again
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: absent
     remove: yes
     local: yes
@@ -1059,9 +1059,9 @@
   tags:
     - user_test_local_mode
 
-- name: Create local_ansibulluser with groups
+- name: Create local_assibulluser with groups
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: present
     local: yes
     groups: ['testgroup1', 'testgroup2']
@@ -1070,9 +1070,9 @@
   tags:
     - user_test_local_mode
 
-- name: Append groups for local_ansibulluser
+- name: Append groups for local_assibulluser
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: present
     local: yes
     groups: ['testgroup3', 'testgroup4']
@@ -1082,9 +1082,9 @@
   tags:
     - user_test_local_mode
 
-- name: Test append without groups for local_ansibulluser
+- name: Test append without groups for local_assibulluser
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: present
     append: yes
   register: local_user_test_5
@@ -1092,9 +1092,9 @@
   tags:
     - user_test_local_mode
 
-- name: Remove local_ansibulluser again
+- name: Remove local_assibulluser again
   user:
-    name: local_ansibulluser
+    name: local_assibulluser
     state: absent
     remove: yes
     local: yes
@@ -1132,7 +1132,7 @@
       - local_user_test_1['warnings'] | first is search('The local user account may already exist')
       - local_user_test_5['warnings'] is search("'append' is set, but no 'groups' are specified. Use 'groups'")
       - local_existing['warnings'] is not defined
-  when: ansible_facts.system in ['Linux']
+  when: assible_facts.system in ['Linux']
   tags:
     - user_test_local_mode
 

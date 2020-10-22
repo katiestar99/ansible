@@ -11,7 +11,7 @@ Retrieve information from a specific VM
 Introduction
 ============
 
-This section shows you how to use Ansible to retrieve information about a specific virtual machine.
+This section shows you how to use Assible to retrieve information about a specific virtual machine.
 
 Scenario requirements
 =====================

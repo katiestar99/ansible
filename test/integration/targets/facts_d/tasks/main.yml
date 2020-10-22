@@ -1,20 +1,20 @@
 # Test code for facts.d and setup filters
 # (c) 2014, James Tanner <tanner.jc@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 - set_fact: fact_dir={{output_dir}}/facts.d
 
@@ -31,11 +31,11 @@
 
 - assert:
     that:
-        - "'ansible_facts' in setup_result"
-        - "'ansible_local' in setup_result.ansible_facts"
-        - "'ansible_env' not in setup_result.ansible_facts"
-        - "'ansible_user_id' not in setup_result.ansible_facts"
-        - "'preferences' in setup_result.ansible_facts['ansible_local']"
-        - "'general' in setup_result.ansible_facts['ansible_local']['preferences']"
-        - "'bar' in setup_result.ansible_facts['ansible_local']['preferences']['general']"
-        - "setup_result.ansible_facts['ansible_local']['preferences']['general']['bar'] == 'loaded'"
+        - "'assible_facts' in setup_result"
+        - "'assible_local' in setup_result.assible_facts"
+        - "'assible_env' not in setup_result.assible_facts"
+        - "'assible_user_id' not in setup_result.assible_facts"
+        - "'preferences' in setup_result.assible_facts['assible_local']"
+        - "'general' in setup_result.assible_facts['assible_local']['preferences']"
+        - "'bar' in setup_result.assible_facts['assible_local']['preferences']['general']"
+        - "setup_result.assible_facts['assible_local']['preferences']['general']['bar'] == 'loaded'"

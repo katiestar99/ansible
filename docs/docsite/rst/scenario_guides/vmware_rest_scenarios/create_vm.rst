@@ -11,7 +11,7 @@ How to create a Virtual Machine
 Introduction
 ============
 
-This section shows you how to use Ansible to create a virtual machine.
+This section shows you how to use Assible to create a virtual machine.
 
 Scenario requirements
 =====================

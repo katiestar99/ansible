@@ -4,11 +4,11 @@
 Network Developer Guide
 **********************************
 
-Welcome to the Developer Guide for Ansible Network Automation!
+Welcome to the Developer Guide for Assible Network Automation!
 
 **Who should use this guide?**
 
-If you want to extend Ansible for Network Automation by creating a module or plugin, this guide is for you. This guide is specific to networking. You should already be familiar with how to create, test, and document modules and plugins, as well as the prerequisites for getting your module or plugin accepted into the main Ansible repository.  See the  :ref:`developer_guide` for details. Before you proceed, please read:
+If you want to extend Assible for Network Automation by creating a module or plugin, this guide is for you. This guide is specific to networking. You should already be familiar with how to create, test, and document modules and plugins, as well as the prerequisites for getting your module or plugin accepted into the main Assible repository.  See the  :ref:`developer_guide` for details. Before you proceed, please read:
 
 * How  to :ref:`add a custom plugin or module locally <developing_locally>`.
 * How to figure out if :ref:`developing a module is the right approach <module_dev_should_you>` for my use case.

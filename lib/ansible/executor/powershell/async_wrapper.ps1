@@ -1,4 +1,4 @@
-# (c) 2018 Ansible Project
+# (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 param(
@@ -7,14 +7,14 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-AnsibleLog "INFO - starting async_wrapper" "async_wrapper"
+Write-AssibleLog "INFO - starting async_wrapper" "async_wrapper"
 
-if (-not $Payload.environment.ContainsKey("ANSIBLE_ASYNC_DIR")) {
-    Write-AnsibleError -Message "internal error: the environment variable ANSIBLE_ASYNC_DIR is not set and is required for an async task"
+if (-not $Payload.environment.ContainsKey("ASSIBLE_ASYNC_DIR")) {
+    Write-AssibleError -Message "internal error: the environment variable ASSIBLE_ASYNC_DIR is not set and is required for an async task"
     $host.SetShouldExit(1)
     return
 }
-$async_dir = [System.Environment]::ExpandEnvironmentVariables($Payload.environment.ANSIBLE_ASYNC_DIR)
+$async_dir = [System.Environment]::ExpandEnvironmentVariables($Payload.environment.ASSIBLE_ASYNC_DIR)
 
 # calculate the result path so we can include it in the worker payload
 $jid = $Payload.async_jid
@@ -22,7 +22,7 @@ $local_jid = $jid + "." + $pid
 
 $results_path = [System.IO.Path]::Combine($async_dir, $local_jid)
 
-Write-AnsibleLog "INFO - creating async results path at '$results_path'" "async_wrapper"
+Write-AssibleLog "INFO - creating async results path at '$results_path'" "async_wrapper"
 
 $Payload.async_results_path = $results_path
 [System.IO.Directory]::CreateDirectory([System.IO.Path]::GetDirectoryName($results_path)) > $null
@@ -43,14 +43,14 @@ $payload_json = ConvertTo-Json -InputObject $Payload -Depth 99 -Compress
 $exec_wrapper = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Payload.exec_wrapper))
 $exec_wrapper += "`0`0`0`0" + $payload_json
 $payload_bytes = [System.Text.Encoding]::UTF8.GetBytes($exec_wrapper)
-$pipe_name = "ansible-async-$jid-$([guid]::NewGuid())"
+$pipe_name = "assible-async-$jid-$([guid]::NewGuid())"
 
 # template the async process command line with the payload details
 $bootstrap_wrapper = {
     # help with debugging errors as we loose visibility of the process output
     # from here on
     trap {
-        $wrapper_path = "$($env:TEMP)\ansible-async-wrapper-error-$(Get-Date -Format "yyyy-MM-ddTHH-mm-ss.ffffZ").txt"
+        $wrapper_path = "$($env:TEMP)\assible-async-wrapper-error-$(Get-Date -Format "yyyy-MM-ddTHH-mm-ss.ffffZ").txt"
         $error_msg = "Error while running the async exec wrapper`r`n$($_ | Out-String)`r`n$($_.ScriptStackTrace)"
         Set-Content -Path $wrapper_path -Value $error_msg
         break
@@ -100,7 +100,7 @@ $pipe_ar = New-Object -TypeName System.IO.Pipes.PipeAccessRule -ArgumentList @(
 )
 $pipe_sec.AddAccessRule($pipe_ar)
 
-Write-AnsibleLog "INFO - creating named pipe '$pipe_name'" "async_wrapper"
+Write-AssibleLog "INFO - creating named pipe '$pipe_name'" "async_wrapper"
 $pipe = New-Object -TypeName System.IO.Pipes.NamedPipeServerStream -ArgumentList @(
     $pipe_name,
     [System.IO.Pipes.PipeDirection]::Out,
@@ -113,11 +113,11 @@ $pipe = New-Object -TypeName System.IO.Pipes.NamedPipeServerStream -ArgumentList
 )
 
 try {
-    Write-AnsibleLog "INFO - creating async process '$exec_args'" "async_wrapper"
+    Write-AssibleLog "INFO - creating async process '$exec_args'" "async_wrapper"
     $process = Invoke-CimMethod -ClassName Win32_Process -Name Create -Arguments @{CommandLine=$exec_args}
     $rc = $process.ReturnValue
 
-    Write-AnsibleLog "INFO - return value from async process exec: $rc" "async_wrapper"
+    Write-AssibleLog "INFO - return value from async process exec: $rc" "async_wrapper"
     if ($rc -ne 0) {
         $error_msg = switch($rc) {
             2 { "Access denied" }
@@ -130,28 +130,28 @@ try {
         throw "Failed to start async process: $rc ($error_msg)"
     }
     $watchdog_pid = $process.ProcessId
-    Write-AnsibleLog "INFO - created async process PID: $watchdog_pid" "async_wrapper"
+    Write-AssibleLog "INFO - created async process PID: $watchdog_pid" "async_wrapper"
 
     # populate initial results before we send the async data to avoid result race
     $result = @{
         started = 1;
         finished = 0;
         results_file = $results_path;
-        ansible_job_id = $local_jid;
-        _ansible_suppress_tmpdir_delete = $true;
-        ansible_async_watchdog_pid = $watchdog_pid
+        assible_job_id = $local_jid;
+        _assible_suppress_tmpdir_delete = $true;
+        assible_async_watchdog_pid = $watchdog_pid
     }
 
-    Write-AnsibleLog "INFO - writing initial async results to '$results_path'" "async_wrapper"
+    Write-AssibleLog "INFO - writing initial async results to '$results_path'" "async_wrapper"
     $result_json = ConvertTo-Json -InputObject $result -Depth 99 -Compress
     Set-Content $results_path -Value $result_json
 
     $np_timeout = $Payload.async_startup_timeout * 1000
-    Write-AnsibleLog "INFO - waiting for async process to connect to named pipe for $np_timeout milliseconds" "async_wrapper"
+    Write-AssibleLog "INFO - waiting for async process to connect to named pipe for $np_timeout milliseconds" "async_wrapper"
     $wait_async = $pipe.BeginWaitForConnection($null, $null)
     $wait_async.AsyncWaitHandle.WaitOne($np_timeout) > $null
     if (-not $wait_async.IsCompleted) {
-        $msg = "Ansible encountered a timeout while waiting for the async task to start and connect to the named"
+        $msg = "Assible encountered a timeout while waiting for the async task to start and connect to the named"
         $msg += "pipe. This can be affected by the performance of the target - you can increase this timeout using"
         $msg += "WIN_ASYNC_STARTUP_TIMEOUT or just for this host using the win_async_startup_timeout hostvar if "
         $msg += "this keeps happening."
@@ -159,7 +159,7 @@ try {
     }
     $pipe.EndWaitForConnection($wait_async)
 
-    Write-AnsibleLog "INFO - writing exec_wrapper and payload to async process" "async_wrapper"
+    Write-AssibleLog "INFO - writing exec_wrapper and payload to async process" "async_wrapper"
     $pipe.Write($payload_bytes, 0, $payload_bytes.Count)
     $pipe.Flush()
     $pipe.WaitForPipeDrain()
@@ -167,6 +167,6 @@ try {
     $pipe.Close()
 }
 
-Write-AnsibleLog "INFO - outputting initial async result: $result_json" "async_wrapper"
+Write-AssibleLog "INFO - outputting initial async result: $result_json" "async_wrapper"
 Write-Output -InputObject $result_json
-Write-AnsibleLog "INFO - ending async_wrapper" "async_wrapper"
+Write-AssibleLog "INFO - ending async_wrapper" "async_wrapper"

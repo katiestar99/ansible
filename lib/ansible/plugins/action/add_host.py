@@ -1,32 +1,32 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 # Copyright 2012, Seth Vidal <skvidal@fedoraproject.org>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.errors import AnsibleActionFail
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.module_utils.six import string_types
-from ansible.plugins.action import ActionBase
-from ansible.parsing.utils.addresses import parse_address
-from ansible.utils.display import Display
-from ansible.utils.vars import combine_vars
+from assible.errors import AssibleActionFail
+from assible.module_utils.common._collections_compat import Mapping
+from assible.module_utils.six import string_types
+from assible.plugins.action import ActionBase
+from assible.parsing.utils.addresses import parse_address
+from assible.utils.display import Display
+from assible.utils.vars import combine_vars
 
 display = Display()
 
@@ -51,12 +51,12 @@ class ActionModule(ActionBase):
             # TODO: create 'conflict' detection in base class to deal with repeats and aliases and warn user
             args = combine_vars(raw, args)
         else:
-            raise AnsibleActionFail('Invalid raw parameters passed, requires a dictonary/mapping got a  %s' % type(raw))
+            raise AssibleActionFail('Invalid raw parameters passed, requires a dictonary/mapping got a  %s' % type(raw))
 
         # Parse out any hostname:port patterns
         new_name = args.get('name', args.get('hostname', args.get('host', None)))
         if new_name is None:
-            raise AnsibleActionFail('name, host or hostname needs to be provided')
+            raise AssibleActionFail('name, host or hostname needs to be provided')
 
         display.vv("creating host via 'add_host': hostname=%s" % new_name)
 
@@ -68,7 +68,7 @@ class ActionModule(ActionBase):
             port = None
 
         if port:
-            args['ansible_ssh_port'] = port
+            args['assible_ssh_port'] = port
 
         groups = args.get('groupname', args.get('groups', args.get('group', '')))
         # add it to the group if that was specified
@@ -79,7 +79,7 @@ class ActionModule(ActionBase):
             elif isinstance(groups, string_types):
                 group_list = groups.split(",")
             else:
-                raise AnsibleActionFail("Groups must be specified as a list.", obj=self._task)
+                raise AssibleActionFail("Groups must be specified as a list.", obj=self._task)
 
             for group_name in group_list:
                 if group_name not in new_groups:

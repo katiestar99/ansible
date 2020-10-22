@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -9,14 +9,14 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-author: Ansible Core Team (@ansible)
+author: Assible Core Team (@assible)
 module: import_role
 short_description: Import a role into a play
 description:
   - Much like the C(roles:) keyword, this task loads a role, but it allows you to control when the role tasks run in
     between other tasks of the play.
   - Most keywords, loops and conditionals will only be applied to the imported tasks, not to this statement itself. If
-    you want the opposite behavior, use M(ansible.builtin.include_role) instead.
+    you want the opposite behavior, use M(assible.builtin.include_role) instead.
 version_added: '2.4'
 options:
   name:
@@ -52,15 +52,15 @@ options:
     version_added: '2.8'
 notes:
   - Handlers are made available to the whole play.
-  - Since Ansible 2.7 variables defined in C(vars) and C(defaults) for the role are exposed at playbook parsing time.
+  - Since Assible 2.7 variables defined in C(vars) and C(defaults) for the role are exposed at playbook parsing time.
     Due to this, these variables will be accessible to roles and tasks executed before the location of the
-    M(ansible.builtin.import_role) task.
-  - Unlike M(ansible.builtin.include_role) variable exposure is not configurable, and will always be exposed.
+    M(assible.builtin.import_role) task.
+  - Unlike M(assible.builtin.include_role) variable exposure is not configurable, and will always be exposed.
 seealso:
-- module: ansible.builtin.import_playbook
-- module: ansible.builtin.import_tasks
-- module: ansible.builtin.include_role
-- module: ansible.builtin.include_tasks
+- module: assible.builtin.import_playbook
+- module: assible.builtin.import_tasks
+- module: assible.builtin.include_role
+- module: assible.builtin.include_tasks
 - ref: playbooks_reuse_includes
   description: More information related to including and importing playbooks, roles and tasks.
 '''

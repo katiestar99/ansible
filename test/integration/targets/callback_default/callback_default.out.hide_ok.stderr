@@ -1,2 +1,2 @@
-+ ansible-playbook -i inventory test.yml
++ assible-playbook -i inventory test.yml
 ++ set +x

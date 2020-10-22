@@ -1,4 +1,4 @@
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -6,9 +6,9 @@ __metaclass__ = type
 
 import ast
 
-from ansible.module_utils._text import to_text
-from ansible.parsing.yaml.loader import AnsibleLoader
-from ansible.utils.display import Display
+from assible.module_utils._text import to_text
+from assible.parsing.yaml.loader import AssibleLoader
+from assible.utils.display import Display
 
 display = Display()
 
@@ -34,7 +34,7 @@ def read_docstring(filename, verbose=True, ignore_errors=True):
         'DOCUMENTATION': 'doc',
         'EXAMPLES': 'plainexamples',
         'RETURN': 'returndocs',
-        'ANSIBLE_METADATA': 'metadata',  # NOTE: now unused, but kept for backwards compat
+        'ASSIBLE_METADATA': 'metadata',  # NOTE: now unused, but kept for backwards compat
     }
 
     try:
@@ -62,7 +62,7 @@ def read_docstring(filename, verbose=True, ignore_errors=True):
                                 data[varkey] = to_text(child.value.s)
                             else:
                                 # string should be yaml if already not a dict
-                                data[varkey] = AnsibleLoader(child.value.s, file_name=filename).get_single_data()
+                                data[varkey] = AssibleLoader(child.value.s, file_name=filename).get_single_data()
 
                         display.debug('assigned: %s' % varkey)
 
@@ -79,7 +79,7 @@ def read_docstub(filename):
     """
     Quickly find short_description using string methods instead of node parsing.
     This does not return a full set of documentation strings and is intended for
-    operations like ansible-doc -l.
+    operations like assible-doc -l.
     """
 
     in_documentation = False
@@ -108,6 +108,6 @@ def read_docstub(filename):
                 in_documentation = True
 
     short_description = r''.join(doc_stub).strip().rstrip('.')
-    data = AnsibleLoader(short_description, file_name=filename).get_single_data()
+    data = AssibleLoader(short_description, file_name=filename).get_single_data()
 
     return data

@@ -4,7 +4,7 @@
 Public Cloud Guides
 *******************
 
-The guides in this section cover using Ansible with a range of public cloud platforms. They explore particular use cases in greater depth and provide a more "top-down" explanation of some basic features.
+The guides in this section cover using Assible with a range of public cloud platforms. They explore particular use cases in greater depth and provide a more "top-down" explanation of some basic features.
 
 .. toctree::
    :maxdepth: 1

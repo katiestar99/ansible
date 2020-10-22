@@ -1,4 +1,4 @@
-.. _vmware_ansible_inventory:
+.. _vmware_assible_inventory:
 
 *************************************
 Using VMware dynamic inventory plugin
@@ -11,13 +11,13 @@ VMware Dynamic Inventory Plugin
 
 
 The best way to interact with your hosts is to use the VMware dynamic inventory plugin, which dynamically queries VMware APIs and
-tells Ansible what nodes can be managed.
+tells Assible what nodes can be managed.
 
 Requirements
 ------------
 
 To use the VMware dynamic inventory plugins, you must install `pyVmomi <https://github.com/vmware/pyvmomi>`_
-on your control node (the host running Ansible).
+on your control node (the host running Assible).
 
 To include tag-related information for the virtual machines in your dynamic inventory, you also need the `vSphere Automation SDK <https://code.vmware.com/web/sdk/65/vsphere-automation-python>`_, which supports REST API features like tagging and content libraries, on your control node.
 You can install the ``vSphere Automation SDK`` following `these instructions <https://github.com/vmware/vsphere-automation-sdk-python#installing-required-python-packages>`_.
@@ -26,7 +26,7 @@ You can install the ``vSphere Automation SDK`` following `these instructions <ht
 
     $ pip install pyvmomi
 
-To use this VMware dynamic inventory plugin, you need to enable it first by specifying the following in the ``ansible.cfg`` file:
+To use this VMware dynamic inventory plugin, you need to enable it first by specifying the following in the ``assible.cfg`` file:
 
 .. code-block:: ini
 
@@ -50,7 +50,7 @@ Here's an example of a valid inventory file:
     with_tags: True
 
 
-Executing ``ansible-inventory --list -i <filename>.vmware.yml`` will create a list of VMware instances that are ready to be configured using Ansible.
+Executing ``assible-inventory --list -i <filename>.vmware.yml`` will create a list of VMware instances that are ready to be configured using Assible.
 
 Using vaulted configuration files
 =================================
@@ -62,7 +62,7 @@ You can encrypt a valid inventory configuration file as follows:
 
 .. code-block:: bash
 
-    $ ansible-vault encrypt <filename>.vmware.yml
+    $ assible-vault encrypt <filename>.vmware.yml
       New Vault password:
       Confirm New Vault password:
       Encryption successful
@@ -71,7 +71,7 @@ And you can use this vaulted inventory configuration file using:
 
 .. code-block:: bash
 
-    $ ansible-inventory -i filename.vmware.yml --list --vault-password-file=/path/to/vault_password_file
+    $ assible-inventory -i filename.vmware.yml --list --vault-password-file=/path/to/vault_password_file
 
 
 .. seealso::

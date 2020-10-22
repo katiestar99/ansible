@@ -1,19 +1,19 @@
 # (c) 2016, Adrian Likins <alikins@redhat.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,12 +21,12 @@ __metaclass__ = type
 
 from units.compat import unittest
 
-from ansible.errors import AnsibleParserError
-from ansible.module_utils.six import string_types
-from ansible.playbook.attribute import FieldAttribute
-from ansible.template import Templar
-from ansible.playbook import base
-from ansible.utils.unsafe_proxy import AnsibleUnsafeBytes, AnsibleUnsafeText
+from assible.errors import AssibleParserError
+from assible.module_utils.six import string_types
+from assible.playbook.attribute import FieldAttribute
+from assible.template import Templar
+from assible.playbook import base
+from assible.utils.unsafe_proxy import AssibleUnsafeBytes, AssibleUnsafeText
 
 from units.mock.loader import DictDataLoader
 
@@ -157,7 +157,7 @@ class TestBase(unittest.TestCase):
         ds = {'not_a_valid_attr': [],
               'other': None}
 
-        self.assertRaises(AnsibleParserError, self.b.load_data, ds)
+        self.assertRaises(AssibleParserError, self.b.load_data, ds)
 
     def test_load_data_invalid_attr_type(self):
         ds = {'environment': True}
@@ -207,20 +207,20 @@ class TestBase(unittest.TestCase):
     def test_vars_not_dict_or_list(self):
         ds = {'environment': [],
               'vars': 'I am a string, not a dict or a list of dicts'}
-        self.assertRaises(AnsibleParserError, self.b.load_data, ds)
+        self.assertRaises(AssibleParserError, self.b.load_data, ds)
 
     def test_vars_not_valid_identifier(self):
         ds = {'environment': [],
               'vars': [{'var_2_key': 'var_2_value'},
                        {'1an-invalid identifer': 'var_1_value'}]
               }
-        self.assertRaises(AnsibleParserError, self.b.load_data, ds)
+        self.assertRaises(AssibleParserError, self.b.load_data, ds)
 
     def test_vars_is_list_but_not_of_dicts(self):
         ds = {'environment': [],
               'vars': ['foo', 'bar', 'this is a string not a dict']
               }
-        self.assertRaises(AnsibleParserError, self.b.load_data, ds)
+        self.assertRaises(AssibleParserError, self.b.load_data, ds)
 
     def test_vars_is_none(self):
         # If vars is None, we should get a empty dict back
@@ -480,7 +480,7 @@ class TestBaseSubClass(TestBase):
     def test_attr_dict_string(self):
         test_value = 'just_some_random_string'
         ds = {'test_attr_dict': test_value}
-        self.assertRaisesRegexp(AnsibleParserError, 'is not a dictionary', self._base_validate, ds)
+        self.assertRaisesRegexp(AssibleParserError, 'is not a dictionary', self._base_validate, ds)
 
     def test_attr_class(self):
         esc = ExampleSubClass()
@@ -503,13 +503,13 @@ class TestBaseSubClass(TestBase):
     def test_attr_class_post_validate_class_not_instance(self):
         not_a_esc = ExampleSubClass
         ds = {'test_attr_class_post_validate': not_a_esc}
-        self.assertRaisesRegexp(AnsibleParserError, 'is not a valid.*got a.*Meta.*instead',
+        self.assertRaisesRegexp(AssibleParserError, 'is not a valid.*got a.*Meta.*instead',
                                 self._base_validate, ds)
 
     def test_attr_class_post_validate_wrong_class(self):
         not_a_esc = 37
         ds = {'test_attr_class_post_validate': not_a_esc}
-        self.assertRaisesRegexp(AnsibleParserError, 'is not a valid.*got a.*int.*instead',
+        self.assertRaisesRegexp(AssibleParserError, 'is not a valid.*got a.*int.*instead',
                                 self._base_validate, ds)
 
     def test_attr_remote_user(self):
@@ -521,7 +521,7 @@ class TestBaseSubClass(TestBase):
     def test_attr_example_undefined(self):
         ds = {'test_attr_example': '{{ some_var_that_shouldnt_exist_to_test_omit }}'}
         exc_regex_str = 'test_attr_example.*has an invalid value, which includes an undefined variable.*some_var_that_shouldnt*'
-        self.assertRaises(AnsibleParserError)
+        self.assertRaises(AssibleParserError)
 
     def test_attr_name_undefined(self):
         ds = {'name': '{{ some_var_that_shouldnt_exist_to_test_omit }}'}
@@ -553,7 +553,7 @@ class TestBaseSubClass(TestBase):
 
     def test_attr_string_invalid_list(self):
         ds = {'test_attr_string': ['The new test_attr_string', 'value, however in a list']}
-        self.assertRaises(AnsibleParserError, self._base_validate, ds)
+        self.assertRaises(AssibleParserError, self._base_validate, ds)
 
     def test_attr_string_required(self):
         the_string_value = "the new test_attr_string_required_value"
@@ -563,7 +563,7 @@ class TestBaseSubClass(TestBase):
 
     def test_attr_list_invalid(self):
         ds = {'test_attr_list': {}}
-        self.assertRaises(AnsibleParserError, self._base_validate, ds)
+        self.assertRaises(AssibleParserError, self._base_validate, ds)
 
     def test_attr_list(self):
         string_list = ['foo', 'bar']
@@ -599,7 +599,7 @@ class TestBaseSubClass(TestBase):
         bsc.load_data(ds)
         fake_loader = DictDataLoader({})
         templar = Templar(loader=fake_loader)
-        self.assertRaisesRegexp(AnsibleParserError, 'cannot have empty values',
+        self.assertRaisesRegexp(AssibleParserError, 'cannot have empty values',
                                 bsc.post_validate, templar)
 
     def test_attr_unknown(self):
@@ -622,9 +622,9 @@ class TestBaseSubClass(TestBase):
 
     def test_get_validated_value_string_rewrap_unsafe(self):
         attribute = FieldAttribute(isa='string')
-        value = AnsibleUnsafeText(u'bar')
+        value = AssibleUnsafeText(u'bar')
         templar = Templar(None)
         bsc = self.ClassUnderTest()
         result = bsc.get_validated_value('foo', attribute, value, templar)
-        self.assertIsInstance(result, AnsibleUnsafeText)
-        self.assertEqual(result, AnsibleUnsafeText(u'bar'))
+        self.assertIsInstance(result, AssibleUnsafeText)
+        self.assertEqual(result, AssibleUnsafeText(u'bar'))

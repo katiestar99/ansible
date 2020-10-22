@@ -2,31 +2,31 @@
 
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # this script is for testing modules without running through the
-# entire guts of ansible, and is very helpful for when developing
+# entire guts of assible, and is very helpful for when developing
 # modules
 #
 # example:
-#    ./hacking/test-module.py -m lib/ansible/modules/commands/command.py -a "/bin/sleep 3"
-#    ./hacking/test-module.py -m lib/ansible/modules/commands/command.py -a "/bin/sleep 3" --debugger /usr/bin/pdb
-#    ./hacking/test-module.py -m lib/ansible/modules/files/lineinfile.py -a "dest=/etc/exports line='/srv/home hostname1(rw,sync)'" --check
-#    ./hacking/test-module.py -m lib/ansible/modules/commands/command.py -a "echo hello" -n -o "test_hello"
+#    ./hacking/test-module.py -m lib/assible/modules/commands/command.py -a "/bin/sleep 3"
+#    ./hacking/test-module.py -m lib/assible/modules/commands/command.py -a "/bin/sleep 3" --debugger /usr/bin/pdb
+#    ./hacking/test-module.py -m lib/assible/modules/files/lineinfile.py -a "dest=/etc/exports line='/srv/home hostname1(rw,sync)'" --check
+#    ./hacking/test-module.py -m lib/assible/modules/commands/command.py -a "echo hello" -n -o "test_hello"
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -39,15 +39,15 @@ import sys
 import traceback
 import shutil
 
-from ansible.release import __version__
-import ansible.utils.vars as utils_vars
-from ansible.parsing.dataloader import DataLoader
-from ansible.parsing.utils.jsonify import jsonify
-from ansible.parsing.splitter import parse_kv
-import ansible.executor.module_common as module_common
-import ansible.constants as C
-from ansible.module_utils._text import to_native, to_text
-from ansible.template import Templar
+from assible.release import __version__
+import assible.utils.vars as utils_vars
+from assible.parsing.dataloader import DataLoader
+from assible.parsing.utils.jsonify import jsonify
+from assible.parsing.splitter import parse_kv
+import assible.executor.module_common as module_common
+import assible.constants as C
+from assible.module_utils._text import to_native, to_text
+from assible.template import Templar
 
 import json
 
@@ -68,9 +68,9 @@ def parse():
                       help="path to python debugger (e.g. /usr/bin/pdb)")
     parser.add_option('-I', '--interpreter', dest='interpreter',
                       help="path to interpreter to use for this module"
-                      " (e.g. ansible_python_interpreter=/usr/bin/python)",
+                      " (e.g. assible_python_interpreter=/usr/bin/python)",
                       metavar='INTERPRETER_TYPE=INTERPRETER_PATH',
-                      default="ansible_python_interpreter=%s" %
+                      default="assible_python_interpreter=%s" %
                       (sys.executable if sys.executable else '/usr/bin/python'))
     parser.add_option('-c', '--check', dest='check', action='store_true',
                       help="run the module in check mode")
@@ -78,7 +78,7 @@ def parse():
                       default=True, help="do not run the resulting module")
     parser.add_option('-o', '--output', dest='filename',
                       help="Filename for resulting module",
-                      default="~/.ansible_module_generated")
+                      default="~/.assible_module_generated")
     options, args = parser.parse_args()
     if not options.module_path:
         parser.print_help()
@@ -89,7 +89,7 @@ def parse():
 
 def write_argsfile(argstring, json=False):
     """ Write args to a file for old-style module's use. """
-    argspath = os.path.expanduser("~/.ansible_test_module_arguments")
+    argspath = os.path.expanduser("~/.assible_test_module_arguments")
     argsfile = open(argspath, 'w')
     if json:
         args = parse_kv(argstring)
@@ -103,11 +103,11 @@ def get_interpreters(interpreter):
     result = dict()
     if interpreter:
         if '=' not in interpreter:
-            print("interpreter must by in the form of ansible_python_interpreter=/usr/bin/python")
+            print("interpreter must by in the form of assible_python_interpreter=/usr/bin/python")
             sys.exit(1)
         interpreter_type, interpreter_path = interpreter.split('=')
-        if not interpreter_type.startswith('ansible_'):
-            interpreter_type = 'ansible_%s' % interpreter_type
+        if not interpreter_type.startswith('assible_'):
+            interpreter_type = 'assible_%s' % interpreter_type
         if not interpreter_type.endswith('_interpreter'):
             interpreter_type = '%s_interpreter' % interpreter_type
         result[interpreter_type] = interpreter_path
@@ -115,7 +115,7 @@ def get_interpreters(interpreter):
 
 
 def boilerplate_module(modfile, args, interpreters, check, destfile):
-    """ simulate what ansible does with new style modules """
+    """ simulate what assible does with new style modules """
 
     # module_fh = open(modfile)
     # module_data = module_fh.read()
@@ -124,15 +124,15 @@ def boilerplate_module(modfile, args, interpreters, check, destfile):
     # replacer = module_common.ModuleReplacer()
     loader = DataLoader()
 
-    # included_boilerplate = module_data.find(module_common.REPLACER) != -1 or module_data.find("import ansible.module_utils") != -1
+    # included_boilerplate = module_data.find(module_common.REPLACER) != -1 or module_data.find("import assible.module_utils") != -1
 
     complex_args = {}
 
-    # default selinux fs list is pass in as _ansible_selinux_special_fs arg
-    complex_args['_ansible_selinux_special_fs'] = C.DEFAULT_SELINUX_SPECIAL_FS
-    complex_args['_ansible_tmpdir'] = C.DEFAULT_LOCAL_TMP
-    complex_args['_ansible_keep_remote_files'] = C.DEFAULT_KEEP_REMOTE_FILES
-    complex_args['_ansible_version'] = __version__
+    # default selinux fs list is pass in as _assible_selinux_special_fs arg
+    complex_args['_assible_selinux_special_fs'] = C.DEFAULT_SELINUX_SPECIAL_FS
+    complex_args['_assible_tmpdir'] = C.DEFAULT_LOCAL_TMP
+    complex_args['_assible_keep_remote_files'] = C.DEFAULT_KEEP_REMOTE_FILES
+    complex_args['_assible_version'] = __version__
 
     if args.startswith("@"):
         # Argument is a YAML file (JSON is a subset of YAML)
@@ -150,7 +150,7 @@ def boilerplate_module(modfile, args, interpreters, check, destfile):
     task_vars = interpreters
 
     if check:
-        complex_args['_ansible_check_mode'] = True
+        complex_args['_assible_check_mode'] = True
 
     modname = os.path.basename(modfile)
     modname = os.path.splitext(modname)[0]
@@ -162,12 +162,12 @@ def boilerplate_module(modfile, args, interpreters, check, destfile):
         task_vars=task_vars
     )
 
-    if module_style == 'new' and '_ANSIBALLZ_WRAPPER = True' in to_native(module_data):
-        module_style = 'ansiballz'
+    if module_style == 'new' and '_ASSIBALLZ_WRAPPER = True' in to_native(module_data):
+        module_style = 'assiballz'
 
     modfile2_path = os.path.expanduser(destfile)
     print("* including generated source, if any, saving to: %s" % modfile2_path)
-    if module_style not in ('ansiballz', 'old'):
+    if module_style not in ('assiballz', 'old'):
         print("* this may offset any line numbers in tracebacks/debuggers!")
     modfile2 = open(modfile2_path, 'wb')
     modfile2.write(module_data)
@@ -177,11 +177,11 @@ def boilerplate_module(modfile, args, interpreters, check, destfile):
     return (modfile2_path, modname, module_style)
 
 
-def ansiballz_setup(modfile, modname, interpreters):
+def assiballz_setup(modfile, modname, interpreters):
     os.system("chmod +x %s" % modfile)
 
-    if 'ansible_python_interpreter' in interpreters:
-        command = [interpreters['ansible_python_interpreter']]
+    if 'assible_python_interpreter' in interpreters:
+        command = [interpreters['assible_python_interpreter']]
     else:
         command = []
     command.extend([modfile, 'explode'])
@@ -192,14 +192,14 @@ def ansiballz_setup(modfile, modname, interpreters):
     lines = out.splitlines()
     if len(lines) != 2 or 'Module expanded into' not in lines[0]:
         print("*" * 35)
-        print("INVALID OUTPUT FROM ANSIBALLZ MODULE WRAPPER")
+        print("INVALID OUTPUT FROM ASSIBALLZ MODULE WRAPPER")
         print(out)
         sys.exit(err)
     debug_dir = lines[1].strip()
 
     # All the directories in an AnsiBallZ that modules can live
-    core_dirs = glob.glob(os.path.join(debug_dir, 'ansible/modules'))
-    collection_dirs = glob.glob(os.path.join(debug_dir, 'ansible_collections/*/*/plugins/modules'))
+    core_dirs = glob.glob(os.path.join(debug_dir, 'assible/modules'))
+    collection_dirs = glob.glob(os.path.join(debug_dir, 'assible_collections/*/*/plugins/modules'))
 
     # There's only one module in an AnsiBallZ payload so look for the first module and then exit
     for module_dir in core_dirs + collection_dirs:
@@ -211,17 +211,17 @@ def ansiballz_setup(modfile, modname, interpreters):
 
     argsfile = os.path.join(debug_dir, 'args')
 
-    print("* ansiballz module detected; extracted module source to: %s" % debug_dir)
+    print("* assiballz module detected; extracted module source to: %s" % debug_dir)
     return modfile, argsfile
 
 
 def runtest(modfile, argspath, modname, module_style, interpreters):
     """Test run a module, piping it's output for reporting."""
     invoke = ""
-    if module_style == 'ansiballz':
-        modfile, argspath = ansiballz_setup(modfile, modname, interpreters)
-        if 'ansible_python_interpreter' in interpreters:
-            invoke = "%s " % interpreters['ansible_python_interpreter']
+    if module_style == 'assiballz':
+        modfile, argspath = assiballz_setup(modfile, modname, interpreters)
+        if 'assible_python_interpreter' in interpreters:
+            invoke = "%s " % interpreters['assible_python_interpreter']
 
     os.system("chmod +x %s" % modfile)
 
@@ -254,8 +254,8 @@ def runtest(modfile, argspath, modname, module_style, interpreters):
 def rundebug(debugger, modfile, argspath, modname, module_style, interpreters):
     """Run interactively with console debugger."""
 
-    if module_style == 'ansiballz':
-        modfile, argspath = ansiballz_setup(modfile, modname, interpreters)
+    if module_style == 'assiballz':
+        modfile, argspath = assiballz_setup(modfile, modname, interpreters)
 
     if argspath is not None:
         subprocess.call("%s %s %s" % (debugger, modfile, argspath), shell=True)
@@ -270,7 +270,7 @@ def main():
     (modfile, modname, module_style) = boilerplate_module(options.module_path, options.module_args, interpreters, options.check, options.filename)
 
     argspath = None
-    if module_style not in ('new', 'ansiballz'):
+    if module_style not in ('new', 'assiballz'):
         if module_style in ('non_native_want_json', 'binary'):
             argspath = write_argsfile(options.module_args, json=True)
         elif module_style == 'old':

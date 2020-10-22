@@ -10,8 +10,8 @@ import astroid
 from pylint.checkers import BaseChecker
 from pylint.interfaces import IAstroidChecker
 
-ANSIBLE_TEST_MODULES_PATH = os.environ['ANSIBLE_TEST_MODULES_PATH']
-ANSIBLE_TEST_MODULE_UTILS_PATH = os.environ['ANSIBLE_TEST_MODULE_UTILS_PATH']
+ASSIBLE_TEST_MODULES_PATH = os.environ['ASSIBLE_TEST_MODULES_PATH']
+ASSIBLE_TEST_MODULE_UTILS_PATH = os.environ['ASSIBLE_TEST_MODULE_UTILS_PATH']
 
 
 class UnwantedEntry:
@@ -55,19 +55,19 @@ def is_module_path(path):
     :type path: str
     :rtype: bool
     """
-    return path.startswith(ANSIBLE_TEST_MODULES_PATH) or path.startswith(ANSIBLE_TEST_MODULE_UTILS_PATH)
+    return path.startswith(ASSIBLE_TEST_MODULES_PATH) or path.startswith(ASSIBLE_TEST_MODULE_UTILS_PATH)
 
 
-class AnsibleUnwantedChecker(BaseChecker):
+class AssibleUnwantedChecker(BaseChecker):
     """Checker for unwanted imports and functions."""
     __implements__ = (IAstroidChecker,)
 
     name = 'unwanted'
 
-    BAD_IMPORT = 'ansible-bad-import'
-    BAD_IMPORT_FROM = 'ansible-bad-import-from'
-    BAD_FUNCTION = 'ansible-bad-function'
-    BAD_MODULE_IMPORT = 'ansible-bad-module-import'
+    BAD_IMPORT = 'assible-bad-import'
+    BAD_IMPORT_FROM = 'assible-bad-import-from'
+    BAD_FUNCTION = 'assible-bad-function'
+    BAD_MODULE_IMPORT = 'assible-bad-module-import'
 
     msgs = dict(
         E5101=('Import %s instead of %s',
@@ -79,7 +79,7 @@ class AnsibleUnwantedChecker(BaseChecker):
         E5103=('Call %s instead of %s',
                BAD_FUNCTION,
                'Identifies functions which should not be used.'),
-        E5104=('Import external package or ansible.module_utils not %s',
+        E5104=('Import external package or assible.module_utils not %s',
                BAD_MODULE_IMPORT,
                'Identifies imports which should not be used.'),
     )
@@ -87,19 +87,19 @@ class AnsibleUnwantedChecker(BaseChecker):
     unwanted_imports = dict(
         # Additional imports that we may want to start checking:
         # boto=UnwantedEntry('boto3', modules_only=True),
-        # requests=UnwantedEntry('ansible.module_utils.urls', modules_only=True),
-        # urllib=UnwantedEntry('ansible.module_utils.urls', modules_only=True),
+        # requests=UnwantedEntry('assible.module_utils.urls', modules_only=True),
+        # urllib=UnwantedEntry('assible.module_utils.urls', modules_only=True),
 
         # see https://docs.python.org/2/library/urllib2.html
-        urllib2=UnwantedEntry('ansible.module_utils.urls',
+        urllib2=UnwantedEntry('assible.module_utils.urls',
                               ignore_paths=(
-                                  '/lib/ansible/module_utils/urls.py',
+                                  '/lib/assible/module_utils/urls.py',
                               )),
 
         # see https://docs.python.org/3.7/library/collections.abc.html
-        collections=UnwantedEntry('ansible.module_utils.common._collections_compat',
+        collections=UnwantedEntry('assible.module_utils.common._collections_compat',
                                   ignore_paths=(
-                                      '/lib/ansible/module_utils/common/_collections_compat.py',
+                                      '/lib/assible/module_utils/common/_collections_compat.py',
                                   ),
                                   names=(
                                       'MappingView',
@@ -124,16 +124,16 @@ class AnsibleUnwantedChecker(BaseChecker):
 
         'sys.exit': UnwantedEntry('exit_json or fail_json',
                                   ignore_paths=(
-                                      '/lib/ansible/module_utils/basic.py',
-                                      '/lib/ansible/modules/async_wrapper.py',
-                                      '/lib/ansible/module_utils/common/removed.py',
+                                      '/lib/assible/module_utils/basic.py',
+                                      '/lib/assible/modules/async_wrapper.py',
+                                      '/lib/assible/module_utils/common/removed.py',
                                   ),
                                   modules_only=True),
 
         'builtins.print': UnwantedEntry('module.log or module.debug',
                                         ignore_paths=(
-                                            '/lib/ansible/module_utils/basic.py',
-                                            '/lib/ansible/module_utils/common/removed.py',
+                                            '/lib/assible/module_utils/basic.py',
+                                            '/lib/assible/module_utils/common/removed.py',
                                         ),
                                         modules_only=True),
     }
@@ -230,13 +230,13 @@ class AnsibleUnwantedChecker(BaseChecker):
         if not is_module_path(self.linter.current_file):
             return
 
-        if modname == 'ansible.module_utils' or modname.startswith('ansible.module_utils.'):
+        if modname == 'assible.module_utils' or modname.startswith('assible.module_utils.'):
             return
 
-        if modname == 'ansible' or modname.startswith('ansible.'):
+        if modname == 'assible' or modname.startswith('assible.'):
             self.add_message(self.BAD_MODULE_IMPORT, args=(modname,), node=node)
 
 
 def register(linter):
     """required method to auto register this checker """
-    linter.register_checker(AnsibleUnwantedChecker(linter))
+    linter.register_checker(AssibleUnwantedChecker(linter))

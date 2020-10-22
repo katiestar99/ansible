@@ -5,7 +5,7 @@
     - name: cleanup
       include_tasks: "{{ cleanup_filename }}"
       with_first_found:
-        - "cleanup-{{ ansible_distribution | lower }}.yml"
+        - "cleanup-{{ assible_distribution | lower }}.yml"
         - "cleanup-default.yml"
       loop_control:
         loop_var: cleanup_filename
@@ -15,5 +15,5 @@
         path: "{{ item }}"
         state: absent
       loop:
-        - "~/.ansible/collections/ansible_collections"
-        - /usr/share/ansible/collections/ansible_collections
+        - "~/.assible/collections/assible_collections"
+        - /usr/share/assible/collections/assible_collections

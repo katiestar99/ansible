@@ -41,7 +41,7 @@ class ChangeDetectionNotSupported(ApplicationError):
 
 
 class AuthContext:
-    """Context information required for Ansible Core CI authentication."""
+    """Context information required for Assible Core CI authentication."""
     def __init__(self):  # type: () -> None
         self.region = None  # type: t.Optional[str]
 
@@ -79,11 +79,11 @@ class CIProvider(ABC):
 
     @abc.abstractmethod
     def supports_core_ci_auth(self, context):  # type: (AuthContext) -> bool
-        """Return True if Ansible Core CI is supported."""
+        """Return True if Assible Core CI is supported."""
 
     @abc.abstractmethod
     def prepare_core_ci_auth(self, context):  # type: (AuthContext) -> t.Dict[str, t.Any]
-        """Return authentication details for Ansible Core CI."""
+        """Return authentication details for Assible Core CI."""
 
     @abc.abstractmethod
     def get_git_details(self, args):  # type: (CommonConfig) -> t.Optional[t.Dict[str, t.Any]]
@@ -117,7 +117,7 @@ def get_ci_provider():  # type: () -> CIProvider
 
 
 class AuthHelper(ABC):
-    """Public key based authentication helper for Ansible Core CI."""
+    """Public key based authentication helper for Assible Core CI."""
     def sign_request(self, request):  # type: (t.Dict[str, t.Any]) -> None
         """Sign the given auth request and make the public key available."""
         payload_bytes = to_bytes(json.dumps(request, sort_keys=True))
@@ -129,9 +129,9 @@ class AuthHelper(ABC):
     def initialize_private_key(self):  # type: () -> str
         """
         Initialize and publish a new key pair (if needed) and return the private key.
-        The private key is cached across ansible-test invocations so it is only generated and published once per CI job.
+        The private key is cached across assible-test invocations so it is only generated and published once per CI job.
         """
-        path = os.path.expanduser('~/.ansible-core-ci-private.key')
+        path = os.path.expanduser('~/.assible-core-ci-private.key')
 
         if os.path.exists(to_bytes(path)):
             private_key_pem = read_text_file(path)
@@ -155,7 +155,7 @@ class AuthHelper(ABC):
 
 
 class CryptographyAuthHelper(AuthHelper, ABC):  # pylint: disable=abstract-method
-    """Cryptography based public key based authentication helper for Ansible Core CI."""
+    """Cryptography based public key based authentication helper for Assible Core CI."""
     def sign_bytes(self, payload_bytes):  # type: (bytes) -> bytes
         """Sign the given payload and return the signature, initializing a new key pair if required."""
         # import cryptography here to avoid overhead and failures in environments which do not use/provide it
@@ -198,7 +198,7 @@ class CryptographyAuthHelper(AuthHelper, ABC):  # pylint: disable=abstract-metho
 
 
 class OpenSSLAuthHelper(AuthHelper, ABC):  # pylint: disable=abstract-method
-    """OpenSSL based public key based authentication helper for Ansible Core CI."""
+    """OpenSSL based public key based authentication helper for Assible Core CI."""
     def sign_bytes(self, payload_bytes):  # type: (bytes) -> bytes
         """Sign the given payload and return the signature, initializing a new key pair if required."""
         private_key_pem = self.initialize_private_key()

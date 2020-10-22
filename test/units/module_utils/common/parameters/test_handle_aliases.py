@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -8,25 +8,25 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.parameters import handle_aliases
-from ansible.module_utils._text import to_native
+from assible.module_utils.common.parameters import handle_aliases
+from assible.module_utils._text import to_native
 
 DEFAULT_LEGAL_INPUTS = [
-    '_ansible_check_mode',
-    '_ansible_debug',
-    '_ansible_diff',
-    '_ansible_keep_remote_files',
-    '_ansible_module_name',
-    '_ansible_no_log',
-    '_ansible_remote_tmp',
-    '_ansible_selinux_special_fs',
-    '_ansible_shell_executable',
-    '_ansible_socket',
-    '_ansible_string_conversion_action',
-    '_ansible_syslog_facility',
-    '_ansible_tmpdir',
-    '_ansible_verbosity',
-    '_ansible_version',
+    '_assible_check_mode',
+    '_assible_debug',
+    '_assible_diff',
+    '_assible_keep_remote_files',
+    '_assible_module_name',
+    '_assible_no_log',
+    '_assible_remote_tmp',
+    '_assible_selinux_special_fs',
+    '_assible_shell_executable',
+    '_assible_socket',
+    '_assible_string_conversion_action',
+    '_assible_syslog_facility',
+    '_assible_tmpdir',
+    '_assible_verbosity',
+    '_assible_version',
 ]
 
 

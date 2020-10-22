@@ -1,4 +1,4 @@
-etc/ansible
-etc/ansible/roles
-usr/lib/python3/dist-packages/ansible
-usr/share/ansible
+etc/assible
+etc/assible/roles
+usr/lib/python3/dist-packages/assible
+usr/share/assible

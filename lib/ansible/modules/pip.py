@@ -63,7 +63,7 @@ options:
     description:
       - The Python executable used for creating the virtual environment.
         For example C(python3.5), C(python2.7). When not specified, the
-        Python version used to run the ansible module is used. This parameter
+        Python version used to run the assible module is used. This parameter
         should not be used when C(virtualenv_command) is using C(pyvenv) or
         the C(-m venv) module.
     type: str
@@ -71,7 +71,7 @@ options:
   state:
     description:
       - The state of module
-      - The 'forcereinstall' option is only available in Ansible 2.1 and above.
+      - The 'forcereinstall' option is only available in Assible 2.1 and above.
     type: str
     choices: [ absent, forcereinstall, latest, present ]
     default: present
@@ -94,12 +94,12 @@ options:
   executable:
     description:
       - The explicit executable or pathname for the pip executable,
-        if different from the Ansible Python interpreter. For
+        if different from the Assible Python interpreter. For
         example C(pip3.3), if there are both Python 2.7 and 3.3 installations
         in the system and you want to run pip for the Python 3.3 installation.
       - Mutually exclusive with I(virtualenv) (added in 2.1).
-      - Does not affect the Ansible Python interpreter.
-      - The setuptools package must be installed for both the Ansible Python interpreter
+      - Does not affect the Assible Python interpreter.
+      - The setuptools package must be installed for both the Assible Python interpreter
         and for the version of Python specified by this option.
     type: path
     version_added: "1.3"
@@ -116,11 +116,11 @@ notes:
    - The virtualenv (U(http://www.virtualenv.org/)) must be
      installed on the remote host if the virtualenv parameter is specified and
      the virtualenv needs to be created.
-   - Although it executes using the Ansible Python interpreter, the pip module shells out to
+   - Although it executes using the Assible Python interpreter, the pip module shells out to
      run the actual pip command, so it can use any pip version you specify with I(executable).
-     By default, it uses the pip version for the Ansible Python interpreter. For example, pip3 on python 3, and pip2 or pip on python 2.
-   - The interpreter used by Ansible
-     (see :ref:`ansible_python_interpreter<ansible_python_interpreter>`)
+     By default, it uses the pip version for the Assible Python interpreter. For example, pip3 on python 3, and pip2 or pip on python 2.
+   - The interpreter used by Assible
+     (see :ref:`assible_python_interpreter<assible_python_interpreter>`)
      requires the setuptools package, regardless of the version of pip set with
      the I(executable) option.
 requirements:
@@ -234,12 +234,12 @@ cmd:
   description: pip command used by the module
   returned: success
   type: str
-  sample: pip2 install ansible six
+  sample: pip2 install assible six
 name:
   description: list of python modules targetted by pip
   returned: success
   type: list
-  sample: ['ansible', 'six']
+  sample: ['assible', 'six']
 requirements:
   description: Path to the requirements file
   returned: success, if a requirements file was provided
@@ -275,9 +275,9 @@ except ImportError:
     HAS_SETUPTOOLS = False
     SETUPTOOLS_IMP_ERR = traceback.format_exc()
 
-from ansible.module_utils.basic import AnsibleModule, is_executable, missing_required_lib
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import PY3
+from assible.module_utils.basic import AssibleModule, is_executable, missing_required_lib
+from assible.module_utils._text import to_native
+from assible.module_utils.six import PY3
 
 
 #: Python one-liners to be run at the command line that will determine the
@@ -590,7 +590,7 @@ def main():
         forcereinstall=['install', '-U', '--force-reinstall'],
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(type='str', default='present', choices=state_map.keys()),
             name=dict(type='list', elements='str'),

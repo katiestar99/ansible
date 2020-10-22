@@ -1,19 +1,19 @@
 # (c) 2016, Adrian Likins <alikins@redhat.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -25,14 +25,14 @@ from units.compat import unittest
 from units.compat.mock import MagicMock
 from units.mock.loader import DictDataLoader
 
-from ansible import errors
-from ansible.playbook.block import Block
-from ansible.playbook.handler import Handler
-from ansible.playbook.task import Task
-from ansible.playbook.task_include import TaskInclude
-from ansible.playbook.role.include import RoleInclude
+from assible import errors
+from assible.playbook.block import Block
+from assible.playbook.handler import Handler
+from assible.playbook.task import Task
+from assible.playbook.task_include import TaskInclude
+from assible.playbook.role.include import RoleInclude
 
-from ansible.playbook import helpers
+from assible.playbook import helpers
 
 
 class MixinForMocks(object):
@@ -63,7 +63,7 @@ class MixinForMocks(object):
         self.mock_block = MagicMock(name='MockBlock')
 
         # On macOS /etc is actually /private/etc, tests fail when performing literal /etc checks
-        self.fake_role_loader = DictDataLoader({os.path.join(os.path.realpath("/etc"), "ansible/roles/bogus_role/tasks/main.yml"): """
+        self.fake_role_loader = DictDataLoader({os.path.join(os.path.realpath("/etc"), "assible/roles/bogus_role/tasks/main.yml"): """
                                                 - shell: echo 'hello world'
                                                 """})
 
@@ -107,7 +107,7 @@ class TestLoadListOfTasks(unittest.TestCase, MixinForMocks):
 
     def test_empty_task(self):
         ds = [{}]
-        self.assertRaisesRegexp(errors.AnsibleParserError,
+        self.assertRaisesRegexp(errors.AssibleParserError,
                                 "no module/action detected in task",
                                 helpers.load_list_of_tasks,
                                 ds, play=self.mock_play,
@@ -115,7 +115,7 @@ class TestLoadListOfTasks(unittest.TestCase, MixinForMocks):
 
     def test_empty_task_use_handlers(self):
         ds = [{}]
-        self.assertRaisesRegexp(errors.AnsibleParserError,
+        self.assertRaisesRegexp(errors.AssibleParserError,
                                 "no module/action detected in task.",
                                 helpers.load_list_of_tasks,
                                 ds,
@@ -126,7 +126,7 @@ class TestLoadListOfTasks(unittest.TestCase, MixinForMocks):
 
     def test_one_bogus_block(self):
         ds = [{'block': None}]
-        self.assertRaisesRegexp(errors.AnsibleParserError,
+        self.assertRaisesRegexp(errors.AssibleParserError,
                                 "A malformed block was encountered",
                                 helpers.load_list_of_tasks,
                                 ds, play=self.mock_play,
@@ -172,7 +172,7 @@ class TestLoadListOfTasks(unittest.TestCase, MixinForMocks):
 
     def test_one_bogus_block_use_handlers(self):
         ds = [{'block': True}]
-        self.assertRaisesRegexp(errors.AnsibleParserError,
+        self.assertRaisesRegexp(errors.AssibleParserError,
                                 "A malformed block was encountered",
                                 helpers.load_list_of_tasks,
                                 ds, play=self.mock_play, use_handlers=True,
@@ -247,7 +247,7 @@ class TestLoadListOfTasks(unittest.TestCase, MixinForMocks):
                'vars': {'tags': "['tag_on_include1', 'tag_on_include2']"},
                'tags': 'mixed_tag1, mixed_tag2'
                }]
-        self.assertRaisesRegexp(errors.AnsibleParserError, 'Mixing styles',
+        self.assertRaisesRegexp(errors.AssibleParserError, 'Mixing styles',
                                 helpers.load_list_of_tasks,
                                 ds, play=self.mock_play,
                                 variable_manager=self.mock_variable_manager, loader=self.fake_include_loader)
@@ -344,7 +344,7 @@ class TestLoadListOfRoles(unittest.TestCase, MixinForMocks):
 
     def test_empty_role(self):
         ds = [{}]
-        self.assertRaisesRegexp(errors.AnsibleError,
+        self.assertRaisesRegexp(errors.AssibleError,
                                 "role definitions must contain a role name",
                                 helpers.load_list_of_roles,
                                 ds, self.mock_play,
@@ -383,7 +383,7 @@ class TestLoadListOfBlocks(unittest.TestCase, MixinForMocks):
     def test_empty_block(self):
         ds = [{}]
         mock_play = MagicMock(name='MockPlay')
-        self.assertRaisesRegexp(errors.AnsibleParserError,
+        self.assertRaisesRegexp(errors.AssibleParserError,
                                 "no module/action detected in task",
                                 helpers.load_list_of_blocks,
                                 ds, mock_play,

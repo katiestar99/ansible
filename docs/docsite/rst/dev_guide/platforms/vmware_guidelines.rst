@@ -4,7 +4,7 @@
 Guidelines for VMware module development
 ****************************************
 
-The Ansible VMware collection (on `Galaxy <https://galaxy.ansible.com/community/vmware>`_, source code `repository <https://github.com/ansible-collections/vmware>`_) is maintained by the VMware Working Group. For further information see the `team community page <https://github.com/ansible/community/wiki/VMware>`_.
+The Assible VMware collection (on `Galaxy <https://galaxy.assible.com/community/vmware>`_, source code `repository <https://github.com/assible-collections/vmware>`_) is maintained by the VMware Working Group. For further information see the `team community page <https://github.com/assible/community/wiki/VMware>`_.
 
 .. contents::
    :local:
@@ -14,14 +14,14 @@ Testing with govcsim
 
 Most of the existing modules are covered by functional tests. The tests are located in the :file:`test/integration/targets/`.
 
-By default, the tests run against a vCenter API simulator called `govcsim <https://github.com/vmware/govmomi/tree/master/vcsim>`_. ``ansible-test`` will automatically pull a `govcsim container <https://quay.io/repository/ansible/vcenter-test-container>` and use it to set-up the test environment.
+By default, the tests run against a vCenter API simulator called `govcsim <https://github.com/vmware/govmomi/tree/master/vcsim>`_. ``assible-test`` will automatically pull a `govcsim container <https://quay.io/repository/assible/vcenter-test-container>` and use it to set-up the test environment.
 
-You can trigger the test of a module manually with the ``ansible-test`` command. For example, to trigger ``vcenter_folder`` tests:
+You can trigger the test of a module manually with the ``assible-test`` command. For example, to trigger ``vcenter_folder`` tests:
 
 .. code-block:: shell
 
     source hacking/env-setup
-    ansible-test integration --python 3.7 vcenter_folder
+    assible-test integration --python 3.7 vcenter_folder
 
 ``govcsim`` is handy because it's much more fast that than a regular test environment. However, it does not
 support all the ESXi or vCenter features.
@@ -88,7 +88,7 @@ Configure your installation
 
 Prepare a configuration file that describes your set-up. The file
 should be called :file:`test/integration/cloud-config-vcenter.ini` and based on
-:file:`test/lib/ansible_test/config/cloud-config-vcenter.ini.template`. For instance, if you've deployed your lab with
+:file:`test/lib/assible_test/config/cloud-config-vcenter.ini.template`. For instance, if you've deployed your lab with
 `vmware-on-libvirt <https://github.com/goneri/vmware-on-libvirt>`:
 
 .. code-block:: ini
@@ -109,15 +109,15 @@ If you use an HTTP proxy
 -------------------------
 Support for hosting test infrastructure behind an HTTP proxy is currently in development. See the following pull requests for more information:
 
-- ansible-test: vcenter behind an HTTP proxy <https://github.com/ansible/ansible/pull/58208>
+- assible-test: vcenter behind an HTTP proxy <https://github.com/assible/assible/pull/58208>
 - pyvmomi: proxy support <https://github.com/vmware/pyvmomi/pull/799>
-- VMware: add support for HTTP proxy in connection API <https://github.com/ansible/ansible/pull/52936>
+- VMware: add support for HTTP proxy in connection API <https://github.com/assible/assible/pull/52936>
 
 Once you have incorporated the code from those PRs, specify the location of the proxy server with the two extra keys:
 
 .. code-block:: ini
 
-    vmware_proxy_host: esxi1-gw.ws.testing.ansible.com
+    vmware_proxy_host: esxi1-gw.ws.testing.assible.com
     vmware_proxy_port: 11153
 
 In addition, you may need to adjust the variables of the following file to match the configuration of your lab:
@@ -131,7 +131,7 @@ Once your configuration is ready, you can trigger a run with the following comma
 .. code-block:: shell
 
     source hacking/env-setup
-    VMWARE_TEST_PLATFORM=static ansible-test integration --python 3.7 vmware_host_firewall_manager
+    VMWARE_TEST_PLATFORM=static assible-test integration --python 3.7 vmware_host_firewall_manager
 
 ``vmware_host_firewall_manager`` is the name of the module to test.
 
@@ -148,7 +148,7 @@ following commands:
 .. code-block:: shell
 
     source hacking/env-setup
-    ansible-test units --venv --python 3.7 '.*vmware.*'
+    assible-test units --venv --python 3.7 '.*vmware.*'
 
 Code style and best practice
 ============================
@@ -157,7 +157,7 @@ datacenter argument with ESXi
 -----------------------------
 
 The ``datacenter`` parameter should not use ``ha-datacenter`` by default. This is because the user may
-not realize that Ansible silently targets the wrong data center.
+not realize that Assible silently targets the wrong data center.
 
 esxi_hostname should not be mandatory
 -------------------------------------
@@ -193,7 +193,7 @@ Writing new tests
 ~~~~~~~~~~~~~~~~~
 
 If you are writing a new collection of integration tests, there are a few VMware-specific things to note beyond
-the standard Ansible :ref:`integration testing<testing_integration>` process.
+the standard Assible :ref:`integration testing<testing_integration>` process.
 
 The test-suite uses a set of common, pre-defined vars located in the :file:`test/integration/targets/prepare_vmware_tests/` role.
 The resources defined there are automatically created by importing that role at the start of your test:
@@ -222,7 +222,7 @@ way it will be automatically clean up for you.
 Avoid the common boiler plate code in your test playbook
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-From Ansible 2.10, the test suite uses `modules_defaults`. This module
+From Assible 2.10, the test suite uses `modules_defaults`. This module
 allow us to preinitialize the following default keys of the VMware modules:
 
 - hostname

@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 #############################################
 from __future__ import (absolute_import, division, print_function)
@@ -29,18 +29,18 @@ import traceback
 from operator import attrgetter
 from random import shuffle
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleOptionsError, AnsibleParserError
-from ansible.inventory.data import InventoryData
-from ansible.module_utils.six import string_types
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.parsing.utils.addresses import parse_address
-from ansible.plugins.loader import inventory_loader
-from ansible.utils.helpers import deduplicate_list
-from ansible.utils.path import unfrackpath
-from ansible.utils.display import Display
-from ansible.utils.vars import combine_vars
-from ansible.vars.plugins import get_vars_from_inventory_sources
+from assible import constants as C
+from assible.errors import AssibleError, AssibleOptionsError, AssibleParserError
+from assible.inventory.data import InventoryData
+from assible.module_utils.six import string_types
+from assible.module_utils._text import to_bytes, to_text
+from assible.parsing.utils.addresses import parse_address
+from assible.plugins.loader import inventory_loader
+from assible.utils.helpers import deduplicate_list
+from assible.utils.path import unfrackpath
+from assible.utils.display import Display
+from assible.utils.vars import combine_vars
+from assible.vars.plugins import get_vars_from_inventory_sources
 
 display = Display()
 
@@ -208,7 +208,7 @@ class InventoryManager(object):
                 display.warning('Failed to load inventory plugin, skipping %s' % name)
 
         if not plugins:
-            raise AnsibleError("No inventory plugins available to generate inventory, make sure you have at least one whitelisted.")
+            raise AssibleError("No inventory plugins available to generate inventory, make sure you have at least one whitelisted.")
 
         return plugins
 
@@ -231,7 +231,7 @@ class InventoryManager(object):
             self._inventory.reconcile_inventory()
         else:
             if C.INVENTORY_UNPARSED_IS_FAILED:
-                raise AnsibleError("No inventory was parsed, please check your configuration and options.")
+                raise AssibleError("No inventory was parsed, please check your configuration and options.")
             else:
                 display.warning("No inventory was parsed, only implicit localhost is available")
 
@@ -296,14 +296,14 @@ class InventoryManager(object):
                         parsed = True
                         display.vvv('Parsed %s inventory source with %s plugin' % (source, plugin_name))
                         break
-                    except AnsibleParserError as e:
+                    except AssibleParserError as e:
                         display.debug('%s was not parsable by %s' % (source, plugin_name))
                         tb = ''.join(traceback.format_tb(sys.exc_info()[2]))
                         failures.append({'src': source, 'plugin': plugin_name, 'exc': e, 'tb': tb})
                     except Exception as e:
                         display.debug('%s failed while attempting to parse %s' % (plugin_name, source))
                         tb = ''.join(traceback.format_tb(sys.exc_info()[2]))
-                        failures.append({'src': source, 'plugin': plugin_name, 'exc': AnsibleError(e), 'tb': tb})
+                        failures.append({'src': source, 'plugin': plugin_name, 'exc': AssibleError(e), 'tb': tb})
                 else:
                     display.vvv("%s declined parsing %s as it did not pass its verify_file() method" % (plugin_name, source))
             else:
@@ -314,9 +314,9 @@ class InventoryManager(object):
                         if 'tb' in fail:
                             display.vvv(to_text(fail['tb']))
                     if C.INVENTORY_ANY_UNPARSED_IS_FAILED:
-                        raise AnsibleError(u'Completely failed to parse inventory source %s' % (source))
+                        raise AssibleError(u'Completely failed to parse inventory source %s' % (source))
         if not parsed:
-            if source != '/etc/ansible/hosts' or os.path.exists(source):
+            if source != '/etc/assible/hosts' or os.path.exists(source):
                 # only warn if NOT using the default and if using it, only if the file is present
                 display.warning("Unable to parse %s as an inventory source" % source)
 
@@ -346,7 +346,7 @@ class InventoryManager(object):
             else:
                 pattern = re.compile(pattern_str[1:])
         except Exception:
-            raise AnsibleError('Invalid host list pattern: %s' % pattern_str)
+            raise AssibleError('Invalid host list pattern: %s' % pattern_str)
 
         # apply patterns
         results = []
@@ -408,7 +408,7 @@ class InventoryManager(object):
                 if order == 'shuffle':
                     shuffle(hosts)
                 elif order not in [None, 'inventory']:
-                    raise AnsibleOptionsError("Invalid 'order' specified for inventory hosts: %s" % order)
+                    raise AssibleOptionsError("Invalid 'order' specified for inventory hosts: %s" % order)
 
         return hosts
 
@@ -485,7 +485,7 @@ class InventoryManager(object):
             try:
                 hosts = self._apply_subscript(hosts, slice)
             except IndexError:
-                raise AnsibleError("No hosts matched the subscripted pattern '%s'" % pattern)
+                raise AssibleError("No hosts matched the subscripted pattern '%s'" % pattern)
             self._pattern_cache[pattern] = hosts
 
         return self._pattern_cache[pattern]
@@ -575,7 +575,7 @@ class InventoryManager(object):
             if C.HOST_PATTERN_MISMATCH == 'warning':
                 display.warning(msg)
             elif C.HOST_PATTERN_MISMATCH == 'error':
-                raise AnsibleError(msg)
+                raise AssibleError(msg)
             # no need to write 'ignore' state
 
         return results
@@ -612,7 +612,7 @@ class InventoryManager(object):
         Limits inventory results to a subset of inventory that matches a given
         pattern, such as to select a given geographic of numeric slice amongst
         a previous 'hosts' selection that only select roles, or vice versa.
-        Corresponds to --limit parameter to ansible-playbook
+        Corresponds to --limit parameter to assible-playbook
         """
         if subset_pattern is None:
             self._subset = None
@@ -627,7 +627,7 @@ class InventoryManager(object):
                 if x[0] == "@":
                     b_limit_file = to_bytes(x[1:])
                     if not os.path.exists(b_limit_file):
-                        raise AnsibleError(u'Unable to find limit file %s' % b_limit_file)
+                        raise AssibleError(u'Unable to find limit file %s' % b_limit_file)
                     with open(b_limit_file) as fd:
                         results.extend([to_text(l.strip()) for l in fd.read().split("\n")])
                 else:

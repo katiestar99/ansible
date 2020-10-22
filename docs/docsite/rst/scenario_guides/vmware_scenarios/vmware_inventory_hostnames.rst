@@ -1,4 +1,4 @@
-.. _vmware_ansible_inventory_using_hostnames:
+.. _vmware_assible_inventory_using_hostnames:
 
 *************************************************
 Using VMware dynamic inventory plugin - Hostnames
@@ -19,7 +19,7 @@ Requirements
 ------------
 
 To use the VMware dynamic inventory plugins, you must install `pyVmomi <https://github.com/vmware/pyvmomi>`_
-on your control node (the host running Ansible).
+on your control node (the host running Assible).
 
 To include tag-related information for the virtual machines in your dynamic inventory, you also need the `vSphere Automation SDK <https://code.vmware.com/web/sdk/65/vsphere-automation-python>`_, which supports REST API features such as tagging and content libraries, on your control node.
 You can install the ``vSphere Automation SDK`` following `these instructions <https://github.com/vmware/vsphere-automation-sdk-python#installing-required-python-packages>`_.
@@ -28,16 +28,16 @@ You can install the ``vSphere Automation SDK`` following `these instructions <ht
 
     $ pip install pyvmomi
 
-Starting in Ansible 2.10, the VMware dynamic inventory plugin is available in the ``community.vmware`` collection included Ansible.
+Starting in Assible 2.10, the VMware dynamic inventory plugin is available in the ``community.vmware`` collection included Assible.
 To install the latest ``community.vmware`` collection:
 
 .. code-block:: bash
 
-    $ ansible-galaxy collection install community.vmware
+    $ assible-galaxy collection install community.vmware
 
 To use this VMware dynamic inventory plugin:
 
-1. Enable it first by specifying the following in the ``ansible.cfg`` file:
+1. Enable it first by specifying the following in the ``assible.cfg`` file:
 
 .. code-block:: ini
 
@@ -68,7 +68,7 @@ the ``config.name`` property from the virtual machine and populate it in the inv
 
 You can check all allowed properties for the given virtual machine at :ref:`vmware_inventory_vm_attributes`.
 
-Executing ``ansible-inventory --list -i <filename>.vmware.yml`` creates a list of the virtual machines that are ready to be configured using Ansible.
+Executing ``assible-inventory --list -i <filename>.vmware.yml`` creates a list of the virtual machines that are ready to be configured using Assible.
 
 What to expect
 --------------

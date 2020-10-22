@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -9,7 +9,7 @@ __metaclass__ = type
 
 class ModuleDocFragment:
 
-    # Common options for Ansible.ModuleUtils.WebRequest
+    # Common options for Assible.ModuleUtils.WebRequest
     DOCUMENTATION = r'''
 options:
   method:
@@ -42,7 +42,7 @@ options:
     description:
     - Header to identify as, generally appears in web server logs.
     - This is set to the C(User-Agent) header on a HTTP request.
-    default: ansible-httpget
+    default: assible-httpget
     type: str
   maximum_redirection:
     description:

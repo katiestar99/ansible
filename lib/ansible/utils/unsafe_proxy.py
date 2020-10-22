@@ -53,52 +53,52 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.module_utils.common._collections_compat import Mapping, Set
-from ansible.module_utils.common.collections import is_sequence
-from ansible.module_utils.six import string_types, binary_type, text_type
-from ansible.utils.native_jinja import NativeJinjaText
+from assible.module_utils._text import to_bytes, to_text
+from assible.module_utils.common._collections_compat import Mapping, Set
+from assible.module_utils.common.collections import is_sequence
+from assible.module_utils.six import string_types, binary_type, text_type
+from assible.utils.native_jinja import NativeJinjaText
 
 
-__all__ = ['AnsibleUnsafe', 'wrap_var']
+__all__ = ['AssibleUnsafe', 'wrap_var']
 
 
-class AnsibleUnsafe(object):
+class AssibleUnsafe(object):
     __UNSAFE__ = True
 
 
-class AnsibleUnsafeBytes(binary_type, AnsibleUnsafe):
+class AssibleUnsafeBytes(binary_type, AssibleUnsafe):
     def decode(self, *args, **kwargs):
         """Wrapper method to ensure type conversions maintain unsafe context"""
-        return AnsibleUnsafeText(super(AnsibleUnsafeBytes, self).decode(*args, **kwargs))
+        return AssibleUnsafeText(super(AssibleUnsafeBytes, self).decode(*args, **kwargs))
 
 
-class AnsibleUnsafeText(text_type, AnsibleUnsafe):
+class AssibleUnsafeText(text_type, AssibleUnsafe):
     def encode(self, *args, **kwargs):
         """Wrapper method to ensure type conversions maintain unsafe context"""
-        return AnsibleUnsafeBytes(super(AnsibleUnsafeText, self).encode(*args, **kwargs))
+        return AssibleUnsafeBytes(super(AssibleUnsafeText, self).encode(*args, **kwargs))
 
 
-class NativeJinjaUnsafeText(NativeJinjaText, AnsibleUnsafeText):
+class NativeJinjaUnsafeText(NativeJinjaText, AssibleUnsafeText):
     pass
 
 
 class UnsafeProxy(object):
     def __new__(cls, obj, *args, **kwargs):
-        from ansible.utils.display import Display
+        from assible.utils.display import Display
         Display().deprecated(
-            'UnsafeProxy is being deprecated. Use wrap_var or AnsibleUnsafeBytes/AnsibleUnsafeText directly instead',
-            version='2.13', collection_name='ansible.builtin'
+            'UnsafeProxy is being deprecated. Use wrap_var or AssibleUnsafeBytes/AssibleUnsafeText directly instead',
+            version='2.13', collection_name='assible.builtin'
         )
         # In our usage we should only receive unicode strings.
         # This conditional and conversion exists to sanity check the values
         # we're given but we may want to take it out for testing and sanitize
         # our input instead.
-        if isinstance(obj, AnsibleUnsafe):
+        if isinstance(obj, AssibleUnsafe):
             return obj
 
         if isinstance(obj, string_types):
-            obj = AnsibleUnsafeText(to_text(obj, errors='surrogate_or_strict'))
+            obj = AssibleUnsafeText(to_text(obj, errors='surrogate_or_strict'))
         return obj
 
 
@@ -119,7 +119,7 @@ def _wrap_set(v):
 
 
 def wrap_var(v):
-    if v is None or isinstance(v, AnsibleUnsafe):
+    if v is None or isinstance(v, AssibleUnsafe):
         return v
 
     if isinstance(v, Mapping):
@@ -131,9 +131,9 @@ def wrap_var(v):
     elif isinstance(v, NativeJinjaText):
         v = NativeJinjaUnsafeText(v)
     elif isinstance(v, binary_type):
-        v = AnsibleUnsafeBytes(v)
+        v = AssibleUnsafeBytes(v)
     elif isinstance(v, text_type):
-        v = AnsibleUnsafeText(v)
+        v = AssibleUnsafeText(v)
 
     return v
 

@@ -4,8 +4,8 @@ __metaclass__ = type
 import json
 import sys
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.facts.utils import (
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.facts.utils import (
     get_file_content,
     get_file_lines,
     get_mount_size,
@@ -13,7 +13,7 @@ from ansible.module_utils.facts.utils import (
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             test=dict(type='str', default='strip'),
             touch_file=dict(type='str', default='/dev/null'),
@@ -45,7 +45,7 @@ def main():
 
     result = {
         'changed': False,
-        'ansible_facts': facts,
+        'assible_facts': facts,
     }
 
     module.exit_json(**result)

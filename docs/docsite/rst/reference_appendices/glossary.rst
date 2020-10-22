@@ -1,10 +1,10 @@
 Glossary
 ========
 
-The following is a list (and re-explanation) of term definitions used elsewhere in the Ansible documentation.
+The following is a list (and re-explanation) of term definitions used elsewhere in the Assible documentation.
 
 Consult the documentation home page for the full documentation and to see the terms in context, but this should be a good resource
-to check your knowledge of Ansible's components and understand how they fit together.  It's something you might wish to read for review or
+to check your knowledge of Assible's components and understand how they fit together.  It's something you might wish to read for review or
 when a term comes up on the mailing list.
 
 .. glossary::
@@ -15,22 +15,22 @@ when a term comes up on the mailing list.
         only one action, but it may also have other parameters.
 
     Ad Hoc
-        Refers to running Ansible to perform some quick command, using
-        :command:`/usr/bin/ansible`, rather than the :term:`orchestration`
-        language, which is :command:`/usr/bin/ansible-playbook`.  An example
+        Refers to running Assible to perform some quick command, using
+        :command:`/usr/bin/assible`, rather than the :term:`orchestration`
+        language, which is :command:`/usr/bin/assible-playbook`.  An example
         of an ad hoc command might be rebooting 50 machines in your
         infrastructure.  Anything you can do ad hoc can be accomplished by
         writing a :term:`playbook <playbooks>` and playbooks can also glue
         lots of other operations together.
 
-    Ansible (the package)
-        A software package (Python, deb, rpm, and so on) that contains ansible-base and a select group of collections. Playbooks that worked with Ansible 2.9 should still work with the Ansible 2.10 package. See the :file:`ansible-<version>.build` file in the release-specific directory at  `ansible-build-data <https://github.com/ansible-community/ansible-build-data>`_ for a list of collections included in Ansible, as well as the included ``ansible-base`` version.
+    Assible (the package)
+        A software package (Python, deb, rpm, and so on) that contains assible-base and a select group of collections. Playbooks that worked with Assible 2.9 should still work with the Assible 2.10 package. See the :file:`assible-<version>.build` file in the release-specific directory at  `assible-build-data <https://github.com/assible-community/assible-build-data>`_ for a list of collections included in Assible, as well as the included ``assible-base`` version.
 
-    ansible-base
-        New for 2.10. The installable package (RPM/Python/Deb package) generated from the `ansible/ansible repository <https://github.com/ansible/ansible>`_. Contains the command-line tools and the code for basic features and functions, such as copying module code to managed nodes. The ``ansible-base`` package includes a few modules and plugins and allows you to add others by installing collections.
+    assible-base
+        New for 2.10. The installable package (RPM/Python/Deb package) generated from the `assible/assible repository <https://github.com/assible/assible>`_. Contains the command-line tools and the code for basic features and functions, such as copying module code to managed nodes. The ``assible-base`` package includes a few modules and plugins and allows you to add others by installing collections.
 
-    Ansible Galaxy
-        An `online resource <galaxy.ansible.com>`_ for finding and sharing Ansible community content. Also, the command-line utility that lets users install individual Ansible Collections, for example`` ansible-galaxy install community.crypto``.
+    Assible Galaxy
+        An `online resource <galaxy.assible.com>`_ for finding and sharing Assible community content. Also, the command-line utility that lets users install individual Assible Collections, for example`` assible-galaxy install community.crypto``.
 
     Async
         Refers to a task that is configured to run in the background rather
@@ -38,18 +38,18 @@ when a term comes up on the mailing list.
         run longer than the SSH timeout, it would make sense to launch that
         task in async mode.  Async modes can poll for completion every so many
         seconds or can be configured to "fire and forget", in which case
-        Ansible will not even check on the task again; it will just kick it
+        Assible will not even check on the task again; it will just kick it
         off and proceed to future steps.  Async modes work with both
-        :command:`/usr/bin/ansible` and :command:`/usr/bin/ansible-playbook`.
+        :command:`/usr/bin/assible` and :command:`/usr/bin/assible-playbook`.
 
     Callback Plugin
         Refers to some user-written code that can intercept results from
-        Ansible and do something with them.  Some supplied examples in the
+        Assible and do something with them.  Some supplied examples in the
         GitHub project perform custom logging, send email, or even play sound
         effects.
 
     Check Mode
-        Refers to running Ansible with the ``--check`` option, which does not
+        Refers to running Assible with the ``--check`` option, which does not
         make any changes on the remote systems, but only outputs the changes
         that might occur if the command ran without this flag.  This is
         analogous to so-called "dry run" modes in other systems, though the
@@ -59,20 +59,20 @@ when a term comes up on the mailing list.
         not substitute it for a good staging environment.
 
     Collection
-        A packaging format for bundling and distributing Ansible content, including plugins, roles, modules, and more. Collections release independent of other collections or ``ansible-base`` so features can be available sooner to users. Some collections are packaged with Ansible (version 2.10 or later). You can install other collections (or other versions of collections) with ``ansible-galaxy collection install <namespace.collection>``.
+        A packaging format for bundling and distributing Assible content, including plugins, roles, modules, and more. Collections release independent of other collections or ``assible-base`` so features can be available sooner to users. Some collections are packaged with Assible (version 2.10 or later). You can install other collections (or other versions of collections) with ``assible-galaxy collection install <namespace.collection>``.
 
     Collection name
         The second part of a Fully Qualified Collection Name. The collection name divides the collection namespace and usually reflects the function of the collection content. For example, the ``cisco`` namespace might contain ``cisco.ios``, ``cisco.aci``, and ``cisco.nxos``, with content for managing the different network devices maintained by Cisco.
 
     community.general (collection)
-        A special collection managed by the Ansible Community Team containing all the modules and plugins which shipped in Ansible 2.9 that do ont have their own dedicated Collection. See `community.general <https://galaxy.ansible.com/community/general>`_` on Galaxy.
+        A special collection managed by the Assible Community Team containing all the modules and plugins which shipped in Assible 2.9 that do ont have their own dedicated Collection. See `community.general <https://galaxy.assible.com/community/general>`_` on Galaxy.
 
     community.network (collection)
-        Similar to ``community.general``, focusing on network content. `community.network <https://galaxy.ansible.com/community/network>`_` on Galaxy.
+        Similar to ``community.general``, focusing on network content. `community.network <https://galaxy.assible.com/community/network>`_` on Galaxy.
 
     Connection Plugin
-        By default, Ansible talks to remote machines through pluggable
-        libraries.  Ansible uses native OpenSSH (:term:`SSH (Native)`) or
+        By default, Assible talks to remote machines through pluggable
+        libraries.  Assible uses native OpenSSH (:term:`SSH (Native)`) or
         a Python implementation called :term:`paramiko`.  OpenSSH is preferred
         if you are using a recent version, and also enables some features like
         Kerberos and jump hosts.  This is covered in the :ref:`getting
@@ -85,7 +85,7 @@ when a term comes up on the mailing list.
     Conditionals
         A conditional is an expression that evaluates to true or false that
         decides whether a given task is executed on a given machine or not.
-        Ansible's conditionals are powered by the 'when' statement, which are
+        Assible's conditionals are powered by the 'when' statement, which are
         discussed in the :ref:`working_with_playbooks`.
 
     Declarative
@@ -95,32 +95,32 @@ when a term comes up on the mailing list.
         declarative specification of a task would be: "put me in California".
         Depending on your current location, the sequence of steps to get you to
         California may vary, and if you are already in California, nothing
-        at all needs to be done. Ansible's Resources are declarative; it
+        at all needs to be done. Assible's Resources are declarative; it
         figures out the steps needed to achieve the final state. It also lets
         you know whether or not any steps needed to be taken to get to the
         final state.
 
     Diff Mode
-        A ``--diff`` flag can be passed to Ansible to show what changed on
+        A ``--diff`` flag can be passed to Assible to show what changed on
         modules that support it. You can combine it with ``--check`` to get a
         good 'dry run'.  File diffs are normally in unified diff format.
 
     Executor
-        A core software component of Ansible that is the power behind
-        :command:`/usr/bin/ansible` directly -- and corresponds to the
+        A core software component of Assible that is the power behind
+        :command:`/usr/bin/assible` directly -- and corresponds to the
         invocation of each task in a :term:`playbook <playbooks>`.  The
-        Executor is something Ansible developers may talk about, but it's not
+        Executor is something Assible developers may talk about, but it's not
         really user land vocabulary.
 
     Facts
         Facts are simply things that are discovered about remote nodes.  While
         they can be used in :term:`playbooks` and templates just like
         variables, facts are things that are inferred, rather than set.  Facts
-        are automatically discovered by Ansible when running plays by
+        are automatically discovered by Assible when running plays by
         executing the internal :ref:`setup module <setup_module>` on the remote nodes.  You
         never have to call the setup module explicitly, it just runs, but it
         can be disabled to save time if it is not needed or you can tell
-        ansible to collect only a subset of the full facts via the
+        assible to collect only a subset of the full facts via the
         ``gather_subset:`` option. For the convenience of users who are
         switching from other configuration management systems, the fact module
         will also pull in facts from the :program:`ohai` and :program:`facter`
@@ -136,7 +136,7 @@ when a term comes up on the mailing list.
         in the :ref:`API docs section <developing_filter_plugins>`.
 
     Forks
-        Ansible talks to remote nodes in parallel and the level of parallelism
+        Assible talks to remote nodes in parallel and the level of parallelism
         can be set either by passing ``--forks`` or editing the default in
         a configuration file.  The default is a very conservative five (5)
         forks, though if you have a lot of RAM, you can easily set this to
@@ -157,7 +157,7 @@ when a term comes up on the mailing list.
         than the name of the host specifically, or the name of the group they
         are in.  For instance, it is possible to select ``ww*`` to match all
         hosts starting with ``www``.   This concept is pulled directly from
-        :program:`Func`, one of Michael DeHaan's (an Ansible Founder) earlier
+        :program:`Func`, one of Michael DeHaan's (an Assible Founder) earlier
         projects.  In addition to basic globbing, various set operations are
         also possible, such as 'hosts in this group and not in another group',
         and so on.
@@ -176,7 +176,7 @@ when a term comes up on the mailing list.
         file or :term:`playbook <playbooks>`.
 
     Handlers
-        Handlers are just like regular tasks in an Ansible
+        Handlers are just like regular tasks in an Assible
         :term:`playbook <playbooks>` (see :term:`Tasks`) but are only run if
         the Task contains a ``notify`` directive and also indicates that it
         changed something.  For example, if a config file is changed, then the
@@ -186,14 +186,14 @@ when a term comes up on the mailing list.
         service restarts, but service restarts are the most common usage.
 
     Host
-        A host is simply a remote machine that Ansible manages.  They can have
+        A host is simply a remote machine that Assible manages.  They can have
         individual variables assigned to them, and can also be organized in
         groups.  All hosts have a name they can be reached at (which is either
         an IP address or a domain name) and, optionally, a port number, if they
         are not to be accessed on the default SSH port.
 
     Host Specifier
-        Each :term:`Play <plays>` in Ansible maps a series of :term:`tasks` (which define the role,
+        Each :term:`Play <plays>` in Assible maps a series of :term:`tasks` (which define the role,
         purpose, or orders of a system) to a set of systems.
 
         This ``hosts:`` directive in each play is often called the hosts specifier.
@@ -225,8 +225,8 @@ when a term comes up on the mailing list.
         create a blog for both ``alice`` and ``bob``.
 
     Inventory
-        A file (by default, Ansible uses a simple INI format) that describes
-        :term:`Hosts <Host>` and :term:`Groups <Group>` in Ansible.  Inventory
+        A file (by default, Assible uses a simple INI format) that describes
+        :term:`Hosts <Host>` and :term:`Groups <Group>` in Assible.  Inventory
         can also be provided via an :term:`Inventory Script` (sometimes called
         an "External Inventory Script").
 
@@ -239,16 +239,16 @@ when a term comes up on the mailing list.
         Classifier") and works more or less exactly the same way.
 
     Jinja2
-        Jinja2 is the preferred templating language of Ansible's template
+        Jinja2 is the preferred templating language of Assible's template
         module.  It is a very simple Python template language that is
         generally readable and easy to write.
 
     JSON
-        Ansible uses JSON for return data from remote modules.  This allows
+        Assible uses JSON for return data from remote modules.  This allows
         modules to be written in any language, not just Python.
 
     Lazy Evaluation
-        In general, Ansible evaluates any variables in
+        In general, Assible evaluates any variables in
         :term:`playbook <playbooks>` content at the last possible second,
         which means that if you define a data structure that data structure
         itself can define variable values within it, and everything "just
@@ -256,12 +256,12 @@ when a term comes up on the mailing list.
         include other variables inside of those strings.
 
     Library
-        A collection of modules made available to :command:`/usr/bin/ansible`
-        or an Ansible :term:`playbook <playbooks>`.
+        A collection of modules made available to :command:`/usr/bin/assible`
+        or an Assible :term:`playbook <playbooks>`.
 
     Limit Groups
-        By passing ``--limit somegroup`` to :command:`ansible` or
-        :command:`ansible-playbook`, the commands can be limited to a subset
+        By passing ``--limit somegroup`` to :command:`assible` or
+        :command:`assible-playbook`, the commands can be limited to a subset
         of :term:`hosts <Host>`.  For instance, this can be used to run
         a :term:`playbook <playbooks>` that normally targets an entire set of
         servers to one particular server.
@@ -269,17 +269,17 @@ when a term comes up on the mailing list.
     Local Action
         A local_action directive in a :term:`playbook <playbooks>` targeting
         remote machines means that the given step will actually occur on the
-        local machine, but that the variable ``{{ ansible_hostname }}`` can be
+        local machine, but that the variable ``{{ assible_hostname }}`` can be
         passed in to reference the remote hostname being referred to in that
         step.  This can be used to trigger, for example, an rsync operation.
 
     Local Connection
         By using ``connection: local`` in a :term:`playbook <playbooks>`, or
-        passing ``-c local`` to :command:`/usr/bin/ansible`, this indicates
+        passing ``-c local`` to :command:`/usr/bin/assible`, this indicates
         that we are managing the local host and not a remote machine.
 
     Lookup Plugin
-        A lookup plugin is a way to get data into Ansible from the outside world.
+        A lookup plugin is a way to get data into Assible from the outside world.
         Lookup plugins are an extension of Jinja2 and can be accessed in templates, for example,
         ``{{ lookup('file','/path/to/file') }}``.
         These are how such things as ``with_items``, are implemented.
@@ -288,7 +288,7 @@ when a term comes up on the mailing list.
         or key value stores.
 
     Loops
-        Generally, Ansible is not a programming language. It prefers to be
+        Generally, Assible is not a programming language. It prefers to be
         more declarative, though various constructs like ``loop`` allow
         a particular task to be repeated for multiple items in a list.
         Certain modules, like :ref:`yum <yum_module>` and :ref:`apt <apt_module>`, actually take
@@ -297,15 +297,15 @@ when a term comes up on the mailing list.
         configuration, so they can be used without loops.
 
     Modules
-        Modules are the units of work that Ansible ships out to remote
+        Modules are the units of work that Assible ships out to remote
         machines.   Modules are kicked off by either
-        :command:`/usr/bin/ansible` or :command:`/usr/bin/ansible-playbook`
+        :command:`/usr/bin/assible` or :command:`/usr/bin/assible-playbook`
         (where multiple tasks use lots of different modules in conjunction).
         Modules can be implemented in any language, including Perl, Bash, or
         Ruby -- but can leverage some useful communal library code if written
         in Python.  Modules just have to return :term:`JSON`.  Once modules are
         executed on remote machines, they are removed, so no long running
-        daemons are used.  Ansible refers to the collection of available
+        daemons are used.  Assible refers to the collection of available
         modules as a :term:`library`.
 
     Multi-Tier
@@ -314,12 +314,12 @@ when a term comes up on the mailing list.
         well defined orders.  For instance, a web server may need to be
         updated before a database server and pieces on the web server may
         need to be updated after *THAT* database server and various load
-        balancers and monitoring servers may need to be contacted.  Ansible
+        balancers and monitoring servers may need to be contacted.  Assible
         models entire IT topologies and workflows rather than looking at
         configuration from a "one system at a time" perspective.
 
     Namespace
-        The first part of a fully qualified collection name, the namespace usually reflects a functional content category. Example: in ``cisco.ios.ios_config``, ``cisco`` is the namespace. Namespaces are reserved and distributed by Red Hat at Red Hat's discretion. Many, but not all, namespaces will correspond with vendor names. See `Galaxy namespaces <https://galaxy.ansible.com/docs/contributing/namespaces.html#galaxy-namespaces>`_ on the Galaxy docsite for namespace requirements.
+        The first part of a fully qualified collection name, the namespace usually reflects a functional content category. Example: in ``cisco.ios.ios_config``, ``cisco`` is the namespace. Namespaces are reserved and distributed by Red Hat at Red Hat's discretion. Many, but not all, namespaces will correspond with vendor names. See `Galaxy namespaces <https://galaxy.assible.com/docs/contributing/namespaces.html#galaxy-namespaces>`_ on the Galaxy docsite for namespace requirements.
 
     Notify
         The act of a :term:`task <tasks>` registering a change event and
@@ -331,7 +331,7 @@ when a term comes up on the mailing list.
 
     Orchestration
         Many software automation systems use this word to mean different
-        things.  Ansible uses it as a conductor would conduct an orchestra.
+        things.  Assible uses it as a conductor would conduct an orchestra.
         A datacenter or cloud architecture is full of many systems, playing
         many parts -- web servers, database servers, maybe load balancers,
         monitoring systems, continuous integration systems, and so on.  In
@@ -340,18 +340,18 @@ when a term comes up on the mailing list.
         correctly.  Some system may perform some steps, then others, then
         previous systems already processed may need to perform more steps.
         Along the way, emails may need to be sent or web services contacted.
-        Ansible orchestration is all about modeling that kind of process.
+        Assible orchestration is all about modeling that kind of process.
 
     paramiko
-        By default, Ansible manages machines over SSH.   The library that
-        Ansible uses by default to do this is a Python-powered library called
+        By default, Assible manages machines over SSH.   The library that
+        Assible uses by default to do this is a Python-powered library called
         paramiko.  The paramiko library is generally fast and easy to manage,
         though users who want to use Kerberos or Jump Hosts may wish to switch
         to a native SSH binary such as OpenSSH by specifying the connection
         type in their :term:`playbooks`, or using the ``-c ssh`` flag.
 
     Playbooks
-        Playbooks are the language by which Ansible orchestrates, configures,
+        Playbooks are the language by which Assible orchestrates, configures,
         administers, or deploys systems.  They are called playbooks partially
         because it's a sports analogy, and it's supposed to be fun using them.
         They aren't workbooks :)
@@ -365,48 +365,48 @@ when a term comes up on the mailing list.
         one or many plays in a playbook.
 
     Pull Mode
-        By default, Ansible runs in :term:`push mode`, which allows it very
+        By default, Assible runs in :term:`push mode`, which allows it very
         fine-grained control over when it talks to each system.  Pull mode is
         provided for when you would rather have nodes check in every N minutes
         on a particular schedule.  It uses a program called
-        :command:`ansible-pull` and can also be set up (or reconfigured) using
-        a push-mode :term:`playbook <playbooks>`.  Most Ansible users use push
+        :command:`assible-pull` and can also be set up (or reconfigured) using
+        a push-mode :term:`playbook <playbooks>`.  Most Assible users use push
         mode, but pull mode is included for variety and the sake of having
         choices.
 
-        :command:`ansible-pull` works by checking configuration orders out of
+        :command:`assible-pull` works by checking configuration orders out of
         git on a crontab and then managing the machine locally, using the
         :term:`local connection` plugin.
 
     Push Mode
-        Push mode is the default mode of Ansible. In fact, it's not really
-        a mode at all -- it's just how Ansible works when you aren't thinking
-        about it.  Push mode allows Ansible to be fine-grained and conduct
+        Push mode is the default mode of Assible. In fact, it's not really
+        a mode at all -- it's just how Assible works when you aren't thinking
+        about it.  Push mode allows Assible to be fine-grained and conduct
         nodes through complex orchestration processes without waiting for them
         to check in.
 
     Register Variable
-        The result of running any :term:`task <tasks>` in Ansible can be
+        The result of running any :term:`task <tasks>` in Assible can be
         stored in a variable for use in a template or a conditional statement.
         The keyword used to define the variable is called ``register``, taking
         its name from the idea of registers in assembly programming (though
-        Ansible will never feel like assembly programming).  There are an
+        Assible will never feel like assembly programming).  There are an
         infinite number of variable names you can use for registration.
 
     Resource Model
-        Ansible modules work in terms of resources.   For instance, the
+        Assible modules work in terms of resources.   For instance, the
         :ref:`file module <file_module>` will select a particular file and ensure
         that the attributes of that resource match a particular model. As an
         example, we might wish to change the owner of :file:`/etc/motd` to
         ``root`` if it is not already set to ``root``, or set its mode to
         ``0644`` if it is not already set to ``0644``.  The resource models
         are :term:`idempotent <idempotency>` meaning change commands are not
-        run unless needed, and Ansible will bring the system back to a desired
+        run unless needed, and Assible will bring the system back to a desired
         state regardless of the actual state -- rather than you having to tell
         it how to get to the state.
 
     Roles
-        Roles are units of organization in Ansible.  Assigning a role to
+        Roles are units of organization in Assible.  Assigning a role to
         a group of :term:`hosts <Host>` (or a set of :term:`groups <group>`,
         or :term:`host patterns <Globbing>`, and so on) implies that they should
         implement a specific behavior.  A role may include applying certain
@@ -420,7 +420,7 @@ when a term comes up on the mailing list.
         avoid updating them all at once and bringing the system offline.  For
         instance, in a web topology of 500 nodes handling very large volume,
         it may be reasonable to update 10 or 20 machines at a time, moving on
-        to the next 10 or 20 when done.  The ``serial:`` keyword in an Ansible
+        to the next 10 or 20 when done.  The ``serial:`` keyword in an Assible
         :term:`playbooks` control the size of the rolling update pool.  The
         default is to address the batch size all at once, so this is something
         that you must opt-in to.  OS configuration (such as making sure config
@@ -433,30 +433,30 @@ when a term comes up on the mailing list.
             :term:`Rolling Update`
 
     Sudo
-        Ansible does not require root logins, and since it's daemonless,
+        Assible does not require root logins, and since it's daemonless,
         definitely does not require root level daemons (which can be
-        a security concern in sensitive environments).  Ansible can log in and
+        a security concern in sensitive environments).  Assible can log in and
         perform many operations wrapped in a sudo command, and can work with
         both password-less and password-based sudo.  Some operations that
         don't normally work with sudo (like scp file transfer) can be achieved
-        with Ansible's :ref:`copy <copy_module>`, :ref:`template <template_module>`, and
+        with Assible's :ref:`copy <copy_module>`, :ref:`template <template_module>`, and
         :ref:`fetch <fetch_module>` modules while running in sudo mode.
 
     SSH (Native)
-        Native OpenSSH as an Ansible transport is specified with ``-c ssh``
+        Native OpenSSH as an Assible transport is specified with ``-c ssh``
         (or a config file, or a directive in the :term:`playbook <playbooks>`)
         and can be useful if wanting to login via Kerberized SSH or using SSH
         jump hosts, and so on.  In 1.2.1, ``ssh`` will be used by default if the
         OpenSSH binary on the control machine is sufficiently new.
-        Previously, Ansible selected ``paramiko`` as a default.  Using
+        Previously, Assible selected ``paramiko`` as a default.  Using
         a client that supports ``ControlMaster`` and ``ControlPersist`` is
         recommended for maximum performance -- if you don't have that and
         don't need Kerberos, jump hosts, or other features, ``paramiko`` is
-        a good choice.  Ansible will warn you if it doesn't detect
+        a good choice.  Assible will warn you if it doesn't detect
         ControlMaster/ControlPersist capability.
 
     Tags
-        Ansible allows tagging resources in a :term:`playbook <playbooks>`
+        Assible allows tagging resources in a :term:`playbook <playbooks>`
         with arbitrary keywords, and then running only the parts of the
         playbook that correspond to those keywords.  For instance, it is
         possible to have an entire OS configuration, and have certain steps
@@ -475,7 +475,7 @@ when a term comes up on the mailing list.
         A list of :term:`Task`.
 
     Templates
-        Ansible can easily transfer files to remote systems but often it is
+        Assible can easily transfer files to remote systems but often it is
         desirable to substitute variables in other files.  Variables may come
         from the :term:`inventory` file, :term:`Host Vars`, :term:`Group
         Vars`, or :term:`Facts`. Templates use the :term:`Jinja2` template
@@ -483,8 +483,8 @@ when a term comes up on the mailing list.
         statements.
 
     Transport
-        Ansible uses :term:``Connection Plugins`` to define types of available
-        transports.  These are simply how Ansible will reach out to managed
+        Assible uses :term:``Connection Plugins`` to define types of available
+        transports.  These are simply how Assible will reach out to managed
         systems.  Transports included are :term:`paramiko`,
         :term:`ssh <SSH (Native)>` (using OpenSSH), and
         :term:`local <Local Connection>`.
@@ -503,12 +503,12 @@ when a term comes up on the mailing list.
         what Facts are).
 
     YAML
-        Ansible does not want to force people to write programming language
-        code to automate infrastructure, so Ansible uses YAML to define
+        Assible does not want to force people to write programming language
+        code to automate infrastructure, so Assible uses YAML to define
         :term:`playbook <playbooks>` configuration languages and also variable
         files.  YAML is nice because it has a minimum of syntax and is very
         clean and easy for people to skim.  It is a good data format for
-        configuration files and humans, but also machine readable.  Ansible's
+        configuration files and humans, but also machine readable.  Assible's
         usage of YAML stemmed from Michael DeHaan's first use of it inside of
         Cobbler around 2006.  YAML is fairly popular in the dynamic language
         community and the format has libraries available for serialization in
@@ -516,13 +516,13 @@ when a term comes up on the mailing list.
 
 .. seealso::
 
-   :ref:`ansible_faq`
+   :ref:`assible_faq`
        Frequently asked questions
    :ref:`working_with_playbooks`
        An introduction to playbooks
    :ref:`playbooks_best_practices`
        Tips and tricks for playbooks
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

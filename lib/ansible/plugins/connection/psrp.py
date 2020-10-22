@@ -1,11 +1,11 @@
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = """
-author: Ansible Core Team
+author: Assible Core Team
 name: psrp
 short_description: Run tasks over Microsoft PowerShell Remoting Protocol
 description:
@@ -23,22 +23,22 @@ options:
     default: inventory_hostname
     type: str
     vars:
-    - name: ansible_host
-    - name: ansible_psrp_host
+    - name: assible_host
+    - name: assible_psrp_host
   remote_user:
     description:
     - The user to log in as.
     type: str
     vars:
-    - name: ansible_user
-    - name: ansible_psrp_user
+    - name: assible_user
+    - name: assible_psrp_user
   remote_password:
     description: Authentication password for the C(remote_user). Can be supplied as CLI option.
     type: str
     vars:
-    - name: ansible_password
-    - name: ansible_winrm_pass
-    - name: ansible_winrm_password
+    - name: assible_password
+    - name: assible_winrm_pass
+    - name: assible_winrm_password
     aliases:
     - password  # Needed for --ask-pass to come through on delegation
   port:
@@ -48,8 +48,8 @@ options:
       otherwise the port is C(5985).
     type: int
     vars:
-    - name: ansible_port
-    - name: ansible_psrp_port
+    - name: assible_port
+    - name: assible_psrp_port
   protocol:
     description:
     - Set the protocol to use for the connection.
@@ -59,13 +59,13 @@ options:
     - https
     type: str
     vars:
-    - name: ansible_psrp_protocol
+    - name: assible_psrp_protocol
   path:
     description:
     - The URI path to connect to.
     type: str
     vars:
-    - name: ansible_psrp_path
+    - name: assible_psrp_path
     default: 'wsman'
   auth:
     description:
@@ -74,7 +74,7 @@ options:
       available and fall back to C(NTLM) if it isn't.
     type: str
     vars:
-    - name: ansible_psrp_auth
+    - name: assible_psrp_auth
     choices:
     - basic
     - certificate
@@ -95,7 +95,7 @@ options:
     default: validate
     type: str
     vars:
-    - name: ansible_psrp_cert_validation
+    - name: assible_psrp_cert_validation
   ca_cert:
     description:
     - The path to a PEM certificate chain to use when validating the server's
@@ -103,8 +103,8 @@ options:
     - This value is ignored if I(cert_validation) is set to C(ignore).
     type: path
     vars:
-    - name: ansible_psrp_cert_trust_path
-    - name: ansible_psrp_ca_cert
+    - name: assible_psrp_cert_trust_path
+    - name: assible_psrp_ca_cert
     aliases: [ cert_trust_path ]
   connection_timeout:
     description:
@@ -112,7 +112,7 @@ options:
     - This is measured in seconds.
     type: int
     vars:
-    - name: ansible_psrp_connection_timeout
+    - name: assible_psrp_connection_timeout
     default: 30
   read_timeout:
     description:
@@ -122,7 +122,7 @@ options:
     - This is measured in seconds.
     type: int
     vars:
-    - name: ansible_psrp_read_timeout
+    - name: assible_psrp_read_timeout
     default: 30
     version_added: '2.8'
   reconnection_retries:
@@ -130,7 +130,7 @@ options:
     - The number of retries on connection errors.
     type: int
     vars:
-    - name: ansible_psrp_reconnection_retries
+    - name: assible_psrp_reconnection_retries
     default: 0
     version_added: '2.8'
   reconnection_backoff:
@@ -138,18 +138,18 @@ options:
     - The backoff time to use in between reconnection attempts.
       (First sleeps X, then sleeps 2*X, then sleeps 4*X, ...)
     - This is measured in seconds.
-    - The C(ansible_psrp_reconnection_backoff) variable was added in Ansible
+    - The C(assible_psrp_reconnection_backoff) variable was added in Assible
       2.9.
     type: int
     vars:
-    - name: ansible_psrp_connection_backoff
-    - name: ansible_psrp_reconnection_backoff
+    - name: assible_psrp_connection_backoff
+    - name: assible_psrp_reconnection_backoff
     default: 2
     version_added: '2.8'
   message_encryption:
     description:
     - Controls the message encryption settings, this is different from TLS
-      encryption when I(ansible_psrp_protocol) is C(https).
+      encryption when I(assible_psrp_protocol) is C(https).
     - Only the auth protocols C(negotiate), C(kerberos), C(ntlm), and
       C(credssp) can do message encryption. The other authentication protocols
       only support encryption when C(protocol) is set to C(https).
@@ -161,7 +161,7 @@ options:
       over HTTP and disables any authentication encryption processes.
     type: str
     vars:
-    - name: ansible_psrp_message_encryption
+    - name: assible_psrp_message_encryption
     choices:
     - auto
     - always
@@ -171,7 +171,7 @@ options:
     description:
     - Set the proxy URL to use when connecting to the remote host.
     vars:
-    - name: ansible_psrp_proxy
+    - name: assible_psrp_proxy
     type: str
   ignore_proxy:
     description:
@@ -179,7 +179,7 @@ options:
       remote host.
     - This option is ignored if C(proxy) is set.
     vars:
-    - name: ansible_psrp_ignore_proxy
+    - name: assible_psrp_ignore_proxy
     type: bool
     default: 'no'
 
@@ -189,13 +189,13 @@ options:
     - The local path to an X509 certificate key to use with certificate auth.
     type: path
     vars:
-    - name: ansible_psrp_certificate_key_pem
+    - name: assible_psrp_certificate_key_pem
   certificate_pem:
     description:
     - The local path to an X509 certificate to use with certificate auth.
     type: path
     vars:
-    - name: ansible_psrp_certificate_pem
+    - name: assible_psrp_certificate_pem
   credssp_auth_mechanism:
     description:
     - The sub authentication mechanism to use with CredSSP auth.
@@ -208,7 +208,7 @@ options:
     - ntlm
     default: auto
     vars:
-    - name: ansible_psrp_credssp_auth_mechanism
+    - name: assible_psrp_credssp_auth_mechanism
   credssp_disable_tlsv1_2:
     description:
     - Disables the use of TLSv1.2 on the CredSSP authentication channel.
@@ -217,7 +217,7 @@ options:
     default: no
     type: bool
     vars:
-    - name: ansible_psrp_credssp_disable_tlsv1_2
+    - name: assible_psrp_credssp_disable_tlsv1_2
   credssp_minimum_version:
     description:
     - The minimum CredSSP server authentication version that will be accepted.
@@ -226,7 +226,7 @@ options:
     default: 2
     type: int
     vars:
-    - name: ansible_psrp_credssp_minimum_version
+    - name: assible_psrp_credssp_minimum_version
   negotiate_delegate:
     description:
     - Allow the remote user the ability to delegate it's credentials to another
@@ -236,19 +236,19 @@ options:
     - Ignored when NTLM was the negotiated auth.
     type: bool
     vars:
-    - name: ansible_psrp_negotiate_delegate
+    - name: assible_psrp_negotiate_delegate
   negotiate_hostname_override:
     description:
     - Override the remote hostname when searching for the host in the Kerberos
       lookup.
-    - This allows Ansible to connect over IP but authenticate with the remote
+    - This allows Assible to connect over IP but authenticate with the remote
       server using it's DNS name.
     - Only valid when Kerberos was the negotiated auth or was explicitly set as
       the authentication.
     - Ignored when NTLM was the negotiated auth.
     type: str
     vars:
-    - name: ansible_psrp_negotiate_hostname_override
+    - name: assible_psrp_negotiate_hostname_override
   negotiate_send_cbt:
     description:
     - Send the Channel Binding Token (CBT) structure when authenticating.
@@ -258,7 +258,7 @@ options:
     default: yes
     type: bool
     vars:
-    - name: ansible_psrp_negotiate_send_cbt
+    - name: assible_psrp_negotiate_send_cbt
   negotiate_service:
     description:
     - Override the service part of the SPN used during Kerberos authentication.
@@ -268,7 +268,7 @@ options:
     default: WSMAN
     type: str
     vars:
-    - name: ansible_psrp_negotiate_service
+    - name: assible_psrp_negotiate_service
 
   # protocol options
   operation_timeout:
@@ -278,7 +278,7 @@ options:
     - This should not exceed the value for C(connection_timeout).
     type: int
     vars:
-    - name: ansible_psrp_operation_timeout
+    - name: assible_psrp_operation_timeout
     default: 20
   max_envelope_size:
     description:
@@ -287,14 +287,14 @@ options:
     - Defaults to C(150KiB) for compatibility with older hosts.
     type: int
     vars:
-    - name: ansible_psrp_max_envelope_size
+    - name: assible_psrp_max_envelope_size
     default: 153600
   configuration_name:
     description:
     - The name of the PowerShell configuration endpoint to connect to.
     type: str
     vars:
-    - name: ansible_psrp_configuration_name
+    - name: assible_psrp_configuration_name
     default: Microsoft.PowerShell
 """
 
@@ -303,15 +303,15 @@ import json
 import logging
 import os
 
-from ansible import constants as C
-from ansible.errors import AnsibleConnectionFailure, AnsibleError
-from ansible.errors import AnsibleFileNotFound
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.plugins.connection import ConnectionBase
-from ansible.plugins.shell.powershell import _common_args
-from ansible.utils.display import Display
-from ansible.utils.hashing import sha1
+from assible import constants as C
+from assible.errors import AssibleConnectionFailure, AssibleError
+from assible.errors import AssibleFileNotFound
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.plugins.connection import ConnectionBase
+from assible.plugins.shell.powershell import _common_args
+from assible.utils.display import Display
+from assible.utils.hashing import sha1
 
 HAS_PYPSRP = True
 PYPSRP_IMP_ERR = None
@@ -362,7 +362,7 @@ class Connection(ConnectionBase):
 
     def _connect(self):
         if not HAS_PYPSRP:
-            raise AnsibleError("pypsrp or dependencies are not installed: %s"
+            raise AssibleError("pypsrp or dependencies are not installed: %s"
                                % to_native(PYPSRP_IMP_ERR))
         super(Connection, self)._connect()
         self._build_kwargs()
@@ -375,7 +375,7 @@ class Connection(ConnectionBase):
 
             # create our psuedo host to capture the exit code and host output
             host_ui = PSHostUserInterface()
-            self.host = PSHost(None, None, False, "Ansible PSRP Host", None,
+            self.host = PSHost(None, None, False, "Assible PSRP Host", None,
                                host_ui, None)
 
             self.runspace = RunspacePool(
@@ -390,15 +390,15 @@ class Connection(ConnectionBase):
             try:
                 self.runspace.open()
             except AuthenticationError as e:
-                raise AnsibleConnectionFailure("failed to authenticate with "
+                raise AssibleConnectionFailure("failed to authenticate with "
                                                "the server: %s" % to_native(e))
             except WinRMError as e:
-                raise AnsibleConnectionFailure(
+                raise AssibleConnectionFailure(
                     "psrp connection failure during runspace open: %s"
                     % to_native(e)
                 )
             except (ConnectionError, ConnectTimeout) as e:
-                raise AnsibleConnectionFailure(
+                raise AssibleConnectionFailure(
                     "Failed to connect to the host via PSRP: %s"
                     % to_native(e)
                 )
@@ -424,14 +424,14 @@ class Connection(ConnectionBase):
             in_data = to_text(in_data, errors="surrogate_or_strict", nonstring="passthru")
 
             if in_data and in_data.startswith(u"#!"):
-                # ANSIBALLZ wrapper, we need to get the interpreter and execute
+                # ASSIBALLZ wrapper, we need to get the interpreter and execute
                 # that as the script - note this won't work as basic.py relies
                 # on packages not available on Windows, once fixed we can enable
                 # this path
                 interpreter = to_native(in_data.splitlines()[0][2:])
                 # script = "$input | &'%s' -" % interpreter
                 # in_data = to_text(in_data)
-                raise AnsibleError("cannot run the interpreter '%s' on the psrp "
+                raise AssibleError("cannot run the interpreter '%s' on the psrp "
                                    "connection plugin" % interpreter)
 
             # call build_module_command to get the bootstrap wrapper text
@@ -464,21 +464,21 @@ class Connection(ConnectionBase):
 
         else:
             display.deprecated("Older pypsrp library detected, please update to pypsrp>=0.4.0 to use the newer copy "
-                               "method over PSRP.", version="2.13", collection_name='ansible.builtin')
+                               "method over PSRP.", version="2.13", collection_name='assible.builtin')
             rc, stdout, stderr, local_sha1 = self._put_file_old(in_path, out_path)
 
         if rc != 0:
-            raise AnsibleError(to_native(stderr))
+            raise AssibleError(to_native(stderr))
 
         put_output = json.loads(stdout)
         remote_sha1 = put_output.get("sha1")
 
         if not remote_sha1:
-            raise AnsibleError("Remote sha1 was not returned, stdout: '%s', stderr: '%s'"
+            raise AssibleError("Remote sha1 was not returned, stdout: '%s', stderr: '%s'"
                                % (to_native(stdout), to_native(stderr)))
 
         if not remote_sha1 == local_sha1:
-            raise AnsibleError("Remote sha1 hash %s does not match local hash %s"
+            raise AssibleError("Remote sha1 hash %s does not match local hash %s"
                                % (to_native(remote_sha1), to_native(local_sha1)))
 
     def _put_file_old(self, in_path, out_path):
@@ -508,7 +508,7 @@ class Connection(ConnectionBase):
                                                preserve_rc=False)
         b_in_path = to_bytes(in_path, errors='surrogate_or_strict')
         if not os.path.exists(b_in_path):
-            raise AnsibleFileNotFound('file or module does not exist: "%s"'
+            raise AssibleFileNotFound('file or module does not exist: "%s"'
                                       % to_native(in_path))
 
         in_size = os.path.getsize(b_in_path)
@@ -647,7 +647,7 @@ end {
 
         b_in_path = to_bytes(in_path, errors='surrogate_or_strict')
         if not os.path.exists(b_in_path):
-            raise AnsibleFileNotFound('file or module does not exist: "%s"' % to_native(in_path))
+            raise AssibleFileNotFound('file or module does not exist: "%s"' % to_native(in_path))
 
         def read_gen():
             offset = 0
@@ -722,7 +722,7 @@ if ($bytes_read -gt 0) {
                                                     use_local_scope=False,
                                                     force_stop=True)
         if rc != 0:
-            raise AnsibleError("failed to setup file stream for fetch '%s': %s"
+            raise AssibleError("failed to setup file stream for fetch '%s': %s"
                                % (out_path, to_native(stderr)))
         elif stdout.strip() == '[DIR]':
             # to be consistent with other connection plugins, we assume the caller has created the target dir
@@ -737,7 +737,7 @@ if ($bytes_read -gt 0) {
                               (in_path, out_path, offset), host=self._psrp_host)
                 rc, stdout, stderr = self._exec_psrp_script(read_script % offset, force_stop=True)
                 if rc != 0:
-                    raise AnsibleError("failed to transfer file to '%s': %s"
+                    raise AssibleError("failed to transfer file to '%s': %s"
                                        % (out_path, to_native(stderr)))
 
                 data = base64.b64decode(stdout.strip())
@@ -813,12 +813,12 @@ if ($bytes_read -gt 0) {
         supported_args = []
         for auth_kwarg in AUTH_KWARGS.values():
             supported_args.extend(auth_kwarg)
-        extra_args = set([v.replace('ansible_psrp_', '') for v in
+        extra_args = set([v.replace('assible_psrp_', '') for v in
                           self.get_option('_extras')])
         unsupported_args = extra_args.difference(supported_args)
 
         for arg in unsupported_args:
-            display.warning("ansible_psrp_%s is unsupported by the current "
+            display.warning("assible_psrp_%s is unsupported by the current "
                             "psrp version installed" % arg)
 
         self._psrp_conn_kwargs = dict(
@@ -846,8 +846,8 @@ if ($bytes_read -gt 0) {
         if hasattr(pypsrp, 'FEATURES') and 'wsman_read_timeout' in pypsrp.FEATURES:
             self._psrp_conn_kwargs['read_timeout'] = self._psrp_read_timeout
         elif self._psrp_read_timeout is not None:
-            display.warning("ansible_psrp_read_timeout is unsupported by the current psrp version installed, "
-                            "using ansible_psrp_connection_timeout value for read_timeout instead.")
+            display.warning("assible_psrp_read_timeout is unsupported by the current psrp version installed, "
+                            "using assible_psrp_connection_timeout value for read_timeout instead.")
 
         # Check if PSRP version supports newer reconnection_retries argument (needs pypsrp 0.3.0+)
         if hasattr(pypsrp, 'FEATURES') and 'wsman_reconnections' in pypsrp.FEATURES:
@@ -855,13 +855,13 @@ if ($bytes_read -gt 0) {
             self._psrp_conn_kwargs['reconnection_backoff'] = self._psrp_reconnection_backoff
         else:
             if self._psrp_reconnection_retries is not None:
-                display.warning("ansible_psrp_reconnection_retries is unsupported by the current psrp version installed.")
+                display.warning("assible_psrp_reconnection_retries is unsupported by the current psrp version installed.")
             if self._psrp_reconnection_backoff is not None:
-                display.warning("ansible_psrp_reconnection_backoff is unsupported by the current psrp version installed.")
+                display.warning("assible_psrp_reconnection_backoff is unsupported by the current psrp version installed.")
 
         # add in the extra args that were set
         for arg in extra_args.intersection(supported_args):
-            option = self.get_option('_extras')['ansible_psrp_%s' % arg]
+            option = self.get_option('_extras')['assible_psrp_%s' % arg]
             self._psrp_conn_kwargs[arg] = option
 
     def _exec_psrp_script(self, script, input_data=None, use_local_scope=True, force_stop=False, arguments=None):
@@ -890,7 +890,7 @@ if ($bytes_read -gt 0) {
         """
         PSRP doesn't have the same concept as other protocols with its output.
         We need some extra logic to convert the pipeline streams and host
-        output into the format that Ansible understands.
+        output into the format that Assible understands.
 
         :param pipeline: The finished PowerShell pipeline that invoked our
             commands

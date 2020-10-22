@@ -1,9 +1,9 @@
 #!powershell
 
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 Function Get-CustomFacts {
   [cmdletBinding()]
@@ -17,7 +17,7 @@ Function Get-CustomFacts {
 
     foreach ($FactsFile in $FactsFiles) {
         $out = & $($FactsFile.FullName)
-        $result.ansible_facts.Add("ansible_$(($FactsFile.Name).Split('.')[0])", $out)
+        $result.assible_facts.Add("assible_$(($FactsFile.Name).Split('.')[0])", $out)
     }
   }
   else
@@ -69,7 +69,7 @@ Function Get-LazyCimInstance([string]$instance_name, [string]$namespace="Root\CI
 }
 
 $result = @{
-    ansible_facts = @{ }
+    assible_facts = @{ }
     changed = $false
 }
 
@@ -96,8 +96,8 @@ $explicit_subset = [System.Collections.Generic.HashSet[string]]@()
 $exclude_subset = [System.Collections.Generic.HashSet[string]]@()
 
 $params = Parse-Args $args -supports_check_mode $true
-$factpath = Get-AnsibleParam -obj $params -name "fact_path" -type "path"
-$gather_subset_source = Get-AnsibleParam -obj $params -name "gather_subset" -type "list" -default "all"
+$factpath = Get-AssibleParam -obj $params -name "fact_path" -type "path"
+$gather_subset_source = Get-AssibleParam -obj $params -name "gather_subset" -type "list" -default "all"
 
 foreach($item in $gather_subset_source) {
     if(([string]$item).StartsWith("!")) {
@@ -133,7 +133,7 @@ foreach($item in $gather_subset_source) {
 [void] $gather_subset.ExceptWith($exclude_subset)
 [void] $gather_subset.UnionWith($explicit_subset)
 
-$ansible_facts = @{
+$assible_facts = @{
     gather_subset=@($gather_subset_source)
     module_setup=$true
 }
@@ -144,7 +144,7 @@ if ($osversion.Version -lt [version]"6.2") {
     # Server 2008, 2008 R2, and Windows 7 are not tested in CI and we want to let customers know about it before
     # removing support altogether.
     $version_string = "{0}.{1}" -f ($osversion.Version.Major, $osversion.Version.Minor)
-    $msg = "Windows version '$version_string' will no longer be supported or tested in the next Ansible release"
+    $msg = "Windows version '$version_string' will no longer be supported or tested in the next Assible release"
     Add-DeprecationWarning -obj $result -message $msg -version "2.11"
 }
 
@@ -159,20 +159,20 @@ if($gather_subset.Contains('all_ipv4_addresses') -or $gather_subset.Contains('al
         }
     }
 
-    $ansible_facts += @{
-        ansible_ip_addresses = $ips
+    $assible_facts += @{
+        assible_ip_addresses = $ips
     }
 }
 
 if($gather_subset.Contains('bios')) {
     $win32_bios = Get-LazyCimInstance Win32_Bios
     $win32_cs = Get-LazyCimInstance Win32_ComputerSystem
-    $ansible_facts += @{
-        ansible_bios_date = $win32_bios.ReleaseDate.ToString("MM/dd/yyyy")
-        ansible_bios_version = $win32_bios.SMBIOSBIOSVersion
-        ansible_product_name = $win32_cs.Model.Trim()
-        ansible_product_serial = $win32_bios.SerialNumber
-        # ansible_product_version = ([string] $win32_cs.SystemFamily)
+    $assible_facts += @{
+        assible_bios_date = $win32_bios.ReleaseDate.ToString("MM/dd/yyyy")
+        assible_bios_version = $win32_bios.SMBIOSBIOSVersion
+        assible_product_name = $win32_cs.Model.Trim()
+        assible_product_serial = $win32_bios.SerialNumber
+        # assible_product_version = ([string] $win32_cs.SystemFamily)
     }
 }
 
@@ -201,8 +201,8 @@ if($gather_subset.Contains('date_time')) {
         year = $datetime.ToString("yyyy")
     }
 
-    $ansible_facts += @{
-        ansible_date_time = $date
+    $assible_facts += @{
+        assible_date_time = $date
     }
 }
 
@@ -222,14 +222,14 @@ if($gather_subset.Contains('distribution')) {
         $installation_type = [String]$install_type_prop.InstallationType
     }
 
-    $ansible_facts += @{
-        ansible_distribution = $win32_os.Caption
-        ansible_distribution_version = $osversion.Version.ToString()
-        ansible_distribution_major_version = $osversion.Version.Major.ToString()
-        ansible_os_family = "Windows"
-        ansible_os_name = ($win32_os.Name.Split('|')[0]).Trim()
-        ansible_os_product_type = $product_type
-        ansible_os_installation_type = $installation_type
+    $assible_facts += @{
+        assible_distribution = $win32_os.Caption
+        assible_distribution_version = $osversion.Version.ToString()
+        assible_distribution_major_version = $osversion.Version.Major.ToString()
+        assible_os_family = "Windows"
+        assible_os_name = ($win32_os.Name.Split('|')[0]).Trim()
+        assible_os_product_type = $product_type
+        assible_os_installation_type = $installation_type
     }
 }
 
@@ -242,8 +242,8 @@ if($gather_subset.Contains('env')) {
         $env_vars.Add($name, $value)
     }
 
-    $ansible_facts += @{
-        ansible_env = $env_vars
+    $assible_facts += @{
+        assible_env = $env_vars
     }
 }
 
@@ -262,7 +262,7 @@ if($gather_subset.Contains('facter')) {
         $facts = "$facter_output" | ConvertFrom-Json
         ForEach($fact in $facts.PSObject.Properties) {
             $fact_name = $fact.Name
-            $ansible_facts.Add("facter_$fact_name", $fact.Value)
+            $assible_facts.Add("facter_$fact_name", $fact.Value)
         }
     }
 }
@@ -307,8 +307,8 @@ if($gather_subset.Contains('interfaces')) {
         $formattednetcfg += $thisadapter
     }
 
-    $ansible_facts += @{
-        ansible_interfaces = $formattednetcfg
+    $assible_facts += @{
+        assible_interfaces = $formattednetcfg
     }
 }
 
@@ -320,13 +320,13 @@ if ($gather_subset.Contains("local") -and $null -ne $factpath) {
 if($gather_subset.Contains('memory')) {
     $win32_cs = Get-LazyCimInstance Win32_ComputerSystem
     $win32_os = Get-LazyCimInstance Win32_OperatingSystem
-    $ansible_facts += @{
+    $assible_facts += @{
         # Win32_PhysicalMemory is empty on some virtual platforms
-        ansible_memtotal_mb = ([math]::ceiling($win32_cs.TotalPhysicalMemory / 1024 / 1024))
-        ansible_memfree_mb = ([math]::ceiling($win32_os.FreePhysicalMemory / 1024))
-        ansible_swaptotal_mb = ([math]::round($win32_os.TotalSwapSpaceSize / 1024))
-        ansible_pagefiletotal_mb = ([math]::round($win32_os.SizeStoredInPagingFiles / 1024))
-        ansible_pagefilefree_mb = ([math]::round($win32_os.FreeSpaceInPagingFiles / 1024))
+        assible_memtotal_mb = ([math]::ceiling($win32_cs.TotalPhysicalMemory / 1024 / 1024))
+        assible_memfree_mb = ([math]::ceiling($win32_os.FreePhysicalMemory / 1024))
+        assible_swaptotal_mb = ([math]::round($win32_os.TotalSwapSpaceSize / 1024))
+        assible_pagefiletotal_mb = ([math]::round($win32_os.SizeStoredInPagingFiles / 1024))
+        assible_pagefilefree_mb = ([math]::round($win32_os.FreeSpaceInPagingFiles / 1024))
     }
 }
 
@@ -343,34 +343,34 @@ if($gather_subset.Contains('platform')) {
     }
 
     try {
-        $ansible_reboot_pending = Get-PendingRebootStatus
+        $assible_reboot_pending = Get-PendingRebootStatus
     } catch {
         # fails for non-admin users, set to null in this case
-        $ansible_reboot_pending = $null
+        $assible_reboot_pending = $null
     }
 
-    $ansible_facts += @{
-        ansible_architecture = $win32_os.OSArchitecture
-        ansible_domain = $domain_suffix
-        ansible_fqdn = $fqdn
-        ansible_hostname = $win32_cs.DNSHostname
-        ansible_netbios_name = $win32_cs.Name
-        ansible_kernel = $osversion.Version.ToString()
-        ansible_nodename = $fqdn
-        ansible_machine_id = Get-MachineSid
-        ansible_owner_contact = ([string] $win32_cs.PrimaryOwnerContact)
-        ansible_owner_name = ([string] $win32_cs.PrimaryOwnerName)
+    $assible_facts += @{
+        assible_architecture = $win32_os.OSArchitecture
+        assible_domain = $domain_suffix
+        assible_fqdn = $fqdn
+        assible_hostname = $win32_cs.DNSHostname
+        assible_netbios_name = $win32_cs.Name
+        assible_kernel = $osversion.Version.ToString()
+        assible_nodename = $fqdn
+        assible_machine_id = Get-MachineSid
+        assible_owner_contact = ([string] $win32_cs.PrimaryOwnerContact)
+        assible_owner_name = ([string] $win32_cs.PrimaryOwnerName)
         # FUTURE: should this live in its own subset?
-        ansible_reboot_pending = $ansible_reboot_pending
-        ansible_system = $osversion.Platform.ToString()
-        ansible_system_description = ([string] $win32_os.Description)
-        ansible_system_vendor = $win32_cs.Manufacturer
+        assible_reboot_pending = $assible_reboot_pending
+        assible_system = $osversion.Platform.ToString()
+        assible_system_description = ([string] $win32_os.Description)
+        assible_system_vendor = $win32_cs.Manufacturer
     }
 }
 
 if($gather_subset.Contains('powershell_version')) {
-    $ansible_facts += @{
-        ansible_powershell_version = ($PSVersionTable.PSVersion.Major)
+    $assible_facts += @{
+        assible_powershell_version = ($PSVersionTable.PSVersion.Major)
     }
 }
 
@@ -388,31 +388,31 @@ if($gather_subset.Contains('processor')) {
         $cpu_list += $win32_cpu.Name
     }
 
-    $ansible_facts += @{
-        ansible_processor = $cpu_list
-        ansible_processor_cores = $win32_cpu.NumberOfCores
-        ansible_processor_count = $win32_cs.NumberOfProcessors
-        ansible_processor_threads_per_core = ($win32_cpu.NumberOfLogicalProcessors / $win32_cpu.NumberofCores)
-        ansible_processor_vcpus = $win32_cs.NumberOfLogicalProcessors
+    $assible_facts += @{
+        assible_processor = $cpu_list
+        assible_processor_cores = $win32_cpu.NumberOfCores
+        assible_processor_count = $win32_cs.NumberOfProcessors
+        assible_processor_threads_per_core = ($win32_cpu.NumberOfLogicalProcessors / $win32_cpu.NumberofCores)
+        assible_processor_vcpus = $win32_cs.NumberOfLogicalProcessors
     }
 }
 
 if($gather_subset.Contains('uptime')) {
     $win32_os = Get-LazyCimInstance Win32_OperatingSystem
-    $ansible_facts += @{
-        ansible_lastboot = $win32_os.lastbootuptime.ToString("u")
-        ansible_uptime_seconds = $([System.Convert]::ToInt64($(Get-Date).Subtract($win32_os.lastbootuptime).TotalSeconds))
+    $assible_facts += @{
+        assible_lastboot = $win32_os.lastbootuptime.ToString("u")
+        assible_uptime_seconds = $([System.Convert]::ToInt64($(Get-Date).Subtract($win32_os.lastbootuptime).TotalSeconds))
     }
 }
 
 if($gather_subset.Contains('user')) {
     $user = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $ansible_facts += @{
-        ansible_user_dir = $env:userprofile
+    $assible_facts += @{
+        assible_user_dir = $env:userprofile
         # Win32_UserAccount.FullName is probably the right thing here, but it can be expensive to get on large domains
-        ansible_user_gecos = ""
-        ansible_user_id = $env:username
-        ansible_user_sid = $user.User.Value
+        assible_user_gecos = ""
+        assible_user_id = $env:username
+        assible_user_sid = $user.User.Value
     }
 }
 
@@ -429,10 +429,10 @@ if($gather_subset.Contains('windows_domain')) {
 
     $domain_role = $domain_roles.Get_Item([Int32]$win32_cs.DomainRole)
 
-    $ansible_facts += @{
-        ansible_windows_domain = $win32_cs.Domain
-        ansible_windows_domain_member = $win32_cs.PartOfDomain
-        ansible_windows_domain_role = $domain_role
+    $assible_facts += @{
+        assible_windows_domain = $win32_cs.Domain
+        assible_windows_domain_member = $win32_cs.PartOfDomain
+        assible_windows_domain_role = $domain_role
     }
 }
 
@@ -470,8 +470,8 @@ if($gather_subset.Contains('winrm')) {
 
     $winrm_cert_expirations = $winrm_cert_expiry | Sort-Object NotAfter
     if ($winrm_cert_expirations) {
-        # this fact was renamed from ansible_winrm_certificate_expires due to collision with ansible_winrm_X connection var pattern
-        $ansible_facts.Add("ansible_win_rm_certificate_expires", $winrm_cert_expirations[0].NotAfter.ToString("yyyy-MM-dd HH:mm:ss"))
+        # this fact was renamed from assible_winrm_certificate_expires due to collision with assible_winrm_X connection var pattern
+        $assible_facts.Add("assible_win_rm_certificate_expires", $winrm_cert_expirations[0].NotAfter.ToString("yyyy-MM-dd HH:mm:ss"))
     }
 }
 
@@ -505,12 +505,12 @@ if($gather_subset.Contains('virtual')) {
         }
     }
 
-    $ansible_facts += @{
-        ansible_virtualization_role = $machine_role
-        ansible_virtualization_type = $machine_type
+    $assible_facts += @{
+        assible_virtualization_role = $machine_role
+        assible_virtualization_type = $machine_type
     }
 }
 
-$result.ansible_facts += $ansible_facts
+$result.assible_facts += $assible_facts
 
 Exit-Json $result

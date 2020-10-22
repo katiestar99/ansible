@@ -3,9 +3,9 @@
 Older Roadmaps
 ===============
 
-Older roadmaps are listed here to provide a history of the Ansible project.
+Older roadmaps are listed here to provide a history of the Assible project.
 
-See :ref:`roadmaps` to find current Ansible and ``ansible-base`` roadmaps.
+See :ref:`roadmaps` to find current Assible and ``assible-base`` roadmaps.
 
 .. toctree::
    :maxdepth: 1

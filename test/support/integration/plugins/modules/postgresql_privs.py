@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # Copyright: (c) 2019, Tobias Birkefeld (@tcraxs) <t@craxs.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'community'}
 
@@ -47,8 +47,8 @@ options:
     description:
     - Type of database object to set privileges on.
     - The C(default_privs) choice is available starting at version 2.7.
-    - The C(foreign_data_wrapper) and C(foreign_server) object types are available from Ansible version '2.8'.
-    - The C(type) choice is available from Ansible version '2.10'.
+    - The C(foreign_data_wrapper) and C(foreign_server) object types are available from Assible version '2.8'.
+    - The C(type) choice is available from Assible version '2.10'.
     type: str
     default: table
     choices: [ database, default_privs, foreign_data_wrapper, foreign_server, function,
@@ -422,10 +422,10 @@ except ImportError:
     psycopg2 = None
 
 # import module snippets
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.database import pg_quote_identifier
-from ansible.module_utils.postgres import postgres_common_argument_spec
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils.database import pg_quote_identifier
+from assible.module_utils.postgres import postgres_common_argument_spec
+from assible.module_utils._text import to_native
 
 VALID_PRIVS = frozenset(('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE',
                          'REFERENCES', 'TRIGGER', 'CREATE', 'CONNECT',
@@ -951,7 +951,7 @@ def main():
         fail_on_role=dict(type='bool', default=True),
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
     )

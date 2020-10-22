@@ -12,9 +12,9 @@ import sys
 from io import StringIO
 from units.compat.mock import MagicMock
 
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.loader import connection_loader
-from ansible.utils.display import Display
+from assible.playbook.play_context import PlayContext
+from assible.plugins.loader import connection_loader
+from assible.utils.display import Display
 
 
 @pytest.fixture(autouse=True)
@@ -50,7 +50,7 @@ def psrp_connection():
         sys.modules["pypsrp.wsman"] = fake_wsman
         sys.modules["requests.exceptions"] = MagicMock()
 
-        from ansible.plugins.connection import psrp
+        from assible.plugins.connection import psrp
 
         # Take a copy of the original import state vars before we set to an ok import
         orig_has_psrp = psrp.HAS_PYPSRP
@@ -119,7 +119,7 @@ class TestConnectionPSRP(object):
         ),
         # ssl=False when port defined to 5985
         (
-            {'_extras': {}, 'ansible_port': '5985'},
+            {'_extras': {}, 'assible_port': '5985'},
             {
                 '_psrp_port': 5985,
                 '_psrp_protocol': 'http'
@@ -127,7 +127,7 @@ class TestConnectionPSRP(object):
         ),
         # ssl=True when port defined to not 5985
         (
-            {'_extras': {}, 'ansible_port': 1234},
+            {'_extras': {}, 'assible_port': 1234},
             {
                 '_psrp_port': 1234,
                 '_psrp_protocol': 'https'
@@ -135,7 +135,7 @@ class TestConnectionPSRP(object):
         ),
         # port 5986 when ssl=True
         (
-            {'_extras': {}, 'ansible_psrp_protocol': 'https'},
+            {'_extras': {}, 'assible_psrp_protocol': 'https'},
             {
                 '_psrp_port': 5986,
                 '_psrp_protocol': 'https'
@@ -143,7 +143,7 @@ class TestConnectionPSRP(object):
         ),
         # port 5985 when ssl=False
         (
-            {'_extras': {}, 'ansible_psrp_protocol': 'http'},
+            {'_extras': {}, 'assible_psrp_protocol': 'http'},
             {
                 '_psrp_port': 5985,
                 '_psrp_protocol': 'http'
@@ -151,7 +151,7 @@ class TestConnectionPSRP(object):
         ),
         # psrp extras
         (
-            {'_extras': {'ansible_psrp_mock_test1': True}},
+            {'_extras': {'assible_psrp_mock_test1': True}},
             {
                 '_psrp_conn_kwargs': {
                     'server': 'inventory_hostname',
@@ -186,14 +186,14 @@ class TestConnectionPSRP(object):
         ),
         # cert validation through string repr of bool
         (
-            {'_extras': {}, 'ansible_psrp_cert_validation': 'ignore'},
+            {'_extras': {}, 'assible_psrp_cert_validation': 'ignore'},
             {
                 '_psrp_cert_validation': False
             },
         ),
         # cert validation path
         (
-            {'_extras': {}, 'ansible_psrp_cert_trust_path': '/path/cert.pem'},
+            {'_extras': {}, 'assible_psrp_cert_trust_path': '/path/cert.pem'},
             {
                 '_psrp_cert_validation': '/path/cert.pem'
             },
@@ -223,11 +223,11 @@ class TestConnectionPSRP(object):
         new_stdin = StringIO()
 
         conn = connection_loader.get('psrp', pc, new_stdin)
-        conn.set_options(var_options={'_extras': {'ansible_psrp_mock_test3': True}})
+        conn.set_options(var_options={'_extras': {'assible_psrp_mock_test3': True}})
 
         mock_display = MagicMock()
         monkeypatch.setattr(Display, "warning", mock_display)
         conn._build_kwargs()
 
         assert mock_display.call_args[0][0] == \
-            'ansible_psrp_mock_test3 is unsupported by the current psrp version installed'
+            'assible_psrp_mock_test3 is unsupported by the current psrp version installed'

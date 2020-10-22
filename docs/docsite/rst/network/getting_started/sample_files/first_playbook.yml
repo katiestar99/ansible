@@ -1,7 +1,7 @@
 ---
 
 - name: Network Getting Started First Playbook
-  connection: ansible.netcommon.network_cli
+  connection: assible.netcommon.network_cli
   gather_facts: false
   hosts: all
   tasks:
@@ -12,4 +12,4 @@
 
     - name: Display the config
       debug:
-        msg: "The hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
+        msg: "The hostname is {{ assible_net_hostname }} and the OS is {{ assible_net_version }}"

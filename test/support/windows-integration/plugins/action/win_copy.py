@@ -1,6 +1,6 @@
-# This file is part of Ansible
+# This file is part of Assible
 
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -16,12 +16,12 @@ import tempfile
 import traceback
 import zipfile
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleFileNotFound
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.action import ActionBase
-from ansible.utils.hashing import checksum
+from assible import constants as C
+from assible.errors import AssibleError, AssibleFileNotFound
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.action import ActionBase
+from assible.utils.hashing import checksum
 
 
 def _walk_dirs(topdir, loader, decrypt=True, base_path=None, local_follow=False, trailing_slash_detector=None, checksum_check=False):
@@ -33,7 +33,7 @@ def _walk_dirs(topdir, loader, decrypt=True, base_path=None, local_follow=False,
 
     :arg topdir: The directory that the filesystem tree is rooted at
     :arg loader: The self._loader object from ActionBase
-    :kwarg decrypt: Whether to decrypt a file encrypted with ansible-vault
+    :kwarg decrypt: Whether to decrypt a file encrypted with assible-vault
     :kwarg base_path: The initial directory structure to strip off of the
         files for the destination directory.  If this is None (the default),
         the base_path is set to ``top_dir``.
@@ -400,7 +400,7 @@ class ActionModule(ActionBase):
             try:
                 # find in expected paths
                 source = self._find_needle('files', source)
-            except AnsibleError as e:
+            except AssibleError as e:
                 result['failed'] = True
                 result['msg'] = to_text(e)
                 result['exception'] = traceback.format_exc()
@@ -434,10 +434,10 @@ class ActionModule(ActionBase):
         else:
             result['operation'] = 'file_copy'
 
-            # If the local file does not exist, get_real_file() raises AnsibleFileNotFound
+            # If the local file does not exist, get_real_file() raises AssibleFileNotFound
             try:
                 source_full = self._loader.get_real_file(source, decrypt=decrypt)
-            except AnsibleFileNotFound as e:
+            except AssibleFileNotFound as e:
                 result['failed'] = True
                 result['msg'] = "could not find src=%s, %s" % (source_full, to_text(e))
                 return result

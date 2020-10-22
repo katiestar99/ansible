@@ -5,7 +5,7 @@
 
 - name: Test installing collections from git repositories
   environment:
-    ANSIBLE_COLLECTIONS_PATHS: '{{ galaxy_dir }}'
+    ASSIBLE_COLLECTIONS_PATHS: '{{ galaxy_dir }}'
   vars:
     cleanup: True
     galaxy_dir: "{{ galaxy_dir }}"
@@ -31,7 +31,7 @@
       path: '{{ item }}'
       state: absent
     loop:
-      - '{{ galaxy_dir }}/ansible_collections'
+      - '{{ galaxy_dir }}/assible_collections'
       - '{{ galaxy_dir }}/development'
 
   - name: remove git

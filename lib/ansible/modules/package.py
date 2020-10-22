@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# (c) 2015, Ansible Project
+# (c) 2015, Assible Project
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -14,13 +14,13 @@ DOCUMENTATION = '''
 module: package
 version_added: 2.0
 author:
-    - Ansible Core Team
+    - Assible Core Team
 short_description: Generic OS package manager
 description:
-    - This modules manages packages on a target without specifying a package manager module (like M(ansible.builtin.yum), M(ansible.builtin.apt), ...).
+    - This modules manages packages on a target without specifying a package manager module (like M(assible.builtin.yum), M(assible.builtin.apt), ...).
       It is convenient to use in an heterogeneous environment of machines without having to create a specific task for
       each package manager. `package` calls behind the module for the package manager used by the operating system
-      discovered by the module M(ansible.builtin.setup).  If `setup` was not yet run, `package` will run it.
+      discovered by the module M(assible.builtin.setup).  If `setup` was not yet run, `package` will run it.
     - This module acts as a proxy to the underlying package manager module. While all arguments will be passed to the
       underlying module, not all modules support the same arguments. This documentation only covers the minimum intersection
       of module arguments that all packaging modules support.

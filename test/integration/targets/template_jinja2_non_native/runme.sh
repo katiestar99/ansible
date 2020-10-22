@@ -2,6 +2,6 @@
 
 set -eux
 
-export ANSIBLE_JINJA2_NATIVE=1
-ansible-playbook 46169.yml -v "$@"
-unset ANSIBLE_JINJA2_NATIVE
+export ASSIBLE_JINJA2_NATIVE=1
+assible-playbook 46169.yml -v "$@"
+unset ASSIBLE_JINJA2_NATIVE

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -14,49 +14,49 @@ import tempfile
 import pytest
 
 from units.compat.mock import patch, MagicMock
-from ansible.module_utils._text import to_bytes
+from assible.module_utils._text import to_bytes
 
-from ansible.module_utils import basic
+from assible.module_utils import basic
 
 
-class TestAnsibleModuleTmpDir:
+class TestAssibleModuleTmpDir:
 
     DATA = (
         (
             {
-                "_ansible_tmpdir": "/path/to/dir",
-                "_ansible_remote_tmp": "/path/tmpdir",
-                "_ansible_keep_remote_files": False,
+                "_assible_tmpdir": "/path/to/dir",
+                "_assible_remote_tmp": "/path/tmpdir",
+                "_assible_keep_remote_files": False,
             },
             True,
             "/path/to/dir"
         ),
         (
             {
-                "_ansible_tmpdir": None,
-                "_ansible_remote_tmp": "/path/tmpdir",
-                "_ansible_keep_remote_files": False
+                "_assible_tmpdir": None,
+                "_assible_remote_tmp": "/path/tmpdir",
+                "_assible_keep_remote_files": False
             },
             False,
-            "/path/tmpdir/ansible-moduletmp-42-"
+            "/path/tmpdir/assible-moduletmp-42-"
         ),
         (
             {
-                "_ansible_tmpdir": None,
-                "_ansible_remote_tmp": "/path/tmpdir",
-                "_ansible_keep_remote_files": False
+                "_assible_tmpdir": None,
+                "_assible_remote_tmp": "/path/tmpdir",
+                "_assible_keep_remote_files": False
             },
             True,
-            "/path/tmpdir/ansible-moduletmp-42-"
+            "/path/tmpdir/assible-moduletmp-42-"
         ),
         (
             {
-                "_ansible_tmpdir": None,
-                "_ansible_remote_tmp": "$HOME/.test",
-                "_ansible_keep_remote_files": False
+                "_assible_tmpdir": None,
+                "_assible_remote_tmp": "$HOME/.test",
+                "_assible_keep_remote_files": False
             },
             False,
-            os.path.join(os.environ['HOME'], ".test/ansible-moduletmp-42-")
+            os.path.join(os.environ['HOME'], ".test/assible-moduletmp-42-")
         ),
     )
 
@@ -79,10 +79,10 @@ class TestAnsibleModuleTmpDir:
         monkeypatch.setattr(os.path, 'exists', lambda x: stat_exists)
         monkeypatch.setattr(os, 'makedirs', mock_makedirs)
         monkeypatch.setattr(shutil, 'rmtree', lambda x: None)
-        monkeypatch.setattr(basic, '_ANSIBLE_ARGS', to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': args})))
+        monkeypatch.setattr(basic, '_ASSIBLE_ARGS', to_bytes(json.dumps({'ASSIBLE_MODULE_ARGS': args})))
 
         with patch('time.time', return_value=42):
-            am = basic.AnsibleModule(argument_spec={})
+            am = basic.AssibleModule(argument_spec={})
             actual_tmpdir = am.tmpdir
 
         assert actual_tmpdir == expected
@@ -96,9 +96,9 @@ class TestAnsibleModuleTmpDir:
             assert makedirs['path'] == expected
             assert makedirs['mode'] == 0o700
 
-    @pytest.mark.parametrize('stdin', ({"_ansible_tmpdir": None,
-                                        "_ansible_remote_tmp": "$HOME/.test",
-                                        "_ansible_keep_remote_files": True},),
+    @pytest.mark.parametrize('stdin', ({"_assible_tmpdir": None,
+                                        "_assible_remote_tmp": "$HOME/.test",
+                                        "_assible_keep_remote_files": True},),
                              indirect=['stdin'])
     def test_tmpdir_makedirs_failure(self, am, monkeypatch):
 
@@ -116,4 +116,4 @@ class TestAnsibleModuleTmpDir:
 
         # because makedirs failed the dir should be None so it uses the System tmp
         assert mock_mkdtemp.call_args[1]['dir'] is None
-        assert mock_mkdtemp.call_args[1]['prefix'].startswith("ansible-moduletmp-")
+        assert mock_mkdtemp.call_args[1]['prefix'].startswith("assible-moduletmp-")

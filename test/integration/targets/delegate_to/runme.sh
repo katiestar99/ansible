@@ -42,26 +42,26 @@ setup
 
 trap teardown EXIT
 
-ANSIBLE_SSH_ARGS='-C -o ControlMaster=auto -o ControlPersist=60s -o UserKnownHostsFile=/dev/null' \
-    ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook test_delegate_to.yml -i inventory -v "$@"
+ASSIBLE_SSH_ARGS='-C -o ControlMaster=auto -o ControlPersist=60s -o UserKnownHostsFile=/dev/null' \
+    ASSIBLE_HOST_KEY_CHECKING=false assible-playbook test_delegate_to.yml -i inventory -v "$@"
 
 # this test is not doing what it says it does, also relies on var that should not be available
-#ansible-playbook test_loop_control.yml -v "$@"
+#assible-playbook test_loop_control.yml -v "$@"
 
-ansible-playbook test_delegate_to_loop_randomness.yml -v "$@"
+assible-playbook test_delegate_to_loop_randomness.yml -v "$@"
 
-ansible-playbook delegate_and_nolog.yml -i inventory -v "$@"
+assible-playbook delegate_and_nolog.yml -i inventory -v "$@"
 
-ansible-playbook delegate_facts_block.yml -i inventory -v "$@"
+assible-playbook delegate_facts_block.yml -i inventory -v "$@"
 
-ansible-playbook test_delegate_to_loop_caching.yml -i inventory -v "$@"
+assible-playbook test_delegate_to_loop_caching.yml -i inventory -v "$@"
 
 # ensure we are using correct settings when delegating
-ANSIBLE_TIMEOUT=3 ansible-playbook delegate_vars_hanldling.yml -i inventory -v "$@"
+ASSIBLE_TIMEOUT=3 assible-playbook delegate_vars_hanldling.yml -i inventory -v "$@"
 
-ansible-playbook has_hostvars.yml -i inventory -v "$@"
+assible-playbook has_hostvars.yml -i inventory -v "$@"
 
-# test ansible_x_interpreter
+# test assible_x_interpreter
 # python
 source virtualenv.sh
 (
@@ -69,7 +69,7 @@ cd "${OUTPUT_DIR}"/venv/bin
 ln -s python firstpython
 ln -s python secondpython
 )
-ansible-playbook verify_interpreter.yml -i inventory_interpreters -v "$@"
-ansible-playbook discovery_applied.yml -i inventory -v "$@"
-ansible-playbook resolve_vars.yml -i inventory -v "$@"
-ansible-playbook test_delegate_to_lookup_context.yml -i inventory -v "$@"
+assible-playbook verify_interpreter.yml -i inventory_interpreters -v "$@"
+assible-playbook discovery_applied.yml -i inventory -v "$@"
+assible-playbook resolve_vars.yml -i inventory -v "$@"
+assible-playbook test_delegate_to_lookup_context.yml -i inventory -v "$@"

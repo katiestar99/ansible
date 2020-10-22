@@ -1,10 +1,10 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
-# Copyright (c) 2015 Peter Sprygada, <psprygada@ansible.com>
+# Copyright (c) 2015 Peter Sprygada, <psprygada@assible.com>
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -28,36 +28,36 @@
 import traceback
 import json
 
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.basic import env_fallback
-from ansible.module_utils.connection import Connection, ConnectionError
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.netconf import (
+from assible.module_utils._text import to_text, to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.basic import env_fallback
+from assible.module_utils.connection import Connection, ConnectionError
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.netconf import (
     NetconfConnection,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.parsing import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.parsing import (
     Cli,
 )
-from ansible.module_utils.six import iteritems
+from assible.module_utils.six import iteritems
 
 
 NET_TRANSPORT_ARGS = dict(
     host=dict(required=True),
     port=dict(type="int"),
-    username=dict(fallback=(env_fallback, ["ANSIBLE_NET_USERNAME"])),
+    username=dict(fallback=(env_fallback, ["ASSIBLE_NET_USERNAME"])),
     password=dict(
-        no_log=True, fallback=(env_fallback, ["ANSIBLE_NET_PASSWORD"])
+        no_log=True, fallback=(env_fallback, ["ASSIBLE_NET_PASSWORD"])
     ),
     ssh_keyfile=dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_SSH_KEYFILE"]), type="path"
+        fallback=(env_fallback, ["ASSIBLE_NET_SSH_KEYFILE"]), type="path"
     ),
     authorize=dict(
         default=False,
-        fallback=(env_fallback, ["ANSIBLE_NET_AUTHORIZE"]),
+        fallback=(env_fallback, ["ASSIBLE_NET_AUTHORIZE"]),
         type="bool",
     ),
     auth_pass=dict(
-        no_log=True, fallback=(env_fallback, ["ANSIBLE_NET_AUTH_PASS"])
+        no_log=True, fallback=(env_fallback, ["ASSIBLE_NET_AUTH_PASS"])
     ),
     provider=dict(type="dict", no_log=True),
     transport=dict(choices=list()),
@@ -119,7 +119,7 @@ class Config(object):
         return self.connection.save_config()
 
 
-class NetworkModule(AnsibleModule):
+class NetworkModule(AssibleModule):
     def __init__(self, *args, **kwargs):
         connect_on_load = kwargs.pop("connect_on_load", True)
 

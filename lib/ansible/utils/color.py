@@ -1,47 +1,47 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import re
 import sys
 
-from ansible import constants as C
+from assible import constants as C
 
-ANSIBLE_COLOR = True
-if C.ANSIBLE_NOCOLOR:
-    ANSIBLE_COLOR = False
+ASSIBLE_COLOR = True
+if C.ASSIBLE_NOCOLOR:
+    ASSIBLE_COLOR = False
 elif not hasattr(sys.stdout, 'isatty') or not sys.stdout.isatty():
-    ANSIBLE_COLOR = False
+    ASSIBLE_COLOR = False
 else:
     try:
         import curses
         curses.setupterm()
         if curses.tigetnum('colors') < 0:
-            ANSIBLE_COLOR = False
+            ASSIBLE_COLOR = False
     except ImportError:
         # curses library was not found
         pass
     except curses.error:
         # curses returns an error (e.g. could not find terminal)
-        ANSIBLE_COLOR = False
+        ASSIBLE_COLOR = False
 
-if C.ANSIBLE_FORCE_COLOR:
-    ANSIBLE_COLOR = True
+if C.ASSIBLE_FORCE_COLOR:
+    ASSIBLE_COLOR = True
 
 # --- begin "pretty"
 #
@@ -88,13 +88,13 @@ def parsecolor(color):
 def stringc(text, color, wrap_nonvisible_chars=False):
     """String in color."""
 
-    if ANSIBLE_COLOR:
+    if ASSIBLE_COLOR:
         color_code = parsecolor(color)
         fmt = u"\033[%sm%s\033[0m"
         if wrap_nonvisible_chars:
             # This option is provided for use in cases when the
             # formatting of a command line prompt is needed, such as
-            # `ansible-console`. As said in `readline` sources:
+            # `assible-console`. As said in `readline` sources:
             # readline/display.c:321
             # /* Current implementation:
             #         \001 (^A) start non-visible characters
@@ -111,13 +111,13 @@ def stringc(text, color, wrap_nonvisible_chars=False):
 def colorize(lead, num, color):
     """ Print 'lead' = 'num' in 'color' """
     s = u"%s=%-4s" % (lead, str(num))
-    if num != 0 and ANSIBLE_COLOR and color is not None:
+    if num != 0 and ASSIBLE_COLOR and color is not None:
         s = stringc(s, color)
     return s
 
 
 def hostcolor(host, stats, color=True):
-    if ANSIBLE_COLOR and color:
+    if ASSIBLE_COLOR and color:
         if stats['failures'] != 0 or stats['unreachable'] != 0:
             return u"%-37s" % stringc(host, C.COLOR_ERROR)
         elif stats['changed'] != 0:

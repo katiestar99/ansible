@@ -1,5 +1,5 @@
 # (c) 2013, Bradley Young <young.bradley@gmail.com>
-# (c) 2012-17 Ansible Project
+# (c) 2012-17 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -35,10 +35,10 @@ RETURN = """
     type: list
     elements: list
 """
-from ansible.errors import AnsibleError
-from ansible.module_utils.six.moves import zip_longest
-from ansible.plugins.lookup import LookupBase
-from ansible.utils.listify import listify_lookup_plugin_terms
+from assible.errors import AssibleError
+from assible.module_utils.six.moves import zip_longest
+from assible.plugins.lookup import LookupBase
+from assible.utils.listify import listify_lookup_plugin_terms
 
 
 class LookupModule(LookupBase):
@@ -62,6 +62,6 @@ class LookupModule(LookupBase):
 
         my_list = terms[:]
         if len(my_list) == 0:
-            raise AnsibleError("with_together requires at least one element in each list")
+            raise AssibleError("with_together requires at least one element in each list")
 
         return [self._flatten(x) for x in zip_longest(*my_list, fillvalue=None)]

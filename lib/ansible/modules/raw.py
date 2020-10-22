@@ -1,6 +1,6 @@
 # This is a virtual module that is entirely implemented server side
 
-# Copyright: (c) 2012, Ansible Project
+# Copyright: (c) 2012, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -31,31 +31,31 @@ description:
        case is installing C(python) on a system without python installed by default.
        Another is speaking to any devices such as
        routers that do not have any Python installed. In any other case, using
-       the M(ansible.builtin.shell) or M(ansible.builtin.command) module is much more appropriate.
+       the M(assible.builtin.shell) or M(assible.builtin.command) module is much more appropriate.
      - Arguments given to C(raw) are run directly through the configured remote shell.
      - Standard output, error output and return code are returned when
        available.
      - There is no change handler support for this module.
      - This module does not require python on the remote system, much like
-       the M(ansible.builtin.script) module.
+       the M(assible.builtin.script) module.
      - This module is also supported for Windows targets.
 notes:
     - "If using raw from a playbook, you may need to disable fact gathering
       using C(gather_facts: no) if you're using C(raw) to bootstrap python
       onto the machine."
     - If you want to execute a command securely and predictably, it may be
-      better to use the M(ansible.builtin.command) or M(ansible.builtin.shell) modules instead.
+      better to use the M(assible.builtin.command) or M(assible.builtin.shell) modules instead.
     - The C(environment) keyword does not work with raw normally, it requires a shell
       which means it only works if C(executable) is set or using the module
       with privilege escalation (C(become)).
     - This module is also supported for Windows targets.
 seealso:
-- module: ansible.builtin.command
-- module: ansible.builtin.shell
-- module: ansible.windows.win_command
-- module: ansible.windows.win_shell
+- module: assible.builtin.command
+- module: assible.builtin.shell
+- module: assible.windows.win_command
+- module: assible.windows.win_shell
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Michael DeHaan
 '''
 

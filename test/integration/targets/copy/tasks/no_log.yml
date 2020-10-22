@@ -24,7 +24,7 @@
                 content: "{{ secret }}"
 
     - name: copy the secret while using -vvv and check mode
-      command: "ansible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}} --check"
+      command: "assible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}} --check"
       register: result
 
     - assert:
@@ -32,7 +32,7 @@
           - "'SECRET' not in result.stdout"
 
     - name: copy the secret while using -vvv
-      command: "ansible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}}"
+      command: "assible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}}"
       register: result
 
     - assert:
@@ -40,7 +40,7 @@
           - "'SECRET' not in result.stdout"
 
     - name: copy the secret while using -vvv and check mode again
-      command: "ansible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}} --check"
+      command: "assible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}} --check"
       register: result
 
     - assert:
@@ -48,7 +48,7 @@
           - "'SECRET' not in result.stdout"
 
     - name: copy the secret while using -vvv again
-      command: "ansible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}}"
+      command: "assible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=SECRET -e dest={{dest}}"
       register: result
 
     - assert:
@@ -56,7 +56,7 @@
           - "'SECRET' not in result.stdout"
 
     - name: copy a new secret while using -vvv and check mode
-      command: "ansible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=NEWSECRET -e dest={{dest}} --check"
+      command: "assible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=NEWSECRET -e dest={{dest}} --check"
       register: result
 
     - assert:
@@ -64,7 +64,7 @@
           - "'NEWSECRET' not in result.stdout"
 
     - name: copy a new secret while using -vvv
-      command: "ansible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=NEWSECRET -e dest={{dest}}"
+      command: "assible-playbook {{local_temp_dir}}/test_no_log.yml -vvv -e secret=NEWSECRET -e dest={{dest}}"
       register: result
 
     - assert:

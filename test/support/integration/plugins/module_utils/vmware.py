@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright: (c) 2015, Joseph Callen <jcallen () csc.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # Copyright: (c) 2018, James E. King III (@jeking3) <jking@apache.org>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 import atexit
-import ansible.module_utils.common._collections_compat as collections_compat
+import assible.module_utils.common._collections_compat as collections_compat
 import json
 import os
 import re
@@ -38,9 +38,9 @@ except ImportError:
     HAS_PYVMOMI = False
     HAS_PYVMOMIJSON = False
 
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.six import integer_types, iteritems, string_types, raise_from
-from ansible.module_utils.basic import env_fallback, missing_required_lib
+from assible.module_utils._text import to_text, to_native
+from assible.module_utils.six import integer_types, iteritems, string_types, raise_from
+from assible.module_utils.basic import env_fallback, missing_required_lib
 
 
 class TaskError(Exception):

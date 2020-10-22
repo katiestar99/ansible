@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2015, Peter Sprygada <psprygada@ansible.com>
+# Copyright: (c) 2015, Peter Sprygada <psprygada@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
@@ -11,7 +11,7 @@ class ModuleDocFragment(object):
   provider:
     description:
     - B(Deprecated)
-    - 'Starting with Ansible 2.5 we recommend using C(connection: network_cli).'
+    - 'Starting with Assible 2.5 we recommend using C(connection: network_cli).'
     - For more information please see the L(IOS Platform Options guide, ../network/user_guide/platform_ios.html).
     - HORIZONTALLINE
     - A dict object containing connection details.
@@ -33,14 +33,14 @@ class ModuleDocFragment(object):
         description:
         - Configures the username to use to authenticate the connection to the remote
           device.  This value is used to authenticate the SSH session. If the value
-          is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME)
+          is not specified in the task, the value of environment variable C(ASSIBLE_NET_USERNAME)
           will be used instead.
         type: str
       password:
         description:
         - Specifies the password to use to authenticate the connection to the remote
           device.   This value is used to authenticate the SSH session. If the value
-          is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD)
+          is not specified in the task, the value of environment variable C(ASSIBLE_NET_PASSWORD)
           will be used instead.
         type: str
       timeout:
@@ -55,14 +55,14 @@ class ModuleDocFragment(object):
         - Specifies the SSH key to use to authenticate the connection to the remote
           device.   This value is the path to the key used to authenticate the SSH
           session. If the value is not specified in the task, the value of environment
-          variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.
+          variable C(ASSIBLE_NET_SSH_KEYFILE) will be used instead.
         type: path
       authorize:
         description:
         - Instructs the module to enter privileged mode on the remote device before
           sending any commands.  If not specified, the device will attempt to execute
           all commands in non-privileged mode. If the value is not specified in the
-          task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be
+          task, the value of environment variable C(ASSIBLE_NET_AUTHORIZE) will be
           used instead.
         type: bool
         default: false
@@ -71,11 +71,11 @@ class ModuleDocFragment(object):
         - Specifies the password to use if required to enter privileged mode on the
           remote device.  If I(authorize) is false, then this argument does nothing.
           If the value is not specified in the task, the value of environment variable
-          C(ANSIBLE_NET_AUTH_PASS) will be used instead.
+          C(ASSIBLE_NET_AUTH_PASS) will be used instead.
         type: str
 notes:
-- For more information on using Ansible to manage network devices see the :ref:`Ansible
+- For more information on using Assible to manage network devices see the :ref:`Assible
   Network Guide <network_guide>`
-- For more information on using Ansible to manage Cisco devices see the `Cisco integration
-  page <https://www.ansible.com/integrations/networks/cisco>`_.
+- For more information on using Assible to manage Cisco devices see the `Cisco integration
+  page <https://www.assible.com/integrations/networks/cisco>`_.
 """

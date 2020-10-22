@@ -39,7 +39,7 @@ class Pep8Test(SanitySingleVersion):
     """Sanity test for PEP 8 style guidelines using pycodestyle."""
     @property
     def error_code(self):  # type: () -> t.Optional[str]
-        """Error code for ansible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
+        """Error code for assible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
         return 'A100'
 
     def filter_targets(self, targets):  # type: (t.List[TestTarget]) -> t.List[TestTarget]

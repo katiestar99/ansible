@@ -1,12 +1,12 @@
 ---
-- debug: msg="START cli_config/cli_comment.yaml on connection={{ ansible_connection }}"
+- debug: msg="START cli_config/cli_comment.yaml on connection={{ assible_connection }}"
 
 - name: setup
-  ansible.netcommon.cli_config: &rm
+  assible.netcommon.cli_config: &rm
     config: set system host-name {{ inventory_hostname_short }}
 
 - name: configure using comment
-  ansible.netcommon.cli_config:
+  assible.netcommon.cli_config:
     config: set system host-name foo
     commit_comment: this is a test
   register: result
@@ -25,6 +25,6 @@
       - "'this is a test' in result.stdout_lines[0][1]"
 
 - name: teardown
-  ansible.netcommon.cli_config: *rm
+  assible.netcommon.cli_config: *rm
 
-- debug: msg="END cli_config/cli_comment.yaml on connection={{ ansible_connection }}"
+- debug: msg="END cli_config/cli_comment.yaml on connection={{ assible_connection }}"

@@ -1,6 +1,6 @@
 {
     "prefixes": [
-        "lib/ansible/config/ansible_builtin_runtime.yml",
+        "lib/assible/config/assible_builtin_runtime.yml",
         "meta/routing.yml",
         "meta/runtime.yml"
     ],

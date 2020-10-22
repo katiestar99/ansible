@@ -1,12 +1,12 @@
 # 2017 Red Hat Inc.
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-DOCUMENTATION = """author: Ansible Core Team
+DOCUMENTATION = """author: Assible Core Team
 connection: persistent
 short_description: Use a persistent unix socket for connection
 description:
@@ -23,15 +23,15 @@ options:
     - section: persistent_connection
       key: command_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_COMMAND_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_COMMAND_TIMEOUT
     vars:
-    - name: ansible_command_timeout
+    - name: assible_command_timeout
 """
-from ansible.executor.task_executor import start_connection
-from ansible.plugins.connection import ConnectionBase
-from ansible.module_utils._text import to_text
-from ansible.module_utils.connection import Connection as SocketConnection
-from ansible.utils.display import Display
+from assible.executor.task_executor import start_connection
+from assible.plugins.connection import ConnectionBase
+from assible.module_utils._text import to_text
+from assible.module_utils.connection import Connection as SocketConnection
+from assible.utils.display import Display
 
 display = Display()
 
@@ -39,7 +39,7 @@ display = Display()
 class Connection(ConnectionBase):
     """ Local based connections """
 
-    transport = "ansible.netcommon.persistent"
+    transport = "assible.netcommon.persistent"
     has_pipelining = False
 
     def __init__(self, play_context, new_stdin, *args, **kwargs):
@@ -82,7 +82,7 @@ class Connection(ConnectionBase):
             host=self._play_context.remote_addr,
         )
         variables = {
-            "ansible_command_timeout": self.get_option(
+            "assible_command_timeout": self.get_option(
                 "persistent_command_timeout"
             )
         }

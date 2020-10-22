@@ -5,7 +5,7 @@ Windows module development walkthrough
 **************************************
 
 In this section, we will walk through developing, testing, and debugging an
-Ansible Windows module.
+Assible Windows module.
 
 Because Windows modules are written in Powershell and need to be run on a
 Windows host, this guide differs from the usual development walkthrough guide.
@@ -20,11 +20,11 @@ Windows environment setup
 =========================
 
 Unlike Python module development which can be run on the host that runs
-Ansible, Windows modules need to be written and tested for Windows hosts.
+Assible, Windows modules need to be written and tested for Windows hosts.
 While evaluation editions of Windows can be downloaded from
-Microsoft, these images are usually not ready to be used by Ansible without
+Microsoft, these images are usually not ready to be used by Assible without
 further modification. The easiest way to set up a Windows host so that it is
-ready to by used by Ansible is to set up a virtual machine using Vagrant.
+ready to by used by Assible is to set up a virtual machine using Vagrant.
 Vagrant can be used to download existing OS images called *boxes* that are then
 deployed to a hypervisor like VirtualBox. These boxes can either be created and
 stored offline or they can be downloaded from a central repository called
@@ -55,26 +55,26 @@ This will download the Vagrant box from Vagrant Cloud and add it to the local
 boxes on your host and then start up that instance in VirtualBox. When starting
 for the first time, the Windows VM will run through the sysprep process and
 then create a HTTP and HTTPS WinRM listener automatically. Vagrant will finish
-its process once the listeners are online, after which the VM can be used by Ansible.
+its process once the listeners are online, after which the VM can be used by Assible.
 
-Create an Ansible inventory
+Create an Assible inventory
 ===========================
 
-The following Ansible inventory file can be used to connect to the newly
+The following Assible inventory file can be used to connect to the newly
 created Windows VM:
 
 .. code-block:: ini
 
     [windows]
-    WindowsServer  ansible_host=127.0.0.1
+    WindowsServer  assible_host=127.0.0.1
 
     [windows:vars]
-    ansible_user=vagrant
-    ansible_password=vagrant
-    ansible_port=55986
-    ansible_connection=winrm
-    ansible_winrm_transport=ntlm
-    ansible_winrm_server_cert_validation=ignore
+    assible_user=vagrant
+    assible_password=vagrant
+    assible_port=55986
+    assible_connection=winrm
+    assible_winrm_transport=ntlm
+    assible_winrm_server_cert_validation=ignore
 
 .. note:: The port ``55986`` is automatically forwarded by Vagrant to the
     Windows host that was created, if this conflicts with an existing local
@@ -98,14 +98,14 @@ any other files associated with that VM.
 
 While this is useful when testing modules on a single Windows instance, these
 host won't work without modification with domain based modules. The Vagrantfile
-at `ansible-windows <https://github.com/jborean93/ansible-windows/tree/master/vagrant>`_
-can be used to create a test domain environment to be used in Ansible. This
-repo contains three files which are used by both Ansible and Vagrant to create
+at `assible-windows <https://github.com/jborean93/assible-windows/tree/master/vagrant>`_
+can be used to create a test domain environment to be used in Assible. This
+repo contains three files which are used by both Assible and Vagrant to create
 multiple Windows hosts in a domain environment. These files are:
 
 - ``Vagrantfile``: The Vagrant file that reads the inventory setup of ``inventory.yml`` and provisions the hosts that are required
 - ``inventory.yml``: Contains the hosts that are required and other connection information such as IP addresses and forwarded ports
-- ``main.yml``: Ansible playbook called by Vagrant to provision the domain controller and join the child hosts to the domain
+- ``main.yml``: Assible playbook called by Vagrant to provision the domain controller and join the child hosts to the domain
 
 By default, these files will create the following environment:
 
@@ -119,7 +119,7 @@ The domain name and accounts can be modified by changing the variables
 ``domain_*`` in the ``inventory.yml`` file if it is required. The inventory
 file can also be modified to provision more or less servers by changing the
 hosts that are defined under the ``domain_children`` key. The host variable
-``ansible_host`` is the private IP that will be assigned to the VirtualBox host
+``assible_host`` is the private IP that will be assigned to the VirtualBox host
 only network adapter while ``vagrant_box`` is the box that will be used to
 create the VM.
 
@@ -130,12 +130,12 @@ To provision the environment as is, run the following:
 
 .. code-block:: shell
 
-    git clone https://github.com/jborean93/ansible-windows.git
+    git clone https://github.com/jborean93/assible-windows.git
     cd vagrant
     vagrant up
 
 .. note:: Vagrant provisions each host sequentially so this can take some time
-    to complete. If any errors occur during the Ansible phase of setting up the
+    to complete. If any errors occur during the Assible phase of setting up the
     domain, run ``vagrant provision`` to rerun just that step.
 
 Unlike setting up a single Windows instance with Vagrant, these hosts can also
@@ -157,8 +157,8 @@ the default ``inventory.yml`` file, WinRM over HTTPS for ``SERVER2012R2`` is
 forwarded over port ``29804`` as it's the fourth entry in ``domain_children``.
 
 .. note:: While an SSH server is available on all Windows hosts but Server
-    2008 (non R2), it is not a support connection for Ansible managing Windows
-    hosts and should not be used with Ansible.
+    2008 (non R2), it is not a support connection for Assible managing Windows
+    hosts and should not be used with Assible.
 
 Windows new module development
 ==============================
@@ -169,24 +169,24 @@ When creating a new module there are a few things to keep in mind:
 - Avoid using ``Write-Host/Debug/Verbose/Error`` in the module and add what needs to be returned to the ``$module.Result`` variable
 - To fail a module, call ``$module.FailJson("failure message here")``, an Exception or ErrorRecord can be set to the second argument for a more descriptive error message
 - You can pass in the exception or ErrorRecord as a second argument to ``FailJson("failure", $_)`` to get a more detailed output
-- Most new modules require check mode and integration tests before they are merged into the main Ansible codebase
+- Most new modules require check mode and integration tests before they are merged into the main Assible codebase
 - Avoid using try/catch statements over a large code block, rather use them for individual calls so the error message can be more descriptive
 - Try and catch specific exceptions when using try/catch statements
 - Avoid using PSCustomObjects unless necessary
-- Look for common functions in ``./lib/ansible/module_utils/powershell/`` and use the code there instead of duplicating work. These can be imported by adding the line ``#Requires -Module *`` where * is the filename to import, and will be automatically included with the module code sent to the Windows target when run via Ansible
-- As well as PowerShell module utils, C# module utils are stored in ``./lib/ansible/module_utils/csharp/`` and are automatically imported in a module execution if the line ``#AnsibleRequires -CSharpUtil *`` is present
+- Look for common functions in ``./lib/assible/module_utils/powershell/`` and use the code there instead of duplicating work. These can be imported by adding the line ``#Requires -Module *`` where * is the filename to import, and will be automatically included with the module code sent to the Windows target when run via Assible
+- As well as PowerShell module utils, C# module utils are stored in ``./lib/assible/module_utils/csharp/`` and are automatically imported in a module execution if the line ``#AssibleRequires -CSharpUtil *`` is present
 - C# and PowerShell module utils achieve the same goal but C# allows a developer to implement low level tasks, such as calling the Win32 API, and can be faster in some cases
 - Ensure the code runs under Powershell v3 and higher on Windows Server 2008 and higher; if higher minimum Powershell or OS versions are required, ensure the documentation reflects this clearly
-- Ansible runs modules under strictmode version 2.0. Be sure to test with that enabled by putting ``Set-StrictMode -Version 2.0`` at the top of your dev script
+- Assible runs modules under strictmode version 2.0. Be sure to test with that enabled by putting ``Set-StrictMode -Version 2.0`` at the top of your dev script
 - Favor native Powershell cmdlets over executable calls if possible
 - Use the full cmdlet name instead of aliases, for example ``Remove-Item`` over ``rm``
 - Use named parameters with cmdlets, for example ``Remove-Item -Path C:\temp`` over ``Remove-Item C:\temp``
 
-A very basic Powershell module `win_environment <https://github.com/ansible-collections/ansible.windows/blob/master/plugins/modules/win_environment.ps1>`_ incorporates best practices for Powershell modules. It demonstrates how to implement check-mode and diff-support, and also shows a warning to the user when a specific condition is met.
+A very basic Powershell module `win_environment <https://github.com/assible-collections/assible.windows/blob/master/plugins/modules/win_environment.ps1>`_ incorporates best practices for Powershell modules. It demonstrates how to implement check-mode and diff-support, and also shows a warning to the user when a specific condition is met.
 
-A slightly more advanced module is `win_uri <https://github.com/ansible-collections/ansible.windows/blob/master/plugins/modules/win_uri.ps1>`_ which additionally shows how to use different parameter types (bool, str, int, list, dict, path) and a selection of choices for parameters, how to fail a module and how to handle exceptions.
+A slightly more advanced module is `win_uri <https://github.com/assible-collections/assible.windows/blob/master/plugins/modules/win_uri.ps1>`_ which additionally shows how to use different parameter types (bool, str, int, list, dict, path) and a selection of choices for parameters, how to fail a module and how to handle exceptions.
 
-As part of the new ``AnsibleModule`` wrapper, the input parameters are defined and validated based on an argument
+As part of the new ``AssibleModule`` wrapper, the input parameters are defined and validated based on an argument
 spec. The following options can be set at the root level of the argument spec:
 
 - ``mutually_exclusive``: A list of lists, where the inner list contains module options that cannot be set together
@@ -224,7 +224,7 @@ options set:
     * ``json``: A string where the value is converted to a JSON string if the input is a dictionary
     * ``list``: A list of values, ``elements=<type>`` can convert the individual list value types if set. If ``elements=dict`` then ``options`` is defined, the values will be validated against the argument spec. When the input is a string then the string is split by ``,`` and any whitespace is trimmed
     * ``path``: A string where values likes ``%TEMP%`` are expanded based on environment values. If the input value starts with ``\\?\`` then no expansion is run
-    * ``raw``: No conversions occur on the value passed in by Ansible
+    * ``raw``: No conversions occur on the value passed in by Assible
     * ``sid``: Will convert Windows security identifier values or Windows account names to a `SecurityIdentifier <https://docs.microsoft.com/en-us/dotnet/api/system.security.principal.securityidentifier?view=netframework-4.7.2>`_ value
     * ``str``: The value is converted to a string
 
@@ -261,23 +261,23 @@ is the order to favor when writing modules:
 - Calls to native executables like ``Secedit.exe``
 
 PowerShell modules support a small subset of the ``#Requires`` options built
-into PowerShell as well as some Ansible-specific requirements specified by
-``#AnsibleRequires``. These statements can be placed at any point in the script,
+into PowerShell as well as some Assible-specific requirements specified by
+``#AssibleRequires``. These statements can be placed at any point in the script,
 but are most commonly near the top. They are used to make it easier to state the
 requirements of the module without writing any of the checks. Each ``requires``
 statement must be on its own line, but there can be multiple requires statements
 in one script.
 
-These are the checks that can be used within Ansible modules:
+These are the checks that can be used within Assible modules:
 
-- ``#Requires -Module Ansible.ModuleUtils.<module_util>``: Added in Ansible 2.4, specifies a module_util to load in for the module execution.
-- ``#Requires -Version x.y``: Added in Ansible 2.5, specifies the version of PowerShell that is required by the module. The module will fail if this requirement is not met.
-- ``#AnsibleRequires -OSVersion x.y``: Added in Ansible 2.5, specifies the OS build version that is required by the module and will fail if this requirement is not met. The actual OS version is derived from ``[Environment]::OSVersion.Version``.
-- ``#AnsibleRequires -Become``: Added in Ansible 2.5, forces the exec runner to run the module with ``become``, which is primarily used to bypass WinRM restrictions. If ``ansible_become_user`` is not specified then the ``SYSTEM`` account is used instead.
-- ``#AnsibleRequires -CSharpUtil Ansible.<module_util>``: Added in Ansible 2.8, specifies a C# module_util to load in for the module execution.
+- ``#Requires -Module Assible.ModuleUtils.<module_util>``: Added in Assible 2.4, specifies a module_util to load in for the module execution.
+- ``#Requires -Version x.y``: Added in Assible 2.5, specifies the version of PowerShell that is required by the module. The module will fail if this requirement is not met.
+- ``#AssibleRequires -OSVersion x.y``: Added in Assible 2.5, specifies the OS build version that is required by the module and will fail if this requirement is not met. The actual OS version is derived from ``[Environment]::OSVersion.Version``.
+- ``#AssibleRequires -Become``: Added in Assible 2.5, forces the exec runner to run the module with ``become``, which is primarily used to bypass WinRM restrictions. If ``assible_become_user`` is not specified then the ``SYSTEM`` account is used instead.
+- ``#AssibleRequires -CSharpUtil Assible.<module_util>``: Added in Assible 2.8, specifies a C# module_util to load in for the module execution.
 
 C# module utils can reference other C# utils by adding the line
-``using Ansible.<module_util>;`` to the top of the script with all the other
+``using Assible.<module_util>;`` to the top of the script with all the other
 using statements.
 
 
@@ -290,26 +290,26 @@ can be imported by adding the following line to a PowerShell module:
 
 .. code-block:: powershell
 
-    #Requires -Module Ansible.ModuleUtils.Legacy
+    #Requires -Module Assible.ModuleUtils.Legacy
 
-This will import the module_util at ``./lib/ansible/module_utils/powershell/Ansible.ModuleUtils.Legacy.psm1``
-and enable calling all of its functions. As of Ansible 2.8, Windows module
-utils can also be written in C# and stored at ``lib/ansible/module_utils/csharp``.
+This will import the module_util at ``./lib/assible/module_utils/powershell/Assible.ModuleUtils.Legacy.psm1``
+and enable calling all of its functions. As of Assible 2.8, Windows module
+utils can also be written in C# and stored at ``lib/assible/module_utils/csharp``.
 These module_utils can be imported by adding the following line to a PowerShell
 module:
 
 .. code-block:: powershell
 
-    #AnsibleRequires -CSharpUtil Ansible.Basic
+    #AssibleRequires -CSharpUtil Assible.Basic
 
-This will import the module_util at ``./lib/ansible/module_utils/csharp/Ansible.Basic.cs``
+This will import the module_util at ``./lib/assible/module_utils/csharp/Assible.Basic.cs``
 and automatically load the types in the executing process. C# module utils can
 reference each other and be loaded together by adding the following line to the
 using statements at the top of the util:
 
 .. code-block:: csharp
 
-    using Ansible.Become;
+    using Assible.Become;
 
 There are special comments that can be set in a C# file for controlling the
 compilation parameters. The following comments can be added to the script;
@@ -344,41 +344,41 @@ A combination of these flags help to make a module util interoperable on both
     //NoWarn -Name CS1956 -CLR Framework
 
 
-The following is a list of module_utils that are packaged with Ansible and a general description of what
+The following is a list of module_utils that are packaged with Assible and a general description of what
 they do:
 
 - ArgvParser: Utility used to convert a list of arguments to an escaped string compliant with the Windows argument parsing rules.
 - CamelConversion: Utility used to convert camelCase strings/lists/dicts to snake_case.
 - CommandUtil: Utility used to execute a Windows process and return the stdout/stderr and rc as separate objects.
 - FileUtil: Utility that expands on the ``Get-ChildItem`` and ``Test-Path`` to work with special files like ``C:\pagefile.sys``.
-- Legacy: General definitions and helper utilities for Ansible module.
+- Legacy: General definitions and helper utilities for Assible module.
 - LinkUtil: Utility to create, remove, and get information about symbolic links, junction points and hard inks.
 - SID: Utilities used to convert a user or group to a Windows SID and vice versa.
 
-For more details on any specific module utility and their requirements, please see the `Ansible
-module utilities source code <https://github.com/ansible/ansible/tree/devel/lib/ansible/module_utils/powershell>`_.
+For more details on any specific module utility and their requirements, please see the `Assible
+module utilities source code <https://github.com/assible/assible/tree/devel/lib/assible/module_utils/powershell>`_.
 
-PowerShell module utilities can be stored outside of the standard Ansible
+PowerShell module utilities can be stored outside of the standard Assible
 distribution for use with custom modules. Custom module_utils are placed in a
 folder called ``module_utils`` located in the root folder of the playbook or role
 directory.
 
-C# module utilities can also be stored outside of the standard Ansible distribution for use with custom modules. Like
+C# module utilities can also be stored outside of the standard Assible distribution for use with custom modules. Like
 PowerShell utils, these are stored in a folder called ``module_utils`` and the filename must end in the extension
-``.cs``, start with ``Ansible.``  and be named after the namespace defined in the util.
+``.cs``, start with ``Assible.``  and be named after the namespace defined in the util.
 
 The below example is a role structure that contains two PowerShell custom module_utils called
-``Ansible.ModuleUtils.ModuleUtil1``, ``Ansible.ModuleUtils.ModuleUtil2``, and a C# util containing the namespace
-``Ansible.CustomUtil``::
+``Assible.ModuleUtils.ModuleUtil1``, ``Assible.ModuleUtils.ModuleUtil2``, and a C# util containing the namespace
+``Assible.CustomUtil``::
 
     meta/
       main.yml
     defaults/
       main.yml
     module_utils/
-      Ansible.ModuleUtils.ModuleUtil1.psm1
-      Ansible.ModuleUtils.ModuleUtil2.psm1
-      Ansible.CustomUtil.cs
+      Assible.ModuleUtils.ModuleUtil1.psm1
+      Assible.ModuleUtils.ModuleUtil2.psm1
+      Assible.CustomUtil.cs
     tasks/
       main.yml
 
@@ -407,7 +407,7 @@ The standard convention for a module util that has a shared argument spec would 
 - A ``Get-<namespace.name.util name>Spec`` function that outputs the common spec for a module
     * It is highly recommended to make this function name be unique to the module to avoid any conflicts with other utils that can be loaded
     * The format of the output spec is a Hashtable in the same format as the ``$spec`` used for normal modules
-- A function that takes in an ``AnsibleModule`` object called under the ``-Module`` parameter which it can use to get the shared options
+- A function that takes in an ``AssibleModule`` object called under the ``-Module`` parameter which it can use to get the shared options
 
 Because these options can be shared across various module it is highly recommended to keep the module option names and
 aliases in the shared spec as specific as they can be. For example do not have a util option called ``password``,
@@ -426,7 +426,7 @@ modules to authentication with a service.
         [CmdletBinding()]
         param (
             [Parameter(Mandatory=$true)]
-            [ValidateScript({ $_.GetType().FullName -eq 'Ansible.Basic.AnsibleModule' })]
+            [ValidateScript({ $_.GetType().FullName -eq 'Assible.Basic.AssibleModule' })]
             $Module,
 
             [Parameter(Mandatory=$true)]
@@ -480,7 +480,7 @@ For a module to take advantage of this common argument spec it can be set out li
     #!powershell
 
     # Include the module util ServiceAuth.psm1 from the my_namespace.my_collection collection
-    #AnsibleRequires -PowerShell ansible_collections.my_namespace.my_collection.plugins.module_utils.ServiceAuth
+    #AssibleRequires -PowerShell assible_collections.my_namespace.my_collection.plugins.module_utils.ServiceAuth
 
     # Create the module spec like normal
     $spec = @{
@@ -491,7 +491,7 @@ For a module to take advantage of this common argument spec it can be set out li
     }
 
     # Create the module from the module spec but also include the util spec to merge into our own.
-    $module = [Ansible.Basic.AnsibleModule]::Create($args, $spec, @(Get-MyNamespaceMyCollectionServiceAuthSpec))
+    $module = [Assible.Basic.AssibleModule]::Create($args, $spec, @(Get-MyNamespaceMyCollectionServiceAuthSpec))
 
     # Call the ServiceAuth module util and pass in the module object so it can access the module options.
     Invoke-MyServiceResource -Module $module -ResourceId $module.Params.resource_id -State $module.params.state
@@ -513,7 +513,7 @@ its docs.
 Windows playbook module testing
 ===============================
 
-You can test a module with an Ansible playbook. For example:
+You can test a module with an Assible playbook. For example:
 
 - Create a playbook in any directory ``touch testmodule.yml``.
 - Create an inventory file in the same directory ``touch hosts``.
@@ -528,9 +528,9 @@ You can test a module with an Ansible playbook. For example:
         win_module:
           name: test name
 
-- Run the playbook ``ansible-playbook -i hosts testmodule.yml``
+- Run the playbook ``assible-playbook -i hosts testmodule.yml``
 
-This can be useful for seeing how Ansible runs with
+This can be useful for seeing how Assible runs with
 the new module end to end. Other possible ways to test the module are
 shown below.
 
@@ -543,13 +543,13 @@ useful when developing a new module or implementing bug fixes. These
 are some steps that need to be followed to set this up:
 
 - Copy the module script to the Windows server
-- Copy the folders ``./lib/ansible/module_utils/powershell`` and ``./lib/ansible/module_utils/csharp`` to the same directory as the script above
+- Copy the folders ``./lib/assible/module_utils/powershell`` and ``./lib/assible/module_utils/csharp`` to the same directory as the script above
 - Add an extra ``#`` to the start of any ``#Requires -Module`` lines in the module code, this is only required for any lines starting with ``#Requires -Module``
 - Add the following to the start of the module script that was copied to the server:
 
 .. code-block:: powershell
 
-    # Set $ErrorActionPreference to what's set during Ansible execution
+    # Set $ErrorActionPreference to what's set during Assible execution
     $ErrorActionPreference = "Stop"
 
     # Set the first argument as the path to a JSON file that contains the module args
@@ -557,22 +557,22 @@ are some steps that need to be followed to set this up:
 
     # Or instead of an args file, set $complex_args to the pre-processed module args
     $complex_args = @{
-        _ansible_check_mode = $false
-        _ansible_diff = $false
+        _assible_check_mode = $false
+        _assible_diff = $false
         path = "C:\temp"
         state = "present"
     }
 
-    # Import any C# utils referenced with '#AnsibleRequires -CSharpUtil' or 'using Ansible.;
+    # Import any C# utils referenced with '#AssibleRequires -CSharpUtil' or 'using Assible.;
     # The $_csharp_utils entries should be the context of the C# util files and not the path
-    Import-Module -Name "$($pwd.Path)\powershell\Ansible.ModuleUtils.AddType.psm1"
+    Import-Module -Name "$($pwd.Path)\powershell\Assible.ModuleUtils.AddType.psm1"
     $_csharp_utils = @(
-        [System.IO.File]::ReadAllText("$($pwd.Path)\csharp\Ansible.Basic.cs")
+        [System.IO.File]::ReadAllText("$($pwd.Path)\csharp\Assible.Basic.cs")
     )
     Add-CSharpType -References $_csharp_utils -IncludeDebugInfo
 
     # Import any PowerShell modules referenced with '#Requires -Module`
-    Import-Module -Name "$($pwd.Path)\powershell\Ansible.ModuleUtils.Legacy.psm1"
+    Import-Module -Name "$($pwd.Path)\powershell\Assible.ModuleUtils.Legacy.psm1"
 
     # End of the setup code and start of the module code
     #!powershell
@@ -581,9 +581,9 @@ You can add more args to ``$complex_args`` as required by the module or define t
 with the structure::
 
     {
-        "ANSIBLE_MODULE_ARGS": {
-            "_ansible_check_mode": false,
-            "_ansible_diff": false,
+        "ASSIBLE_MODULE_ARGS": {
+            "_assible_check_mode": false,
+            "_assible_diff": false,
             "path": "C:\\temp",
             "state": "present"
         }
@@ -598,12 +598,12 @@ the most popular ones are
 .. _Powershell ISE: https://docs.microsoft.com/en-us/powershell/scripting/core-powershell/ise/how-to-debug-scripts-in-windows-powershell-ise
 .. _Visual Studio Code: https://blogs.technet.microsoft.com/heyscriptingguy/2017/02/06/debugging-powershell-script-in-visual-studio-code-part-1/
 
-To be able to view the arguments as passed by Ansible to the module follow
+To be able to view the arguments as passed by Assible to the module follow
 these steps.
 
-- Prefix the Ansible command with :envvar:`ANSIBLE_KEEP_REMOTE_FILES=1<ANSIBLE_KEEP_REMOTE_FILES>` to specify that Ansible should keep the exec files on the server.
-- Log onto the Windows server using the same user account that Ansible used to execute the module.
-- Navigate to ``%TEMP%\..``. It should contain a folder starting with ``ansible-tmp-``.
+- Prefix the Assible command with :envvar:`ASSIBLE_KEEP_REMOTE_FILES=1<ASSIBLE_KEEP_REMOTE_FILES>` to specify that Assible should keep the exec files on the server.
+- Log onto the Windows server using the same user account that Assible used to execute the module.
+- Navigate to ``%TEMP%\..``. It should contain a folder starting with ``assible-tmp-``.
 - Inside this folder, open the PowerShell script for the module.
 - In this script is a raw JSON script under ``$json_raw`` which contains the module arguments under ``module_args``. These args can be assigned manually to the ``$complex_args`` variable that is defined on your debug script or put in the ``args.json`` file.
 
@@ -611,15 +611,15 @@ these steps.
 Windows unit testing
 ====================
 
-Currently there is no mechanism to run unit tests for Powershell modules under Ansible CI.
+Currently there is no mechanism to run unit tests for Powershell modules under Assible CI.
 
 
 Windows integration testing
 ===========================
 
-Integration tests for Ansible modules are typically written as Ansible roles. These test
+Integration tests for Assible modules are typically written as Assible roles. These test
 roles are located in ``./test/integration/targets``. You must first set up your testing
-environment, and configure a test inventory for Ansible to connect to.
+environment, and configure a test inventory for Assible to connect to.
 
 In this example we will set up a test inventory to connect to two hosts and run the integration
 tests for win_stat:
@@ -628,11 +628,11 @@ tests for win_stat:
 - Create a copy of ``./test/integration/inventory.winrm.template`` and name it ``inventory.winrm``.
 - Fill in entries under ``[windows]`` and set the required variables that are needed to connect to the host.
 - :ref:`Install the required Python modules <windows_winrm>` to support WinRM and a configured authentication method.
-- To execute the integration tests, run ``ansible-test windows-integration win_stat``; you can replace ``win_stat`` with the role you want to test.
+- To execute the integration tests, run ``assible-test windows-integration win_stat``; you can replace ``win_stat`` with the role you want to test.
 
 This will execute all the tests currently defined for that role. You can set
 the verbosity level using the ``-v`` argument just as you would with
-ansible-playbook.
+assible-playbook.
 
 When developing tests for a new module, it is recommended to test a scenario once in
 check mode and twice not in check mode. This ensures that check mode
@@ -689,8 +689,8 @@ idempotent and does not report changes. For example:
 Windows communication and development support
 =============================================
 
-Join the IRC channel ``#ansible-devel`` or ``#ansible-windows`` on freenode for
-discussions about Ansible development for Windows.
+Join the IRC channel ``#assible-devel`` or ``#assible-windows`` on freenode for
+discussions about Assible development for Windows.
 
-For questions and discussions pertaining to using the Ansible product,
-use the ``#ansible`` channel.
+For questions and discussions pertaining to using the Assible product,
+use the ``#assible`` channel.

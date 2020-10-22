@@ -1,17 +1,17 @@
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -28,15 +28,15 @@ import time
 from multiprocessing import cpu_count
 from multiprocessing.pool import ThreadPool
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.six import iteritems
-from ansible.module_utils.common.process import get_bin_path
-from ansible.module_utils.common.text.formatters import bytes_to_human
-from ansible.module_utils.facts.hardware.base import Hardware, HardwareCollector
-from ansible.module_utils.facts.utils import get_file_content, get_file_lines, get_mount_size
+from assible.module_utils._text import to_text
+from assible.module_utils.six import iteritems
+from assible.module_utils.common.process import get_bin_path
+from assible.module_utils.common.text.formatters import bytes_to_human
+from assible.module_utils.facts.hardware.base import Hardware, HardwareCollector
+from assible.module_utils.facts.utils import get_file_content, get_file_lines, get_mount_size
 
 # import this as a module to ensure we get the same module instance
-from ansible.module_utils.facts import timeout
+from assible.module_utils.facts import timeout
 
 
 def get_partition_uuid(partname):
@@ -245,11 +245,11 @@ class LinuxHardware(Hardware):
         # and sometimes includes both 'processor' and 'Processor'.
         # The fields for Power CPUs include 'processor' and 'cpu'.
         # Always use 'processor' count for ARM and Power systems
-        if collected_facts.get('ansible_architecture', '').startswith(('armv', 'aarch', 'ppc')):
+        if collected_facts.get('assible_architecture', '').startswith(('armv', 'aarch', 'ppc')):
             i = processor_occurence
 
         # FIXME
-        if collected_facts.get('ansible_architecture') != 's390x':
+        if collected_facts.get('assible_architecture') != 's390x':
             if xen_paravirt:
                 cpu_facts['processor_count'] = i
                 cpu_facts['processor_cores'] = i
@@ -519,7 +519,7 @@ class LinuxHardware(Hardware):
 
         # _udevadm_uuid is a fallback for versions of lsblk <= 2.23 that don't have --paths
         # see _run_lsblk() above
-        # https://github.com/ansible/ansible/issues/36077
+        # https://github.com/assible/assible/issues/36077
         uuid = uuids.get(device, self._udevadm_uuid(device))
 
         return mount_size, uuid

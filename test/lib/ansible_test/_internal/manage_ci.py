@@ -1,4 +1,4 @@
-"""Access Ansible Core CI remote services."""
+"""Access Assible Core CI remote services."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -11,7 +11,7 @@ from .util import (
     ApplicationError,
     cmd_quote,
     display,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
 )
 
 from .util_common import (
@@ -21,11 +21,11 @@ from .util_common import (
 )
 
 from .core_ci import (
-    AnsibleCoreCI,
+    AssibleCoreCI,
 )
 
-from .ansible_util import (
-    ansible_environment,
+from .assible_util import (
+    assible_environment,
 )
 
 from .config import (
@@ -38,10 +38,10 @@ from .payload import (
 
 
 class ManageWindowsCI:
-    """Manage access to a Windows instance provided by Ansible Core CI."""
+    """Manage access to a Windows instance provided by Assible Core CI."""
     def __init__(self, core_ci):
         """
-        :type core_ci: AnsibleCoreCI
+        :type core_ci: AssibleCoreCI
         """
         self.core_ci = core_ci
         self.ssh_args = ['-i', self.core_ci.ssh_key.key]
@@ -63,20 +63,20 @@ class ManageWindowsCI:
         """
 
     def wait(self):
-        """Wait for instance to respond to ansible ping."""
+        """Wait for instance to respond to assible ping."""
         extra_vars = [
-            'ansible_connection=winrm',
-            'ansible_host=%s' % self.core_ci.connection.hostname,
-            'ansible_user=%s' % self.core_ci.connection.username,
-            'ansible_password=%s' % self.core_ci.connection.password,
-            'ansible_port=%s' % self.core_ci.connection.port,
-            'ansible_winrm_server_cert_validation=ignore',
+            'assible_connection=winrm',
+            'assible_host=%s' % self.core_ci.connection.hostname,
+            'assible_user=%s' % self.core_ci.connection.username,
+            'assible_password=%s' % self.core_ci.connection.password,
+            'assible_port=%s' % self.core_ci.connection.port,
+            'assible_winrm_server_cert_validation=ignore',
         ]
 
         name = 'windows_%s' % self.core_ci.version
 
-        env = ansible_environment(self.core_ci.args)
-        cmd = ['ansible', '-m', 'ansible.windows.win_ping', '-i', '%s,' % name, name, '-e', ' '.join(extra_vars)]
+        env = assible_environment(self.core_ci.args)
+        cmd = ['assible', '-m', 'assible.windows.win_ping', '-i', '%s,' % name, name, '-e', ' '.join(extra_vars)]
 
         for dummy in range(1, 120):
             try:
@@ -141,30 +141,30 @@ class ManageWindowsCI:
 
 
 class ManageNetworkCI:
-    """Manage access to a network instance provided by Ansible Core CI."""
+    """Manage access to a network instance provided by Assible Core CI."""
     def __init__(self, core_ci):
         """
-        :type core_ci: AnsibleCoreCI
+        :type core_ci: AssibleCoreCI
         """
         self.core_ci = core_ci
 
     def wait(self):
-        """Wait for instance to respond to ansible ping."""
+        """Wait for instance to respond to assible ping."""
         settings = get_network_settings(self.core_ci.args, self.core_ci.platform, self.core_ci.version)
 
         extra_vars = [
-            'ansible_host=%s' % self.core_ci.connection.hostname,
-            'ansible_port=%s' % self.core_ci.connection.port,
-            'ansible_ssh_private_key_file=%s' % self.core_ci.ssh_key.key,
+            'assible_host=%s' % self.core_ci.connection.hostname,
+            'assible_port=%s' % self.core_ci.connection.port,
+            'assible_ssh_private_key_file=%s' % self.core_ci.ssh_key.key,
         ] + [
             '%s=%s' % (key, value) for key, value in settings.inventory_vars.items()
         ]
 
         name = '%s-%s' % (self.core_ci.platform, self.core_ci.version.replace('.', '-'))
 
-        env = ansible_environment(self.core_ci.args)
+        env = assible_environment(self.core_ci.args)
         cmd = [
-            'ansible',
+            'assible',
             '-m', '%s%s_command' % (settings.collection + '.' if settings.collection else '', self.core_ci.platform),
             '-a', 'commands=?',
             '-u', self.core_ci.connection.username,
@@ -185,10 +185,10 @@ class ManageNetworkCI:
 
 
 class ManagePosixCI:
-    """Manage access to a POSIX instance provided by Ansible Core CI."""
+    """Manage access to a POSIX instance provided by Assible Core CI."""
     def __init__(self, core_ci):
         """
-        :type core_ci: AnsibleCoreCI
+        :type core_ci: AssibleCoreCI
         """
         self.core_ci = core_ci
         self.ssh_args = ['-i', self.core_ci.ssh_key.key]
@@ -221,7 +221,7 @@ class ManagePosixCI:
             self.become = []
 
     def setup(self, python_version):
-        """Start instance and wait for it to become ready and respond to an ansible ping.
+        """Start instance and wait for it to become ready and respond to an assible ping.
         :type python_version: str
         :rtype: str
         """
@@ -263,12 +263,12 @@ class ManagePosixCI:
         """Configure remote host for testing.
         :type python_version: str
         """
-        self.upload(os.path.join(ANSIBLE_TEST_DATA_ROOT, 'setup', 'remote.sh'), '/tmp')
+        self.upload(os.path.join(ASSIBLE_TEST_DATA_ROOT, 'setup', 'remote.sh'), '/tmp')
         self.ssh('chmod +x /tmp/remote.sh && /tmp/remote.sh %s %s' % (self.core_ci.platform, python_version))
 
     def upload_source(self):
         """Upload and extract source."""
-        with tempfile.NamedTemporaryFile(prefix='ansible-source-', suffix='.tgz') as local_source_fd:
+        with tempfile.NamedTemporaryFile(prefix='assible-source-', suffix='.tgz') as local_source_fd:
             remote_source_dir = '/tmp'
             remote_source_path = os.path.join(remote_source_dir, os.path.basename(local_source_fd.name))
 
@@ -279,7 +279,7 @@ class ManagePosixCI:
             # being different and -z not being recognized. This pattern works
             # with both versions of tar.
             self.ssh(
-                'rm -rf ~/ansible ~/ansible_collections && cd ~/ && gunzip --stdout %s | tar oxf - && rm %s' %
+                'rm -rf ~/assible ~/assible_collections && cd ~/ && gunzip --stdout %s | tar oxf - && rm %s' %
                 (remote_source_path, remote_source_path)
             )
 

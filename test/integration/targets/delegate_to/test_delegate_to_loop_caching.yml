@@ -42,4 +42,4 @@
 
     - assert:
         that:
-          - _ansible_loop_cache is undefined
+          - _assible_loop_cache is undefined

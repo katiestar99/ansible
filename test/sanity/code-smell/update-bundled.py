@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# (c) 2018, Ansible Project
+# (c) 2018, Assible Project
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 """
 This test checks whether the libraries we're bundling are out of date and need to be synced with
 a newer upstream release.
@@ -33,7 +33,7 @@ from distutils.version import LooseVersion
 
 import packaging.specifiers
 
-from ansible.module_utils.urls import open_url
+from assible.module_utils.urls import open_url
 
 
 BUNDLED_RE = re.compile(b'\\b_BUNDLED_METADATA\\b')
@@ -48,14 +48,14 @@ def get_bundled_libs(paths):
         library consists of multiple files, this should be the file which has metadata included.
     """
     bundled_libs = set()
-    for filename in fnmatch.filter(paths, 'lib/ansible/compat/*/__init__.py'):
+    for filename in fnmatch.filter(paths, 'lib/assible/compat/*/__init__.py'):
         bundled_libs.add(filename)
 
-    bundled_libs.add('lib/ansible/module_utils/compat/selectors.py')
-    bundled_libs.add('lib/ansible/module_utils/distro/__init__.py')
-    bundled_libs.add('lib/ansible/module_utils/six/__init__.py')
+    bundled_libs.add('lib/assible/module_utils/compat/selectors.py')
+    bundled_libs.add('lib/assible/module_utils/distro/__init__.py')
+    bundled_libs.add('lib/assible/module_utils/six/__init__.py')
     # backports.ssl_match_hostname should be moved to its own file in the future
-    bundled_libs.add('lib/ansible/module_utils/urls.py')
+    bundled_libs.add('lib/assible/module_utils/urls.py')
 
     return bundled_libs
 

@@ -1,26 +1,26 @@
 # Copyright 2015 Abhijit Menon-Sen <ams@2ndQuadrant.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import re
-from ansible.errors import AnsibleParserError, AnsibleError
+from assible.errors import AssibleParserError, AssibleError
 
 # Components that match a numeric or alphanumeric begin:end or begin:end:step
 # range expression inside square brackets.
@@ -205,12 +205,12 @@ def parse_address(address, allow_ranges=False):
 
     # If it isn't any of the above, we don't understand it.
     if not host:
-        raise AnsibleError("Not a valid network hostname: %s" % address)
+        raise AssibleError("Not a valid network hostname: %s" % address)
 
     # If we get to this point, we know that any included ranges are valid.
     # If the caller is prepared to handle them, all is well.
     # Otherwise we treat it as a parse failure.
     if not allow_ranges and '[' in host:
-        raise AnsibleParserError("Detected range in host but was asked to ignore ranges")
+        raise AssibleParserError("Detected range in host but was asked to ignore ranges")
 
     return (host, port)

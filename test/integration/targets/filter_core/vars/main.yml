@@ -27,7 +27,7 @@ other_data:
         - yellow
         - xray
 
-# from https://github.com/ansible/ansible/issues/20379#issuecomment-280492883
+# from https://github.com/assible/assible/issues/20379#issuecomment-280492883
 example_20379: {
     "ApplicationVersions": [
         {

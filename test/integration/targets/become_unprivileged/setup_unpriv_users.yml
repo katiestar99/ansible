@@ -18,12 +18,12 @@
     - name: Set password for unpriv1 (MacOSX)
       set_fact:
         password: 'iWishIWereCoolEnoughForRoot!'
-      when: ansible_distribution == 'MacOSX'
+      when: assible_distribution == 'MacOSX'
 
     - name: Set password for unpriv1 (everything else)
       set_fact:
         password: $6$CRuKRUfAoVwibjUI$1IEOISMFAE/a0VG73K9QsD0uruXNPLNkZ6xWg4Sk3kZIXwv6.YJLECzfNjn6pu8ay6XlVcj2dUvycLetL5Lgx1
-      when: ansible_distribution != 'MacOSX'
+      when: assible_distribution != 'MacOSX'
 
     # This user is special. It gets a password so we can sudo as it
     # (we set the sudo password in runme.sh) and it gets wheel so it can
@@ -44,7 +44,7 @@
         name: unpriv1
         groups: com.apple.access_ssh
         append: yes
-      when: ansible_distribution == 'MacOSX'
+      when: assible_distribution == 'MacOSX'
 
     - name: Create .ssh for unpriv1
       file:
@@ -74,7 +74,7 @@
     - name: Fix sudoers.d path for FreeBSD
       set_fact:
         sudoers_etc: /usr/local/etc
-      when: ansible_distribution == 'FreeBSD'
+      when: assible_distribution == 'FreeBSD'
 
     - name: Fix sudoers.d path for everything else
       set_fact:
@@ -84,7 +84,7 @@
     - name: Set chown group for bsd and osx
       set_fact:
         chowngroup: wheel
-      when: ansible_distribution in ('FreeBSD', 'MacOSX')
+      when: assible_distribution in ('FreeBSD', 'MacOSX')
 
     - name: Chown group for everything else
       set_fact:

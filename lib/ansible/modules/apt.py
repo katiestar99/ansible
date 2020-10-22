@@ -54,7 +54,7 @@ options:
   cache_valid_time:
     description:
       - Update the apt cache if its older than the I(cache_valid_time). This option is set in seconds.
-      - As of Ansible 2.4, if explicitly set, this sets I(update_cache=yes).
+      - As of Assible 2.4, if explicitly set, this sets I(update_cache=yes).
     type: int
     default: 0
   purge:
@@ -70,7 +70,7 @@ options:
   install_recommends:
     description:
       - Corresponds to the C(--no-install-recommends) option for I(apt). C(yes) installs recommended packages.  C(no) does not install
-        recommended packages. By default, Ansible will use the same defaults as the operating system. Suggested packages are never installed.
+        recommended packages. By default, Assible will use the same defaults as the operating system. Suggested packages are never installed.
     aliases: [ install-recommends ]
     type: bool
   force:
@@ -111,7 +111,7 @@ options:
   deb:
      description:
        - Path to a .deb package on the remote machine.
-       - If :// in the path, ansible will attempt to download deb before installing. (Version added 2.1)
+       - If :// in the path, assible will attempt to download deb before installing. (Version added 2.1)
        - Requires the C(xz-utils) package to extract the control file of the deb package to install.
      type: path
      required: false
@@ -309,9 +309,9 @@ import time
 import random
 import time
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_bytes, to_native
-from ansible.module_utils.urls import fetch_file
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_bytes, to_native
+from assible.module_utils.urls import fetch_file
 
 # APT related constants
 APT_ENV_VARS = dict(
@@ -373,7 +373,7 @@ class PolicyRcD(object):
         # we will back it up during package installation
         # then restore it
         if os.path.exists('/usr/sbin/policy-rc.d'):
-            self.backup_dir = tempfile.mkdtemp(prefix="ansible")
+            self.backup_dir = tempfile.mkdtemp(prefix="assible")
         else:
             self.backup_dir = None
 
@@ -554,7 +554,7 @@ def expand_pkgspec_from_fnmatches(m, pkgspec, cache):
     #
     # We have decided not to do similar implicit regex matching but might take
     # a PR to add some sort of explicit regex matching:
-    # https://github.com/ansible/ansible-modules-core/issues/1258
+    # https://github.com/assible/assible-modules-core/issues/1258
     new_pkgspec = []
     if pkgspec:
         for pkgspec_pattern in pkgspec:
@@ -617,7 +617,7 @@ def mark_installed_manually(m, packages):
 
     apt_mark_cmd_path = m.get_bin_path("apt-mark")
 
-    # https://github.com/ansible/ansible/issues/40531
+    # https://github.com/assible/assible/issues/40531
     if apt_mark_cmd_path is None:
         m.warn("Could not find apt-mark binary, not marking package(s) as manually installed.")
         return
@@ -1021,7 +1021,7 @@ def get_updated_cache_time():
     return mtimestamp, updated_cache_time
 
 
-# https://github.com/ansible/ansible-modules-core/issues/2951
+# https://github.com/assible/assible-modules-core/issues/2951
 def get_cache(module):
     '''Attempt to get the cache object and update till it works'''
     cache = None
@@ -1046,7 +1046,7 @@ def get_cache(module):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(type='str', default='present', choices=['absent', 'build-dep', 'fixed', 'latest', 'present']),
             update_cache=dict(type='bool', aliases=['update-cache']),

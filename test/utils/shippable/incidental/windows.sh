@@ -26,7 +26,7 @@ python_versions=(
 single_version=2012-R2
 
 # shellcheck disable=SC2086
-ansible-test windows-integration --explain ${CHANGED:+"$CHANGED"} ${UNSTABLE:+"$UNSTABLE"} > /tmp/explain.txt 2>&1 || { cat /tmp/explain.txt && false; }
+assible-test windows-integration --explain ${CHANGED:+"$CHANGED"} ${UNSTABLE:+"$UNSTABLE"} > /tmp/explain.txt 2>&1 || { cat /tmp/explain.txt && false; }
 { grep ' windows-integration: .* (targeted)$' /tmp/explain.txt || true; } > /tmp/windows.txt
 
 if [ -s /tmp/windows.txt ] || [ "${CHANGED:+$CHANGED}" == "" ]; then
@@ -69,7 +69,7 @@ for version in "${python_versions[@]}"; do
     fi
 
     # shellcheck disable=SC2086
-    ansible-test windows-integration --color -v --retry-on-error "${ci}" ${COVERAGE:+"$COVERAGE"} ${CHANGED:+"$CHANGED"} ${UNSTABLE:+"$UNSTABLE"} \
+    assible-test windows-integration --color -v --retry-on-error "${ci}" ${COVERAGE:+"$COVERAGE"} ${CHANGED:+"$CHANGED"} ${UNSTABLE:+"$UNSTABLE"} \
         "${platforms[@]}" \
         --docker default --python "${version}" \
         --remote-terminate "${terminate}" --remote-stage "${stage}" --remote-provider "${provider}"

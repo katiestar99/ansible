@@ -99,10 +99,10 @@ RETURN = """
 
 import json
 
-from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.plugins.lookup import LookupBase
-from ansible.module_utils._text import to_native, to_text
-from ansible.utils.display import Display
+from assible.errors import AssibleError, AssibleParserError
+from assible.plugins.lookup import LookupBase
+from assible.module_utils._text import to_native, to_text
+from assible.utils.display import Display
 
 try:
     import pika
@@ -118,23 +118,23 @@ class LookupModule(LookupBase):
 
     def run(self, terms, variables=None, url=None, queue=None, count=None):
         if not HAS_PIKA:
-            raise AnsibleError('pika python package is required for rabbitmq lookup.')
+            raise AssibleError('pika python package is required for rabbitmq lookup.')
         if not url:
-            raise AnsibleError('URL is required for rabbitmq lookup.')
+            raise AssibleError('URL is required for rabbitmq lookup.')
         if not queue:
-            raise AnsibleError('Queue is required for rabbitmq lookup.')
+            raise AssibleError('Queue is required for rabbitmq lookup.')
 
         display.vvv(u"terms:%s : variables:%s url:%s queue:%s count:%s" % (terms, variables, url, queue, count))
 
         try:
             parameters = pika.URLParameters(url)
         except Exception as e:
-            raise AnsibleError("URL malformed: %s" % to_native(e))
+            raise AssibleError("URL malformed: %s" % to_native(e))
 
         try:
             connection = pika.BlockingConnection(parameters)
         except Exception as e:
-            raise AnsibleError("Connection issue: %s" % to_native(e))
+            raise AssibleError("Connection issue: %s" % to_native(e))
 
         try:
             conn_channel = connection.channel()
@@ -142,8 +142,8 @@ class LookupModule(LookupBase):
             try:
                 connection.close()
             except pika.exceptions.AMQPConnectionError as ie:
-                raise AnsibleError("Channel and connection closing issues: %s / %s" % to_native(e), to_native(ie))
-            raise AnsibleError("Channel issue: %s" % to_native(e))
+                raise AssibleError("Channel and connection closing issues: %s / %s" % to_native(e), to_native(ie))
+            raise AssibleError("Channel issue: %s" % to_native(e))
 
         ret = []
         idx = 0
@@ -169,7 +169,7 @@ class LookupModule(LookupBase):
                     try:
                         msg_details['json'] = json.loads(msg_details['msg'])
                     except ValueError as e:
-                        raise AnsibleError("Unable to decode JSON for message %s: %s" % (method_frame.delivery_tag, to_native(e)))
+                        raise AssibleError("Unable to decode JSON for message %s: %s" % (method_frame.delivery_tag, to_native(e)))
 
                 ret.append(msg_details)
                 conn_channel.basic_ack(method_frame.delivery_tag)

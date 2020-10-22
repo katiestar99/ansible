@@ -6,7 +6,7 @@
   become_user: unpriv2
 
   tasks:
-    - name: Get AnsiballZ temp directory
+    - name: Get AssiballZ temp directory
       action: tmpdir
       register: tmpdir
       become_user: unpriv2
@@ -17,7 +17,7 @@
       register: whoami
 
     - name: Ensure we used the right fallback
-      shell: ls -le /var/tmp/ansible*/*_command.py
+      shell: ls -le /var/tmp/assible*/*_command.py
       register: ls
 
     - assert:

@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -273,13 +273,13 @@ issuer:
         - Note that for repeated values, only the last one will be returned.
     returned: success
     type: dict
-    sample: '{"organizationName": "Ansible", "commonName": "ca.example.com"}'
+    sample: '{"organizationName": "Assible", "commonName": "ca.example.com"}'
 issuer_ordered:
     description: The CRL's issuer as an ordered list of tuples.
     returned: success
     type: list
     elements: list
-    sample: '[["organizationName", "Ansible"], ["commonName": "ca.example.com"]]'
+    sample: '[["organizationName", "Assible"], ["commonName": "ca.example.com"]]'
 last_update:
     description: The point in time from which this CRL can be trusted as ASN.1 TIME.
     returned: success
@@ -351,9 +351,9 @@ import os
 import traceback
 from distutils.version import LooseVersion
 
-from ansible.module_utils import crypto as crypto_utils
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
+from assible.module_utils import crypto as crypto_utils
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.basic import AssibleModule, missing_required_lib
 
 MINIMAL_CRYPTOGRAPHY_VERSION = '1.2'
 
@@ -698,7 +698,7 @@ class CRL(crypto_utils.OpenSSLObject):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(type='str', default='present', choices=['present', 'absent']),
             mode=dict(type='str', default='generate', choices=['generate', 'update']),

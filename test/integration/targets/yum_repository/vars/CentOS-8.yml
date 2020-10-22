@@ -7,4 +7,4 @@ yum_repository_test_repo:
 yum_repository_epel:
   description: Extra Packages for Enterprise Linux $releasever - $basearch
   metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-$releasever&arch=$basearch&infra=$infra&content=$contentdir
-  gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_facts.distribution_major_version }}
+  gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ assible_facts.distribution_major_version }}

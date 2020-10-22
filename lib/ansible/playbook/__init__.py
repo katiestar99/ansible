@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,13 +21,13 @@ __metaclass__ = type
 
 import os
 
-from ansible import constants as C
-from ansible.errors import AnsibleParserError
-from ansible.module_utils._text import to_text, to_native
-from ansible.playbook.play import Play
-from ansible.playbook.playbook_include import PlaybookInclude
-from ansible.plugins.loader import add_all_plugin_dirs
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleParserError
+from assible.module_utils._text import to_text, to_native
+from assible.playbook.play import Play
+from assible.playbook.playbook_include import PlaybookInclude
+from assible.plugins.loader import add_all_plugin_dirs
+from assible.utils.display import Display
 
 display = Display()
 
@@ -69,18 +69,18 @@ class Playbook:
         try:
             ds = self._loader.load_from_file(os.path.basename(file_name))
         except UnicodeDecodeError as e:
-            raise AnsibleParserError("Could not read playbook (%s) due to encoding issues: %s" % (file_name, to_native(e)))
+            raise AssibleParserError("Could not read playbook (%s) due to encoding issues: %s" % (file_name, to_native(e)))
 
         # check for errors and restore the basedir in case this error is caught and handled
         if ds is None:
             self._loader.set_basedir(cur_basedir)
-            raise AnsibleParserError("Empty playbook, nothing to do", obj=ds)
+            raise AssibleParserError("Empty playbook, nothing to do", obj=ds)
         elif not isinstance(ds, list):
             self._loader.set_basedir(cur_basedir)
-            raise AnsibleParserError("A playbook must be a list of plays, got a %s instead" % type(ds), obj=ds)
+            raise AssibleParserError("A playbook must be a list of plays, got a %s instead" % type(ds), obj=ds)
         elif not ds:
             display.deprecated("Empty plays will currently be skipped, in the future they will cause a syntax error",
-                               version='2.12', collection_name='ansible.builtin')
+                               version='2.12', collection_name='assible.builtin')
 
         # Parse the playbook entries. For plays, we simply parse them
         # using the Play() object, and includes are parsed using the
@@ -89,12 +89,12 @@ class Playbook:
             if not isinstance(entry, dict):
                 # restore the basedir in case this error is caught and handled
                 self._loader.set_basedir(cur_basedir)
-                raise AnsibleParserError("playbook entries must be either a valid play or an include statement", obj=entry)
+                raise AssibleParserError("playbook entries must be either a valid play or an include statement", obj=entry)
 
             if any(action in entry for action in ('import_playbook', 'include')):
                 if 'include' in entry:
                     display.deprecated("'include' for playbook includes. You should use 'import_playbook' instead",
-                                       version="2.12", collection_name='ansible.builtin')
+                                       version="2.12", collection_name='assible.builtin')
                 pb = PlaybookInclude.load(entry, basedir=self._basedir, variable_manager=variable_manager, loader=self._loader)
                 if pb is not None:
                     self._entries.extend(pb._entries)

@@ -298,7 +298,7 @@ options:
   uid_owner:
     description:
       - Specifies the UID or username to use in match by owner rule.
-      - From Ansible 2.6 when the C(!) argument is prepended then the it inverts
+      - From Assible 2.6 when the C(!) argument is prepended then the it inverts
         the rule to apply instead to all users except that one specified.
     type: str
     version_added: "2.1"
@@ -467,7 +467,7 @@ import re
 
 from distutils.version import LooseVersion
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 IPTABLES_WAIT_SUPPORT_ADDED = '1.4.20'
@@ -656,7 +656,7 @@ def get_iptables_version(iptables_path, module):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         supports_check_mode=True,
         argument_spec=dict(
             table=dict(type='str', default='filter', choices=['filter', 'nat', 'mangle', 'raw', 'security']),

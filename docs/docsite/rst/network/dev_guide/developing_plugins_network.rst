@@ -15,8 +15,8 @@ Network connection plugins
 ==========================
 Each network connection plugin has a set of its own plugins which provide a specification of the
 connection for a particular set of devices. The specific plugin used is selected at runtime based
-on the value of the ``ansible_network_os`` variable assigned to the host. This variable should be
-set to the same value as the name of the plugin to be loaded. Thus, ``ansible_network_os=nxos``
+on the value of the ``assible_network_os`` variable assigned to the host. This variable should be
+set to the same value as the name of the plugin to be loaded. Thus, ``assible_network_os=nxos``
 will try to load a plugin in a file named ``nxos.py``, so it is important to name the plugin in a
 way that will be sensible to users.
 
@@ -26,10 +26,10 @@ such a call in a module_utils file so it may be shared with other modules.
 
 .. code-block:: python
 
-  from ansible.module_utils.connection import Connection
+  from assible.module_utils.connection import Connection
 
   def get_config(module):
-      # module is your AnsibleModule instance.
+      # module is your AssibleModule instance.
       connection = Connection(module._socket_path)
 
       # You can now call any method (that doesn't start with '_') of the connection
@@ -55,7 +55,7 @@ The ``httpapi`` connection plugin has a ``send()`` method, but an httpapi plugin
 
 .. code-block:: python
 
-   from ansible.module_utils.six.moves.urllib.error import HTTPError
+   from assible.module_utils.six.moves.urllib.error import HTTPError
 
    def send_request(self, data, path, method='POST'):
        # Fixed headers for requests
@@ -100,7 +100,7 @@ If instead an explicit login endpoint needs to be requested to receive an authen
            # with the rest of the request from send_request()
            self.connection._auth = {'X-api-token': response['token']}
        except KeyError:
-           raise AnsibleAuthenticationFailure(message="Failed to acquire login token.")
+           raise AssibleAuthenticationFailure(message="Failed to acquire login token.")
 
 Similarly, ``logout(self)`` can be implemented to call an endpoint to invalidate and/or release the current token, if such an endpoint exists. This will be automatically called when the connection is closed (and, by extension, when reset).
 
@@ -124,7 +124,7 @@ The ``handle_httperror(self, exception)`` method can deal with status codes retu
 
 * Any other value will be taken as a nonfatal response from the request. This may be useful if the server returns error messages in the body of the response. Returning the original exception is usually sufficient in this case, as HTTPError objects have the same interface as a successful response.
 
-For example httpapi plugins, see the `source code for the httpapi plugins <https://github.com/ansible/ansible/tree/devel/lib/ansible/plugins/httpapi>`_ included with Ansible Core.
+For example httpapi plugins, see the `source code for the httpapi plugins <https://github.com/assible/assible/tree/devel/lib/assible/plugins/httpapi>`_ included with Assible Core.
 
 
 
@@ -133,9 +133,9 @@ Developing NETCONF plugins
 
 The :ref:`netconf <netconf_connection>` connection plugin provides a connection to remote devices over the ``SSH NETCONF`` subsystem. Network devices typically use this connection plugin to send and receive ``RPC`` calls over ``NETCONF``.
 
-The ``netconf`` connection plugin uses the ``ncclient`` Python library under the hood to initiate a NETCONF session with a NETCONF-enabled remote network device. ``ncclient`` also executes NETCONF RPC requests and receives responses. You must install the ``ncclient`` on the local Ansible controller.
+The ``netconf`` connection plugin uses the ``ncclient`` Python library under the hood to initiate a NETCONF session with a NETCONF-enabled remote network device. ``ncclient`` also executes NETCONF RPC requests and receives responses. You must install the ``ncclient`` on the local Assible controller.
 
-To use the ``netconf`` connection plugin for network devices that support standard NETCONF (:RFC:`6241`) operations such as ``get``, ``get-config``, ``edit-config``, set ``ansible_network_os=default``.
+To use the ``netconf`` connection plugin for network devices that support standard NETCONF (:RFC:`6241`) operations such as ``get``, ``get-config``, ``edit-config``, set ``assible_network_os=default``.
 You can use :ref:`netconf_get <netconf_get_module>`, :ref:`netconf_config <netconf_config_module>` and :ref:`netconf_rpc <netconf_rpc_module>` modules to talk to a NETCONF enabled remote host.
 
 As a contributor and user, you should be able to use all the methods under the ``NetconfBase`` class if your device supports standard NETCONF. You can contribute a new plugin if the device you are working with has a vendor specific NETCONF RPC.
@@ -144,7 +144,7 @@ To support a vendor specific NETCONF RPC, add the implementation in the network 
 For Junos for example:
 
 * See the vendor-specific Junos RPC methods implemented in ``plugins/netconf/junos.py``.
-* Set the value of ``ansible_network_os`` to the name of the netconf plugin file, that is ``junos`` in this case.
+* Set the value of ``assible_network_os`` to the name of the netconf plugin file, that is ``junos`` in this case.
 
 .. _developing_plugins_network_cli:
 
@@ -152,7 +152,7 @@ Developing network_cli plugins
 ==============================
 
 The :ref:`network_cli <network_cli_connection>` connection type uses ``paramiko_ssh`` under the hood which creates a pseudo terminal to send commands and receive responses.
-``network_cli`` loads two platform specific plugins based on the value of ``ansible_network_os``:
+``network_cli`` loads two platform specific plugins based on the value of ``assible_network_os``:
 
 * Terminal plugin (for example ``plugins/terminal/ios.py``) - Controls the parameters related to terminal, such as setting terminal length and width, page disabling and privilege escalation. Also defines regex to identify the command prompt and error prompts.
 
@@ -203,7 +203,7 @@ The following sample shows the start of a custom cli_parser plugin:
 
 .. code-block:: python
 
-   from ansible_collections.ansible.netcommon.plugins.module_utils.cli_parser.cli_parserbase import (
+   from assible_collections.assible.netcommon.plugins.module_utils.cli_parser.cli_parserbase import (
        CliParserBase,
    )
 
@@ -247,7 +247,7 @@ The following task uses this custom cli_parser plugin:
 .. code-block:: yaml
 
    - name: Use a custom cli_parser
-     ansible.netcommon.cli_parse:
+     assible.netcommon.cli_parse:
        command: ls -l
        parser:
          name: my_organiztion.my_collection.custom_parser
@@ -257,7 +257,7 @@ To develop a custom plugin:
 - Each cli_parser plugin requires a ``parse`` function.
 - Always return a dictionary with ``errors`` or ``parsed``.
 - Place the custom cli_parser in plugins/cli_parsers directory of the collection.
-- See the `current cli_parsers <https://github.com/ansible-collections/ansible.netcommon/tree/main/plugins/cli_parsers>`_ for examples to follow.
+- See the `current cli_parsers <https://github.com/assible-collections/assible.netcommon/tree/main/plugins/cli_parsers>`_ for examples to follow.
 
 
 .. seealso::

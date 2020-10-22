@@ -1,15 +1,15 @@
-# (c) 2020 Ansible Project
+# (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = """
     name: unvault
-    author: Ansible Core Team
+    author: Assible Core Team
     version_added: "2.10"
     short_description: read vaulted file(s) contents
     description:
-        - This lookup returns the contents from vaulted (or not) file(s) on the Ansible controller's file system.
+        - This lookup returns the contents from vaulted (or not) file(s) on the Assible controller's file system.
     options:
       _terms:
         description: path(s) of files to read
@@ -30,10 +30,10 @@ RETURN = """
     elements: raw
 """
 
-from ansible.errors import AnsibleParserError
-from ansible.plugins.lookup import LookupBase
-from ansible.module_utils._text import to_text
-from ansible.utils.display import Display
+from assible.errors import AssibleParserError
+from assible.plugins.lookup import LookupBase
+from assible.module_utils._text import to_text
+from assible.utils.display import Display
 
 display = Display()
 
@@ -58,6 +58,6 @@ class LookupModule(LookupBase):
                     b_contents = f.read()
                 ret.append(b_contents)
             else:
-                raise AnsibleParserError('Unable to find file matching "%s" ' % term)
+                raise AssibleParserError('Unable to find file matching "%s" ' % term)
 
         return ret

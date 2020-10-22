@@ -4,7 +4,7 @@
 Working with network connection options
 ***************************************
 
-Network modules can support multiple connection protocols, such as ``ansible.netcommon.network_cli``, ``ansible.netcommon.netconf``, and ``ansible.netcommon.httpapi``. These connections include some common options you can set to control how the connection to your network device behaves.
+Network modules can support multiple connection protocols, such as ``assible.netcommon.network_cli``, ``assible.netcommon.netconf``, and ``assible.netcommon.httpapi``. These connections include some common options you can set to control how the connection to your network device behaves.
 
 Common options are:
 
@@ -18,7 +18,7 @@ Common options are:
 Setting timeout options
 =======================
 
-When communicating with a remote device, you have control over how long Ansible maintains the connection to that device, as well as how long Ansible waits for a command to complete on that device. Each of these options can be set as variables in your playbook files, environment variables, or settings in your :ref:`ansible.cfg file <ansible_configuration_settings>`.
+When communicating with a remote device, you have control over how long Assible maintains the connection to that device, as well as how long Assible waits for a command to complete on that device. Each of these options can be set as variables in your playbook files, environment variables, or settings in your :ref:`assible.cfg file <assible_configuration_settings>`.
 
 For example, the three options for controlling the connection timeout are as follows.
 
@@ -30,19 +30,19 @@ Using vars (per task):
     cisco.ios.ios_command:
       commands: copy running-config startup-config
       vars:
-        ansible_command_timeout: 30
+        assible_command_timeout: 30
 
 Using the environment variable:
 
 .. code-block:: bash
 
-  $export ANSIBLE_PERSISTENT_COMMAND_TIMEOUT=30
+  $export ASSIBLE_PERSISTENT_COMMAND_TIMEOUT=30
 
-Using the global configuration (in :file:`ansible.cfg`)
+Using the global configuration (in :file:`assible.cfg`)
 
 .. code-block:: ini
 
   [persistent_connection ]
   command_timeout = 30
 
-See :ref:`ansible_variable_precedence` for details on the relative precedence of each of these variables. See the individual connection type to understand each option.
+See :ref:`assible_variable_precedence` for details on the relative precedence of each of these variables. See the individual connection type to understand each option.

@@ -2,10 +2,10 @@
 .. _using_network_roles:
 
 *************************
-Use Ansible network roles
+Use Assible network roles
 *************************
 
-Roles are sets of Ansible defaults, files, tasks, templates, variables, and other Ansible components that work together. As you saw on :ref:`first_network_playbook`, moving from a command to a playbook makes it easy to run multiple tasks and repeat the same tasks in the same order. Moving from a playbook to a role makes it even easier to reuse and share your ordered tasks. You can look at :ref:`Ansible Galaxy <ansible_galaxy>`, which lets you share your roles and use others' roles, either directly or as inspiration.
+Roles are sets of Assible defaults, files, tasks, templates, variables, and other Assible components that work together. As you saw on :ref:`first_network_playbook`, moving from a command to a playbook makes it easy to run multiple tasks and repeat the same tasks in the same order. Moving from a playbook to a role makes it even easier to reuse and share your ordered tasks. You can look at :ref:`Assible Galaxy <assible_galaxy>`, which lets you share your roles and use others' roles, either directly or as inspiration.
 
 .. contents::
    :local:
@@ -13,21 +13,21 @@ Roles are sets of Ansible defaults, files, tasks, templates, variables, and othe
 Understanding roles
 ===================
 
-So what exactly is a role, and why should you care? Ansible roles are basically playbooks broken up into a known file structure. Moving to roles from a playbook makes sharing, reading, and updating your Ansible workflow easier. Users can write their own roles. So for example, you don't have to write your own DNS playbook. Instead, you specify a DNS server and a role to configure it for you.
+So what exactly is a role, and why should you care? Assible roles are basically playbooks broken up into a known file structure. Moving to roles from a playbook makes sharing, reading, and updating your Assible workflow easier. Users can write their own roles. So for example, you don't have to write your own DNS playbook. Instead, you specify a DNS server and a role to configure it for you.
 
-To simplify your workflow even further, the Ansible Network team has written a series of roles for common network use cases. Using these roles means you don't have to reinvent the wheel. Instead of writing and maintaining your own ``create_vlan`` playbooks or roles, you can concentrate on designing, codifying and maintaining the parser templates that describe your network topologies and inventory, and let Ansible's network roles do the work. See the `network-related roles <https://galaxy.ansible.com/ansible-network>`_ on Ansible Galaxy.
+To simplify your workflow even further, the Assible Network team has written a series of roles for common network use cases. Using these roles means you don't have to reinvent the wheel. Instead of writing and maintaining your own ``create_vlan`` playbooks or roles, you can concentrate on designing, codifying and maintaining the parser templates that describe your network topologies and inventory, and let Assible's network roles do the work. See the `network-related roles <https://galaxy.assible.com/assible-network>`_ on Assible Galaxy.
 
 A sample DNS playbook
 ---------------------
 
-To demonstrate the concept of what a role is, the example ``playbook.yml`` below is a single YAML file containing a two-task playbook.  This Ansible Playbook configures the hostname on a Cisco IOS XE device, then it configures the DNS (domain name system) servers.
+To demonstrate the concept of what a role is, the example ``playbook.yml`` below is a single YAML file containing a two-task playbook.  This Assible Playbook configures the hostname on a Cisco IOS XE device, then it configures the DNS (domain name system) servers.
 
 .. code-block:: yaml
 
    ---
    - name: configure cisco routers
      hosts: routers
-     connection: ansible.netcommon.network_cli
+     connection: assible.netcommon.network_cli
      gather_facts: no
      vars:
        dns: "8.8.8.8 8.8.4.4"
@@ -41,11 +41,11 @@ To demonstrate the concept of what a role is, the example ``playbook.yml`` below
         cisco.ios.ios_config:
           lines: ip name-server {{dns}}
 
-If you run this playbook using the ``ansible-playbook`` command, you'll see the output below.  This example used ``-l`` option to limit the playbook to only executing on the **rtr1** node.
+If you run this playbook using the ``assible-playbook`` command, you'll see the output below.  This example used ``-l`` option to limit the playbook to only executing on the **rtr1** node.
 
 .. code-block:: bash
 
-   [user@ansible ~]$ ansible-playbook playbook.yml -l rtr1
+   [user@assible ~]$ assible-playbook playbook.yml -l rtr1
 
    PLAY [configure cisco routers] *************************************************
 
@@ -70,13 +70,13 @@ This playbook configured the hostname and DNS servers.  You can verify that conf
 Convert the playbook into a role
 ---------------------------------
 
-The next step is to convert this playbook into a reusable role. You can create the directory structure manually, or you can use ``ansible-galaxy init`` to create the standard framework for a role.
+The next step is to convert this playbook into a reusable role. You can create the directory structure manually, or you can use ``assible-galaxy init`` to create the standard framework for a role.
 
 .. code-block:: bash
 
-   [user@ansible ~]$ ansible-galaxy init system-demo
-   [user@ansible ~]$ cd system-demo/
-   [user@ansible system-demo]$ tree
+   [user@assible ~]$ assible-galaxy init system-demo
+   [user@assible ~]$ cd system-demo/
+   [user@assible system-demo]$ tree
    .
    ├── defaults
    │   └── main.yml
@@ -99,18 +99,18 @@ This first demonstration uses only the **tasks** and **vars** directories.  The 
 
 .. code-block:: bash
 
-   [user@ansible system-demo]$ tree
+   [user@assible system-demo]$ tree
    .
    ├── tasks
    │   └── main.yml
    └── vars
        └── main.yml
 
-Next, move the content of the ``vars`` and ``tasks`` sections from the original Ansible Playbook into the role. First, move the two tasks into the ``tasks/main.yml`` file:
+Next, move the content of the ``vars`` and ``tasks`` sections from the original Assible Playbook into the role. First, move the two tasks into the ``tasks/main.yml`` file:
 
 .. code-block:: bash
 
-   [user@ansible system-demo]$ cat tasks/main.yml
+   [user@assible system-demo]$ cat tasks/main.yml
    ---
    - name: configure hostname
      cisco.ios.ios_config:
@@ -124,18 +124,18 @@ Next, move the variables into the ``vars/main.yml`` file:
 
 .. code-block:: bash
 
-   [user@ansible system-demo]$ cat vars/main.yml
+   [user@assible system-demo]$ cat vars/main.yml
    ---
    dns: "8.8.8.8 8.8.4.4"
 
-Finally, modify the original Ansible Playbook to remove the ``tasks`` and ``vars`` sections and add the keyword ``roles``  with the name of the role, in this case ``system-demo``.  You'll have this playbook:
+Finally, modify the original Assible Playbook to remove the ``tasks`` and ``vars`` sections and add the keyword ``roles``  with the name of the role, in this case ``system-demo``.  You'll have this playbook:
 
 .. code-block:: yaml
 
    ---
    - name: configure cisco routers
      hosts: routers
-     connection: ansible.netcommon.network_cli
+     connection: assible.netcommon.network_cli
      gather_facts: no
 
      roles:
@@ -145,7 +145,7 @@ To summarize, this demonstration now has a total of three directories and three 
 
 .. code-block:: bash
 
-   [user@ansible ~]$ tree
+   [user@assible ~]$ tree
    .
    ├── playbook.yml
    └── system-demo
@@ -158,7 +158,7 @@ Running the playbook results in identical behavior with slightly different outpu
 
 .. code-block:: bash
 
-   [user@ansible ~]$ ansible-playbook playbook.yml -l rtr1
+   [user@assible ~]$ assible-playbook playbook.yml -l rtr1
 
    PLAY [configure cisco routers] *************************************************
 
@@ -182,12 +182,12 @@ As before, the playbook will generate the following configuration on a Cisco IOS
    ip name-server 8.8.8.8 8.8.4.4
 
 
-This is why Ansible roles can be simply thought of as deconstructed playbooks. They are simple, effective and reusable.  Now another user can simply include the ``system-demo`` role instead of having to create a custom "hard coded" playbook.
+This is why Assible roles can be simply thought of as deconstructed playbooks. They are simple, effective and reusable.  Now another user can simply include the ``system-demo`` role instead of having to create a custom "hard coded" playbook.
 
 Variable precedence
 -------------------
 
-What if you want to change the DNS servers?  You aren't expected to change the ``vars/main.yml`` within the role structure. Ansible has many places where you can specify variables for a given play. See :ref:`playbooks_variables` for details on variables and precedence. There are actually 21 places to put variables.  While this list can seem overwhelming at first glance, the vast majority of use cases only involve knowing the spot for variables of least precedence and how to pass variables with most precedence. See :ref:`ansible_variable_precedence` for more guidance on where you should put variables.
+What if you want to change the DNS servers?  You aren't expected to change the ``vars/main.yml`` within the role structure. Assible has many places where you can specify variables for a given play. See :ref:`playbooks_variables` for details on variables and precedence. There are actually 21 places to put variables.  While this list can seem overwhelming at first glance, the vast majority of use cases only involve knowing the spot for variables of least precedence and how to pass variables with most precedence. See :ref:`assible_variable_precedence` for more guidance on where you should put variables.
 
 Lowest precedence
 ^^^^^^^^^^^^^^^^^
@@ -196,8 +196,8 @@ The lowest precedence is the ``defaults`` directory within a role.  This means a
 
 .. code-block:: bash
 
-   [user@ansible system-demo]$ mv vars defaults
-   [user@ansible system-demo]$ tree
+   [user@assible system-demo]$ mv vars defaults
+   [user@assible system-demo]$ tree
    .
    ├── defaults
    │   └── main.yml
@@ -211,7 +211,7 @@ Add a new ``vars`` section to the playbook to override the default behavior (whe
    ---
    - name: configure cisco routers
      hosts: routers
-     connection: ansible.netcommon.network_cli
+     connection: assible.netcommon.network_cli
      gather_facts: no
      vars:
        dns: 1.1.1.1
@@ -222,7 +222,7 @@ Run this updated playbook on **rtr2**:
 
 .. code-block:: bash
 
-   [user@ansible ~]$ ansible-playbook playbook.yml -l rtr2
+   [user@assible ~]$ assible-playbook playbook.yml -l rtr2
 
 The configuration on the **rtr2** Cisco router will look as follows:
 
@@ -240,7 +240,7 @@ Specifying variables in the ``defaults`` directory within a role will always tak
 
 .. code-block:: bash
 
-   [user@ansible ~]$ ansible-playbook playbook.yml -e "dns=192.168.1.1" -l rtr3
+   [user@assible ~]$ assible-playbook playbook.yml -e "dns=192.168.1.1" -l rtr3
 
 The result on the Cisco IOS XE router will only contain the highest precedence setting of 192.168.1.1:
 
@@ -249,19 +249,19 @@ The result on the Cisco IOS XE router will only contain the highest precedence s
    rtr3#sh run | i name-server
    ip name-server 192.168.1.1
 
-How is this useful?  Why should you care?  Extra vars are commonly used by network operators to override defaults.  A powerful example of this is with Red Hat Ansible Tower and the Survey feature.  It is possible through the web UI to prompt a network operator to fill out parameters with a Web form.  This can be really simple for non-technical playbook writers to execute a playbook using their Web browser. See `Ansible Tower Job Template Surveys <https://docs.ansible.com/ansible-tower/latest/html/userguide/workflow_templates.html#surveys>`_ for more details.
+How is this useful?  Why should you care?  Extra vars are commonly used by network operators to override defaults.  A powerful example of this is with Red Hat Assible Tower and the Survey feature.  It is possible through the web UI to prompt a network operator to fill out parameters with a Web form.  This can be really simple for non-technical playbook writers to execute a playbook using their Web browser. See `Assible Tower Job Template Surveys <https://docs.assible.com/assible-tower/latest/html/userguide/workflow_templates.html#surveys>`_ for more details.
 
 
 Update an installed role
 ------------------------
 
-The Ansible Galaxy page for a role lists all available versions. To update a locally installed role to a new or different version, use the ``ansible-galaxy install`` command with the version and ``--force`` option. You may also need to manually update any dependent roles to support this version. See the role **Read Me** tab in Galaxy for dependent role minimum version requirements.
+The Assible Galaxy page for a role lists all available versions. To update a locally installed role to a new or different version, use the ``assible-galaxy install`` command with the version and ``--force`` option. You may also need to manually update any dependent roles to support this version. See the role **Read Me** tab in Galaxy for dependent role minimum version requirements.
 
 .. code-block:: bash
 
-  [user@ansible]$ ansible-galaxy install mynamespace.my_role,v2.7.1 --force
+  [user@assible]$ assible-galaxy install mynamespace.my_role,v2.7.1 --force
 
 .. seealso::
 
-       `Ansible Galaxy documentation <https://galaxy.ansible.com/docs/>`_
-           Ansible Galaxy user guide
+       `Assible Galaxy documentation <https://galaxy.assible.com/docs/>`_
+           Assible Galaxy user guide

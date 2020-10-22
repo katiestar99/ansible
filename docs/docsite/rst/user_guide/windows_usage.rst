@@ -1,21 +1,21 @@
-Using Ansible and Windows
+Using Assible and Windows
 =========================
-When using Ansible to manage Windows, many of the syntax and rules that apply
+When using Assible to manage Windows, many of the syntax and rules that apply
 for Unix/Linux hosts also apply to Windows, but there are still some differences
 when it comes to components like path separators and OS-specific tasks.
-This document covers details specific to using Ansible for Windows.
+This document covers details specific to using Assible for Windows.
 
 .. contents:: Topics
    :local:
 
 Use Cases
 `````````
-Ansible can be used to orchestrate a multitude of tasks on Windows servers.
+Assible can be used to orchestrate a multitude of tasks on Windows servers.
 Below are some examples and info about common tasks.
 
 Installing Software
 -------------------
-There are three main ways that Ansible can be used to install software:
+There are three main ways that Assible can be used to install software:
 
 * Using the ``win_chocolatey`` module. This sources the program data from the default
   public `Chocolatey <https://chocolatey.org/>`_ repository. Internal repositories can
@@ -80,12 +80,12 @@ Below are some examples of using all three options to install 7-Zip:
 
 Some installers like Microsoft Office or SQL Server require credential delegation or
 access to components restricted by WinRM. The best method to bypass these
-issues is to use ``become`` with the task. With ``become``, Ansible will run
+issues is to use ``become`` with the task. With ``become``, Assible will run
 the installer as if it were run interactively on the host.
 
 .. Note:: Many installers do not properly pass back error information over WinRM. In these cases, if the install has been  verified to work locally the recommended method is to use become.
 
-.. Note:: Some installers restart the WinRM or HTTP services, or cause them to become temporarily unavailable, making Ansible assume the system is unreachable.
+.. Note:: Some installers restart the WinRM or HTTP services, or cause them to become temporarily unavailable, making Assible assume the system is unreachable.
 
 Installing Updates
 ------------------
@@ -137,7 +137,7 @@ update or hotfix:
 
 Set Up Users and Groups
 -----------------------
-Ansible can be used to create Windows users and groups both locally and on a domain.
+Assible can be used to create Windows users and groups both locally and on a domain.
 
 Local
 +++++
@@ -203,7 +203,7 @@ are created:
         groups:
         - Test User
         - Application
-        company: Ansible
+        company: Assible
         update_password: on_create
       loop:
       - name: Test User
@@ -219,10 +219,10 @@ In cases where there is no appropriate module available for a task,
 a command or script can be run using the ``win_shell``, ``win_command``, ``raw``, and ``script`` modules.
 
 The ``raw`` module simply executes a Powershell command remotely. Since ``raw``
-has none of the wrappers that Ansible typically uses, ``become``, ``async``
+has none of the wrappers that Assible typically uses, ``become``, ``async``
 and environment variables do not work.
 
-The ``script`` module executes a script from the Ansible controller on
+The ``script`` module executes a script from the Assible controller on
 one or more Windows hosts. Like ``raw``, ``script`` currently does not support
 ``become``, ``async``, or environment variables.
 
@@ -314,7 +314,7 @@ With those rules in mind, here are some examples of quoting:
     argv[1] = escaped \" backslash
     argv[2] = unquoted-end-backslash\
 
-    # Due to YAML and Ansible parsing '\"' must be written as '{% raw %}\\{% endraw %}"'
+    # Due to YAML and Assible parsing '\"' must be written as '{% raw %}\\{% endraw %}"'
     - win_command: C:\temp\executable.exe C:\no\space\path "arg with end \ before end quote{% raw %}\\{% endraw %}"
 
     argv[0] = C:\temp\executable.exe
@@ -330,7 +330,7 @@ commands. One way to bypass these restrictions is to run a command through a
 scheduled task. A scheduled task is a Windows component that provides the
 ability to run an executable on a schedule and under a different account.
 
-Ansible version 2.5 added modules that make it easier to work with scheduled tasks in Windows.
+Assible version 2.5 added modules that make it easier to work with scheduled tasks in Windows.
 The following is an example of running a script as a scheduled task that deletes itself after
 running:
 
@@ -359,7 +359,7 @@ running:
       retries: 12
       delay: 10
 
-.. Note:: The modules used in the above example were updated/added in Ansible
+.. Note:: The modules used in the above example were updated/added in Assible
     version 2.5.
 
 Path Formatting for Windows
@@ -369,7 +369,7 @@ the major changes is the shift from ``/`` as the path separator to ``\``. This
 can cause major issues with how playbooks are written, since ``\`` is often used
 as an escape character on POSIX systems.
 
-Ansible allows two different styles of syntax; each deals with path separators for Windows differently:
+Assible allows two different styles of syntax; each deals with path separators for Windows differently:
 
 YAML Style
 ----------
@@ -436,11 +436,11 @@ Legacy key=value Style
 The legacy ``key=value`` syntax is used on the command line for ad-hoc commands,
 or inside playbooks. The use of this style is discouraged within playbooks
 because backslash characters need to be escaped, making playbooks harder to read.
-The legacy syntax depends on the specific implementation in Ansible, and quoting
+The legacy syntax depends on the specific implementation in Assible, and quoting
 (both single and double) does not have any effect on how it is parsed by
-Ansible.
+Assible.
 
-The Ansible key=value parser parse_kv() considers the following escape
+The Assible key=value parser parse_kv() considers the following escape
 sequences:
 
 * ``\``, ``'``, ``"``, ``\a``, ``\b``, ``\f``, ``\n``, ``\r``, ``\t`` and
@@ -484,18 +484,18 @@ The failing examples don't fail outright but will substitute ``\t`` with the
 
 Limitations
 ```````````
-Some things you cannot do with Ansible and Windows are:
+Some things you cannot do with Assible and Windows are:
 
 * Upgrade PowerShell
 
 * Interact with the WinRM listeners
 
-Because WinRM is reliant on the services being online and running during normal operations, you cannot upgrade PowerShell or interact with WinRM listeners with Ansible. Both of these actions will cause the connection to fail. This can technically be avoided by using ``async`` or a scheduled task, but those methods are fragile if the process it runs breaks the underlying connection Ansible uses, and are best left to the bootstrapping process or before an image is
+Because WinRM is reliant on the services being online and running during normal operations, you cannot upgrade PowerShell or interact with WinRM listeners with Assible. Both of these actions will cause the connection to fail. This can technically be avoided by using ``async`` or a scheduled task, but those methods are fragile if the process it runs breaks the underlying connection Assible uses, and are best left to the bootstrapping process or before an image is
 created.
 
 Developing Windows Modules
 ``````````````````````````
-Because Ansible modules for Windows are written in PowerShell, the development
+Because Assible modules for Windows are written in PowerShell, the development
 guides for Windows modules differ substantially from those for standard standard modules. Please see
 :ref:`developing_modules_general_windows` for more information.
 
@@ -507,7 +507,7 @@ guides for Windows modules differ substantially from those for standard standard
        Tips and tricks for playbooks
    :ref:`List of Windows Modules <windows_modules>`
        Windows specific module list, all implemented in PowerShell
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

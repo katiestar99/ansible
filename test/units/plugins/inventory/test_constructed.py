@@ -2,30 +2,30 @@
 
 # Copyright 2019 Alan Rominger <arominge@redhat.net>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import pytest
 
-from ansible.errors import AnsibleParserError
-from ansible.plugins.inventory.constructed import InventoryModule
-from ansible.inventory.data import InventoryData
-from ansible.template import Templar
+from assible.errors import AssibleParserError
+from assible.plugins.inventory.constructed import InventoryModule
+from assible.inventory.data import InventoryData
+from assible.template import Templar
 
 
 @pytest.fixture()
@@ -193,7 +193,7 @@ def test_parent_group_templating_error(inventory_module):
             'parent_group': '{{ location.barn-yard }}'
         }
     ]
-    with pytest.raises(AnsibleParserError) as err_message:
+    with pytest.raises(AssibleParserError) as err_message:
         inventory_module._add_host_to_keyed_groups(
             keyed_groups, host.vars, host.name, strict=True
         )

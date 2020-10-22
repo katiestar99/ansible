@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -34,9 +34,9 @@ try:
 except ImportError:
     HAS_PSYCOPG2 = False
 
-from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import iteritems
+from assible.module_utils.basic import missing_required_lib
+from assible.module_utils._text import to_native
+from assible.module_utils.six import iteritems
 from distutils.version import LooseVersion
 
 
@@ -72,7 +72,7 @@ def connect_to_db(module, conn_params, autocommit=False, fail_on_conn=True):
     Return psycopg2 connection object.
 
     Args:
-        module (AnsibleModule) -- object of ansible.module_utils.basic.AnsibleModule class
+        module (AssibleModule) -- object of assible.module_utils.basic.AssibleModule class
         conn_params (dict) -- dictionary with connection parameters
 
     Kwargs:
@@ -132,7 +132,7 @@ def exec_sql(obj, query, query_params=None, ddl=False, add_to_executed=True, don
 
     Args:
         obj (obj) -- must be an object of a user class.
-            The object must have module (AnsibleModule class object) and
+            The object must have module (AssibleModule class object) and
             cursor (psycopg cursor object) attributes
         query (str) -- SQL query to execute
 
@@ -182,7 +182,7 @@ def get_conn_params(module, params_dict, warn_db_default=True):
     Return a dictionary with parameters to connect to PostgreSQL server.
 
     Args:
-        module (AnsibleModule) -- object of ansible.module_utils.basic.AnsibleModule class
+        module (AssibleModule) -- object of assible.module_utils.basic.AssibleModule class
         params_dict (dict) -- dictionary with variables
 
     Kwargs:

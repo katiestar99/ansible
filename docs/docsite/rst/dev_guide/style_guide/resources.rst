@@ -1,7 +1,7 @@
 Resources
 ````````````````
-* Follow the style of the :ref:`Ansible Documentation<ansible_documentation>`
-* Ask for advice on IRC, on the ``#ansible-devel`` Freenode channel
+* Follow the style of the :ref:`Assible Documentation<assible_documentation>`
+* Ask for advice on IRC, on the ``#assible-devel`` Freenode channel
 * Review these online style guides:
 
   * `AP Stylebook <https://www.apstylebook.com>`_

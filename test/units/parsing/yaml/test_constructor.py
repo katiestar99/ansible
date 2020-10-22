@@ -9,9 +9,9 @@ import pytest
 from yaml import MappingNode, Mark, ScalarNode
 from yaml.constructor import ConstructorError
 
-import ansible.constants as C
-from ansible.utils.display import Display
-from ansible.parsing.yaml.constructor import AnsibleConstructor
+import assible.constants as C
+from assible.utils.display import Display
+from assible.parsing.yaml.constructor import AssibleConstructor
 
 
 @pytest.fixture
@@ -54,7 +54,7 @@ def test_duplicate_yaml_dict_key_ignore(dupe_node, monkeypatch):
     monkeypatch.setattr(C, 'DUPLICATE_YAML_DICT_KEY', 'ignore')
     cap = Capture()
     monkeypatch.setattr(Display(), 'warning', cap)
-    ac = AnsibleConstructor()
+    ac = AssibleConstructor()
     ac.construct_mapping(dupe_node)
     assert not cap.called
 
@@ -63,7 +63,7 @@ def test_duplicate_yaml_dict_key_warn(dupe_node, monkeypatch):
     monkeypatch.setattr(C, 'DUPLICATE_YAML_DICT_KEY', 'warn')
     cap = Capture()
     monkeypatch.setattr(Display(), 'warning', cap)
-    ac = AnsibleConstructor()
+    ac = AssibleConstructor()
     ac.construct_mapping(dupe_node)
     assert cap.called
     expected = [
@@ -80,5 +80,5 @@ def test_duplicate_yaml_dict_key_warn(dupe_node, monkeypatch):
 
 def test_duplicate_yaml_dict_key_error(dupe_node, monkeypatch, mocker):
     monkeypatch.setattr(C, 'DUPLICATE_YAML_DICT_KEY', 'error')
-    ac = AnsibleConstructor()
+    ac = AssibleConstructor()
     pytest.raises(ConstructorError, ac.construct_mapping, dupe_node)

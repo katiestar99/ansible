@@ -1,5 +1,5 @@
 # test using builtin module of multiple types in a role in a collection
-# https://github.com/ansible/ansible/issues/65298
+# https://github.com/assible/assible/issues/65298
 - name: Run setup module because there is both setup.ps1 and setup.py
   setup:
     gather_subset: min
@@ -18,7 +18,7 @@
 
 # verify that pluginloader caching doesn't prevent us from explicitly calling a builtin plugin with the same name
 - name: call builtin ping module explicitly
-  ansible.builtin.ping:
+  assible.builtin.ping:
   register: builtinping_out
 
 - debug:
@@ -32,7 +32,7 @@
 
 - assert:
     that:
-    - pluginlookup_out.collection_list == ['testns.testcoll', 'ansible.builtin', 'testns.coll_in_sys', 'bogus.fromrolemeta']
+    - pluginlookup_out.collection_list == ['testns.testcoll', 'assible.builtin', 'testns.coll_in_sys', 'bogus.fromrolemeta']
     - ping_out.source is defined and ping_out.source == 'user'
     - systestmodule_out.source is defined and systestmodule_out.source == 'sys'
     - builtinping_out.ping is defined and builtinping_out.ping == 'pong'

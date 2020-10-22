@@ -1,7 +1,7 @@
 - name: Create unarchivetest1 user
   user:
     name: unarchivetest1
-    group: "{{ group_table[ansible_facts['distribution']] | default(omit) }}"
+    group: "{{ group_table[assible_facts['distribution']] | default(omit) }}"
   register: user
   vars:
     group_table:
@@ -62,7 +62,7 @@
     # Due to a bug in the date calculation used to determine if a change
     # was made or not, this check is unreliable. This seems to only happen on
     # Ubuntu 1604.
-    # https://github.com/ansible/ansible/blob/58145dff9ca1a713f8ed295a0076779a91c41cba/lib/ansible/modules/unarchive.py#L472-L474
+    # https://github.com/assible/assible/blob/58145dff9ca1a713f8ed295a0076779a91c41cba/lib/assible/modules/unarchive.py#L472-L474
     - name: Check that unarchiving again reports no change
       assert:
         that:
@@ -82,4 +82,4 @@
         path: /Users/unarchivetest1
         state: absent
       become: no
-      when: ansible_facts.distribution == 'MacOSX'
+      when: assible_facts.distribution == 'MacOSX'

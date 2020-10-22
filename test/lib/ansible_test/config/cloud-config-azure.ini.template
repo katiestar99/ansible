@@ -1,17 +1,17 @@
-# This is the configuration template for ansible-test Azure integration tests.
+# This is the configuration template for assible-test Azure integration tests.
 #
 # You do not need this template if you are:
 #
-# 1) Running integration tests without using ansible-test.
-# 2) Using the automatically provisioned Azure credentials in ansible-test.
+# 1) Running integration tests without using assible-test.
+# 2) Using the automatically provisioned Azure credentials in assible-test.
 #
 # If you do not want to use the automatically provisioned temporary Azure credentials,
 # fill in the values below and save this file without the .template extension.
-# This will cause ansible-test to use the given configuration instead of temporary credentials.
+# This will cause assible-test to use the given configuration instead of temporary credentials.
 #
 # NOTE: Automatic provisioning of Azure credentials requires one of:
-#       1) ansible-core-ci API key in ~/.ansible-core-ci.key
-#       2) Sherlock URL (including API key) in ~/.ansible-sherlock-ci.cfg
+#       1) assible-core-ci API key in ~/.assible-core-ci.key
+#       2) Sherlock URL (including API key) in ~/.assible-sherlock-ci.cfg
 
 [default]
 # Provide either Service Principal or Active Directory credentials below.

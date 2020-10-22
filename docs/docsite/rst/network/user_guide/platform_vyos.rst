@@ -4,7 +4,7 @@
 VyOS Platform Options
 ***************************************
 
-The `VyOS <https://galaxy.ansible.com/vyos/vyos>`_ collection supports the ``ansible.netcommon.network_cli`` connection type. This page offers details on connection options to manage VyOS using Ansible.
+The `VyOS <https://galaxy.assible.com/vyos/vyos>`_ collection supports the ``assible.netcommon.network_cli`` connection type. This page offers details on connection options to manage VyOS using Assible.
 
 .. contents::
   :local:
@@ -26,7 +26,7 @@ Connections available
 
     Indirect Access       via a bastion (jump host)
 
-    Connection Settings   ``ansible_connection: ansible.netcommon.network_cli``
+    Connection Settings   ``assible_connection: assible.netcommon.network_cli``
 
     |enable_mode|         not supported
 
@@ -36,9 +36,9 @@ Connections available
 .. |enable_mode| replace:: Enable Mode |br| (Privilege Escalation)
 
 
-The ``ansible_connection: local`` has been deprecated. Please use ``ansible_connection: ansible.netcommon.network_cli`` instead.
+The ``assible_connection: local`` has been deprecated. Please use ``assible_connection: assible.netcommon.network_cli`` instead.
 
-Using CLI in Ansible
+Using CLI in Assible
 ====================
 
 Example CLI ``group_vars/vyos.yml``
@@ -46,15 +46,15 @@ Example CLI ``group_vars/vyos.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.network_cli
-   ansible_network_os: vyos.vyos.vyos
-   ansible_user: myuser
-   ansible_password: !vault...
-   ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection: assible.netcommon.network_cli
+   assible_network_os: vyos.vyos.vyos
+   assible_user: myuser
+   assible_password: !vault...
+   assible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
 
-- If you are using SSH keys (including an ssh-agent) you can remove the ``ansible_password`` configuration.
-- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``ansible_ssh_common_args`` configuration.
+- If you are using SSH keys (including an ssh-agent) you can remove the ``assible_password`` configuration.
+- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``assible_ssh_common_args`` configuration.
 - If you are accessing your host through a bastion/jump host, you cannot include your SSH password in the ``ProxyCommand`` directive. To prevent secrets from leaking out (for example in ``ps`` output), SSH does not support providing passwords via environment variables.
 
 Example CLI task
@@ -65,7 +65,7 @@ Example CLI task
    - name: Retrieve VyOS version info
      vyos.vyos.vyos_command:
        commands: show version
-     when: ansible_network_os == 'vyos.vyos.vyos'
+     when: assible_network_os == 'vyos.vyos.vyos'
 
 .. include:: shared_snippets/SSH_warning.txt
 

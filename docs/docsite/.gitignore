@@ -7,7 +7,7 @@ build
 .\#*
 .doctrees
 # Generated docs stuff
-ansible*.xml
+assible*.xml
 .buildinfo
 objects.inv
 .doctrees

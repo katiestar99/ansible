@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -116,18 +116,18 @@ description:
 
 from distutils.version import LooseVersion
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.cloudstack import (
-    AnsibleCloudStack,
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.cloudstack import (
+    AssibleCloudStack,
     cs_argument_spec,
     cs_required_together,
 )
 
 
-class AnsibleCloudStackRolePermission(AnsibleCloudStack):
+class AssibleCloudStackRolePermission(AssibleCloudStack):
 
     def __init__(self, module):
-        super(AnsibleCloudStackRolePermission, self).__init__(module)
+        super(AssibleCloudStackRolePermission, self).__init__(module)
         cloudstack_min_version = LooseVersion('4.9.2')
 
         self.returns = {
@@ -326,7 +326,7 @@ def main():
         parent=dict(),
     ))
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         required_together=cs_required_together(),
         mutually_exclusive=(
@@ -335,7 +335,7 @@ def main():
         supports_check_mode=True
     )
 
-    acs_role_perm = AnsibleCloudStackRolePermission(module)
+    acs_role_perm = AssibleCloudStackRolePermission(module)
 
     state = module.params.get('state')
     if state in ['absent']:

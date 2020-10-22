@@ -1,27 +1,27 @@
 - name: Initialize a git repo
-  command: 'git init {{ galaxy_dir }}/development/ansible_test'
+  command: 'git init {{ galaxy_dir }}/development/assible_test'
 
 - stat:
-    path: "{{ galaxy_dir }}/development/ansible_test"
+    path: "{{ galaxy_dir }}/development/assible_test"
 
 - name: Add a couple collections to the repository
-  command: 'ansible-galaxy collection init {{ item }}'
+  command: 'assible-galaxy collection init {{ item }}'
   args:
     chdir: '{{ galaxy_dir }}/development'
   loop:
-    - 'ansible_test.collection_1'
-    - 'ansible_test.collection_2'
+    - 'assible_test.collection_1'
+    - 'assible_test.collection_2'
 
 - name: Add collection_2 as a dependency of collection_1
   lineinfile:
-    path: '{{ galaxy_dir }}/development/ansible_test/collection_1/galaxy.yml'
+    path: '{{ galaxy_dir }}/development/assible_test/collection_1/galaxy.yml'
     regexp: '^dependencies'
-    line: "dependencies: {'git+file://{{ galaxy_dir }}/development/ansible_test/.git#collection_2/': '*'}"
+    line: "dependencies: {'git+file://{{ galaxy_dir }}/development/assible_test/.git#collection_2/': '*'}"
 
 - name: Commit the changes
   command: '{{ item }}'
   args:
-    chdir: '{{ galaxy_dir }}/development/ansible_test'
+    chdir: '{{ galaxy_dir }}/development/assible_test'
   loop:
     - git add ./
     - git commit -m 'add collections'

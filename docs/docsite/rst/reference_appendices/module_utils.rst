@@ -1,27 +1,27 @@
-.. _ansible.module_utils:
+.. _assible.module_utils:
 .. _module_utils:
 
 ***************************************************************
-Ansible Reference: Module Utilities
+Assible Reference: Module Utilities
 ***************************************************************
 
 This page documents utilities intended to be helpful when writing
-Ansible modules in Python.
+Assible modules in Python.
 
 
-AnsibleModule
+AssibleModule
 --------------
 
-To use this functionality, include ``from ansible.module_utils.basic import AnsibleModule`` in your module.
+To use this functionality, include ``from assible.module_utils.basic import AssibleModule`` in your module.
 
-.. autoclass:: ansible.module_utils.basic.AnsibleModule
+.. autoclass:: assible.module_utils.basic.AssibleModule
    :members:
    :noindex:
 
 Basic
 ------
 
-To use this functionality, include ``import ansible.module_utils.basic`` in your module.
+To use this functionality, include ``import assible.module_utils.basic`` in your module.
 
-.. automodule:: ansible.module_utils.basic
+.. automodule:: assible.module_utils.basic
    :members:

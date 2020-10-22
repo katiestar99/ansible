@@ -1,4 +1,4 @@
-- name: test playbook for ansible-pull
+- name: test playbook for assible-pull
   hosts: all
   gather_facts: False
   tasks:

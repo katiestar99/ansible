@@ -6,7 +6,7 @@ A brief description of the role goes here.
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses any vendor specific SDKs or module with specific dependencies, it may be a good idea to mention in this section that the package is required.
+Any pre-requisites that may not be covered by Assible itself or the role should be mentioned here. For instance, if the role uses any vendor specific SDKs or module with specific dependencies, it may be a good idea to mention in this section that the package is required.
 
 Role Variables
 --------------

@@ -67,12 +67,12 @@ notes:
     response will be repeated. If you need different responses for successive
     question matches, instead of a string response, use a list of strings as
     the response. The list functionality is new in 2.1.
-  - The M(ansible.builtin.expect) module is designed for simple scenarios.
-    For more complex needs, consider the use of expect code with the M(ansible.builtin.shell)
-    or M(ansible.builtin.script) modules. (An example is part of the M(ansible.builtin.shell) module documentation)
+  - The M(assible.builtin.expect) module is designed for simple scenarios.
+    For more complex needs, consider the use of expect code with the M(assible.builtin.shell)
+    or M(assible.builtin.script) modules. (An example is part of the M(assible.builtin.shell) module documentation)
 seealso:
-- module: ansible.builtin.script
-- module: ansible.builtin.shell
+- module: assible.builtin.script
+- module: assible.builtin.shell
 author: "Matt Martz (@sivel)"
 '''
 
@@ -107,8 +107,8 @@ except ImportError:
     PEXPECT_IMP_ERR = traceback.format_exc()
     HAS_PEXPECT = False
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils._text import to_native, to_text
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils._text import to_native, to_text
 
 
 def response_closure(module, question, responses):
@@ -127,7 +127,7 @@ def response_closure(module, question, responses):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             command=dict(required=True),
             chdir=dict(type='path'),

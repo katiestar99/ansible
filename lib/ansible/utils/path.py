@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -21,8 +21,8 @@ import os
 import shutil
 
 from errno import EEXIST
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_bytes, to_native, to_text
+from assible.errors import AssibleError
+from assible.module_utils._text import to_bytes, to_native, to_text
 
 
 __all__ = ['unfrackpath', 'makedirs_safe']
@@ -73,7 +73,7 @@ def makedirs_safe(path, mode=None):
 
     :arg path: A byte or text string representing a directory chain to be created
     :kwarg mode: If given, the mode to set the directory to
-    :raises AnsibleError: If the directory cannot be created and does not already exist.
+    :raises AssibleError: If the directory cannot be created and does not already exist.
     :raises UnicodeDecodeError: if the path is not decodable in the utf-8 encoding.
     '''
 
@@ -87,7 +87,7 @@ def makedirs_safe(path, mode=None):
                 os.makedirs(b_rpath)
         except OSError as e:
             if e.errno != EEXIST:
-                raise AnsibleError("Unable to create local directories(%s): %s" % (to_native(rpath), to_native(e)))
+                raise AssibleError("Unable to create local directories(%s): %s" % (to_native(rpath), to_native(e)))
 
 
 def basedir(source):
@@ -127,7 +127,7 @@ def cleanup_tmp_file(path, warn=False):
             except Exception as e:
                 if warn:
                     # Importing here to avoid circular import
-                    from ansible.utils.display import Display
+                    from assible.utils.display import Display
                     display = Display()
                     display.display(u'Unable to remove temporary file {0}'.format(to_text(e)))
     except Exception:

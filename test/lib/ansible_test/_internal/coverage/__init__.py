@@ -20,7 +20,7 @@ from ..util import (
     ApplicationError,
     common_environment,
     display,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
 )
 
 from ..util_common import (
@@ -49,7 +49,7 @@ if t.TYPE_CHECKING:
     import coverage as coverage_module
 
 COVERAGE_GROUPS = ('command', 'target', 'environment', 'version')
-COVERAGE_CONFIG_PATH = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'coveragerc')
+COVERAGE_CONFIG_PATH = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'coveragerc')
 COVERAGE_OUTPUT_FILE_NAME = 'coverage'
 
 
@@ -141,7 +141,7 @@ def get_collection_path_regexes():  # type: () -> t.Tuple[t.Optional[t.Pattern],
 
 
 def get_python_modules():  # type: () -> t.Dict[str, str]
-    """Return a dictionary of Ansible module names and their paths."""
+    """Return a dictionary of Assible module names and their paths."""
     return dict((target.module, target.path) for target in list(walk_module_targets()) if target.path.endswith('.py'))
 
 
@@ -226,41 +226,41 @@ def sanitize_filename(
         collection_sub_re=None,  # type: t.Optional[t.Pattern]
 ):  # type: (...) -> t.Optional[str]
     """Convert the given code coverage path to a local absolute path and return its, or None if the path is not valid."""
-    ansible_path = os.path.abspath('lib/ansible/') + '/'
+    assible_path = os.path.abspath('lib/assible/') + '/'
     root_path = data_context().content.root + '/'
     integration_temp_path = os.path.sep + os.path.join(ResultType.TMP.relative_path, 'integration') + os.path.sep
 
     if modules is None:
         modules = {}
 
-    if '/ansible_modlib.zip/ansible/' in filename:
-        # Rewrite the module_utils path from the remote host to match the controller. Ansible 2.6 and earlier.
-        new_name = re.sub('^.*/ansible_modlib.zip/ansible/', ansible_path, filename)
+    if '/assible_modlib.zip/assible/' in filename:
+        # Rewrite the module_utils path from the remote host to match the controller. Assible 2.6 and earlier.
+        new_name = re.sub('^.*/assible_modlib.zip/assible/', assible_path, filename)
         display.info('%s -> %s' % (filename, new_name), verbosity=3)
         filename = new_name
     elif collection_search_re and collection_search_re.search(filename):
         new_name = os.path.abspath(collection_sub_re.sub('', filename))
         display.info('%s -> %s' % (filename, new_name), verbosity=3)
         filename = new_name
-    elif re.search(r'/ansible_[^/]+_payload\.zip/ansible/', filename):
-        # Rewrite the module_utils path from the remote host to match the controller. Ansible 2.7 and later.
-        new_name = re.sub(r'^.*/ansible_[^/]+_payload\.zip/ansible/', ansible_path, filename)
+    elif re.search(r'/assible_[^/]+_payload\.zip/assible/', filename):
+        # Rewrite the module_utils path from the remote host to match the controller. Assible 2.7 and later.
+        new_name = re.sub(r'^.*/assible_[^/]+_payload\.zip/assible/', assible_path, filename)
         display.info('%s -> %s' % (filename, new_name), verbosity=3)
         filename = new_name
-    elif '/ansible_module_' in filename:
-        # Rewrite the module path from the remote host to match the controller. Ansible 2.6 and earlier.
-        module_name = re.sub('^.*/ansible_module_(?P<module>.*).py$', '\\g<module>', filename)
+    elif '/assible_module_' in filename:
+        # Rewrite the module path from the remote host to match the controller. Assible 2.6 and earlier.
+        module_name = re.sub('^.*/assible_module_(?P<module>.*).py$', '\\g<module>', filename)
         if module_name not in modules:
             display.warning('Skipping coverage of unknown module: %s' % module_name)
             return None
         new_name = os.path.abspath(modules[module_name])
         display.info('%s -> %s' % (filename, new_name), verbosity=3)
         filename = new_name
-    elif re.search(r'/ansible_[^/]+_payload(_[^/]+|\.zip)/__main__\.py$', filename):
-        # Rewrite the module path from the remote host to match the controller. Ansible 2.7 and later.
-        # AnsiballZ versions using zipimporter will match the `.zip` portion of the regex.
-        # AnsiballZ versions not using zipimporter will match the `_[^/]+` portion of the regex.
-        module_name = re.sub(r'^.*/ansible_(?P<module>[^/]+)_payload(_[^/]+|\.zip)/__main__\.py$',
+    elif re.search(r'/assible_[^/]+_payload(_[^/]+|\.zip)/__main__\.py$', filename):
+        # Rewrite the module path from the remote host to match the controller. Assible 2.7 and later.
+        # AssiballZ versions using zipimporter will match the `.zip` portion of the regex.
+        # AssiballZ versions not using zipimporter will match the `_[^/]+` portion of the regex.
+        module_name = re.sub(r'^.*/assible_(?P<module>[^/]+)_payload(_[^/]+|\.zip)/__main__\.py$',
                              '\\g<module>', filename).rstrip('_')
         if module_name not in modules:
             display.warning('Skipping coverage of unknown module: %s' % module_name)
@@ -268,9 +268,9 @@ def sanitize_filename(
         new_name = os.path.abspath(modules[module_name])
         display.info('%s -> %s' % (filename, new_name), verbosity=3)
         filename = new_name
-    elif re.search('^(/.*?)?/root/ansible/', filename):
+    elif re.search('^(/.*?)?/root/assible/', filename):
         # Rewrite the path of code running on a remote host or in a docker container as root.
-        new_name = re.sub('^(/.*?)?/root/ansible/', root_path, filename)
+        new_name = re.sub('^(/.*?)?/root/assible/', root_path, filename)
         display.info('%s -> %s' % (filename, new_name), verbosity=3)
         filename = new_name
     elif integration_temp_path in filename:

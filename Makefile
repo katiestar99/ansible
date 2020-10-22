@@ -1,27 +1,27 @@
 # WARN: gmake syntax
 ########################################################
-# Makefile for Ansible
+# Makefile for Assible
 #
 # useful targets:
 #   make clean ---------------- clean up
-#   make webdocs -------------- produce ansible doc at docs/docsite/_build/html
+#   make webdocs -------------- produce assible doc at docs/docsite/_build/html
 #   make sdist ---------------- produce a tarball
 #   make deb-src -------------- produce a DEB source
 #   make deb ------------------ produce a DEB
 #   make docs ----------------- rebuild the manpages (results are checked in)
-#   make tests ---------------- run the tests (see https://docs.ansible.com/ansible/devel/dev_guide/testing_units.html for requirements)
+#   make tests ---------------- run the tests (see https://docs.assible.com/assible/devel/dev_guide/testing_units.html for requirements)
 
 ########################################################
 # variable section
 
-NAME = ansible-base
+NAME = assible-base
 OS = $(shell uname -s)
 PREFIX ?= '/usr/local'
 SDIST_DIR ?= 'dist'
 
 # This doesn't evaluate until it's called. The -D argument is the
 # directory of the target file ($@), kinda like `dirname`.
-MANPAGES ?= $(patsubst %.rst.in,%,$(wildcard ./docs/man/man1/ansible*.1.rst.in))
+MANPAGES ?= $(patsubst %.rst.in,%,$(wildcard ./docs/man/man1/assible*.1.rst.in))
 ifneq ($(shell which rst2man 2>/dev/null),)
 ASCII2MAN = rst2man $< $@
 else ifneq ($(shell which rst2man.py 2>/dev/null),)
@@ -31,7 +31,7 @@ ASCII2MAN = @echo "ERROR: rst2man from docutils command is not installed but is 
 endif
 
 PYTHON=python
-GENERATE_CLI = hacking/build-ansible.py generate-man
+GENERATE_CLI = hacking/build-assible.py generate-man
 
 # fetch version from project release.py as single source-of-truth
 VERSION := $(shell $(PYTHON) packaging/release/versionhelper/version_helper.py --raw || echo error)
@@ -88,15 +88,15 @@ PBUILDER_CACHE_DIR = /var/cache/pbuilder
 PBUILDER_BIN ?= pbuilder
 PBUILDER_OPTS ?= --debootstrapopts --variant=buildd --architecture $(PBUILDER_ARCH) --debbuildopts -b
 
-# ansible-test parameters
-ANSIBLE_TEST ?= bin/ansible-test
+# assible-test parameters
+ASSIBLE_TEST ?= bin/assible-test
 TEST_FLAGS ?=
 
-# ansible-test units parameters (make test / make test-py3)
+# assible-test units parameters (make test / make test-py3)
 PYTHON_VERSION ?= $(shell python2 -c 'import sys; print("%s.%s" % sys.version_info[:2])')
 PYTHON3_VERSION ?= $(shell python3 -c 'import sys; print("%s.%s" % sys.version_info[:2])')
 
-# ansible-test integration parameters (make integration)
+# assible-test integration parameters (make integration)
 IMAGE ?= centos7
 TARGET ?=
 
@@ -107,15 +107,15 @@ all: clean python
 
 .PHONY: tests
 tests:
-	$(ANSIBLE_TEST) units -v --python $(PYTHON_VERSION) $(TEST_FLAGS)
+	$(ASSIBLE_TEST) units -v --python $(PYTHON_VERSION) $(TEST_FLAGS)
 
 .PHONY: tests-py3
 tests-py3:
-	$(ANSIBLE_TEST) units -v --python $(PYTHON3_VERSION) $(TEST_FLAGS)
+	$(ASSIBLE_TEST) units -v --python $(PYTHON3_VERSION) $(TEST_FLAGS)
 
 .PHONY: integration
 integration:
-	$(ANSIBLE_TEST) integration -v --docker $(IMAGE) $(TARGET) $(TEST_FLAGS)
+	$(ASSIBLE_TEST) integration -v --docker $(IMAGE) $(TARGET) $(TEST_FLAGS)
 
 # Regenerate %.1.rst if %.1.rst.in has been modified more
 # recently than %.1.rst.
@@ -125,7 +125,7 @@ integration:
 
 # Regenerate %.1 if %.1.rst or release.py has been modified more
 # recently than %.1. (Implicitly runs the %.1.rst recipe)
-%.1: %.1.rst lib/ansible/release.py
+%.1: %.1.rst lib/assible/release.py
 	$(ASCII2MAN)
 
 .PHONY: clean
@@ -133,7 +133,7 @@ clean:
 	@echo "Cleaning up distutils stuff"
 	rm -rf build
 	rm -rf dist
-	rm -rf lib/ansible*.egg-info/
+	rm -rf lib/assible*.egg-info/
 	@echo "Cleaning up byte compiled python stuff"
 	find . -type f -regex ".*\.py[co]$$" -delete
 	find . -type d -name "__pycache__" -delete
@@ -172,8 +172,8 @@ install:
 	$(PYTHON) setup.py install
 
 install_manpages:
-	gzip -9 $(wildcard ./docs/man/man1/ansible*.1)
-	cp $(wildcard ./docs/man/man1/ansible*.1.gz) $(PREFIX)/man/man1/
+	gzip -9 $(wildcard ./docs/man/man1/assible*.1)
+	cp $(wildcard ./docs/man/man1/assible*.1.gz) $(PREFIX)/man/man1/
 
 .PHONY: sdist_check
 sdist_check:
@@ -182,14 +182,14 @@ sdist_check:
 
 .PHONY: sdist
 sdist: sdist_check clean docs
-	_ANSIBLE_SDIST_FROM_MAKEFILE=1 $(PYTHON) setup.py sdist --dist-dir=$(SDIST_DIR)
+	_ASSIBLE_SDIST_FROM_MAKEFILE=1 $(PYTHON) setup.py sdist --dist-dir=$(SDIST_DIR)
 
 # Official releases generate the changelog as the last commit before the release.
 # Snapshots shouldn't result in new checkins so the changelog is generated as
 # part of creating the tarball.
 .PHONY: snapshot
 snapshot: sdist_check clean docs changelog
-	_ANSIBLE_SDIST_FROM_MAKEFILE=1 $(PYTHON) setup.py sdist --dist-dir=$(SDIST_DIR)
+	_ASSIBLE_SDIST_FROM_MAKEFILE=1 $(PYTHON) setup.py sdist --dist-dir=$(SDIST_DIR)
 
 .PHONY: sdist_upload
 sdist_upload: clean docs
@@ -197,7 +197,7 @@ sdist_upload: clean docs
 
 .PHONY: changelog
 changelog:
-	PYTHONPATH=./lib antsibull-changelog release -vv --use-ansible-doc && PYTHONPATH=./lib antsibull-changelog generate -vv --use-ansible-doc
+	PYTHONPATH=./lib antsibull-changelog release -vv --use-assible-doc && PYTHONPATH=./lib antsibull-changelog generate -vv --use-assible-doc
 
 .PHONY: debian
 debian: sdist
@@ -217,7 +217,7 @@ deb: deb-src
 	    $(PBUILDER_BIN) build $${PBUILDER_OPTS} deb-build/$${DIST}/$(NAME)_$(DEB_VERSION)-$(DEB_RELEASE)~$${DIST}.dsc ; \
 	done
 	@echo "#############################################"
-	@echo "Ansible DEB artifacts:"
+	@echo "Assible DEB artifacts:"
 	@for DIST in $(DEB_DIST) ; do \
 	    echo deb-build/$${DIST}/$(NAME)_$(DEB_VERSION)-$(DEB_RELEASE)~$${DIST}_amd64.changes ; \
 	done
@@ -231,7 +231,7 @@ local_deb: debian
 	    (cd deb-build/$${DIST}/$(NAME)-$(VERSION)/ && $(DEBUILD) -b) ; \
 	done
 	@echo "#############################################"
-	@echo "Ansible DEB artifacts:"
+	@echo "Assible DEB artifacts:"
 	@for DIST in $(DEB_DIST) ; do \
 	    echo deb-build/$${DIST}/$(NAME)_$(DEB_VERSION)-$(DEB_RELEASE)~$${DIST}_amd64.changes ; \
 	done
@@ -243,7 +243,7 @@ deb-src: debian
 	    (cd deb-build/$${DIST}/$(NAME)-$(VERSION)/ && $(DEBUILD) -S) ; \
 	done
 	@echo "#############################################"
-	@echo "Ansible DEB artifacts:"
+	@echo "Assible DEB artifacts:"
 	@for DIST in $(DEB_DIST) ; do \
 	    echo deb-build/$${DIST}/$(NAME)_$(DEB_VERSION)-$(DEB_RELEASE)~$${DIST}_source.changes ; \
 	done
@@ -275,9 +275,9 @@ linkcheckdocs:
 	(cd docs/docsite/; CPUS=$(CPUS) $(MAKE) linkcheckdocs)
 
 .PHONY: generate_rst
-generate_rst: lib/ansible/cli/*.py
+generate_rst: lib/assible/cli/*.py
 	mkdir -p ./docs/man/man1/ ; \
-	$(GENERATE_CLI) --template-file=docs/templates/man.j2 --output-dir=docs/man/man1/ --output-format man lib/ansible/cli/*.py
+	$(GENERATE_CLI) --template-file=docs/templates/man.j2 --output-dir=docs/man/man1/ --output-format man lib/assible/cli/*.py
 
 
 docs: generate_rst

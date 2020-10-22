@@ -9,7 +9,7 @@ from . import types as t
 
 from .util import (
     display,
-    get_ansible_version,
+    get_assible_version,
 )
 
 from .util_common import (
@@ -123,7 +123,7 @@ class TestResult:
         :type extension: str
         :rtype: str
         """
-        name = 'ansible-test-%s' % self.command
+        name = 'assible-test-%s' % self.command
 
         if self.test:
             name += '-%s' % self.test
@@ -144,7 +144,7 @@ class TestResult:
         """
         test_suites = [
             self.junit.TestSuite(
-                name='ansible-test',
+                name='assible-test',
                 test_cases=[test_case],
                 timestamp=datetime.datetime.utcnow().replace(microsecond=0).isoformat(),
                 properties=properties,
@@ -203,7 +203,7 @@ One or more of the following situations may be responsible:
         xml = '''
 <?xml version="1.0" encoding="utf-8"?>
 <testsuites disabled="0" errors="1" failures="0" tests="1" time="0.0">
-\t<testsuite disabled="0" errors="1" failures="0" file="None" log="None" name="ansible-test" skipped="0" tests="1" time="0" timestamp="%s" url="None">
+\t<testsuite disabled="0" errors="1" failures="0" file="None" log="None" name="assible-test" skipped="0" tests="1" time="0" timestamp="%s" url="None">
 \t\t<testcase classname="timeout" name="timeout">
 \t\t\t<error message="%s" type="error">%s</error>
 \t\t</testcase>
@@ -357,7 +357,7 @@ class TestFailure(TestResult):
         """
         :rtype: str
         """
-        command = 'ansible-test %s' % self.command
+        command = 'assible-test %s' % self.command
 
         if self.test:
             command += ' --test %s' % self.test
@@ -376,12 +376,12 @@ class TestFailure(TestResult):
 
         # Use the major.minor version for the URL only if this a release that
         # matches the pattern 2.4.0, otherwise, use 'devel'
-        ansible_version = get_ansible_version()
+        assible_version = get_assible_version()
         url_version = 'devel'
-        if re.search(r'^[0-9.]+$', ansible_version):
-            url_version = '.'.join(ansible_version.split('.')[:2])
+        if re.search(r'^[0-9.]+$', assible_version):
+            url_version = '.'.join(assible_version.split('.')[:2])
 
-        testing_docs_url = 'https://docs.ansible.com/ansible/%s/dev_guide/testing' % url_version
+        testing_docs_url = 'https://docs.assible.com/assible/%s/dev_guide/testing' % url_version
 
         url = '%s/%s/' % (testing_docs_url, self.command)
 

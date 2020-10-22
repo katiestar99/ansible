@@ -62,11 +62,11 @@ class ScalewayCloudEnvironment(CloudEnvironment):
 
         display.sensitive.add(env_vars['SCW_API_KEY'])
 
-        ansible_vars = dict(
+        assible_vars = dict(
             scw_org=parser.get('default', 'org'),
         )
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )

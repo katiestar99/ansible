@@ -46,13 +46,13 @@
 
     - assert:
         that:
-          - ansible_lvm.pvs[loop_device1].vg == 'first'
-          - ansible_lvm.pvs[loop_device2].vg == 'second'
-          - ansible_lvm.lvs.one.vg == 'first'
-          - ansible_lvm.lvs.two.vg == 'first'
-          - ansible_lvm.lvs.uno.vg == 'second'
-          - ansible_lvm.vgs.first.num_lvs == "2"
-          - ansible_lvm.vgs.second.num_lvs == "1"
+          - assible_lvm.pvs[loop_device1].vg == 'first'
+          - assible_lvm.pvs[loop_device2].vg == 'second'
+          - assible_lvm.lvs.one.vg == 'first'
+          - assible_lvm.lvs.two.vg == 'first'
+          - assible_lvm.lvs.uno.vg == 'second'
+          - assible_lvm.vgs.first.num_lvs == "2"
+          - assible_lvm.vgs.second.num_lvs == "1"
 
   always:
     - name: remove lvs

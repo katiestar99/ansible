@@ -1,5 +1,5 @@
 # Copyright: (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -14,30 +14,30 @@ import socket
 import sys
 import time
 
-from ansible import constants as C
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.errors import AnsibleOptionsError
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.plugins.loader import module_loader
-from ansible.utils.cmd_functions import run_cmd
-from ansible.utils.display import Display
+from assible import constants as C
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.errors import AssibleOptionsError
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.six.moves import shlex_quote
+from assible.plugins.loader import module_loader
+from assible.utils.cmd_functions import run_cmd
+from assible.utils.display import Display
 
 display = Display()
 
 
 class PullCLI(CLI):
-    ''' Used to pull a remote copy of ansible on each managed node,
+    ''' Used to pull a remote copy of assible on each managed node,
         each set to run via cron and update playbook source via a source repository.
-        This inverts the default *push* architecture of ansible into a *pull* architecture,
+        This inverts the default *push* architecture of assible into a *pull* architecture,
         which has near-limitless scaling potential.
 
-        The setup playbook can be tuned to change the cron frequency, logging locations, and parameters to ansible-pull.
+        The setup playbook can be tuned to change the cron frequency, logging locations, and parameters to assible-pull.
         This is useful both for extreme scale-out as well as periodic remediation.
-        Usage of the 'fetch' module to retrieve logs from ansible-pull runs would be an
-        excellent way to gather and analyze remote logs from ansible-pull.
+        Usage of the 'fetch' module to retrieve logs from assible-pull runs would be an
+        excellent way to gather and analyze remote logs from assible-pull.
     '''
 
     DEFAULT_REPO_TYPE = 'git'
@@ -48,8 +48,8 @@ class PullCLI(CLI):
         2: 'File is not readable',
     }
     SUPPORTED_REPO_MODULES = ['git']
-    ARGUMENTS = {'playbook.yml': 'The name of one the YAML format files to run as an Ansible playbook.'
-                                 'This can be a relative path within the checkout. By default, Ansible will'
+    ARGUMENTS = {'playbook.yml': 'The name of one the YAML format files to run as an Assible playbook.'
+                                 'This can be a relative path within the checkout. By default, Assible will'
                                  "look for a playbook based on the host's fully-qualified domain name,"
                                  'on the host hostname and finally a playbook named *local.yml*.', }
 
@@ -68,7 +68,7 @@ class PullCLI(CLI):
         return inv_opts
 
     def init_parser(self):
-        ''' create an options parser for bin/ansible '''
+        ''' create an options parser for bin/assible '''
 
         super(PullCLI, self).init_parser(
             usage='%prog -U <repository> [options] [<playbook.yml>]',
@@ -102,7 +102,7 @@ class PullCLI(CLI):
         self.parser.add_argument('--accept-host-key', default=False, dest='accept_host_key', action='store_true',
                                  help='adds the hostkey for the repo url if not already added')
         self.parser.add_argument('-m', '--module-name', dest='module_name', default=self.DEFAULT_REPO_TYPE,
-                                 help='Repository module name, which ansible will use to check out the repo. Choices are %s. Default is %s.'
+                                 help='Repository module name, which assible will use to check out the repo. Choices are %s. Default is %s.'
                                       % (self.REPO_CHOICES, self.DEFAULT_REPO_TYPE))
         self.parser.add_argument('--verify-commit', dest='verify', default=False, action='store_true',
                                  help='verify GPG signature of checked out commit, if it fails abort running the playbook. '
@@ -124,24 +124,24 @@ class PullCLI(CLI):
         if not options.dest:
             hostname = socket.getfqdn()
             # use a hostname dependent directory, in case of $HOME on nfs
-            options.dest = os.path.join('~/.ansible/pull', hostname)
+            options.dest = os.path.join('~/.assible/pull', hostname)
         options.dest = os.path.expandvars(os.path.expanduser(options.dest))
 
         if os.path.exists(options.dest) and not os.path.isdir(options.dest):
-            raise AnsibleOptionsError("%s is not a valid or accessible directory." % options.dest)
+            raise AssibleOptionsError("%s is not a valid or accessible directory." % options.dest)
 
         if options.sleep:
             try:
                 secs = random.randint(0, int(options.sleep))
                 options.sleep = secs
             except ValueError:
-                raise AnsibleOptionsError("%s is not a number." % options.sleep)
+                raise AssibleOptionsError("%s is not a number." % options.sleep)
 
         if not options.url:
-            raise AnsibleOptionsError("URL for repository not specified, use -h for help")
+            raise AssibleOptionsError("URL for repository not specified, use -h for help")
 
         if options.module_name not in self.SUPPORTED_REPO_MODULES:
-            raise AnsibleOptionsError("Unsupported repo module %s, choices are %s" % (options.module_name, ','.join(self.SUPPORTED_REPO_MODULES)))
+            raise AssibleOptionsError("Unsupported repo module %s, choices are %s" % (options.module_name, ','.join(self.SUPPORTED_REPO_MODULES)))
 
         display.verbosity = options.verbosity
         self.validate_conflicts(options)
@@ -155,11 +155,11 @@ class PullCLI(CLI):
 
         # log command line
         now = datetime.datetime.now()
-        display.display(now.strftime("Starting Ansible Pull at %F %T"))
+        display.display(now.strftime("Starting Assible Pull at %F %T"))
         display.display(' '.join(sys.argv))
 
         # Build Checkout command
-        # Now construct the ansible command
+        # Now construct the assible command
         node = platform.node()
         host = socket.getfqdn()
         limit_opts = 'localhost,%s,127.0.0.1' % ','.join(set([host, node, host.split('.')[0], node.split('.')[0]]))
@@ -173,7 +173,7 @@ class PullCLI(CLI):
         if not inv_opts:
             inv_opts = " -i localhost, "
             # avoid interpreter discovery since we already know which interpreter to use on localhost
-            inv_opts += '-e %s ' % shlex_quote('ansible_python_interpreter=%s' % sys.executable)
+            inv_opts += '-e %s ' % shlex_quote('assible_python_interpreter=%s' % sys.executable)
 
         # SCM specific options
         if context.CLIARGS['module_name'] == 'git':
@@ -210,7 +210,7 @@ class PullCLI(CLI):
             if context.CLIARGS['checkout']:
                 repo_opts += ' version=%s' % context.CLIARGS['checkout']
         else:
-            raise AnsibleOptionsError('Unsupported (%s) SCM module for pull, choices are: %s'
+            raise AssibleOptionsError('Unsupported (%s) SCM module for pull, choices are: %s'
                                       % (context.CLIARGS['module_name'],
                                          ','.join(self.REPO_CHOICES)))
 
@@ -220,11 +220,11 @@ class PullCLI(CLI):
 
         path = module_loader.find_plugin(context.CLIARGS['module_name'])
         if path is None:
-            raise AnsibleOptionsError(("module '%s' not found.\n" % context.CLIARGS['module_name']))
+            raise AssibleOptionsError(("module '%s' not found.\n" % context.CLIARGS['module_name']))
 
         bin_path = os.path.dirname(os.path.abspath(sys.argv[0]))
         # hardcode local and inventory/host as this is just meant to fetch the repo
-        cmd = '%s/ansible %s %s -m %s -a "%s" all -l "%s"' % (bin_path, inv_opts, base_opts,
+        cmd = '%s/assible %s %s -m %s -a "%s" all -l "%s"' % (bin_path, inv_opts, base_opts,
                                                               context.CLIARGS['module_name'],
                                                               repo_opts, limit_opts)
         for ev in context.CLIARGS['extra_vars']:
@@ -236,7 +236,7 @@ class PullCLI(CLI):
             time.sleep(context.CLIARGS['sleep'])
 
         # RUN the Checkout command
-        display.debug("running ansible with VCS module to checkout repo")
+        display.debug("running assible with VCS module to checkout repo")
         display.vvvv('EXEC: %s' % cmd)
         rc, b_out, b_err = run_cmd(cmd, live=True)
 
@@ -251,10 +251,10 @@ class PullCLI(CLI):
 
         playbook = self.select_playbook(context.CLIARGS['dest'])
         if playbook is None:
-            raise AnsibleOptionsError("Could not find a playbook to run.")
+            raise AssibleOptionsError("Could not find a playbook to run.")
 
         # Build playbook command
-        cmd = '%s/ansible-playbook %s %s' % (bin_path, base_opts, playbook)
+        cmd = '%s/assible-playbook %s %s' % (bin_path, base_opts, playbook)
         if context.CLIARGS['vault_password_files']:
             for vault_password_file in context.CLIARGS['vault_password_files']:
                 cmd += " --vault-password-file=%s" % vault_password_file
@@ -287,7 +287,7 @@ class PullCLI(CLI):
             cmd += inv_opts
 
         # RUN THE PLAYBOOK COMMAND
-        display.debug("running ansible-playbook to do actual work")
+        display.debug("running assible-playbook to do actual work")
         display.debug('EXEC: %s' % cmd)
         rc, b_out, b_err = run_cmd(cmd, live=True)
 

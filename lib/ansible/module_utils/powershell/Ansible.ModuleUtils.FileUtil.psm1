@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 <#
@@ -9,7 +9,7 @@ as possible. They work by using Get-ChildItem with a filter and return the
 result from that.
 #>
 
-Function Test-AnsiblePath {
+Function Test-AssiblePath {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true)][string]$Path
@@ -32,7 +32,7 @@ Function Test-AnsiblePath {
     }
 }
 
-Function Get-AnsibleItem {
+Function Get-AssibleItem {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true)][string]$Path
@@ -57,4 +57,4 @@ Function Get-AnsibleItem {
     }
 }
 
-Export-ModuleMember -Function Test-AnsiblePath, Get-AnsibleItem
+Export-ModuleMember -Function Test-AssiblePath, Get-AssibleItem

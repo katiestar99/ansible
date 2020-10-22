@@ -27,7 +27,7 @@ from .util import (
     PYTHON_PATHS,
     raw_command,
     read_lines_without_comments,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
     ApplicationError,
 )
 
@@ -110,9 +110,9 @@ class CommonConfig:
 
         self.cache = {}
 
-    def get_ansible_config(self):  # type: () -> str
-        """Return the path to the Ansible config for the given config."""
-        return os.path.join(ANSIBLE_TEST_DATA_ROOT, 'ansible.cfg')
+    def get_assible_config(self):  # type: () -> str
+        """Return the path to the Assible config for the given config."""
+        return os.path.join(ASSIBLE_TEST_DATA_ROOT, 'assible.cfg')
 
 
 class NetworkPlatformSettings:
@@ -153,9 +153,9 @@ def get_parameterized_completion(cache, name):
         if data_context().content.collection:
             context = 'collection'
         else:
-            context = 'ansible-base'
+            context = 'assible-base'
 
-        images = read_lines_without_comments(os.path.join(ANSIBLE_TEST_DATA_ROOT, 'completion', '%s.txt' % name), remove_blank_lines=True)
+        images = read_lines_without_comments(os.path.join(ASSIBLE_TEST_DATA_ROOT, 'completion', '%s.txt' % name), remove_blank_lines=True)
 
         cache.update(dict(kvp for kvp in [parse_parameterized_completion(i) for i in images] if kvp and kvp[1].get('context', context) == context))
 
@@ -194,8 +194,8 @@ def get_network_settings(args, platform, version):  # type: (NetworkIntegrationC
     settings = NetworkPlatformSettings(
         collection,
         dict(
-            ansible_connection=args.platform_connection.get(platform, completion.get('connection')),
-            ansible_network_os='%s.%s' % (collection, platform) if collection else platform,
+            assible_connection=args.platform_connection.get(platform, completion.get('connection')),
+            assible_network_os='%s.%s' % (collection, platform) if collection else platform,
         )
     )
 
@@ -266,7 +266,7 @@ def get_python_path(args, interpreter):
         return python_path
 
     prefix = 'python-'
-    suffix = '-ansible'
+    suffix = '-assible'
 
     root_temp_dir = '/tmp'
 
@@ -372,7 +372,7 @@ def get_coverage_environment(args, target_name, version, temp_path, module_cover
         # cause the 'coverage' module to be found, but not imported or enabled
         coverage_file = ''
 
-    # Enable code coverage collection on local Python programs (this does not include Ansible modules).
+    # Enable code coverage collection on local Python programs (this does not include Assible modules).
     # Used by the injectors to support code coverage.
     # Used by the pytest unit test plugin to support code coverage.
     # The COVERAGE_FILE variable is also used directly by the 'coverage' module.
@@ -382,19 +382,19 @@ def get_coverage_environment(args, target_name, version, temp_path, module_cover
     )
 
     if module_coverage:
-        # Enable code coverage collection on Ansible modules (both local and remote).
-        # Used by the AnsiballZ wrapper generator in lib/ansible/executor/module_common.py to support code coverage.
+        # Enable code coverage collection on Assible modules (both local and remote).
+        # Used by the AssiballZ wrapper generator in lib/assible/executor/module_common.py to support code coverage.
         env.update(dict(
-            _ANSIBLE_COVERAGE_CONFIG=config_file,
-            _ANSIBLE_COVERAGE_OUTPUT=coverage_file,
+            _ASSIBLE_COVERAGE_CONFIG=config_file,
+            _ASSIBLE_COVERAGE_OUTPUT=coverage_file,
         ))
 
         if remote_temp_path:
             # Include the command, target and label so the remote host can create a filename with that info. The remote
             # is responsible for adding '={language version}=coverage.{hostname}.{pid}.{id}'
-            env['_ANSIBLE_COVERAGE_REMOTE_OUTPUT'] = os.path.join(remote_temp_path, '%s=%s=%s' % (
+            env['_ASSIBLE_COVERAGE_REMOTE_OUTPUT'] = os.path.join(remote_temp_path, '%s=%s=%s' % (
                 args.command, target_name, args.coverage_label or 'remote'))
-            env['_ANSIBLE_COVERAGE_REMOTE_PATH_FILTER'] = os.path.join(data_context().content.root, '*')
+            env['_ASSIBLE_COVERAGE_REMOTE_PATH_FILTER'] = os.path.join(data_context().content.root, '*')
 
     return env
 
@@ -425,7 +425,7 @@ def intercept_command(args, cmd, target_name, env, capture=False, data=None, cwd
     cmd = list(cmd)
     version = python_version or args.python_version
     interpreter = virtualenv or find_python(version)
-    inject_path = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'injector')
+    inject_path = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'injector')
 
     if not virtualenv:
         # injection of python into the path is required when not activating a virtualenv
@@ -434,8 +434,8 @@ def intercept_command(args, cmd, target_name, env, capture=False, data=None, cwd
         inject_path = python_path + os.path.pathsep + inject_path
 
     env['PATH'] = inject_path + os.path.pathsep + env['PATH']
-    env['ANSIBLE_TEST_PYTHON_VERSION'] = version
-    env['ANSIBLE_TEST_PYTHON_INTERPRETER'] = interpreter
+    env['ASSIBLE_TEST_PYTHON_VERSION'] = version
+    env['ASSIBLE_TEST_PYTHON_INTERPRETER'] = interpreter
 
     if args.coverage and not disable_coverage:
         # add the necessary environment variables to enable code coverage collection
@@ -450,7 +450,7 @@ def resolve_csharp_ps_util(import_name, path):
     :type import_name: str
     :type path: str
     """
-    if data_context().content.is_ansible or not import_name.startswith('.'):
+    if data_context().content.is_assible or not import_name.startswith('.'):
         # We don't support relative paths for builtin utils, there's no point.
         return import_name
 
@@ -462,7 +462,7 @@ def resolve_csharp_ps_util(import_name, path):
             break
         del module_packages[-1]
 
-    return 'ansible_collections.%s%s' % (data_context().content.prefix,
+    return 'assible_collections.%s%s' % (data_context().content.prefix,
                                          '.'.join(module_packages + [p for p in packages if p]))
 
 

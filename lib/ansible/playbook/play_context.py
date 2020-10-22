@@ -2,20 +2,20 @@
 
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -25,17 +25,17 @@ import os
 import pwd
 import sys
 
-from ansible import constants as C
-from ansible import context
-from ansible.errors import AnsibleError
-from ansible.module_utils.compat.paramiko import paramiko
-from ansible.module_utils.six import iteritems
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.base import Base
-from ansible.plugins import get_plugin_class
-from ansible.utils.display import Display
-from ansible.plugins.loader import get_shell_plugin
-from ansible.utils.ssh_functions import check_for_controlpersist
+from assible import constants as C
+from assible import context
+from assible.errors import AssibleError
+from assible.module_utils.compat.paramiko import paramiko
+from assible.module_utils.six import iteritems
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.base import Base
+from assible.plugins import get_plugin_class
+from assible.utils.display import Display
+from assible.plugins.loader import get_shell_plugin
+from assible.utils.ssh_functions import check_for_controlpersist
 
 
 display = Display()
@@ -58,20 +58,20 @@ TASK_ATTRIBUTE_OVERRIDES = (
 )
 
 RESET_VARS = (
-    'ansible_connection',
-    'ansible_user',
-    'ansible_host',
-    'ansible_port',
+    'assible_connection',
+    'assible_user',
+    'assible_host',
+    'assible_port',
 
     # TODO: ???
-    'ansible_docker_extra_args',
-    'ansible_ssh_host',
-    'ansible_ssh_pass',
-    'ansible_ssh_port',
-    'ansible_ssh_user',
-    'ansible_ssh_private_key_file',
-    'ansible_ssh_pipelining',
-    'ansible_ssh_executable',
+    'assible_docker_extra_args',
+    'assible_ssh_host',
+    'assible_ssh_pass',
+    'assible_ssh_port',
+    'assible_ssh_user',
+    'assible_ssh_private_key_file',
+    'assible_ssh_pipelining',
+    'assible_ssh_executable',
 )
 
 
@@ -95,7 +95,7 @@ class PlayContext(Base):
     _timeout = FieldAttribute(isa='int', default=C.DEFAULT_TIMEOUT)
     _connection_user = FieldAttribute(isa='string')
     _private_key_file = FieldAttribute(isa='string', default=C.DEFAULT_PRIVATE_KEY_FILE)
-    _pipelining = FieldAttribute(isa='bool', default=C.ANSIBLE_PIPELINING)
+    _pipelining = FieldAttribute(isa='bool', default=C.ASSIBLE_PIPELINING)
 
     # networking modules
     _network_os = FieldAttribute(isa='string')
@@ -104,8 +104,8 @@ class PlayContext(Base):
     _docker_extra_args = FieldAttribute(isa='string')
 
     # ssh # FIXME: remove these
-    _ssh_executable = FieldAttribute(isa='string', default=C.ANSIBLE_SSH_EXECUTABLE)
-    _ssh_args = FieldAttribute(isa='string', default=C.ANSIBLE_SSH_ARGS)
+    _ssh_executable = FieldAttribute(isa='string', default=C.ASSIBLE_SSH_EXECUTABLE)
+    _ssh_args = FieldAttribute(isa='string', default=C.ASSIBLE_SSH_ARGS)
     _ssh_common_args = FieldAttribute(isa='string')
     _sftp_extra_args = FieldAttribute(isa='string')
     _scp_extra_args = FieldAttribute(isa='string')
@@ -220,7 +220,7 @@ class PlayContext(Base):
 
         # next, use the MAGIC_VARIABLE_MAPPING dictionary to update this
         # connection info object with 'magic' variables from the variable list.
-        # If the value 'ansible_delegated_vars' is in the variables, it means
+        # If the value 'assible_delegated_vars' is in the variables, it means
         # we have a delegated-to host, so we check there first before looking
         # at the variables in general
         if task.delegate_to is not None:
@@ -228,7 +228,7 @@ class PlayContext(Base):
             # templated based on the loop variable, so we try and locate
             # the host name in the delegated variable dictionary here
             delegated_host_name = templar.template(task.delegate_to)
-            delegated_vars = variables.get('ansible_delegated_vars', dict()).get(delegated_host_name, dict())
+            delegated_vars = variables.get('assible_delegated_vars', dict()).get(delegated_host_name, dict())
 
             delegated_transport = C.DEFAULT_TRANSPORT
             for transport_var in C.MAGIC_VARIABLE_MAPPING.get('connection'):
@@ -240,30 +240,30 @@ class PlayContext(Base):
             # address, otherwise we default to connecting to it by name. This
             # may happen when users put an IP entry into their inventory, or if
             # they rely on DNS for a non-inventory hostname
-            for address_var in ('ansible_%s_host' % delegated_transport,) + C.MAGIC_VARIABLE_MAPPING.get('remote_addr'):
+            for address_var in ('assible_%s_host' % delegated_transport,) + C.MAGIC_VARIABLE_MAPPING.get('remote_addr'):
                 if address_var in delegated_vars:
                     break
             else:
                 display.debug("no remote address found for delegated host %s\nusing its name, so success depends on DNS resolution" % delegated_host_name)
-                delegated_vars['ansible_host'] = delegated_host_name
+                delegated_vars['assible_host'] = delegated_host_name
 
             # reset the port back to the default if none was specified, to prevent
             # the delegated host from inheriting the original host's setting
-            for port_var in ('ansible_%s_port' % delegated_transport,) + C.MAGIC_VARIABLE_MAPPING.get('port'):
+            for port_var in ('assible_%s_port' % delegated_transport,) + C.MAGIC_VARIABLE_MAPPING.get('port'):
                 if port_var in delegated_vars:
                     break
             else:
                 if delegated_transport == 'winrm':
-                    delegated_vars['ansible_port'] = 5986
+                    delegated_vars['assible_port'] = 5986
                 else:
-                    delegated_vars['ansible_port'] = C.DEFAULT_REMOTE_PORT
+                    delegated_vars['assible_port'] = C.DEFAULT_REMOTE_PORT
 
             # and likewise for the remote user
-            for user_var in ('ansible_%s_user' % delegated_transport,) + C.MAGIC_VARIABLE_MAPPING.get('remote_user'):
+            for user_var in ('assible_%s_user' % delegated_transport,) + C.MAGIC_VARIABLE_MAPPING.get('remote_user'):
                 if user_var in delegated_vars and delegated_vars[user_var]:
                     break
             else:
-                delegated_vars['ansible_user'] = task.remote_user or self.remote_user
+                delegated_vars['assible_user'] = task.remote_user or self.remote_user
         else:
             delegated_vars = dict()
 
@@ -342,7 +342,7 @@ class PlayContext(Base):
         """ helper function to create privilege escalation commands """
         display.deprecated(
             "PlayContext.make_become_cmd should not be used, the calling code should be using become plugins instead",
-            version="2.12", collection_name='ansible.builtin'
+            version="2.12", collection_name='assible.builtin'
         )
 
         if not cmd or not self.become:
@@ -371,7 +371,7 @@ class PlayContext(Base):
             if self.become_pass:
                 self.prompt = plugin.prompt
         else:
-            raise AnsibleError("Privilege escalation method not found: %s" % become_method)
+            raise AssibleError("Privilege escalation method not found: %s" % become_method)
 
         return cmd
 

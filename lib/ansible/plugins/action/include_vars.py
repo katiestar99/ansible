@@ -7,10 +7,10 @@ __metaclass__ = type
 from os import path, walk
 import re
 
-from ansible.errors import AnsibleError
-from ansible.module_utils.six import string_types
-from ansible.module_utils._text import to_native, to_text
-from ansible.plugins.action import ActionBase
+from assible.errors import AssibleError
+from assible.module_utils.six import string_types
+from assible.module_utils._text import to_native, to_text
+from assible.plugins.action import ActionBase
 
 
 class ActionModule(ActionBase):
@@ -64,7 +64,7 @@ class ActionModule(ActionBase):
         if isinstance(self.valid_extensions, string_types):
             self.valid_extensions = list(self.valid_extensions)
         if not isinstance(self.valid_extensions, list):
-            raise AnsibleError('Invalid type for "extensions" option, it must be a list')
+            raise AssibleError('Invalid type for "extensions" option, it must be a list')
 
     def run(self, tmp=None, task_vars=None):
         """ Load yml files recursively from a directory.
@@ -88,10 +88,10 @@ class ActionModule(ActionBase):
             elif arg in self.VALID_ALL:
                 pass
             else:
-                raise AnsibleError('{0} is not a valid option in include_vars'.format(to_native(arg)))
+                raise AssibleError('{0} is not a valid option in include_vars'.format(to_native(arg)))
 
         if dirs and files:
-            raise AnsibleError("You are mixing file only and dir only arguments, these are incompatible")
+            raise AssibleError("You are mixing file only and dir only arguments, these are incompatible")
 
         # set internal vars from args
         self._set_args()
@@ -121,7 +121,7 @@ class ActionModule(ActionBase):
                 if not failed:
                     results.update(updated_results)
 
-            except AnsibleError as e:
+            except AssibleError as e:
                 failed = True
                 err_msg = to_native(e)
 
@@ -136,9 +136,9 @@ class ActionModule(ActionBase):
             result['failed'] = failed
             result['message'] = err_msg
 
-        result['ansible_included_var_files'] = self.included_files
-        result['ansible_facts'] = results
-        result['_ansible_no_log'] = not self.show_content
+        result['assible_included_var_files'] = self.included_files
+        result['assible_facts'] = results
+        result['_assible_no_log'] = not self.show_content
 
         return result
 
@@ -194,7 +194,7 @@ class ActionModule(ActionBase):
                     return True
             except Exception:
                 err_msg = 'Invalid regular expression: {0}'.format(file_type)
-                raise AnsibleError(err_msg)
+                raise AssibleError(err_msg)
         return False
 
     def _is_valid_file_ext(self, source_file):

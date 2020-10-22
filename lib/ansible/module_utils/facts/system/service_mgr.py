@@ -1,19 +1,19 @@
 # Collect facts related to system service manager and init.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -22,10 +22,10 @@ import os
 import platform
 import re
 
-from ansible.module_utils._text import to_native
+from assible.module_utils._text import to_native
 
-from ansible.module_utils.facts.utils import get_file_content
-from ansible.module_utils.facts.collector import BaseFactCollector
+from assible.module_utils.facts.utils import get_file_content
+from assible.module_utils.facts.collector import BaseFactCollector
 
 # The distutils module is not shipped with SUNWPython on Solaris.
 # It's in the SUNWPython-devel package which also contains development files
@@ -116,22 +116,22 @@ class ServiceMgrFactCollector(BaseFactCollector):
 
         # FIXME: replace with a system->service_mgr_name map?
         # start with the easy ones
-        elif collected_facts.get('ansible_distribution', None) == 'MacOSX':
+        elif collected_facts.get('assible_distribution', None) == 'MacOSX':
             # FIXME: find way to query executable, version matching is not ideal
             if LooseVersion(platform.mac_ver()[0]) >= LooseVersion('10.4'):
                 service_mgr_name = 'launchd'
             else:
                 service_mgr_name = 'systemstarter'
-        elif 'BSD' in collected_facts.get('ansible_system', '') or collected_facts.get('ansible_system') in ['Bitrig', 'DragonFly']:
+        elif 'BSD' in collected_facts.get('assible_system', '') or collected_facts.get('assible_system') in ['Bitrig', 'DragonFly']:
             # FIXME: we might want to break out to individual BSDs or 'rc'
             service_mgr_name = 'bsdinit'
-        elif collected_facts.get('ansible_system') == 'AIX':
+        elif collected_facts.get('assible_system') == 'AIX':
             service_mgr_name = 'src'
-        elif collected_facts.get('ansible_system') == 'SunOS':
+        elif collected_facts.get('assible_system') == 'SunOS':
             service_mgr_name = 'smf'
-        elif collected_facts.get('ansible_distribution') == 'OpenWrt':
+        elif collected_facts.get('assible_distribution') == 'OpenWrt':
             service_mgr_name = 'openwrt_init'
-        elif collected_facts.get('ansible_system') == 'Linux':
+        elif collected_facts.get('assible_system') == 'Linux':
             # FIXME: mv is_systemd_managed
             if self.is_systemd_managed(module=module):
                 service_mgr_name = 'systemd'

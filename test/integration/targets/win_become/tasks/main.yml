@@ -1,6 +1,6 @@
 - set_fact:
-    become_test_username: ansible_become_test
-    become_test_admin_username: ansible_become_admin
+    become_test_username: assible_become_test
+    become_test_admin_username: assible_become_admin
     gen_pw: "{{ 'password123!' + lookup('password', '/dev/null chars=ascii_letters,digits length=8') }}"
 
 - name: create unprivileged user
@@ -42,10 +42,10 @@
 
   - name: get become user profile dir so we can clean it up later
     vars: &become_vars
-      ansible_become_user: "{{ become_test_username }}"
-      ansible_become_password: "{{ gen_pw }}"
-      ansible_become_method: runas
-      ansible_become: yes
+      assible_become_user: "{{ become_test_username }}"
+      assible_become_password: "{{ gen_pw }}"
+      assible_become_method: runas
+      assible_become: yes
     win_shell: $env:USERPROFILE
     register: profile_dir_out
 
@@ -56,10 +56,10 @@
 
   - name: get become admin user profile dir so we can clean it up later
     vars: &admin_become_vars
-      ansible_become_user: "{{ become_test_admin_username }}"
-      ansible_become_password: "{{ gen_pw }}"
-      ansible_become_method: runas
-      ansible_become: yes
+      assible_become_user: "{{ become_test_admin_username }}"
+      assible_become_password: "{{ gen_pw }}"
+      assible_become_method: runas
+      assible_become: yes
     win_shell: $env:USERPROFILE
     register: admin_profile_dir_out
 
@@ -98,7 +98,7 @@
 
   - name: test become runas via task keywords
     vars:
-      ansible_become_password: "{{ gen_pw }}"
+      assible_become_password: "{{ gen_pw }}"
     become: yes
     become_method: runas
     become_user: "{{ become_test_username }}"
@@ -126,14 +126,14 @@
         - whoami_out.label.sid == 'S-1-16-8192'
         - whoami_out.logon_type == 'Interactive'
 
-  - name: test with module that will return non-zero exit code (https://github.com/ansible/ansible/issues/30468)
+  - name: test with module that will return non-zero exit code (https://github.com/assible/assible/issues/30468)
     vars: *become_vars
     setup:
 
   - name: test become with invalid password
     win_whoami:
     vars:
-      ansible_become_pass: '{{ gen_pw }}abc'
+      assible_become_pass: '{{ gen_pw }}abc'
     become: yes
     become_method: runas
     become_user: '{{ become_test_username }}'
@@ -149,8 +149,8 @@
     become_method: runas
     become_user: '{{ become_test_username }}'
     vars:
-      ansible_become_pass: broken
-      ansible_runas_pass: '{{ gen_pw }}'  # should have a higher precedence than ansible_become_pass
+      assible_become_pass: broken
+      assible_runas_pass: '{{ gen_pw }}'  # should have a higher precedence than assible_become_pass
 
   - name: test become + async
     vars: *become_vars

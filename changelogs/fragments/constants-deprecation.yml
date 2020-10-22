@@ -1,4 +1,4 @@
 removed_features:
-  - The deprecated ``ansible.constants.mk_boolean()`` has been removed.
-  - The deprecated ``ansible.constants.get_config()`` has been removed.
-  - The deprecated ``ansible.constants.BECOME_METHODS`` has been removed.
+  - The deprecated ``assible.constants.mk_boolean()`` has been removed.
+  - The deprecated ``assible.constants.get_config()`` has been removed.
+  - The deprecated ``assible.constants.BECOME_METHODS`` has been removed.

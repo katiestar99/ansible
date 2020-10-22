@@ -15,7 +15,7 @@ short_description: Interacts with webservices
 description:
   - Interacts with HTTP and HTTPS web services and supports Digest, Basic and WSSE
     HTTP authentication mechanisms.
-  - For Windows targets, use the M(ansible.windows.win_uri) module instead.
+  - For Windows targets, use the M(assible.windows.win_uri) module instead.
 version_added: "1.1"
 options:
   url:
@@ -91,7 +91,7 @@ options:
         doing a GET or HEAD on the URI to which it is being redirected. C(none) will not follow
         any redirects. Note that C(yes) and C(no) choices are accepted for backwards compatibility,
         where C(yes) is the equivalent of C(all) and C(no) is the equivalent of C(safe). C(yes) and C(no)
-        are deprecated and will be removed in some future version of Ansible.
+        are deprecated and will be removed in some future version of Assible.
     type: str
     choices: ['all', 'no', 'none', 'safe', 'urllib2', 'yes']
     default: safe
@@ -175,7 +175,7 @@ options:
     description:
       - Header to identify as, generally appears in web server logs.
     type: str
-    default: ansible-httpget
+    default: assible-httpget
   use_gssapi:
     description:
       - Use GSSAPI to perform the authentication, typically this is for Kerberos or Kerberos through Negotiate
@@ -188,12 +188,12 @@ options:
     default: no
     version_added: '2.11'
 notes:
-  - The dependency on httplib2 was removed in Ansible 2.1.
+  - The dependency on httplib2 was removed in Assible 2.1.
   - The module returns all the HTTP headers in lower-case.
-  - For Windows targets, use the M(ansible.windows.win_uri) module instead.
+  - For Windows targets, use the M(assible.windows.win_uri) module instead.
 seealso:
-- module: ansible.builtin.get_url
-- module: ansible.windows.win_uri
+- module: assible.builtin.get_url
+- module: assible.windows.win_uri
 author:
 - Romeo Theriault (@romeotheriault)
 extends_documentation_fragment: files
@@ -316,7 +316,7 @@ EXAMPLES = r'''
   delay: 5 # Every 5 seconds
 
 # There are issues in a supporting Python library that is discussed in
-# https://github.com/ansible/ansible/issues/52705 where a proxy is defined
+# https://github.com/assible/assible/issues/52705 where a proxy is defined
 # but you want to bypass proxy use on CIDR masks by using no_proxy
 - name: Work around a python issue that doesn't support no_proxy envvar
   uri:
@@ -398,7 +398,7 @@ url:
   description: The actual URL used for the request.
   returned: always
   type: str
-  sample: https://www.ansible.com/
+  sample: https://www.assible.com/
 '''
 
 import cgi
@@ -410,12 +410,12 @@ import shutil
 import sys
 import tempfile
 
-from ansible.module_utils.basic import AnsibleModule, sanitize_keys
-from ansible.module_utils.six import PY2, iteritems, string_types
-from ansible.module_utils.six.moves.urllib.parse import urlencode, urlsplit
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common._collections_compat import Mapping, Sequence
-from ansible.module_utils.urls import fetch_url, prepare_multipart, url_argument_spec
+from assible.module_utils.basic import AssibleModule, sanitize_keys
+from assible.module_utils.six import PY2, iteritems, string_types
+from assible.module_utils.six.moves.urllib.parse import urlencode, urlsplit
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common._collections_compat import Mapping, Sequence
+from assible.module_utils.urls import fetch_url, prepare_multipart, url_argument_spec
 
 JSON_CANDIDATES = ('text', 'json', 'javascript')
 
@@ -638,7 +638,7 @@ def main():
         remote_src=dict(type='bool', default=False),
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         add_file_common_args=True,
         mutually_exclusive=[['body', 'src']],
@@ -646,7 +646,7 @@ def main():
 
     if module.params.get('thirsty'):
         module.deprecate('The alias "thirsty" has been deprecated and will be removed, use "force" instead',
-                         version='2.13', collection_name='ansible.builtin')
+                         version='2.13', collection_name='assible.builtin')
 
     url = module.params['url']
     body = module.params['body']

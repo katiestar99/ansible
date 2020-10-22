@@ -1,10 +1,10 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
-# Copyright (c) 2016, Toshio Kuratomi <tkuratomi@ansible.com>
+# Copyright (c) 2016, Toshio Kuratomi <tkuratomi@assible.com>
 # Copyright (c) 2015, Marius Gedminas
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -56,7 +56,7 @@ except ImportError:
     # which is essentially a cut/paste from an earlier (2.6) version of python's
     # ast.py
     from compiler import ast, parse
-    from ansible.module_utils.six import binary_type, integer_types, string_types, text_type
+    from assible.module_utils.six import binary_type, integer_types, string_types, text_type
 
     def literal_eval(node_or_string):
         """

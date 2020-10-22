@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -38,8 +38,8 @@ except ImportError:
         # Assume we're running in FIPS mode here
         _md5 = None
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_bytes
+from assible.errors import AssibleError
+from assible.module_utils._text import to_bytes
 
 
 def secure_hash_s(data, hash_func=sha1):
@@ -66,7 +66,7 @@ def secure_hash(filename, hash_func=sha1):
             block = infile.read(blocksize)
         infile.close()
     except IOError as e:
-        raise AnsibleError("error while accessing the file %s, error was: %s" % (filename, e))
+        raise AssibleError("error while accessing the file %s, error was: %s" % (filename, e))
     return digest.hexdigest()
 
 
@@ -77,7 +77,7 @@ checksum_s = secure_hash_s
 
 #
 # Backwards compat functions.  Some modules include md5s in their return values
-# Continue to support that for now.  As of ansible-1.8, all of those modules
+# Continue to support that for now.  As of assible-1.8, all of those modules
 # should also return "checksum" (sha1 for now)
 # Do not use md5 unless it is needed for:
 # 1) Optional backwards compatibility

@@ -1,20 +1,20 @@
 #
 # (c) 2017 Red Hat Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -22,10 +22,10 @@ __metaclass__ = type
 from abc import abstractmethod
 from functools import wraps
 
-from ansible.errors import AnsibleError
-from ansible.plugins import AnsiblePlugin
-from ansible.module_utils._text import to_native
-from ansible.module_utils.basic import missing_required_lib
+from assible.errors import AssibleError
+from assible.plugins import AssiblePlugin
+from assible.module_utils._text import to_native
+from assible.module_utils.basic import missing_required_lib
 
 try:
     from ncclient.operations import RPCError
@@ -46,21 +46,21 @@ def ensure_ncclient(func):
     @wraps(func)
     def wrapped(self, *args, **kwargs):
         if not HAS_NCCLIENT:
-            raise AnsibleError("%s: %s" % (missing_required_lib('ncclient'), to_native(NCCLIENT_IMP_ERR)))
+            raise AssibleError("%s: %s" % (missing_required_lib('ncclient'), to_native(NCCLIENT_IMP_ERR)))
         return func(self, *args, **kwargs)
     return wrapped
 
 
-class NetconfBase(AnsiblePlugin):
+class NetconfBase(AssiblePlugin):
     """
     A base class for implementing Netconf connections
 
-    .. note:: Unlike most of Ansible, nearly all strings in
+    .. note:: Unlike most of Assible, nearly all strings in
         :class:`TerminalBase` plugins are byte strings.  This is because of
         how close to the underlying platform these plugins operate.  Remember
         to mark literal strings as byte string (``b"string"``) and to use
-        :func:`~ansible.module_utils._text.to_bytes` and
-        :func:`~ansible.module_utils._text.to_text` to avoid unexpected
+        :func:`~assible.module_utils._text.to_bytes` and
+        :func:`~assible.module_utils._text.to_text` to avoid unexpected
         problems.
 
         List of supported rpc's:
@@ -90,7 +90,7 @@ class NetconfBase(AnsiblePlugin):
               'get_capabilities()' returns 'result' as a json string.
 
             Usage:
-            from ansible.module_utils.connection import Connection
+            from assible.module_utils.connection import Connection
 
             conn = Connection()
             data = conn.execute_rpc(rpc)

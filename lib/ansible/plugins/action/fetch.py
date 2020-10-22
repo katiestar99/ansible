@@ -1,33 +1,33 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import os
 import base64
 
-from ansible.errors import AnsibleActionFail, AnsibleActionSkip
-from ansible.module_utils._text import to_bytes
-from ansible.module_utils.six import string_types
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.action import ActionBase
-from ansible.utils.display import Display
-from ansible.utils.hashing import checksum, checksum_s, md5, secure_hash
-from ansible.utils.path import makedirs_safe, is_subpath
+from assible.errors import AssibleActionFail, AssibleActionSkip
+from assible.module_utils._text import to_bytes
+from assible.module_utils.six import string_types
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.action import ActionBase
+from assible.utils.display import Display
+from assible.utils.hashing import checksum, checksum_s, md5, secure_hash
+from assible.utils.path import makedirs_safe, is_subpath
 
 display = Display()
 
@@ -44,7 +44,7 @@ class ActionModule(ActionBase):
 
         try:
             if self._play_context.check_mode:
-                raise AnsibleActionSkip('check mode not (yet) supported for this module')
+                raise AssibleActionSkip('check mode not (yet) supported for this module')
 
             source = self._task.args.get('src', None)
             original_dest = dest = self._task.args.get('dest', None)
@@ -64,7 +64,7 @@ class ActionModule(ActionBase):
                 msg = "src and dest are required"
 
             if msg:
-                raise AnsibleActionFail(msg)
+                raise AssibleActionFail(msg)
 
             source = self._connection._shell.join_path(source)
             source = self._remote_expand_user(source)
@@ -78,7 +78,7 @@ class ActionModule(ActionBase):
             # use slurp if permissions are lacking or privilege escalation is needed
             remote_data = None
             if remote_checksum in ('1', '2', None):
-                slurpres = self._execute_module(module_name='ansible.legacy.slurp', module_args=dict(src=source), task_vars=task_vars)
+                slurpres = self._execute_module(module_name='assible.legacy.slurp', module_args=dict(src=source), task_vars=task_vars)
                 if slurpres.get('failed'):
                     if not fail_on_missing and (slurpres.get('msg').startswith('file not found') or remote_checksum == '1'):
                         result['msg'] = "the remote file does not exist, not transferring, ignored"
@@ -103,11 +103,11 @@ class ActionModule(ActionBase):
             # ensure we only use file name, avoid relative paths
             if not is_subpath(dest, original_dest):
                 # TODO: ? dest = os.path.expanduser(dest.replace(('../','')))
-                raise AnsibleActionFail("Detected directory traversal, expected to be contained in '%s' but got '%s'" % (original_dest, dest))
+                raise AssibleActionFail("Detected directory traversal, expected to be contained in '%s' but got '%s'" % (original_dest, dest))
 
             if flat:
                 if os.path.isdir(to_bytes(dest, errors='surrogate_or_strict')) and not dest.endswith(os.sep):
-                    raise AnsibleActionFail("dest is an existing directory, use a trailing slash if you want to fetch src into that directory")
+                    raise AssibleActionFail("dest is an existing directory, use a trailing slash if you want to fetch src into that directory")
                 if dest.endswith(os.sep):
                     # if the path ends with "/", we'll use the source filename as the
                     # destination filename
@@ -169,7 +169,7 @@ class ActionModule(ActionBase):
                         f.write(remote_data)
                         f.close()
                     except (IOError, OSError) as e:
-                        raise AnsibleActionFail("Failed to fetch the file: %s" % e)
+                        raise AssibleActionFail("Failed to fetch the file: %s" % e)
                 new_checksum = secure_hash(dest)
                 # For backwards compatibility. We'll return None on FIPS enabled systems
                 try:

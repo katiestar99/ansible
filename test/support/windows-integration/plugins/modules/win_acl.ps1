@@ -5,9 +5,9 @@
 # Copyright: (c) 2015, Hans-Joachim Kliemeck <git@kliemeck.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.PrivilegeUtil
-#Requires -Module Ansible.ModuleUtils.SID
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.PrivilegeUtil
+#Requires -Module Assible.ModuleUtils.SID
 
 $ErrorActionPreference = "Stop"
 
@@ -67,9 +67,9 @@ Function SetPrivilegeTokens() {
             "SeTakeOwnershipPrivilege"  # Grants ability to take owernship of an object w/out being granted discretionary access
         )
         foreach ($privilege in $privileges) {
-            $state = Get-AnsiblePrivilege -Name $privilege
+            $state = Get-AssiblePrivilege -Name $privilege
             if ($state -eq $false) {
-                Set-AnsiblePrivilege -Name $privilege -Value $true
+                Set-AssiblePrivilege -Name $privilege -Value $true
             }
         }
     }
@@ -80,15 +80,15 @@ $result = @{
     changed = $false
 }
 
-$path = Get-AnsibleParam -obj $params -name "path" -type "str" -failifempty $true
-$user = Get-AnsibleParam -obj $params -name "user" -type "str" -failifempty $true
-$rights = Get-AnsibleParam -obj $params -name "rights" -type "str" -failifempty $true
+$path = Get-AssibleParam -obj $params -name "path" -type "str" -failifempty $true
+$user = Get-AssibleParam -obj $params -name "user" -type "str" -failifempty $true
+$rights = Get-AssibleParam -obj $params -name "rights" -type "str" -failifempty $true
 
-$type = Get-AnsibleParam -obj $params -name "type" -type "str" -failifempty $true -validateset "allow","deny"
-$state = Get-AnsibleParam -obj $params -name "state" -type "str" -default "present" -validateset "absent","present"
+$type = Get-AssibleParam -obj $params -name "type" -type "str" -failifempty $true -validateset "allow","deny"
+$state = Get-AssibleParam -obj $params -name "state" -type "str" -default "present" -validateset "absent","present"
 
-$inherit = Get-AnsibleParam -obj $params -name "inherit" -type "str"
-$propagation = Get-AnsibleParam -obj $params -name "propagation" -type "str" -default "None" -validateset "InheritOnly","None","NoPropagateInherit"
+$inherit = Get-AssibleParam -obj $params -name "inherit" -type "str"
+$propagation = Get-AssibleParam -obj $params -name "propagation" -type "str" -default "None" -validateset "InheritOnly","None","NoPropagateInherit"
 
 # We mount the HKCR, HKU, and HKCC registry hives so PS can access them.
 # Network paths have no qualifiers so we use -EA SilentlyContinue to ignore that

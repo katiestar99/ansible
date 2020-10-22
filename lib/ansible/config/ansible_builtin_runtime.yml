@@ -1,10 +1,10 @@
-# Copyright (c) 2020 Ansible Project
+# Copyright (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 plugin_routing:
   connection:
     # test entries
     redirected_local:
-      redirect: ansible.builtin.local
+      redirect: assible.builtin.local
     buildah:
       redirect: containers.podman.buildah
     podman:
@@ -40,22 +40,22 @@ plugin_routing:
     vmware_tools:
       redirect: community.vmware.vmware_tools
     httpapi:
-      redirect: ansible.netcommon.httpapi
+      redirect: assible.netcommon.httpapi
     napalm:
-      redirect: ansible.netcommon.napalm
+      redirect: assible.netcommon.napalm
     netconf:
-      redirect: ansible.netcommon.netconf
+      redirect: assible.netcommon.netconf
     network_cli:
-      redirect: ansible.netcommon.network_cli
+      redirect: assible.netcommon.network_cli
     persistent:
-      redirect: ansible.netcommon.persistent
+      redirect: assible.netcommon.persistent
   modules:
     # test entry
     formerly_core_ping:
       redirect: testns.testcoll.ping
     # test entry
     uses_redirected_action:
-      redirect: ansible.builtin.ping
+      redirect: assible.builtin.ping
     podman_container_info:
       redirect: containers.podman.podman_container_info
     podman_image_info:
@@ -1479,7 +1479,7 @@ plugin_routing:
     iso_extract:
       redirect: community.general.iso_extract
     patch:
-      redirect: ansible.posix.patch
+      redirect: assible.posix.patch
     read_csv:
       redirect: community.general.read_csv
     xattr:
@@ -3101,7 +3101,7 @@ plugin_routing:
     filesystem:
       redirect: community.general.filesystem
     firewalld:
-      redirect: ansible.posix.firewalld
+      redirect: assible.posix.firewalld
     gconftool2:
       redirect: community.general.gconftool2
     interfaces_file:
@@ -4033,151 +4033,151 @@ plugin_routing:
     s3_bucket:
       redirect: amazon.aws.s3_bucket
     telnet:
-      redirect: ansible.netcommon.telnet
+      redirect: assible.netcommon.telnet
     cli_command:
-      redirect: ansible.netcommon.cli_command
+      redirect: assible.netcommon.cli_command
     cli_config:
-      redirect: ansible.netcommon.cli_config
+      redirect: assible.netcommon.cli_config
     net_put:
-      redirect: ansible.netcommon.net_put
+      redirect: assible.netcommon.net_put
     net_get:
-      redirect: ansible.netcommon.net_get
+      redirect: assible.netcommon.net_get
     net_linkagg:
-      redirect: ansible.netcommon.net_linkagg
+      redirect: assible.netcommon.net_linkagg
     net_interface:
-      redirect: ansible.netcommon.net_interface
+      redirect: assible.netcommon.net_interface
     net_lldp_interface:
-      redirect: ansible.netcommon.net_lldp_interface
+      redirect: assible.netcommon.net_lldp_interface
     net_vlan:
-      redirect: ansible.netcommon.net_vlan
+      redirect: assible.netcommon.net_vlan
     net_l2_interface:
-      redirect: ansible.netcommon.net_l2_interface
+      redirect: assible.netcommon.net_l2_interface
     net_l3_interface:
-      redirect: ansible.netcommon.net_l3_interface
+      redirect: assible.netcommon.net_l3_interface
     net_vrf:
-      redirect: ansible.netcommon.net_vrf
+      redirect: assible.netcommon.net_vrf
     netconf_config:
-      redirect: ansible.netcommon.netconf_config
+      redirect: assible.netcommon.netconf_config
     netconf_rpc:
-      redirect: ansible.netcommon.netconf_rpc
+      redirect: assible.netcommon.netconf_rpc
     netconf_get:
-      redirect: ansible.netcommon.netconf_get
+      redirect: assible.netcommon.netconf_get
     net_lldp:
-      redirect: ansible.netcommon.net_lldp
+      redirect: assible.netcommon.net_lldp
     restconf_get:
-      redirect: ansible.netcommon.restconf_get
+      redirect: assible.netcommon.restconf_get
     restconf_config:
-      redirect: ansible.netcommon.restconf_config
+      redirect: assible.netcommon.restconf_config
     net_static_route:
-      redirect: ansible.netcommon.net_static_route
+      redirect: assible.netcommon.net_static_route
     net_system:
-      redirect: ansible.netcommon.net_system
+      redirect: assible.netcommon.net_system
     net_logging:
-      redirect: ansible.netcommon.net_logging
+      redirect: assible.netcommon.net_logging
     net_user:
-      redirect: ansible.netcommon.net_user
+      redirect: assible.netcommon.net_user
     net_ping:
-      redirect: ansible.netcommon.net_ping
+      redirect: assible.netcommon.net_ping
     net_banner:
-      redirect: ansible.netcommon.net_banner
+      redirect: assible.netcommon.net_banner
     acl:
-      redirect: ansible.posix.acl
+      redirect: assible.posix.acl
     synchronize:
-      redirect: ansible.posix.synchronize
+      redirect: assible.posix.synchronize
     at:
-      redirect: ansible.posix.at
+      redirect: assible.posix.at
     authorized_key:
-      redirect: ansible.posix.authorized_key
+      redirect: assible.posix.authorized_key
     mount:
-      redirect: ansible.posix.mount
+      redirect: assible.posix.mount
     seboolean:
-      redirect: ansible.posix.seboolean
+      redirect: assible.posix.seboolean
     selinux:
-      redirect: ansible.posix.selinux
+      redirect: assible.posix.selinux
     sysctl:
-      redirect: ansible.posix.sysctl
+      redirect: assible.posix.sysctl
     async_status.ps1:
-      redirect: ansible.windows.async_status
+      redirect: assible.windows.async_status
     setup.ps1:
-      redirect: ansible.windows.setup
+      redirect: assible.windows.setup
     slurp.ps1:
-      redirect: ansible.windows.slurp
+      redirect: assible.windows.slurp
     win_acl:
-      redirect: ansible.windows.win_acl
+      redirect: assible.windows.win_acl
     win_acl_inheritance:
-      redirect: ansible.windows.win_acl_inheritance
+      redirect: assible.windows.win_acl_inheritance
     win_certificate_store:
-      redirect: ansible.windows.win_certificate_store
+      redirect: assible.windows.win_certificate_store
     win_command:
-      redirect: ansible.windows.win_command
+      redirect: assible.windows.win_command
     win_copy:
-      redirect: ansible.windows.win_copy
+      redirect: assible.windows.win_copy
     win_dns_client:
-      redirect: ansible.windows.win_dns_client
+      redirect: assible.windows.win_dns_client
     win_domain:
-      redirect: ansible.windows.win_domain
+      redirect: assible.windows.win_domain
     win_domain_controller:
-      redirect: ansible.windows.win_domain_controller
+      redirect: assible.windows.win_domain_controller
     win_domain_membership:
-      redirect: ansible.windows.win_domain_membership
+      redirect: assible.windows.win_domain_membership
     win_dsc:
-      redirect: ansible.windows.win_dsc
+      redirect: assible.windows.win_dsc
     win_environment:
-      redirect: ansible.windows.win_environment
+      redirect: assible.windows.win_environment
     win_feature:
-      redirect: ansible.windows.win_feature
+      redirect: assible.windows.win_feature
     win_file:
-      redirect: ansible.windows.win_file
+      redirect: assible.windows.win_file
     win_find:
-      redirect: ansible.windows.win_find
+      redirect: assible.windows.win_find
     win_get_url:
-      redirect: ansible.windows.win_get_url
+      redirect: assible.windows.win_get_url
     win_group:
-      redirect: ansible.windows.win_group
+      redirect: assible.windows.win_group
     win_group_membership:
-      redirect: ansible.windows.win_group_membership
+      redirect: assible.windows.win_group_membership
     win_hostname:
-      redirect: ansible.windows.win_hostname
+      redirect: assible.windows.win_hostname
     win_optional_feature:
-      redirect: ansible.windows.win_optional_feature
+      redirect: assible.windows.win_optional_feature
     win_owner:
-      redirect: ansible.windows.win_owner
+      redirect: assible.windows.win_owner
     win_package:
-      redirect: ansible.windows.win_package
+      redirect: assible.windows.win_package
     win_path:
-      redirect: ansible.windows.win_path
+      redirect: assible.windows.win_path
     win_ping:
-      redirect: ansible.windows.win_ping
+      redirect: assible.windows.win_ping
     win_reboot:
-      redirect: ansible.windows.win_reboot
+      redirect: assible.windows.win_reboot
     win_reg_stat:
-      redirect: ansible.windows.win_reg_stat
+      redirect: assible.windows.win_reg_stat
     win_regedit:
-      redirect: ansible.windows.win_regedit
+      redirect: assible.windows.win_regedit
     win_service:
-      redirect: ansible.windows.win_service
+      redirect: assible.windows.win_service
     win_share:
-      redirect: ansible.windows.win_share
+      redirect: assible.windows.win_share
     win_shell:
-      redirect: ansible.windows.win_shell
+      redirect: assible.windows.win_shell
     win_stat:
-      redirect: ansible.windows.win_stat
+      redirect: assible.windows.win_stat
     win_tempfile:
-      redirect: ansible.windows.win_tempfile
+      redirect: assible.windows.win_tempfile
     win_template:
-      redirect: ansible.windows.win_template
+      redirect: assible.windows.win_template
     win_updates:
-      redirect: ansible.windows.win_updates
+      redirect: assible.windows.win_updates
     win_uri:
-      redirect: ansible.windows.win_uri
+      redirect: assible.windows.win_uri
     win_user:
-      redirect: ansible.windows.win_user
+      redirect: assible.windows.win_user
     win_user_right:
-      redirect: ansible.windows.win_user_right
+      redirect: assible.windows.win_user_right
     win_wait_for:
-      redirect: ansible.windows.win_wait_for
+      redirect: assible.windows.win_wait_for
     win_whoami:
-      redirect: ansible.windows.win_whoami
+      redirect: assible.windows.win_whoami
     fortios_address:
       redirect: fortinet.fortios.fortios_address
     fortios_alertemail_setting:
@@ -7569,16 +7569,16 @@ plugin_routing:
   module_utils:
     # test entries
     formerly_core:
-      redirect: ansible_collections.testns.testcoll.plugins.module_utils.base
+      redirect: assible_collections.testns.testcoll.plugins.module_utils.base
     sub1.sub2.formerly_core:
-      redirect: ansible_collections.testns.testcoll.plugins.module_utils.base
+      redirect: assible_collections.testns.testcoll.plugins.module_utils.base
     # real
     acme:
       redirect: community.crypto.acme
     alicloud_ecs:
       redirect: community.general.alicloud_ecs
-    ansible_tower:
-      redirect: awx.awx.ansible_tower
+    assible_tower:
+      redirect: awx.awx.assible_tower
     aws.batch:
       redirect: amazon.aws.batch
     aws.cloudfront_facts:
@@ -7616,7 +7616,7 @@ plugin_routing:
     cloudstack:
       redirect: ngine_io.cloudstack.cloudstack
     compat.ipaddress:
-      redirect: ansible.netcommon.compat.ipaddress
+      redirect: assible.netcommon.compat.ipaddress
     crypto:
       redirect: community.crypto.crypto
     database:
@@ -7643,7 +7643,7 @@ plugin_routing:
       tombstone:
         removal_date: 2019-11-06
     firewalld:
-      redirect: ansible.posix.firewalld
+      redirect: assible.posix.firewalld
     gcdns:
       redirect: community.general.gcdns
     gce:
@@ -7677,7 +7677,7 @@ plugin_routing:
     ipa:
       redirect: community.general.ipa
     ismount:
-      redirect: ansible.posix.mount
+      redirect: assible.posix.mount
     k8s.common:
       redirect: community.kubernetes.common
     k8s.raw:
@@ -7726,8 +7726,8 @@ plugin_routing:
       redirect: community.network.network.aruba.aruba
     network.asa.asa:
       redirect: cisco.asa.network.asa.asa
-    network.avi.ansible_utils:
-      redirect: community.network.network.avi.ansible_utils
+    network.avi.assible_utils:
+      redirect: community.network.network.avi.assible_utils
     network.avi.avi:
       redirect: community.network.network.avi.avi
     network.avi.avi_api:
@@ -7745,19 +7745,19 @@ plugin_routing:
     network.cnos.cnos_errorcodes:
       redirect: community.network.network.cnos.cnos_errorcodes
     network.common.cfg.base:
-      redirect: ansible.netcommon.network.common.cfg.base
+      redirect: assible.netcommon.network.common.cfg.base
     network.common.config:
-      redirect: ansible.netcommon.network.common.config
+      redirect: assible.netcommon.network.common.config
     network.common.facts.facts:
-      redirect: ansible.netcommon.network.common.facts.facts
+      redirect: assible.netcommon.network.common.facts.facts
     network.common.netconf:
-      redirect: ansible.netcommon.network.common.netconf
+      redirect: assible.netcommon.network.common.netconf
     network.common.network:
-      redirect: ansible.netcommon.network.common.network
+      redirect: assible.netcommon.network.common.network
     network.common.parsing:
-      redirect: ansible.netcommon.network.common.parsing
+      redirect: assible.netcommon.network.common.parsing
     network.common.utils:
-      redirect: ansible.netcommon.network.common.utils
+      redirect: assible.netcommon.network.common.utils
     network.dellos10.dellos10:
       redirect: dellemc.os10.network.os10
     network.dellos9.dellos9:
@@ -8466,9 +8466,9 @@ plugin_routing:
     network.meraki.meraki:
       redirect: cisco.meraki.network.meraki.meraki
     network.netconf:
-      redirect: ansible.netcommon.network.netconf
+      redirect: assible.netcommon.network.netconf
     network.netconf.netconf:
-      redirect: ansible.netcommon.network.netconf.netconf
+      redirect: assible.netcommon.network.netconf.netconf
     network.netscaler:
       redirect: community.network.network.netscaler
     network.netscaler.netscaler:
@@ -8654,9 +8654,9 @@ plugin_routing:
     network.panos.panos:
       redirect: community.network.network.panos.panos
     network.restconf:
-      redirect: ansible.netcommon.network.restconf
+      redirect: assible.netcommon.network.restconf
     network.restconf.restconf:
-      redirect: ansible.netcommon.network.restconf.restconf
+      redirect: assible.netcommon.network.restconf.restconf
     network.routeros:
       redirect: community.network.network.routeros
     network.routeros.routeros:
@@ -9001,61 +9001,61 @@ plugin_routing:
     aws_s3:
       redirect: amazon.aws.aws_s3
     cli_command:
-      redirect: ansible.netcommon.cli_command
+      redirect: assible.netcommon.cli_command
     cli_config:
-      redirect: ansible.netcommon.cli_config
+      redirect: assible.netcommon.cli_config
     net_base:
-      redirect: ansible.netcommon.net_base
+      redirect: assible.netcommon.net_base
     net_user:
-      redirect: ansible.netcommon.net_user
+      redirect: assible.netcommon.net_user
     net_vlan:
-      redirect: ansible.netcommon.net_vlan
+      redirect: assible.netcommon.net_vlan
     net_static_route:
-      redirect: ansible.netcommon.net_static_route
+      redirect: assible.netcommon.net_static_route
     net_lldp:
-      redirect: ansible.netcommon.net_lldp
+      redirect: assible.netcommon.net_lldp
     net_vrf:
-      redirect: ansible.netcommon.net_vrf
+      redirect: assible.netcommon.net_vrf
     net_ping:
-      redirect: ansible.netcommon.net_ping
+      redirect: assible.netcommon.net_ping
     net_l3_interface:
-      redirect: ansible.netcommon.net_l3_interface
+      redirect: assible.netcommon.net_l3_interface
     net_l2_interface:
-      redirect: ansible.netcommon.net_l2_interface
+      redirect: assible.netcommon.net_l2_interface
     net_interface:
-      redirect: ansible.netcommon.net_interface
+      redirect: assible.netcommon.net_interface
     net_system:
-      redirect: ansible.netcommon.net_system
+      redirect: assible.netcommon.net_system
     net_lldp_interface:
-      redirect: ansible.netcommon.net_lldp_interface
+      redirect: assible.netcommon.net_lldp_interface
     net_put:
-      redirect: ansible.netcommon.net_put
+      redirect: assible.netcommon.net_put
     net_get:
-      redirect: ansible.netcommon.net_get
+      redirect: assible.netcommon.net_get
     net_logging:
-      redirect: ansible.netcommon.net_logging
+      redirect: assible.netcommon.net_logging
     net_banner:
-      redirect: ansible.netcommon.net_banner
+      redirect: assible.netcommon.net_banner
     net_linkagg:
-      redirect: ansible.netcommon.net_linkagg
+      redirect: assible.netcommon.net_linkagg
     netconf:
-      redirect: ansible.netcommon.netconf
+      redirect: assible.netcommon.netconf
     network:
-      redirect: ansible.netcommon.network
+      redirect: assible.netcommon.network
     telnet:
-      redirect: ansible.netcommon.telnet
+      redirect: assible.netcommon.telnet
     patch:
-      redirect: ansible.posix.patch
+      redirect: assible.posix.patch
     synchronize:
-      redirect: ansible.posix.synchronize
+      redirect: assible.posix.synchronize
     win_copy:
-      redirect: ansible.windows.win_copy
+      redirect: assible.windows.win_copy
     win_reboot:
-      redirect: ansible.windows.win_reboot
+      redirect: assible.windows.win_reboot
     win_template:
-      redirect: ansible.windows.win_template
+      redirect: assible.windows.win_template
     win_updates:
-      redirect: ansible.windows.win_updates
+      redirect: assible.windows.win_updates
     fortios_config:
       redirect: fortinet.fortios.fortios_config
     eos:
@@ -9102,7 +9102,7 @@ plugin_routing:
     sesu:
       redirect: community.general.sesu
     enable:
-      redirect: ansible.netcommon.enable
+      redirect: assible.netcommon.enable
   cache:
     memcached:
       redirect: community.general.memcached
@@ -9170,19 +9170,19 @@ plugin_routing:
     aws_resource_actions:
       redirect: amazon.aws.aws_resource_actions
     cgroup_perf_recap:
-      redirect: ansible.posix.cgroup_perf_recap
+      redirect: assible.posix.cgroup_perf_recap
     debug:
-      redirect: ansible.posix.debug
+      redirect: assible.posix.debug
     json:
-      redirect: ansible.posix.json
+      redirect: assible.posix.json
     profile_roles:
-      redirect: ansible.posix.profile_roles
+      redirect: assible.posix.profile_roles
     profile_tasks:
-      redirect: ansible.posix.profile_tasks
+      redirect: assible.posix.profile_tasks
     skippy:
-      redirect: ansible.posix.skippy
+      redirect: assible.posix.skippy
     timer:
-      redirect: ansible.posix.timer
+      redirect: assible.posix.timer
     foreman:
       redirect: theforeman.foreman.foreman
     # 'collections' integration test entries, do not remove
@@ -9356,9 +9356,9 @@ plugin_routing:
     ec2:
       redirect: amazon.aws.ec2
     netconf:
-      redirect: ansible.netcommon.netconf
+      redirect: assible.netcommon.netconf
     network_agnostic:
-      redirect: ansible.netcommon.network_agnostic
+      redirect: assible.netcommon.network_agnostic
     fortios:
       redirect: fortinet.fortios.fortios
     netapp:
@@ -9420,9 +9420,9 @@ plugin_routing:
   filter:
     # test entries
     formerly_core_filter:
-      redirect: ansible.builtin.bool
+      redirect: assible.builtin.bool
     formerly_core_masked_filter:
-      redirect: ansible.builtin.bool
+      redirect: assible.builtin.bool
     gcp_kms_encrypt:
       redirect: google.cloud.gcp_kms_encrypt
     gcp_kms_decrypt:
@@ -9434,51 +9434,51 @@ plugin_routing:
     k8s_config_resource_name:
       redirect: community.kubernetes.k8s_config_resource_name
     cidr_merge:
-      redirect: ansible.netcommon.cidr_merge
+      redirect: assible.netcommon.cidr_merge
     ipaddr:
-      redirect: ansible.netcommon.ipaddr
+      redirect: assible.netcommon.ipaddr
     ipmath:
-      redirect: ansible.netcommon.ipmath
+      redirect: assible.netcommon.ipmath
     ipwrap:
-      redirect: ansible.netcommon.ipwrap
+      redirect: assible.netcommon.ipwrap
     ip4_hex:
-      redirect: ansible.netcommon.ip4_hex
+      redirect: assible.netcommon.ip4_hex
     ipv4:
-      redirect: ansible.netcommon.ipv4
+      redirect: assible.netcommon.ipv4
     ipv6:
-      redirect: ansible.netcommon.ipv6
+      redirect: assible.netcommon.ipv6
     ipsubnet:
-      redirect: ansible.netcommon.ipsubnet
+      redirect: assible.netcommon.ipsubnet
     next_nth_usable:
-      redirect: ansible.netcommon.next_nth_usable
+      redirect: assible.netcommon.next_nth_usable
     network_in_network:
-      redirect: ansible.netcommon.network_in_network
+      redirect: assible.netcommon.network_in_network
     network_in_usable:
-      redirect: ansible.netcommon.network_in_usable
+      redirect: assible.netcommon.network_in_usable
     reduce_on_network:
-      redirect: ansible.netcommon.reduce_on_network
+      redirect: assible.netcommon.reduce_on_network
     nthhost:
-      redirect: ansible.netcommon.nthhost
+      redirect: assible.netcommon.nthhost
     previous_nth_usable:
-      redirect: ansible.netcommon.previous_nth_usable
+      redirect: assible.netcommon.previous_nth_usable
     slaac:
-      redirect: ansible.netcommon.slaac
+      redirect: assible.netcommon.slaac
     hwaddr:
-      redirect: ansible.netcommon.hwaddr
+      redirect: assible.netcommon.hwaddr
     parse_cli:
-      redirect: ansible.netcommon.parse_cli
+      redirect: assible.netcommon.parse_cli
     parse_cli_textfsm:
-      redirect: ansible.netcommon.parse_cli_textfsm
+      redirect: assible.netcommon.parse_cli_textfsm
     parse_xml:
-      redirect: ansible.netcommon.parse_xml
+      redirect: assible.netcommon.parse_xml
     type5_pw:
-      redirect: ansible.netcommon.type5_pw
+      redirect: assible.netcommon.type5_pw
     hash_salt:
-      redirect: ansible.netcommon.hash_salt
+      redirect: assible.netcommon.hash_salt
     comp_type5:
-      redirect: ansible.netcommon.comp_type5
+      redirect: assible.netcommon.comp_type5
     vlan_parser:
-      redirect: ansible.netcommon.vlan_parser
+      redirect: assible.netcommon.vlan_parser
   httpapi:
     exos:
       redirect: community.network.exos
@@ -9491,7 +9491,7 @@ plugin_routing:
     vmware:
       redirect: community.vmware.vmware
     restconf:
-      redirect: ansible.netcommon.restconf
+      redirect: assible.netcommon.restconf
     fortios:
       redirect: fortinet.fortios.fortios
     checkpoint:
@@ -9644,7 +9644,7 @@ plugin_routing:
     sros:
       redirect: community.network.sros
     default:
-      redirect: ansible.netcommon.default
+      redirect: assible.netcommon.default
     iosxr:
       redirect: cisco.iosxr.iosxr
     junos:
@@ -9652,27 +9652,27 @@ plugin_routing:
   shell:
     # test entry
     formerly_core_powershell:
-      redirect: ansible.builtin.powershell
+      redirect: assible.builtin.powershell
     csh:
-      redirect: ansible.posix.csh
+      redirect: assible.posix.csh
     fish:
-      redirect: ansible.posix.fish
+      redirect: assible.posix.fish
   test:
     # test entries
     formerly_core_test:
-      redirect: ansible.builtin.search
+      redirect: assible.builtin.search
     formerly_core_masked_test:
-      redirect: ansible.builtin.search
+      redirect: assible.builtin.search
 import_redirection:
   # test entry
-  ansible.module_utils.formerly_core:
-    redirect: ansible_collections.testns.testcoll.plugins.module_utils.base
-  ansible.module_utils.known_hosts:
-    redirect: ansible_collections.community.general.plugins.module_utils.known_hosts
-  # ansible.builtin synthetic collection redirection hackery
-  ansible_collections.ansible.builtin.plugins.modules:
-    redirect: ansible.modules
-  ansible_collections.ansible.builtin.plugins.module_utils:
-    redirect: ansible.module_utils
-  ansible_collections.ansible.builtin.plugins:
-    redirect: ansible.plugins
+  assible.module_utils.formerly_core:
+    redirect: assible_collections.testns.testcoll.plugins.module_utils.base
+  assible.module_utils.known_hosts:
+    redirect: assible_collections.community.general.plugins.module_utils.known_hosts
+  # assible.builtin synthetic collection redirection hackery
+  assible_collections.assible.builtin.plugins.modules:
+    redirect: assible.modules
+  assible_collections.assible.builtin.plugins.module_utils:
+    redirect: assible.module_utils
+  assible_collections.assible.builtin.plugins:
+    redirect: assible.plugins

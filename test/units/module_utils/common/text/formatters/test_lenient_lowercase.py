@@ -9,7 +9,7 @@ from datetime import datetime
 
 import pytest
 
-from ansible.module_utils.common.text.formatters import lenient_lowercase
+from assible.module_utils.common.text.formatters import lenient_lowercase
 
 
 INPUT_LIST = [

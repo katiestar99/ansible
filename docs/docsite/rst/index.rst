@@ -1,24 +1,24 @@
-.. _ansible_documentation:
+.. _assible_documentation:
 
-Ansible Documentation
+Assible Documentation
 =====================
 
-About Ansible
+About Assible
 `````````````
 
-Ansible is an IT automation tool.  It can configure systems, deploy software, and orchestrate more advanced IT tasks such as continuous deployments or zero downtime rolling updates.
+Assible is an IT automation tool.  It can configure systems, deploy software, and orchestrate more advanced IT tasks such as continuous deployments or zero downtime rolling updates.
 
-Ansible's main goals are simplicity and ease-of-use. It also has a strong focus on security and reliability, featuring a minimum of moving parts, usage of OpenSSH for transport (with other transports and pull modes as alternatives), and a language that is designed around auditability by humans--even those not familiar with the program.
+Assible's main goals are simplicity and ease-of-use. It also has a strong focus on security and reliability, featuring a minimum of moving parts, usage of OpenSSH for transport (with other transports and pull modes as alternatives), and a language that is designed around auditability by humans--even those not familiar with the program.
 
-We believe simplicity is relevant to all sizes of environments, so we design for busy users of all types: developers, sysadmins, release engineers, IT managers, and everyone in between. Ansible is appropriate for managing all environments, from small setups with a handful of instances to enterprise environments with many thousands of instances.
+We believe simplicity is relevant to all sizes of environments, so we design for busy users of all types: developers, sysadmins, release engineers, IT managers, and everyone in between. Assible is appropriate for managing all environments, from small setups with a handful of instances to enterprise environments with many thousands of instances.
 
-You can learn more at `AnsibleFest <https://www.ansible.com/ansiblefest>`_, the annual event for all Ansible contributors, users, and customers hosted by Red Hat. AnsibleFest is the place to connect with others, learn new skills, and find a new friend to automate with.
+You can learn more at `AssibleFest <https://www.assible.com/assiblefest>`_, the annual event for all Assible contributors, users, and customers hosted by Red Hat. AssibleFest is the place to connect with others, learn new skills, and find a new friend to automate with.
 
-Ansible manages machines in an agent-less manner. There is never a question of how to upgrade remote daemons or the problem of not being able to manage systems because daemons are uninstalled.  Because OpenSSH is one of the most peer-reviewed open source components, security exposure is greatly reduced. Ansible is decentralized--it relies on your existing OS credentials to control access to remote machines. If needed, Ansible can easily connect with Kerberos, LDAP, and other centralized authentication management systems.
+Assible manages machines in an agent-less manner. There is never a question of how to upgrade remote daemons or the problem of not being able to manage systems because daemons are uninstalled.  Because OpenSSH is one of the most peer-reviewed open source components, security exposure is greatly reduced. Assible is decentralized--it relies on your existing OS credentials to control access to remote machines. If needed, Assible can easily connect with Kerberos, LDAP, and other centralized authentication management systems.
 
-This documentation covers the version of Ansible noted in the upper left corner of this page. We maintain multiple versions of Ansible and of the documentation, so please be sure you are using the version of the documentation that covers the version of Ansible you're using. For recent features, we note the version of Ansible where the feature was added.
+This documentation covers the version of Assible noted in the upper left corner of this page. We maintain multiple versions of Assible and of the documentation, so please be sure you are using the version of the documentation that covers the version of Assible you're using. For recent features, we note the version of Assible where the feature was added.
 
-Ansible releases a new major release of Ansible approximately three to four times per year. The core application evolves somewhat conservatively, valuing simplicity in language design and setup. Contributors develop and change modules and plugins, hosted in collections since version 2.10, much more quickly.
+Assible releases a new major release of Assible approximately three to four times per year. The core application evolves somewhat conservatively, valuing simplicity in language design and setup. Contributors develop and change modules and plugins, hosted in collections since version 2.10, much more quickly.
 
 .. toctree::
    :maxdepth: 2
@@ -29,26 +29,26 @@ Ansible releases a new major release of Ansible approximately three to four time
 
 .. toctree::
    :maxdepth: 2
-   :caption: Using Ansible
+   :caption: Using Assible
 
    user_guide/index
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contributing to Ansible
+   :caption: Contributing to Assible
 
    community/index
 
 .. toctree::
    :maxdepth: 2
-   :caption: Extending Ansible
+   :caption: Extending Assible
 
    dev_guide/index
 
 .. toctree::
    :glob:
    :maxdepth: 1
-   :caption: Common Ansible Scenarios
+   :caption: Common Assible Scenarios
 
    scenario_guides/cloud_guides
    scenario_guides/network_guides
@@ -64,7 +64,7 @@ Ansible releases a new major release of Ansible approximately three to four time
 
 .. toctree::
    :maxdepth: 2
-   :caption: Ansible Galaxy
+   :caption: Assible Galaxy
 
    galaxy/user_guide.rst
    galaxy/dev_guide.rst

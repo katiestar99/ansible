@@ -1,19 +1,19 @@
 # Copyright 2015 Abhijit Menon-Sen <ams@2ndQuadrant.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -22,14 +22,14 @@ __metaclass__ = type
 import string
 import textwrap
 
-from ansible import constants as C
+from assible import constants as C
 from units.compat import mock
 from units.compat import unittest
-from ansible.module_utils.six import string_types
-from ansible.module_utils._text import to_text
+from assible.module_utils.six import string_types
+from assible.module_utils._text import to_text
 from units.mock.path import mock_unfrackpath_noop
 
-from ansible.inventory.manager import InventoryManager, split_host_pattern
+from assible.inventory.manager import InventoryManager, split_host_pattern
 
 from units.mock.loader import DictDataLoader
 
@@ -164,7 +164,7 @@ class TestInventoryPlugins(unittest.TestCase):
             else:
                 self.assertIsInstance(variables['var%s' % i], type(values[i]))
 
-    @mock.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
+    @mock.patch('assible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
     @mock.patch('os.path.exists', lambda x: True)
     @mock.patch('os.access', lambda x, y: True)
     def test_yaml_inventory(self, filename="test.yaml"):

@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -13,11 +13,11 @@ import sys
 
 from collections import namedtuple
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleAssertionError
-from ansible.module_utils.six import text_type
-from ansible.module_utils._text import to_text, to_bytes
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleError, AssibleAssertionError
+from assible.module_utils.six import text_type
+from assible.module_utils._text import to_text, to_bytes
+from assible.utils.display import Display
 
 PASSLIB_AVAILABLE = False
 try:
@@ -49,7 +49,7 @@ def random_password(length=DEFAULT_PASSWORD_LENGTH, chars=C.DEFAULT_PASSWORD_CHA
         letters, ascii digits, and these symbols ``.,:-_``
     '''
     if not isinstance(chars, text_type):
-        raise AnsibleAssertionError('%s (%s) is not a text_type' % (chars, type(chars)))
+        raise AssibleAssertionError('%s (%s) is not a text_type' % (chars, type(chars)))
 
     random_generator = random.SystemRandom()
     return u''.join(random_generator.choice(chars) for dummy in range(length))
@@ -82,10 +82,10 @@ class CryptHash(BaseHash):
         super(CryptHash, self).__init__(algorithm)
 
         if sys.platform.startswith('darwin'):
-            raise AnsibleError("crypt.crypt not supported on Mac OS X/Darwin, install passlib python module")
+            raise AssibleError("crypt.crypt not supported on Mac OS X/Darwin, install passlib python module")
 
         if algorithm not in self.algorithms:
-            raise AnsibleError("crypt.crypt does not support '%s' algorithm" % self.algorithm)
+            raise AssibleError("crypt.crypt does not support '%s' algorithm" % self.algorithm)
         self.algo_data = self.algorithms[algorithm]
 
     def hash(self, secret, salt=None, salt_size=None, rounds=None):
@@ -97,11 +97,11 @@ class CryptHash(BaseHash):
         salt_size = salt_size or self.algo_data.salt_size
         ret = salt or random_salt(salt_size)
         if re.search(r'[^./0-9A-Za-z]', ret):
-            raise AnsibleError("invalid characters in salt")
+            raise AssibleError("invalid characters in salt")
         if self.algo_data.salt_exact and len(ret) != self.algo_data.salt_size:
-            raise AnsibleError("invalid salt size")
+            raise AssibleError("invalid salt size")
         elif not self.algo_data.salt_exact and len(ret) > self.algo_data.salt_size:
-            raise AnsibleError("invalid salt size")
+            raise AssibleError("invalid salt size")
         return ret
 
     def _rounds(self, rounds):
@@ -130,7 +130,7 @@ class CryptHash(BaseHash):
         # None as result would be interpreted by the some modules (user module)
         # as no password at all.
         if not result:
-            raise AnsibleError(
+            raise AssibleError(
                 "crypt.crypt does not support '%s' algorithm" % self.algorithm,
                 orig_exc=orig_exc,
             )
@@ -143,12 +143,12 @@ class PasslibHash(BaseHash):
         super(PasslibHash, self).__init__(algorithm)
 
         if not PASSLIB_AVAILABLE:
-            raise AnsibleError("passlib must be installed to hash with '%s'" % algorithm)
+            raise AssibleError("passlib must be installed to hash with '%s'" % algorithm)
 
         try:
             self.crypt_algo = getattr(passlib.hash, algorithm)
         except Exception:
-            raise AnsibleError("passlib does not support '%s' algorithm" % algorithm)
+            raise AssibleError("passlib does not support '%s' algorithm" % algorithm)
 
     def hash(self, secret, salt=None, salt_size=None, rounds=None):
         salt = self._clean_salt(salt)
@@ -198,13 +198,13 @@ class PasslibHash(BaseHash):
         elif hasattr(self.crypt_algo, 'encrypt'):
             result = self.crypt_algo.encrypt(secret, **settings)
         else:
-            raise AnsibleError("installed passlib version %s not supported" % passlib.__version__)
+            raise AssibleError("installed passlib version %s not supported" % passlib.__version__)
 
         # passlib.hash should always return something or raise an exception.
         # Still ensure that there is always a result.
         # Otherwise an empty password might be assumed by some modules, like the user module.
         if not result:
-            raise AnsibleError("failed to hash with algorithm '%s'" % self.algorithm)
+            raise AssibleError("failed to hash with algorithm '%s'" % self.algorithm)
 
         # Hashes from passlib.hash should be represented as ascii strings of hex
         # digits so this should not traceback.  If it's not representable as such

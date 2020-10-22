@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>, and others
-# Copyright: (c) 2016, Toshio Kuratomi <tkuratomi@ansible.com>
+# Copyright: (c) 2016, Toshio Kuratomi <tkuratomi@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -20,12 +20,12 @@ description:
      - The command(s) will not be
        processed through the shell, so variables like C($HOSTNAME) and operations
        like C("*"), C("<"), C(">"), C("|"), C(";") and C("&") will not work.
-       Use the M(ansible.builtin.shell) module if you need these features.
+       Use the M(assible.builtin.shell) module if you need these features.
      - To create C(command) tasks that are easier to read than the ones using space-delimited
        arguments, pass parameters using the C(args) L(task keyword,../reference_appendices/playbooks_keywords.html#task)
        or use C(cmd) parameter.
      - Either a free form command or C(cmd) parameter is required, see the examples.
-     - For Windows targets, use the M(ansible.windows.win_command) module instead.
+     - For Windows targets, use the M(assible.windows.win_command) module instead.
 options:
   free_form:
     description:
@@ -83,23 +83,23 @@ options:
     type: bool
     default: yes
 notes:
-    -  If you want to run a command through the shell (say you are using C(<), C(>), C(|), etc), you actually want the M(ansible.builtin.shell) module instead.
+    -  If you want to run a command through the shell (say you are using C(<), C(>), C(|), etc), you actually want the M(assible.builtin.shell) module instead.
        Parsing shell metacharacters can lead to unexpected commands being executed if quoting is not done correctly so it is more secure to
        use the C(command) module when possible.
     -  " C(creates), C(removes), and C(chdir) can be specified after the command.
        For instance, if you only want to run a command if a certain file does not exist, use this."
     -  Check mode is supported when passing C(creates) or C(removes). If running in check mode and either of these are specified, the module will
        check for the existence of the file and report the correct changed status. If these are not supplied, the task will be skipped.
-    -  The C(executable) parameter is removed since version 2.4. If you have a need for this parameter, use the M(ansible.builtin.shell) module instead.
-    -  For Windows targets, use the M(ansible.windows.win_command) module instead.
-    -  For rebooting systems, use the M(ansible.builtin.reboot) or M(ansible.windows.win_reboot) module.
+    -  The C(executable) parameter is removed since version 2.4. If you have a need for this parameter, use the M(assible.builtin.shell) module instead.
+    -  For Windows targets, use the M(assible.windows.win_command) module instead.
+    -  For rebooting systems, use the M(assible.builtin.reboot) or M(assible.windows.win_reboot) module.
 seealso:
-- module: ansible.builtin.raw
-- module: ansible.builtin.script
-- module: ansible.builtin.shell
-- module: ansible.windows.win_command
+- module: assible.builtin.raw
+- module: assible.builtin.script
+- module: assible.builtin.shell
+- module: assible.windows.win_command
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Michael DeHaan
 '''
 
@@ -208,9 +208,9 @@ import glob
 import os
 import shlex
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native, to_bytes, to_text
-from ansible.module_utils.common.collections import is_iterable
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native, to_bytes, to_text
+from assible.module_utils.common.collections import is_iterable
 
 
 def check_command(module, commandline):
@@ -231,7 +231,7 @@ def check_command(module, commandline):
 
     disable_suffix = "If you need to use command because {mod} is insufficient you can add" \
                      " 'warn: false' to this command task or set 'command_warnings=False' in" \
-                     " ansible.cfg to get rid of this message."
+                     " assible.cfg to get rid of this message."
     substitutions = {'mod': None, 'cmd': command}
 
     if command in arguments:
@@ -251,9 +251,9 @@ def check_command(module, commandline):
 
 def main():
 
-    # the command module is the one ansible module that does not take key=value args
+    # the command module is the one assible module that does not take key=value args
     # hence don't copy this one if you are looking to build others!
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             _raw_params=dict(),
             _uses_shell=dict(type='bool', default=False),
@@ -263,7 +263,7 @@ def main():
             creates=dict(type='path'),
             removes=dict(type='path'),
             # The default for this really comes from the action plugin
-            warn=dict(type='bool', default=False, removed_in_version='2.14', removed_from_collection='ansible.builtin'),
+            warn=dict(type='bool', default=False, removed_in_version='2.14', removed_from_collection='assible.builtin'),
             stdin=dict(required=False),
             stdin_add_newline=dict(type='bool', default=True),
             strip_empty_ends=dict(type='bool', default=True),
@@ -283,7 +283,7 @@ def main():
     strip = module.params['strip_empty_ends']
 
     if not shell and executable:
-        module.warn("As of Ansible 2.4, the parameter 'executable' is no longer supported with the 'command' module. Not using '%s'." % executable)
+        module.warn("As of Assible 2.4, the parameter 'executable' is no longer supported with the 'command' module. Not using '%s'." % executable)
         executable = None
 
     if (not args or args.strip() == '') and not argv:

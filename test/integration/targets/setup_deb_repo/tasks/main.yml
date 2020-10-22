@@ -53,4 +53,4 @@
     - ''
     - -updates
 
-  when: ansible_distribution in ['Ubuntu', 'Debian']
+  when: assible_distribution in ['Ubuntu', 'Debian']

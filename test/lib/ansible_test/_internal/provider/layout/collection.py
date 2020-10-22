@@ -1,4 +1,4 @@
-"""Layout provider for Ansible collections."""
+"""Layout provider for Assible collections."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -15,14 +15,14 @@ from . import (
 
 
 class CollectionLayout(LayoutProvider):
-    """Layout provider for Ansible collections."""
+    """Layout provider for Assible collections."""
     __module_path = 'plugins/modules'
     __unit_path = 'test/unit'
 
     @staticmethod
     def is_content_root(path):  # type: (str) -> bool
         """Return True if the given path is a content root for this provider."""
-        if os.path.basename(os.path.dirname(os.path.dirname(path))) == 'ansible_collections':
+        if os.path.basename(os.path.dirname(os.path.dirname(path))) == 'assible_collections':
             return True
 
         return False

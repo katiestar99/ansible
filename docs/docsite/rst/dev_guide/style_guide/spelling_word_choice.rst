@@ -12,7 +12,7 @@ Spell out the acronym before using it in alone text, such as "The Embedded DevKi
 
 Applications
 +++++++++++++++++++
-When used as a proper name, use the capitalization of the product, such as GNUPro, Source-Navigator, and Ansible Tower. When used as a command, use lowercase as appropriate, such as "To start GCC, type ``gcc``."
+When used as a proper name, use the capitalization of the product, such as GNUPro, Source-Navigator, and Assible Tower. When used as a command, use lowercase as appropriate, such as "To start GCC, type ``gcc``."
 
 .. note::
 
@@ -295,7 +295,7 @@ Correct. Do not use "webserver". For example, "The Apache HTTP Server is the def
  
 Website
 ++++++++++++++
-Correct. Do not use "web site" or "Web site." For example, "The Ansible website contains ..."
+Correct. Do not use "web site" or "Web site." For example, "The Assible website contains ..."
 
 Who/whom
 ++++++++++++++

@@ -11,7 +11,7 @@ How to collect information about your environment
 Introduction
 ============
 
-This section shows you how to utilize Ansible to collect information about your environment.
+This section shows you how to utilize Assible to collect information about your environment.
 This information is useful for the other tutorials.
 
 Scenario requirements

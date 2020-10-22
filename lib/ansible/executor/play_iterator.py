@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,12 +21,12 @@ __metaclass__ = type
 
 import fnmatch
 
-from ansible import constants as C
-from ansible.module_utils.six import iteritems
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.playbook.block import Block
-from ansible.playbook.task import Task
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.module_utils.six import iteritems
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.playbook.block import Block
+from assible.playbook.task import Task
+from assible.utils.display import Display
 
 
 display = Display()
@@ -287,7 +287,7 @@ class PlayIterator:
 
                     if (gathering == 'implicit' and implied) or \
                        (gathering == 'explicit' and boolean(self._play.gather_facts, strict=False)) or \
-                       (gathering == 'smart' and implied and not (self._variable_manager._fact_cache.get(host.name, {}).get('_ansible_facts_gathered', False))):
+                       (gathering == 'smart' and implied and not (self._variable_manager._fact_cache.get(host.name, {}).get('_assible_facts_gathered', False))):
                         # The setup block is always self._blocks[0], as we inject it
                         # during the play compilation in __init__ above.
                         setup_block = self._blocks[0]

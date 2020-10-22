@@ -7,7 +7,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.text.formatters import bytes_to_human
+from assible.module_utils.common.text.formatters import bytes_to_human
 
 
 @pytest.mark.parametrize(

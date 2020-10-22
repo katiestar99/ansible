@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -27,8 +27,8 @@
 #
 import sys
 
-from ansible.module_utils._text import to_text, to_bytes
-from ansible.module_utils.connection import Connection, ConnectionError
+from assible.module_utils._text import to_text, to_bytes
+from assible.module_utils.connection import Connection, ConnectionError
 
 try:
     from ncclient.xml_ import NCElement, new_ele, sub_ele

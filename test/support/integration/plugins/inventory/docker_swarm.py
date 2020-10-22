@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2018, Stefan Heitmueller <stefan.heitmueller@gmx.com>
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -13,7 +13,7 @@ DOCUMENTATION = '''
     version_added: '2.8'
     author:
       - Stefan Heitmüller (@morph027) <stefan.heitmueller@gmx.com>
-    short_description: Ansible dynamic inventory plugin for Docker swarm nodes.
+    short_description: Assible dynamic inventory plugin for Docker swarm nodes.
     requirements:
         - python >= 2.7
         - L(Docker SDK for Python,https://docker-py.readthedocs.io/en/stable/) >= 1.10.0
@@ -89,14 +89,14 @@ DOCUMENTATION = '''
             default: 60
             aliases: [ time_out ]
         include_host_uri:
-            description: Toggle to return the additional attribute C(ansible_host_uri) which contains the URI of the
+            description: Toggle to return the additional attribute C(assible_host_uri) which contains the URI of the
                          swarm leader in format of C(tcp://172.16.0.1:2376). This value may be used without additional
                          modification as value of option I(docker_host) in Docker Swarm modules when connecting via API.
                          The port always defaults to C(2376).
             type: bool
             default: no
         include_host_uri_port:
-            description: Override the detected port number included in I(ansible_host_uri)
+            description: Override the detected port number included in I(assible_host_uri)
             type: int
 '''
 
@@ -122,7 +122,7 @@ ca_cert: /somewhere/ca.pem
 client_key: /somewhere/key.pem
 client_cert: /somewhere/cert.pem
 
-# Example using constructed features to create groups and set ansible_host
+# Example using constructed features to create groups and set assible_host
 plugin: docker_swarm
 docker_host: tcp://my-docker-host:2375
 strict: False
@@ -140,11 +140,11 @@ keyed_groups:
     prefix: label
 '''
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six.moves.urllib.parse import urlparse
-from ansible.plugins.inventory import BaseInventoryPlugin, Constructable
-from ansible.parsing.utils.addresses import parse_address
+from assible.errors import AssibleError
+from assible.module_utils._text import to_native
+from assible.module_utils.six.moves.urllib.parse import urlparse
+from assible.plugins.inventory import BaseInventoryPlugin, Constructable
+from assible.parsing.utils.addresses import parse_address
 
 try:
     import docker
@@ -249,12 +249,12 @@ def get_connect_params(auth, fail_function):
 
 
 class InventoryModule(BaseInventoryPlugin, Constructable):
-    ''' Host inventory parser for ansible using Docker swarm as source. '''
+    ''' Host inventory parser for assible using Docker swarm as source. '''
 
     NAME = 'docker_swarm'
 
     def _fail(self, msg):
-        raise AnsibleError(msg)
+        raise AssibleError(msg)
 
     def _populate(self):
         raw_params = dict(
@@ -293,10 +293,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
                 self.node_attrs = self.client.nodes.get(self.node.id).attrs
                 self.inventory.add_host(self.node_attrs['ID'])
                 self.inventory.add_host(self.node_attrs['ID'], group=self.node_attrs['Spec']['Role'])
-                self.inventory.set_variable(self.node_attrs['ID'], 'ansible_host',
+                self.inventory.set_variable(self.node_attrs['ID'], 'assible_host',
                                             self.node_attrs['Status']['Addr'])
                 if self.get_option('include_host_uri'):
-                    self.inventory.set_variable(self.node_attrs['ID'], 'ansible_host_uri',
+                    self.inventory.set_variable(self.node_attrs['ID'], 'assible_host_uri',
                                                 'tcp://' + self.node_attrs['Status']['Addr'] + ':' + host_uri_port)
                 if self.get_option('verbose_output'):
                     self.inventory.set_variable(self.node_attrs['ID'], 'docker_swarm_node_attributes', self.node_attrs)
@@ -307,9 +307,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
                         swarm_leader_ip = parse_address(self.node_attrs['ManagerStatus']['Addr'])[0] or \
                             self.node_attrs['Status']['Addr']
                         if self.get_option('include_host_uri'):
-                            self.inventory.set_variable(self.node_attrs['ID'], 'ansible_host_uri',
+                            self.inventory.set_variable(self.node_attrs['ID'], 'assible_host_uri',
                                                         'tcp://' + swarm_leader_ip + ':' + host_uri_port)
-                        self.inventory.set_variable(self.node_attrs['ID'], 'ansible_host', swarm_leader_ip)
+                        self.inventory.set_variable(self.node_attrs['ID'], 'assible_host', swarm_leader_ip)
                         self.inventory.add_host(self.node_attrs['ID'], group='leader')
                     else:
                         self.inventory.add_host(self.node_attrs['ID'], group='nonleaders')
@@ -333,7 +333,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
                                                self.node_attrs['ID'],
                                                strict=strict)
         except Exception as e:
-            raise AnsibleError('Unable to fetch hosts from Docker swarm API, this was the original exception: %s' %
+            raise AssibleError('Unable to fetch hosts from Docker swarm API, this was the original exception: %s' %
                                to_native(e))
 
     def verify_file(self, path):
@@ -344,7 +344,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
     def parse(self, inventory, loader, path, cache=True):
         if not HAS_DOCKER:
-            raise AnsibleError('The Docker swarm dynamic inventory plugin requires the Docker SDK for Python: '
+            raise AssibleError('The Docker swarm dynamic inventory plugin requires the Docker SDK for Python: '
                                'https://github.com/docker/docker-py.')
         super(InventoryModule, self).parse(inventory, loader, path, cache)
         self._read_config_data(path)

@@ -1,7 +1,7 @@
-.. _k8s_ansible_intro:
+.. _k8s_assible_intro:
 
 **************************************
-Introduction to Ansible for Kubernetes
+Introduction to Assible for Kubernetes
 **************************************
 
 .. contents::
@@ -17,20 +17,20 @@ Requirements
 
 To use the modules, you'll need the following:
 
-- Run Ansible from source. For assistance, view :ref:`from_source`.
+- Run Assible from source. For assistance, view :ref:`from_source`.
 - `OpenShift Rest Client <https://github.com/openshift/openshift-restclient-python>`_ installed on the host that will execute the modules.
 
 
 Installation
 ============
 
-The Kubernetes modules are part of the `Ansible Kubernetes collection <https://github.com/ansible-collections/community.kubernetes>`_.
+The Kubernetes modules are part of the `Assible Kubernetes collection <https://github.com/assible-collections/community.kubernetes>`_.
 
 To install the collection, run the following:
 
 .. code-block:: bash
 
-    $ ansible-galaxy collection install community.kubernetes
+    $ assible-galaxy collection install community.kubernetes
 
 
 Authenticating with the API
@@ -45,6 +45,6 @@ To disable SSL certificate verification, set ``verify_ssl`` to false.
 Reporting an issue
 ==================
 
-If you find a bug or have a suggestion regarding modules, please file issues at `Ansible Kubernetes collection <https://github.com/ansible-collections/community.kubernetes>`_.
+If you find a bug or have a suggestion regarding modules, please file issues at `Assible Kubernetes collection <https://github.com/assible-collections/community.kubernetes>`_.
 If you find a bug regarding OpenShift client, please file issues at `OpenShift REST Client issues <https://github.com/openshift/openshift-restclient-python/issues>`_.
 If you find a bug regarding Kubectl binary, please file issues at `Kubectl issue tracker <https://github.com/kubernetes/kubectl>`_

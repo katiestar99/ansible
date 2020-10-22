@@ -1,5 +1,5 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -49,9 +49,9 @@ RETURN = """
 
 from jinja2.exceptions import UndefinedError
 
-from ansible.errors import AnsibleError, AnsibleUndefinedVariable
-from ansible.plugins.lookup import LookupBase
-from ansible.utils.listify import listify_lookup_plugin_terms
+from assible.errors import AssibleError, AssibleUndefinedVariable
+from assible.plugins.lookup import LookupBase
+from assible.utils.listify import listify_lookup_plugin_terms
 
 
 class LookupModule(LookupBase):
@@ -62,7 +62,7 @@ class LookupModule(LookupBase):
             try:
                 intermediate = listify_lookup_plugin_terms(x, templar=self._templar, loader=self._loader, fail_on_undefined=True)
             except UndefinedError as e:
-                raise AnsibleUndefinedVariable("One of the nested variables was undefined. The error was: %s" % e)
+                raise AssibleUndefinedVariable("One of the nested variables was undefined. The error was: %s" % e)
             results.append(intermediate)
         return results
 
@@ -74,7 +74,7 @@ class LookupModule(LookupBase):
         my_list.reverse()
         result = []
         if len(my_list) == 0:
-            raise AnsibleError("with_nested requires at least one element in the nested list")
+            raise AssibleError("with_nested requires at least one element in the nested list")
         result = my_list.pop()
         while len(my_list) > 0:
             result2 = self._combine(result, my_list.pop())

@@ -6,9 +6,9 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils.six import PY3, iteritems, string_types
-from ansible.module_utils.six.moves.urllib.parse import quote, quote_plus, unquote_plus
-from ansible.module_utils._text import to_bytes, to_text
+from assible.module_utils.six import PY3, iteritems, string_types
+from assible.module_utils.six.moves.urllib.parse import quote, quote_plus, unquote_plus
+from assible.module_utils._text import to_bytes, to_text
 
 try:
     from jinja2.filters import do_urlencode
@@ -56,7 +56,7 @@ def do_urlencode(value):
 
 
 class FilterModule(object):
-    ''' Ansible core jinja2 filters '''
+    ''' Assible core jinja2 filters '''
 
     def filters(self):
         filters = {

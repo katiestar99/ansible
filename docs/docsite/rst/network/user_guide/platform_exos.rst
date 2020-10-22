@@ -4,7 +4,7 @@
 EXOS Platform Options
 ***************************************
 
-Extreme EXOS is part of the `community.network <https://galaxy.ansible.com/community/network>`_ collection and supports multiple connections. This page offers details on how each connection works in Ansible and how to use it.
+Extreme EXOS is part of the `community.network <https://galaxy.assible.com/community/network>`_ collection and supports multiple connections. This page offers details on how each connection works in Assible and how to use it.
 
 .. contents::
   :local:
@@ -27,8 +27,8 @@ Connections available
 
     Indirect Access       via a bastion (jump host)                   via a web proxy
 
-    Connection Settings   ``ansible_connection:``                     ``ansible_connection:``
-                            ``ansible.netcommon.network_cli``           ``ansible.netcommon.httpapi``
+    Connection Settings   ``assible_connection:``                     ``assible_connection:``
+                            ``assible.netcommon.network_cli``           ``assible.netcommon.httpapi``
 
     |enable_mode|         not supported by EXOS                       not supported by EXOS
 
@@ -37,9 +37,9 @@ Connections available
 
 .. |enable_mode| replace:: Enable Mode |br| (Privilege Escalation)
 
-EXOS does not support ``ansible_connection: local``. You must use ``ansible_connection: ansible.netcommon.network_cli`` or ``ansible_connection: ansible.netcommon.httpapi``.
+EXOS does not support ``assible_connection: local``. You must use ``assible_connection: assible.netcommon.network_cli`` or ``assible_connection: assible.netcommon.httpapi``.
 
-Using CLI in Ansible
+Using CLI in Assible
 ====================
 
 Example CLI ``group_vars/exos.yml``
@@ -47,15 +47,15 @@ Example CLI ``group_vars/exos.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.network_cli
-   ansible_network_os: community.network.exos
-   ansible_user: myuser
-   ansible_password: !vault...
-   ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection: assible.netcommon.network_cli
+   assible_network_os: community.network.exos
+   assible_user: myuser
+   assible_password: !vault...
+   assible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
 
-- If you are using SSH keys (including an ssh-agent) you can remove the ``ansible_password`` configuration.
-- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``ansible_ssh_common_args`` configuration.
+- If you are using SSH keys (including an ssh-agent) you can remove the ``assible_password`` configuration.
+- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``assible_ssh_common_args`` configuration.
 - If you are accessing your host through a bastion/jump host, you cannot include your SSH password in the ``ProxyCommand`` directive. To prevent secrets from leaking out (for example in ``ps`` output), SSH does not support providing passwords via environment variables.
 
 Example CLI task
@@ -66,11 +66,11 @@ Example CLI task
    - name: Retrieve EXOS OS version
      community.network.exos_command:
        commands: show version
-     when: ansible_network_os == 'community.network.exos'
+     when: assible_network_os == 'community.network.exos'
 
 
 
-Using EXOS-API in Ansible
+Using EXOS-API in Assible
 =========================
 
 Example EXOS-API ``group_vars/exos.yml``
@@ -78,10 +78,10 @@ Example EXOS-API ``group_vars/exos.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.httpapi
-   ansible_network_os: community.network.exos
-   ansible_user: myuser
-   ansible_password: !vault...
+   assible_connection: assible.netcommon.httpapi
+   assible_network_os: community.network.exos
+   assible_user: myuser
+   assible_password: !vault...
    proxy_env:
      http_proxy: http://proxy.example.com:8080
 
@@ -97,7 +97,7 @@ Example EXOS-API task
    - name: Retrieve EXOS OS version
      community.network.exos_command:
        commands: show version
-     when: ansible_network_os == 'community.network.exos'
+     when: assible_network_os == 'community.network.exos'
 
 In this example the ``proxy_env`` variable defined in ``group_vars`` gets passed to the ``environment`` option of the module used in the task.
 

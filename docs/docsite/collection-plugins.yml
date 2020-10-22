@@ -3,15 +3,15 @@
 # we'll need all of these same details.
 module:
     purefa_user:
-        source: 'https://galaxy.ansible.com/'
+        source: 'https://galaxy.assible.com/'
         fqcn: 'purestorage.flasharray'
     purefa_vg:
-        source: 'https://galaxy.ansible.com/'
+        source: 'https://galaxy.assible.com/'
         fqcn: 'purestorage.flasharray'
     gcp_compute_firewall_info:
-        source: 'https://galaxy.ansible.com/'
+        source: 'https://galaxy.assible.com/'
         fqcn: 'google.cloud'
 module_utils:
     purefa:
-        source: 'https://galaxy.ansible.com/'
+        source: 'https://galaxy.assible.com/'
         fqcn: 'purestorage.flasharray'

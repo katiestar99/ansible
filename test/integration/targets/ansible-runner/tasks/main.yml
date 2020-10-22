@@ -2,4 +2,4 @@
   - include_tasks: setup.yml
   - include_tasks: adhoc_example1.yml
   - include_tasks: playbook_example1.yml
-  when: ansible_distribution in ('RedHat', 'CentOS') and ansible_distribution_major_version == '7'
+  when: assible_distribution in ('RedHat', 'CentOS') and assible_distribution_major_version == '7'

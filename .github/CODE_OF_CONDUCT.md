@@ -1,3 +1,3 @@
 # Community Code of Conduct
 
-Please see the official [Ansible Community Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html).
+Please see the official [Assible Community Code of Conduct](https://docs.assible.com/assible/latest/community/code_of_conduct.html).

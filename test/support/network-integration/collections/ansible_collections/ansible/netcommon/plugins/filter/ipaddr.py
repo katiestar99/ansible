@@ -1,19 +1,19 @@
 # (c) 2014, Maciej Delmanowski <drybjed@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
@@ -35,7 +35,7 @@ else:
 
     mac_linux.word_fmt = "%.2x"
 
-from ansible import errors
+from assible import errors
 
 
 # ---- IP address and network query helpers ----
@@ -137,7 +137,7 @@ def _cidr_lookup_query(v, iplist, value):
 def _first_usable_query(v, vtype):
     if vtype == "address":
         "Does it make sense to raise an error"
-        raise errors.AnsibleFilterError("Not a network address")
+        raise errors.AssibleFilterError("Not a network address")
     elif vtype == "network":
         if v.size == 2:
             return str(netaddr.IPAddress(int(v.network)))
@@ -210,7 +210,7 @@ def _ipv6_query(v, value):
 def _last_usable_query(v, vtype):
     if vtype == "address":
         "Does it make sense to raise an error"
-        raise errors.AnsibleFilterError("Not a network address")
+        raise errors.AssibleFilterError("Not a network address")
     elif vtype == "network":
         if v.size > 1:
             first_usable, last_usable = _first_last(v)
@@ -270,7 +270,7 @@ def _network_wildcard_query(v):
 def _next_usable_query(v, vtype):
     if vtype == "address":
         "Does it make sense to raise an error"
-        raise errors.AnsibleFilterError("Not a network address")
+        raise errors.AssibleFilterError("Not a network address")
     elif vtype == "network":
         if v.size > 1:
             first_usable, last_usable = _first_last(v)
@@ -281,21 +281,21 @@ def _next_usable_query(v, vtype):
 
 def _peer_query(v, vtype):
     if vtype == "address":
-        raise errors.AnsibleFilterError("Not a network address")
+        raise errors.AssibleFilterError("Not a network address")
     elif vtype == "network":
         if v.size == 2:
             return str(netaddr.IPAddress(int(v.ip) ^ 1))
         if v.size == 4:
             if int(v.ip) % 4 == 0:
-                raise errors.AnsibleFilterError(
+                raise errors.AssibleFilterError(
                     "Network address of /30 has no peer"
                 )
             if int(v.ip) % 4 == 3:
-                raise errors.AnsibleFilterError(
+                raise errors.AssibleFilterError(
                     "Broadcast address of /30 has no peer"
                 )
             return str(netaddr.IPAddress(int(v.ip) ^ 3))
-        raise errors.AnsibleFilterError("Not a point-to-point network")
+        raise errors.AssibleFilterError("Not a point-to-point network")
 
 
 def _prefix_query(v):
@@ -305,7 +305,7 @@ def _prefix_query(v):
 def _previous_usable_query(v, vtype):
     if vtype == "address":
         "Does it make sense to raise an error"
-        raise errors.AnsibleFilterError("Not a network address")
+        raise errors.AssibleFilterError("Not a network address")
     elif vtype == "network":
         if v.size > 1:
             first_usable, last_usable = _first_last(v)
@@ -334,7 +334,7 @@ def _public_query(v, value):
 def _range_usable_query(v, vtype):
     if vtype == "address":
         "Does it make sense to raise an error"
-        raise errors.AnsibleFilterError("Not a network address")
+        raise errors.AssibleFilterError("Not a network address")
     elif vtype == "network":
         if v.size > 1:
             first_usable, last_usable = _first_last(v)
@@ -444,7 +444,7 @@ def _win_query(v):
 # the inputs.
 def cidr_merge(value, action="merge"):
     if not hasattr(value, "__iter__"):
-        raise errors.AnsibleFilterError(
+        raise errors.AssibleFilterError(
             "cidr_merge: expected iterable, got " + repr(value)
         )
 
@@ -452,7 +452,7 @@ def cidr_merge(value, action="merge"):
         try:
             return [str(ip) for ip in netaddr.cidr_merge(value)]
         except Exception as e:
-            raise errors.AnsibleFilterError(
+            raise errors.AssibleFilterError(
                 "cidr_merge: error in netaddr:\n%s" % e
             )
 
@@ -464,19 +464,19 @@ def cidr_merge(value, action="merge"):
             try:
                 return str(netaddr.IPNetwork(value[0]))
             except Exception as e:
-                raise errors.AnsibleFilterError(
+                raise errors.AssibleFilterError(
                     "cidr_merge: error in netaddr:\n%s" % e
                 )
         else:
             try:
                 return str(netaddr.spanning_cidr(value))
             except Exception as e:
-                raise errors.AnsibleFilterError(
+                raise errors.AssibleFilterError(
                     "cidr_merge: error in netaddr:\n%s" % e
                 )
 
     else:
-        raise errors.AnsibleFilterError(
+        raise errors.AssibleFilterError(
             "cidr_merge: invalid action '%s'" % action
         )
 
@@ -708,7 +708,7 @@ def ipaddr(value, query="", version=False, alias="ipaddr"):
                 return value
 
         except Exception:
-            raise errors.AnsibleFilterError(
+            raise errors.AssibleFilterError(
                 alias + ": unknown filter type: %s" % query
             )
 
@@ -723,14 +723,14 @@ def ipmath(value, amount):
             ip = netaddr.IPAddress(value)
     except (netaddr.AddrFormatError, ValueError):
         msg = "You must pass a valid IP address; {0} is invalid".format(value)
-        raise errors.AnsibleFilterError(msg)
+        raise errors.AssibleFilterError(msg)
 
     if not isinstance(amount, int):
         msg = (
             "You must pass an integer for arithmetic; "
             "{0} is not a valid integer"
         ).format(amount)
-        raise errors.AnsibleFilterError(msg)
+        raise errors.AssibleFilterError(msg)
 
     return str(ip + amount)
 
@@ -846,13 +846,13 @@ def ipsubnet(value, query="", index="x"):
             msg = "You must pass a valid subnet or IP address; {0} is invalid".format(
                 query_string
             )
-            raise errors.AnsibleFilterError(msg)
+            raise errors.AssibleFilterError(msg)
         query = netaddr.IPNetwork(v)
         for i, subnet in enumerate(query.subnet(value.prefixlen), 1):
             if subnet == value:
                 return str(i)
         msg = "{0} is not in the subnet {1}".format(value.cidr, query.cidr)
-        raise errors.AnsibleFilterError(msg)
+        raise errors.AssibleFilterError(msg)
     return False
 
 
@@ -902,7 +902,7 @@ def next_nth_usable(value, offset):
         return False
 
     if type(offset) != int:
-        raise errors.AnsibleFilterError("Must pass in an integer")
+        raise errors.AssibleFilterError("Must pass in an integer")
     if v.size > 1:
         first_usable, last_usable = _first_last(v)
         nth_ip = int(netaddr.IPAddress(int(v.ip) + offset))
@@ -924,7 +924,7 @@ def previous_nth_usable(value, offset):
         return False
 
     if type(offset) != int:
-        raise errors.AnsibleFilterError("Must pass in an integer")
+        raise errors.AssibleFilterError("Must pass in an integer")
     if v.size > 1:
         first_usable, last_usable = _first_last(v)
         nth_ip = int(netaddr.IPAddress(int(v.ip) - offset))
@@ -1114,7 +1114,7 @@ def hwaddr(value, query="", alias="hwaddr"):
         v = netaddr.EUI(value)
     except Exception:
         if query and query != "bool":
-            raise errors.AnsibleFilterError(
+            raise errors.AssibleFilterError(
                 alias + ": not a hardware address: %s" % value
             )
 
@@ -1124,7 +1124,7 @@ def hwaddr(value, query="", alias="hwaddr"):
     try:
         return query_func_map[query](v, *extras)
     except KeyError:
-        raise errors.AnsibleFilterError(
+        raise errors.AssibleFilterError(
             alias + ": unknown filter type: %s" % query
         )
 
@@ -1136,9 +1136,9 @@ def macaddr(value, query=""):
 
 
 def _need_netaddr(f_name, *args, **kwargs):
-    raise errors.AnsibleFilterError(
+    raise errors.AssibleFilterError(
         "The %s filter requires python's netaddr be "
-        "installed on the ansible controller" % f_name
+        "installed on the assible controller" % f_name
     )
 
 
@@ -1150,7 +1150,7 @@ def ip4_hex(arg, delimiter=""):
     )
 
 
-# ---- Ansible filters ----
+# ---- Assible filters ----
 class FilterModule(object):
     """ IP address and network manipulation filters """
 

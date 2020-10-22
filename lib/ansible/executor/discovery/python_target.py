@@ -1,4 +1,4 @@
-# Copyright: (c) 2018 Ansible Project
+# Copyright: (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # FUTURE: this could be swapped out for our bundled version of distro to move more complete platform

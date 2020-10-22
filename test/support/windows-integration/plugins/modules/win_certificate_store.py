@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -153,7 +153,7 @@ EXAMPLES = r'''
     key_exportable: no
   # usually you don't set this here but it is for illustrative purposes
   vars:
-    ansible_winrm_transport: credssp
+    assible_winrm_transport: credssp
 
 - name: Remove a certificate based on file thumbprint
   win_certificate_store:

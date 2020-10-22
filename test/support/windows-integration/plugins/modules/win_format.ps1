@@ -3,8 +3,8 @@
 # Copyright: (c) 2019, Varun Chopra (@chopraaa) <v@chopraaa.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#AnsibleRequires -OSVersion 6.2
+#AssibleRequires -CSharpUtil Assible.Basic
+#AssibleRequires -OSVersion 6.2
 
 Set-StrictMode -Version 2
 
@@ -33,7 +33,7 @@ $spec = @{
     supports_check_mode = $true
 }
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 
 $drive_letter = $module.Params.drive_letter
 $path = $module.Params.path
@@ -65,7 +65,7 @@ if ($compress_volume -eq $true) {
     }
 }
 
-function Get-AnsibleVolume {
+function Get-AssibleVolume {
     param(
         $DriveLetter,
         $Path,
@@ -100,7 +100,7 @@ function Get-AnsibleVolume {
     return $volume
 }
 
-function Format-AnsibleVolume {
+function Format-AssibleVolume {
     param(
         $Path,
         $Label,
@@ -138,29 +138,29 @@ function Format-AnsibleVolume {
 
 }
 
-$ansible_volume = Get-AnsibleVolume -DriveLetter $drive_letter -Path $path -Label $label
-$ansible_file_system = $ansible_volume.FileSystem
-$ansible_volume_size = $ansible_volume.Size
-$ansible_volume_alu = (Get-CimInstance -ClassName Win32_Volume -Filter "DeviceId = '$($ansible_volume.path.replace('\','\\'))'" -Property BlockSize).BlockSize
+$assible_volume = Get-AssibleVolume -DriveLetter $drive_letter -Path $path -Label $label
+$assible_file_system = $assible_volume.FileSystem
+$assible_volume_size = $assible_volume.Size
+$assible_volume_alu = (Get-CimInstance -ClassName Win32_Volume -Filter "DeviceId = '$($assible_volume.path.replace('\','\\'))'" -Property BlockSize).BlockSize
 
-$ansible_partition = Get-Partition -Volume $ansible_volume
+$assible_partition = Get-Partition -Volume $assible_volume
 
-if (-not $force_format -and $null -ne $allocation_unit_size -and $ansible_volume_alu -ne 0 -and $null -ne $ansible_volume_alu -and $allocation_unit_size -ne $ansible_volume_alu) {
-        $module.FailJson("Force format must be specified since target allocation unit size: $($allocation_unit_size) is different from the current allocation unit size of the volume: $($ansible_volume_alu)")
+if (-not $force_format -and $null -ne $allocation_unit_size -and $assible_volume_alu -ne 0 -and $null -ne $assible_volume_alu -and $allocation_unit_size -ne $assible_volume_alu) {
+        $module.FailJson("Force format must be specified since target allocation unit size: $($allocation_unit_size) is different from the current allocation unit size of the volume: $($assible_volume_alu)")
 }
 
-foreach ($access_path in $ansible_partition.AccessPaths) {
+foreach ($access_path in $assible_partition.AccessPaths) {
     if ($access_path -ne $Path) {
         if ($null -ne $file_system -and
-            -not [string]::IsNullOrEmpty($ansible_file_system) -and
-            $file_system -ne $ansible_file_system)
+            -not [string]::IsNullOrEmpty($assible_file_system) -and
+            $file_system -ne $assible_file_system)
         {
             if (-not $force_format)
             {
                 $no_files_in_volume = (Get-ChildItem -LiteralPath $access_path -ErrorAction SilentlyContinue | Measure-Object).Count -eq 0
                 if($no_files_in_volume)
                 {
-                    $module.FailJson("Force format must be specified since target file system: $($file_system) is different from the current file system of the volume: $($ansible_file_system.ToLower())")
+                    $module.FailJson("Force format must be specified since target file system: $($file_system) is different from the current file system of the volume: $($assible_file_system.ToLower())")
                 }
                 else
                 {
@@ -177,20 +177,20 @@ foreach ($access_path in $ansible_partition.AccessPaths) {
 
 if ($force_format) {
     if (-not $module.CheckMode) {
-        Format-AnsibleVolume -Path $ansible_volume.Path -Full $full_format -Label $new_label -FileSystem $file_system -SetIntegrityStreams $integrity_streams -UseLargeFRS $large_frs -Compress $compress_volume -AllocationUnitSize $allocation_unit_size
+        Format-AssibleVolume -Path $assible_volume.Path -Full $full_format -Label $new_label -FileSystem $file_system -SetIntegrityStreams $integrity_streams -UseLargeFRS $large_frs -Compress $compress_volume -AllocationUnitSize $allocation_unit_size
     }
     $module.Result.changed = $true
 }
 else {
     if ($pristine) {
         if ($null -eq $new_label) {
-            $new_label = $ansible_volume.FileSystemLabel
+            $new_label = $assible_volume.FileSystemLabel
         }
         # Conditions for formatting
-        if ($ansible_volume_size -eq 0 -or
-            $ansible_volume.FileSystemLabel -ne $new_label) {
+        if ($assible_volume_size -eq 0 -or
+            $assible_volume.FileSystemLabel -ne $new_label) {
             if (-not $module.CheckMode) {
-                Format-AnsibleVolume -Path $ansible_volume.Path -Full $full_format -Label $new_label -FileSystem $file_system -SetIntegrityStreams $integrity_streams -UseLargeFRS $large_frs -Compress $compress_volume -AllocationUnitSize $allocation_unit_size
+                Format-AssibleVolume -Path $assible_volume.Path -Full $full_format -Label $new_label -FileSystem $file_system -SetIntegrityStreams $integrity_streams -UseLargeFRS $large_frs -Compress $compress_volume -AllocationUnitSize $allocation_unit_size
             }
             $module.Result.changed = $true
         }

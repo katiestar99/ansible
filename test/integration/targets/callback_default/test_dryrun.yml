@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
   - debug:
-      msg: 'ansible_check_mode: {{ansible_check_mode}}'
+      msg: 'assible_check_mode: {{assible_check_mode}}'
 
   - name: Command
     command: ls -l
@@ -24,7 +24,7 @@
   check_mode: true
   tasks:
   - debug:
-      msg: 'ansible_check_mode: {{ansible_check_mode}}'
+      msg: 'assible_check_mode: {{assible_check_mode}}'
 
   - name: Command
     command: ls -l
@@ -44,7 +44,7 @@
   check_mode: false
   tasks:
   - debug:
-      msg: 'ansible_check_mode: {{ansible_check_mode}}'
+      msg: 'assible_check_mode: {{assible_check_mode}}'
 
   - name: Command
     command: ls -l

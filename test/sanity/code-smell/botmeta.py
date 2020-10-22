@@ -12,7 +12,7 @@ import yaml
 from voluptuous import All, Any, Match, MultipleInvalid, Required, Schema
 from voluptuous.humanize import humanize_error
 
-from ansible.module_utils.six import string_types
+from assible.module_utils.six import string_types
 
 
 def main():
@@ -86,6 +86,6 @@ if __name__ == '__main__':
     main()
 
 # Possible future work
-# * Schema for `macros:` - currently ignored due to team_ansible
+# * Schema for `macros:` - currently ignored due to team_assible
 # * Ensure that all $teams mention in `files:` exist in `$macros`
 # * Validate GitHub names - possibly expensive lookup needed - No should be validated when module is added - gundalow

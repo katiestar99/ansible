@@ -4,7 +4,7 @@
 IOS-XR Platform Options
 ***************************************
 
-The `Cisco IOS-XR collection <https://galaxy.ansible.com/cisco/iosxr>`_ supports multiple connections. This page offers details on how each connection works in Ansible and how to use it.
+The `Cisco IOS-XR collection <https://galaxy.assible.com/cisco/iosxr>`_ supports multiple connections. This page offers details on how each connection works in Assible and how to use it.
 
 .. contents::
   :local:
@@ -30,8 +30,8 @@ Connections available
 
     Indirect Access       via a bastion (jump host)                   via a bastion (jump host)
 
-    Connection Settings   ``ansible_connection:``                     ``ansible_connection:``
-                            ``ansible.netcommon.network_cli``          ``ansible.netcommon.netconf``  
+    Connection Settings   ``assible_connection:``                     ``assible_connection:``
+                            ``assible.netcommon.network_cli``          ``assible.netcommon.netconf``  
 
     |enable_mode|         not supported                               not supported
 
@@ -41,9 +41,9 @@ Connections available
 .. |enable_mode| replace:: Enable Mode |br| (Privilege Escalation)
 
 
-The ``ansible_connection: local`` has been deprecated. Please use ``ansible_connection: ansible.netcommon.network_cli`` or ``ansible_connection: ansible.netcommon.netconf`` instead.
+The ``assible_connection: local`` has been deprecated. Please use ``assible_connection: assible.netcommon.network_cli`` or ``assible_connection: assible.netcommon.netconf`` instead.
 
-Using CLI in Ansible
+Using CLI in Assible
 ====================
 
 Example CLI inventory ``[iosxr:vars]``
@@ -52,15 +52,15 @@ Example CLI inventory ``[iosxr:vars]``
 .. code-block:: yaml
 
    [iosxr:vars]
-   ansible_connection=ansible.netcommon.network_cli
-   ansible_network_os=cisco.iosxr.iosxr
-   ansible_user=myuser
-   ansible_password=!vault...
-   ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection=assible.netcommon.network_cli
+   assible_network_os=cisco.iosxr.iosxr
+   assible_user=myuser
+   assible_password=!vault...
+   assible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
 
-- If you are using SSH keys (including an ssh-agent) you can remove the ``ansible_password`` configuration.
-- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``ansible_ssh_common_args`` configuration.
+- If you are using SSH keys (including an ssh-agent) you can remove the ``assible_password`` configuration.
+- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``assible_ssh_common_args`` configuration.
 - If you are accessing your host through a bastion/jump host, you cannot include your SSH password in the ``ProxyCommand`` directive. To prevent secrets from leaking out (for example in ``ps`` output), SSH does not support providing passwords via environment variables.
 
 Example CLI task
@@ -71,10 +71,10 @@ Example CLI task
    - name: Retrieve IOS-XR version
      cisco.iosxr.iosxr_command:
        commands: show version
-     when: ansible_network_os == 'cisco.iosxr.iosxr'
+     when: assible_network_os == 'cisco.iosxr.iosxr'
 
 
-Using NETCONF in Ansible
+Using NETCONF in Assible
 ========================
 
 Enabling NETCONF
@@ -85,14 +85,14 @@ Before you can use NETCONF to connect to a switch, you must:
 - install the ``ncclient`` python package on your control node(s) with ``pip install ncclient``
 - enable NETCONF on the Cisco IOS-XR device(s)
 
-To enable NETCONF on a new switch via Ansible, use the ``cisco.iosxr.iosxr_netconf`` module through the CLI connection. Set up your platform-level variables just like in the CLI example above, then run a playbook task like this:
+To enable NETCONF on a new switch via Assible, use the ``cisco.iosxr.iosxr_netconf`` module through the CLI connection. Set up your platform-level variables just like in the CLI example above, then run a playbook task like this:
 
 .. code-block:: yaml
 
    - name: Enable NETCONF
-     connection: ansible.netcommon.network_cli
+     connection: assible.netcommon.network_cli
      cisco.iosxr.iosxr_netconf:
-     when: ansible_network_os == 'cisco.iosxr.iosxr'
+     when: assible_network_os == 'cisco.iosxr.iosxr'
 
 Once NETCONF is enabled, change your variables to use the NETCONF connection.
 
@@ -102,11 +102,11 @@ Example NETCONF inventory ``[iosxr:vars]``
 .. code-block:: yaml
 
    [iosxr:vars]
-   ansible_connection=ansible.netcommon.netconf
-   ansible_network_os=cisco.iosxr.iosxr
-   ansible_user=myuser
-   ansible_password=!vault |
-   ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection=assible.netcommon.netconf
+   assible_network_os=cisco.iosxr.iosxr
+   assible_user=myuser
+   assible_password=!vault |
+   assible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
 
 Example NETCONF task
@@ -119,7 +119,7 @@ Example NETCONF task
        hostname: iosxr01
        domain_name: test.example.com
        domain_search:
-         - ansible.com
+         - assible.com
          - redhat.com
          - cisco.com
 

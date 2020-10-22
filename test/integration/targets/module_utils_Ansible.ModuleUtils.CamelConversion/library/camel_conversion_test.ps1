@@ -1,7 +1,7 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.CamelConversion
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.CamelConversion
 
 $ErrorActionPreference = 'Stop'
 

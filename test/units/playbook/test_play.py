@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -22,8 +22,8 @@ __metaclass__ = type
 from units.compat import unittest
 from units.compat.mock import patch, MagicMock
 
-from ansible.errors import AnsibleParserError
-from ansible.playbook.play import Play
+from assible.errors import AssibleParserError
+from assible.playbook.play import Play
 
 from units.mock.loader import DictDataLoader
 from units.mock.path import mock_unfrackpath_noop
@@ -62,7 +62,7 @@ class TestPlay(unittest.TestCase):
             user="testing",
             remote_user="testing",
         )
-        self.assertRaises(AnsibleParserError, Play.load, play_data)
+        self.assertRaises(AssibleParserError, Play.load, play_data)
 
     def test_play_with_tasks(self):
         p = Play.load(dict(
@@ -96,10 +96,10 @@ class TestPlay(unittest.TestCase):
             post_tasks=[dict(action='shell echo "hello world"')],
         ))
 
-    @patch('ansible.playbook.role.definition.unfrackpath', mock_unfrackpath_noop)
+    @patch('assible.playbook.role.definition.unfrackpath', mock_unfrackpath_noop)
     def test_play_with_roles(self):
         fake_loader = DictDataLoader({
-            '/etc/ansible/roles/foo/tasks.yml': """
+            '/etc/assible/roles/foo/tasks.yml': """
             - name: role task
               shell: echo "hello world"
             """,

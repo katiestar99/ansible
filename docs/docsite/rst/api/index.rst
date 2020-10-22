@@ -1,11 +1,11 @@
 :orphan:
 
 *************************
-Ansible API Documentation
+Assible API Documentation
 *************************
 
-The Ansible API is under construction. These stub references for attributes, classes, functions, methods, and modules will be documented in future.
-The :ref:`module utilities <ansible.module_utils>` included in ``ansible.module_utils.basic`` and ``AnsibleModule`` are documented under Reference & Appendices.
+The Assible API is under construction. These stub references for attributes, classes, functions, methods, and modules will be documented in future.
+The :ref:`module utilities <assible.module_utils>` included in ``assible.module_utils.basic`` and ``AssibleModule`` are documented under Reference & Appendices.
 
 .. contents::
    :local:
@@ -13,29 +13,29 @@ The :ref:`module utilities <ansible.module_utils>` included in ``ansible.module_
 Attributes
 ==========
 
-.. py:attribute:: AnsibleModule.params
+.. py:attribute:: AssibleModule.params
 
 The parameters accepted by the module.
 
-.. py:attribute:: ansible.module_utils.basic.ANSIBLE_VERSION
+.. py:attribute:: assible.module_utils.basic.ASSIBLE_VERSION
 
-.. py:attribute:: ansible.module_utils.basic.SELINUX_SPECIAL_FS
+.. py:attribute:: assible.module_utils.basic.SELINUX_SPECIAL_FS
 
-Deprecated in favor of ansibleModule._selinux_special_fs.
+Deprecated in favor of assibleModule._selinux_special_fs.
 
-.. py:attribute:: AnsibleModule.ansible_version
+.. py:attribute:: AssibleModule.assible_version
 
-.. py:attribute:: AnsibleModule._debug
+.. py:attribute:: AssibleModule._debug
 
-.. py:attribute:: AnsibleModule._diff
+.. py:attribute:: AssibleModule._diff
 
-.. py:attribute:: AnsibleModule.no_log
+.. py:attribute:: AssibleModule.no_log
 
-.. py:attribute:: AnsibleModule._selinux_special_fs
+.. py:attribute:: AssibleModule._selinux_special_fs
 
-(formerly ansible.module_utils.basic.SELINUX_SPECIAL_FS)
+(formerly assible.module_utils.basic.SELINUX_SPECIAL_FS)
 
-.. py:attribute:: AnsibleModule._syslog_facility
+.. py:attribute:: AssibleModule._syslog_facility
 
 .. py:attribute:: self.playbook
 
@@ -49,20 +49,20 @@ Deprecated in favor of ansibleModule._selinux_special_fs.
 Classes
 =======
 
-.. py:class:: ``ansible.module_utils.basic.AnsibleModule``
+.. py:class:: ``assible.module_utils.basic.AssibleModule``
    :noindex:
 
-The basic utilities for AnsibleModule.
+The basic utilities for AssibleModule.
 
-.. py:class:: AnsibleModule
+.. py:class:: AssibleModule
 
-The main class for an Ansible module.
+The main class for an Assible module.
 
 
 Functions
 =========
 
-.. py:function:: ansible.module_utils.basic._load_params()
+.. py:function:: assible.module_utils.basic._load_params()
 
 Load parameters.
 
@@ -70,21 +70,21 @@ Load parameters.
 Methods
 =======
 
-.. py:method:: AnsibleModule.log()
+.. py:method:: AssibleModule.log()
 
-Logs the output of Ansible.
+Logs the output of Assible.
 
-.. py:method:: AnsibleModule.debug()
+.. py:method:: AssibleModule.debug()
 
-Debugs Ansible.
+Debugs Assible.
 
-.. py:method:: Ansible.get_bin_path()
+.. py:method:: Assible.get_bin_path()
 
 Retrieves the path for executables.
 
-.. py:method:: AnsibleModule.run_command()
+.. py:method:: AssibleModule.run_command()
 
-Runs a command within an Ansible module.
+Runs a command within an Assible module.
 
 .. py:method:: module.fail_json()
 
@@ -98,10 +98,10 @@ Exits and returns output.
 Modules
 =======
 
-.. py:module:: ansible.module_utils
+.. py:module:: assible.module_utils
 
-.. py:module:: ansible.module_utils.basic
+.. py:module:: assible.module_utils.basic
   :noindex:
 
 
-.. py:module:: ansible.module_utils.url
+.. py:module:: assible.module_utils.url

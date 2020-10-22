@@ -11,11 +11,11 @@ import pytest
 from io import StringIO
 
 from units.compat.mock import MagicMock
-from ansible.errors import AnsibleConnectionFailure
-from ansible.module_utils._text import to_bytes
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.loader import connection_loader
-from ansible.plugins.connection import winrm
+from assible.errors import AssibleConnectionFailure
+from assible.module_utils._text import to_bytes
+from assible.playbook.play_context import PlayContext
+from assible.plugins.loader import connection_loader
+from assible.plugins.connection import winrm
 
 pytest.importorskip("winrm")
 
@@ -44,7 +44,7 @@ class TestConnectionWinRM(object):
         ),
         # http through port
         (
-            {'_extras': {}, 'ansible_port': 5985},
+            {'_extras': {}, 'assible_port': 5985},
             {},
             {
                 '_winrm_kwargs': {'username': None, 'password': None},
@@ -56,7 +56,7 @@ class TestConnectionWinRM(object):
         ),
         # kerberos user with kerb present
         (
-            {'_extras': {}, 'ansible_user': 'user@domain.com'},
+            {'_extras': {}, 'assible_user': 'user@domain.com'},
             {},
             {
                 '_kerb_managed': False,
@@ -71,7 +71,7 @@ class TestConnectionWinRM(object):
         ),
         # kerberos user without kerb present
         (
-            {'_extras': {}, 'ansible_user': 'user@domain.com'},
+            {'_extras': {}, 'assible_user': 'user@domain.com'},
             {},
             {
                 '_kerb_managed': False,
@@ -86,7 +86,7 @@ class TestConnectionWinRM(object):
         ),
         # kerberos user with managed ticket (implicit)
         (
-            {'_extras': {}, 'ansible_user': 'user@domain.com'},
+            {'_extras': {}, 'assible_user': 'user@domain.com'},
             {'remote_password': 'pass'},
             {
                 '_kerb_managed': True,
@@ -101,8 +101,8 @@ class TestConnectionWinRM(object):
         ),
         # kerb with managed ticket (explicit)
         (
-            {'_extras': {}, 'ansible_user': 'user@domain.com',
-             'ansible_winrm_kinit_mode': 'managed'},
+            {'_extras': {}, 'assible_user': 'user@domain.com',
+             'assible_winrm_kinit_mode': 'managed'},
             {'password': 'pass'},
             {
                 '_kerb_managed': True,
@@ -111,8 +111,8 @@ class TestConnectionWinRM(object):
         ),
         # kerb with unmanaged ticket (explicit))
         (
-            {'_extras': {}, 'ansible_user': 'user@domain.com',
-             'ansible_winrm_kinit_mode': 'manual'},
+            {'_extras': {}, 'assible_user': 'user@domain.com',
+             'assible_winrm_kinit_mode': 'manual'},
             {'password': 'pass'},
             {
                 '_kerb_managed': False,
@@ -121,8 +121,8 @@ class TestConnectionWinRM(object):
         ),
         # transport override (single)
         (
-            {'_extras': {}, 'ansible_user': 'user@domain.com',
-             'ansible_winrm_transport': 'ntlm'},
+            {'_extras': {}, 'assible_user': 'user@domain.com',
+             'assible_winrm_transport': 'ntlm'},
             {},
             {
                 '_winrm_kwargs': {'username': 'user@domain.com',
@@ -134,8 +134,8 @@ class TestConnectionWinRM(object):
         ),
         # transport override (list)
         (
-            {'_extras': {}, 'ansible_user': 'user@domain.com',
-             'ansible_winrm_transport': ['ntlm', 'certificate']},
+            {'_extras': {}, 'assible_user': 'user@domain.com',
+             'assible_winrm_transport': ['ntlm', 'certificate']},
             {},
             {
                 '_winrm_kwargs': {'username': 'user@domain.com',
@@ -147,8 +147,8 @@ class TestConnectionWinRM(object):
         ),
         # winrm extras
         (
-            {'_extras': {'ansible_winrm_server_cert_validation': 'ignore',
-                         'ansible_winrm_service': 'WSMAN'}},
+            {'_extras': {'assible_winrm_server_cert_validation': 'ignore',
+                         'assible_winrm_service': 'WSMAN'}},
             {},
             {
                 '_winrm_kwargs': {'username': None, 'password': None,
@@ -159,16 +159,16 @@ class TestConnectionWinRM(object):
         ),
         # direct override
         (
-            {'_extras': {}, 'ansible_winrm_connection_timeout': 5},
+            {'_extras': {}, 'assible_winrm_connection_timeout': 5},
             {'connection_timeout': 10},
             {
                 '_winrm_connection_timeout': 10,
             },
             False
         ),
-        # password as ansible_password
+        # password as assible_password
         (
-            {'_extras': {}, 'ansible_password': 'pass'},
+            {'_extras': {}, 'assible_password': 'pass'},
             {},
             {
                 '_winrm_pass': 'pass',
@@ -176,9 +176,9 @@ class TestConnectionWinRM(object):
             },
             False
         ),
-        # password as ansible_winrm_pass
+        # password as assible_winrm_pass
         (
-            {'_extras': {}, 'ansible_winrm_pass': 'pass'},
+            {'_extras': {}, 'assible_winrm_pass': 'pass'},
             {},
             {
                 '_winrm_pass': 'pass',
@@ -187,9 +187,9 @@ class TestConnectionWinRM(object):
             False
         ),
 
-        # password as ansible_winrm_password
+        # password as assible_winrm_password
         (
-            {'_extras': {}, 'ansible_winrm_password': 'pass'},
+            {'_extras': {}, 'assible_winrm_password': 'pass'},
             {},
             {
                 '_winrm_pass': 'pass',
@@ -225,13 +225,13 @@ class TestWinRMKerbAuth(object):
     @pytest.mark.parametrize('options, expected', [
         [{"_extras": {}},
          (["kinit", "user@domain"],)],
-        [{"_extras": {}, 'ansible_winrm_kinit_cmd': 'kinit2'},
+        [{"_extras": {}, 'assible_winrm_kinit_cmd': 'kinit2'},
          (["kinit2", "user@domain"],)],
-        [{"_extras": {'ansible_winrm_kerberos_delegation': True}},
+        [{"_extras": {'assible_winrm_kerberos_delegation': True}},
          (["kinit", "-f", "user@domain"],)],
-        [{"_extras": {}, 'ansible_winrm_kinit_args': '-f -p'},
+        [{"_extras": {}, 'assible_winrm_kinit_args': '-f -p'},
          (["kinit", "-f", "-p", "user@domain"],)],
-        [{"_extras": {}, 'ansible_winrm_kerberos_delegation': True, 'ansible_winrm_kinit_args': '-p'},
+        [{"_extras": {}, 'assible_winrm_kerberos_delegation': True, 'assible_winrm_kinit_args': '-p'},
          (["kinit", "-p", "user@domain"],)]
     ])
     def test_kinit_success_subprocess(self, monkeypatch, options, expected):
@@ -261,13 +261,13 @@ class TestWinRMKerbAuth(object):
     @pytest.mark.parametrize('options, expected', [
         [{"_extras": {}},
          ("kinit", ["user@domain"],)],
-        [{"_extras": {}, 'ansible_winrm_kinit_cmd': 'kinit2'},
+        [{"_extras": {}, 'assible_winrm_kinit_cmd': 'kinit2'},
          ("kinit2", ["user@domain"],)],
-        [{"_extras": {'ansible_winrm_kerberos_delegation': True}},
+        [{"_extras": {'assible_winrm_kerberos_delegation': True}},
          ("kinit", ["-f", "user@domain"],)],
-        [{"_extras": {}, 'ansible_winrm_kinit_args': '-f -p'},
+        [{"_extras": {}, 'assible_winrm_kinit_args': '-f -p'},
          ("kinit", ["-f", "-p", "user@domain"],)],
-        [{"_extras": {}, 'ansible_winrm_kerberos_delegation': True, 'ansible_winrm_kinit_args': '-p'},
+        [{"_extras": {}, 'assible_winrm_kerberos_delegation': True, 'assible_winrm_kinit_args': '-p'},
          ("kinit", ["-p", "user@domain"],)]
     ])
     def test_kinit_success_pexpect(self, monkeypatch, options, expected):
@@ -308,11 +308,11 @@ class TestWinRMKerbAuth(object):
         pc = PlayContext()
         new_stdin = StringIO()
         conn = connection_loader.get('winrm', pc, new_stdin)
-        options = {"_extras": {}, "ansible_winrm_kinit_cmd": "/fake/kinit"}
+        options = {"_extras": {}, "assible_winrm_kinit_cmd": "/fake/kinit"}
         conn.set_options(var_options=options)
         conn._build_winrm_kwargs()
 
-        with pytest.raises(AnsibleConnectionFailure) as err:
+        with pytest.raises(AssibleConnectionFailure) as err:
             conn._kerb_auth("user@domain", "pass")
         assert str(err.value) == "Kerberos auth failure when calling " \
                                  "kinit cmd '/fake/kinit': %s" % expected_err
@@ -331,11 +331,11 @@ class TestWinRMKerbAuth(object):
         pc = PlayContext()
         new_stdin = StringIO()
         conn = connection_loader.get('winrm', pc, new_stdin)
-        options = {"_extras": {}, "ansible_winrm_kinit_cmd": "/fake/kinit"}
+        options = {"_extras": {}, "assible_winrm_kinit_cmd": "/fake/kinit"}
         conn.set_options(var_options=options)
         conn._build_winrm_kwargs()
 
-        with pytest.raises(AnsibleConnectionFailure) as err:
+        with pytest.raises(AssibleConnectionFailure) as err:
             conn._kerb_auth("user@domain", "pass")
         assert str(err.value) == "Kerberos auth failure when calling " \
                                  "kinit cmd '/fake/kinit': %s" % expected_err
@@ -359,7 +359,7 @@ class TestWinRMKerbAuth(object):
         conn.set_options(var_options={"_extras": {}})
         conn._build_winrm_kwargs()
 
-        with pytest.raises(AnsibleConnectionFailure) as err:
+        with pytest.raises(AssibleConnectionFailure) as err:
             conn._kerb_auth("invaliduser", "pass")
 
         assert str(err.value) == \
@@ -384,7 +384,7 @@ class TestWinRMKerbAuth(object):
         conn.set_options(var_options={"_extras": {}})
         conn._build_winrm_kwargs()
 
-        with pytest.raises(AnsibleConnectionFailure) as err:
+        with pytest.raises(AssibleConnectionFailure) as err:
             conn._kerb_auth("invaliduser", "pass")
 
         assert str(err.value) == \
@@ -407,7 +407,7 @@ class TestWinRMKerbAuth(object):
         conn.set_options(var_options={"_extras": {}})
         conn._build_winrm_kwargs()
 
-        with pytest.raises(AnsibleConnectionFailure) as err:
+        with pytest.raises(AssibleConnectionFailure) as err:
             conn._kerb_auth("username", "password")
         assert str(err.value) == \
             "Kerberos auth failure for principal username with subprocess: " \
@@ -432,7 +432,7 @@ class TestWinRMKerbAuth(object):
         conn.set_options(var_options={"_extras": {}})
         conn._build_winrm_kwargs()
 
-        with pytest.raises(AnsibleConnectionFailure) as err:
+        with pytest.raises(AssibleConnectionFailure) as err:
             conn._kerb_auth("username", "password")
         assert str(err.value) == \
             "Kerberos auth failure for principal username with pexpect: " \

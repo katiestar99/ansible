@@ -1,4 +1,4 @@
-"""Payload management for sending Ansible files and test content to other systems (VMs, containers)."""
+"""Payload management for sending Assible files and test content to other systems (VMs, containers)."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -18,7 +18,7 @@ from .config import (
 
 from .util import (
     display,
-    ANSIBLE_SOURCE_ROOT,
+    ASSIBLE_SOURCE_ROOT,
     remove_tree,
     is_subdir,
 )
@@ -36,19 +36,19 @@ tarfile.pwd = None
 tarfile.grp = None
 
 # this bin symlink map must exactly match the contents of the bin directory
-# it is necessary for payload creation to reconstruct the bin directory when running ansible-test from an installed version of ansible
-ANSIBLE_BIN_SYMLINK_MAP = {
-    'ansible': '../lib/ansible/cli/scripts/ansible_cli_stub.py',
-    'ansible-config': 'ansible',
-    'ansible-connection': '../lib/ansible/cli/scripts/ansible_connection_cli_stub.py',
-    'ansible-console': 'ansible',
-    'ansible-doc': 'ansible',
-    'ansible-galaxy': 'ansible',
-    'ansible-inventory': 'ansible',
-    'ansible-playbook': 'ansible',
-    'ansible-pull': 'ansible',
-    'ansible-test': '../test/lib/ansible_test/_data/cli/ansible_test_cli_stub.py',
-    'ansible-vault': 'ansible',
+# it is necessary for payload creation to reconstruct the bin directory when running assible-test from an installed version of assible
+ASSIBLE_BIN_SYMLINK_MAP = {
+    'assible': '../lib/assible/cli/scripts/assible_cli_stub.py',
+    'assible-config': 'assible',
+    'assible-connection': '../lib/assible/cli/scripts/assible_connection_cli_stub.py',
+    'assible-console': 'assible',
+    'assible-doc': 'assible',
+    'assible-galaxy': 'assible',
+    'assible-inventory': 'assible',
+    'assible-playbook': 'assible',
+    'assible-pull': 'assible',
+    'assible-test': '../test/lib/assible_test/_data/cli/assible_test_cli_stub.py',
+    'assible-vault': 'assible',
 }
 
 
@@ -57,7 +57,7 @@ def create_payload(args, dst_path):  # type: (CommonConfig, str) -> None
     if args.explain:
         return
 
-    files = list(data_context().ansible_source)
+    files = list(data_context().assible_source)
     filters = {}
 
     def make_executable(tar_info):  # type: (tarfile.TarInfo) -> t.Optional[tarfile.TarInfo]
@@ -65,21 +65,21 @@ def create_payload(args, dst_path):  # type: (CommonConfig, str) -> None
         tar_info.mode |= stat.S_IXUSR | stat.S_IXOTH | stat.S_IXGRP
         return tar_info
 
-    if not ANSIBLE_SOURCE_ROOT:
-        # reconstruct the bin directory which is not available when running from an ansible install
+    if not ASSIBLE_SOURCE_ROOT:
+        # reconstruct the bin directory which is not available when running from an assible install
         files.extend(create_temporary_bin_files(args))
-        filters.update(dict((os.path.join('ansible', path[3:]), make_executable) for path in ANSIBLE_BIN_SYMLINK_MAP.values() if path.startswith('../')))
+        filters.update(dict((os.path.join('assible', path[3:]), make_executable) for path in ASSIBLE_BIN_SYMLINK_MAP.values() if path.startswith('../')))
 
-    if not data_context().content.is_ansible:
-        # exclude unnecessary files when not testing ansible itself
+    if not data_context().content.is_assible:
+        # exclude unnecessary files when not testing assible itself
         files = [f for f in files if
                  is_subdir(f[1], 'bin/') or
-                 is_subdir(f[1], 'lib/ansible/') or
-                 is_subdir(f[1], 'test/lib/ansible_test/')]
+                 is_subdir(f[1], 'lib/assible/') or
+                 is_subdir(f[1], 'test/lib/assible_test/')]
 
         if not isinstance(args, (ShellConfig, IntegrationConfig)):
-            # exclude built-in ansible modules when they are not needed
-            files = [f for f in files if not is_subdir(f[1], 'lib/ansible/modules/') or f[1] == 'lib/ansible/modules/__init__.py']
+            # exclude built-in assible modules when they are not needed
+            files = [f for f in files if not is_subdir(f[1], 'lib/assible/modules/') or f[1] == 'lib/assible/modules/__init__.py']
 
         collection_layouts = data_context().create_collection_layouts()
 
@@ -94,9 +94,9 @@ def create_payload(args, dst_path):  # type: (CommonConfig, str) -> None
                 # include files from each collection in the same collection root as the content being tested
                 extra_files.extend((os.path.join(layout.root, path), os.path.join(layout.collection.directory, path)) for path in layout.all_files())
     else:
-        # when testing ansible itself the ansible source is the content
+        # when testing assible itself the assible source is the content
         content_files = files
-        # there are no extra files when testing ansible itself
+        # there are no extra files when testing assible itself
         extra_files = []
 
     for callback in data_context().payload_callbacks:
@@ -104,11 +104,11 @@ def create_payload(args, dst_path):  # type: (CommonConfig, str) -> None
         # this is done before placing them in the appropriate subdirectory (see below)
         callback(content_files)
 
-    # place ansible source files under the 'ansible' directory on the delegated host
-    files = [(src, os.path.join('ansible', dst)) for src, dst in files]
+    # place assible source files under the 'assible' directory on the delegated host
+    files = [(src, os.path.join('assible', dst)) for src, dst in files]
 
     if data_context().content.collection:
-        # place collection files under the 'ansible_collections/{namespace}/{collection}' directory on the delegated host
+        # place collection files under the 'assible_collections/{namespace}/{collection}' directory on the delegated host
         files.extend((src, os.path.join(data_context().content.collection.directory, dst)) for src, dst in content_files)
         # extra files already have the correct destination path
         files.extend(extra_files)
@@ -132,15 +132,15 @@ def create_payload(args, dst_path):  # type: (CommonConfig, str) -> None
 
 
 def create_temporary_bin_files(args):  # type: (CommonConfig) -> t.Tuple[t.Tuple[str, str], ...]
-    """Create a temporary ansible bin directory populated using the symlink map."""
+    """Create a temporary assible bin directory populated using the symlink map."""
     if args.explain:
-        temp_path = '/tmp/ansible-tmp-bin'
+        temp_path = '/tmp/assible-tmp-bin'
     else:
-        temp_path = tempfile.mkdtemp(prefix='ansible', suffix='bin')
+        temp_path = tempfile.mkdtemp(prefix='assible', suffix='bin')
         atexit.register(remove_tree, temp_path)
 
-        for name, dest in ANSIBLE_BIN_SYMLINK_MAP.items():
+        for name, dest in ASSIBLE_BIN_SYMLINK_MAP.items():
             path = os.path.join(temp_path, name)
             os.symlink(dest, path)
 
-    return tuple((os.path.join(temp_path, name), os.path.join('bin', name)) for name in sorted(ANSIBLE_BIN_SYMLINK_MAP))
+    return tuple((os.path.join(temp_path, name), os.path.join('bin', name)) for name in sorted(ASSIBLE_BIN_SYMLINK_MAP))

@@ -6,7 +6,7 @@ from .util import common_auth_test
 
 def test_auth():
     # noinspection PyProtectedMember
-    from ansible_test._internal.ci.shippable import (
+    from assible_test._internal.ci.shippable import (
         ShippableAuthHelper,
     )
 

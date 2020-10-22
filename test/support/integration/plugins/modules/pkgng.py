@@ -13,7 +13,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -116,7 +116,7 @@ EXAMPLES = '''
 
 
 import re
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def query_package(module, pkgng_path, name, dir_arg):
@@ -342,7 +342,7 @@ def autoremove_packages(module, pkgng_path, dir_arg):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(default="present", choices=["present", "latest", "absent"], required=False),
             name=dict(aliases=["pkg"], required=True, type='list'),

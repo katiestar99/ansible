@@ -1,6 +1,6 @@
 using System;
 
-namespace ansible_collections.testns.testcoll.plugins.module_utils.subpkg.subcs
+namespace assible_collections.testns.testcoll.plugins.module_utils.subpkg.subcs
 {
     public class NestedUtil
     {

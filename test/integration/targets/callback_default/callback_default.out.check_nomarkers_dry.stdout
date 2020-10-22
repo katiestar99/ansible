@@ -3,7 +3,7 @@ PLAY [A common play] ***********************************************************
 
 TASK [debug] *******************************************************************
 ok: [testhost] => {
-    "msg": "ansible_check_mode: True"
+    "msg": "assible_check_mode: True"
 }
 
 TASK [Command] *****************************************************************
@@ -19,7 +19,7 @@ PLAY [Play with check_mode: true (runs always in check_mode)] ******************
 
 TASK [debug] *******************************************************************
 ok: [testhost] => {
-    "msg": "ansible_check_mode: True"
+    "msg": "assible_check_mode: True"
 }
 
 TASK [Command] *****************************************************************
@@ -35,7 +35,7 @@ PLAY [Play with check_mode: false (runs always in wet mode)] *******************
 
 TASK [debug] *******************************************************************
 ok: [testhost] => {
-    "msg": "ansible_check_mode: True"
+    "msg": "assible_check_mode: True"
 }
 
 TASK [Command] *****************************************************************

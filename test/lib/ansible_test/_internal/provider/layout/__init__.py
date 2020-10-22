@@ -9,7 +9,7 @@ import os
 from ... import types as t
 
 from ...util import (
-    ANSIBLE_SOURCE_ROOT,
+    ASSIBLE_SOURCE_ROOT,
 )
 
 from .. import (
@@ -75,7 +75,7 @@ class Layout:
 
 
 class ContentLayout(Layout):
-    """Information about the current Ansible content being tested."""
+    """Information about the current Assible content being tested."""
     def __init__(self,
                  root,  # type: str
                  paths,  # type: t.List[str]
@@ -111,7 +111,7 @@ class ContentLayout(Layout):
         self.unit_module_utils_path = unit_module_utils_path
         self.unit_messages = unit_messages
 
-        self.is_ansible = root == ANSIBLE_SOURCE_ROOT
+        self.is_assible = root == ASSIBLE_SOURCE_ROOT
 
     @property
     def prefix(self):  # type: () -> str
@@ -134,7 +134,7 @@ class ContentLayout(Layout):
     @property
     def module_utils_powershell_path(self):  # type: () -> t.Optional[str]
         """Return the path where powershell module_utils are found, if any."""
-        if self.is_ansible:
+        if self.is_assible:
             return os.path.join(self.plugin_paths['module_utils'], 'powershell')
 
         return self.plugin_paths.get('module_utils')
@@ -142,7 +142,7 @@ class ContentLayout(Layout):
     @property
     def module_utils_csharp_path(self):  # type: () -> t.Optional[str]
         """Return the path where csharp module_utils are found, if any."""
-        if self.is_ansible:
+        if self.is_assible:
             return os.path.join(self.plugin_paths['module_utils'], 'csharp')
 
         return self.plugin_paths.get('module_utils')
@@ -168,7 +168,7 @@ class CollectionDetail:
         self.root = root
         self.full_name = '%s.%s' % (namespace, name)
         self.prefix = '%s.' % self.full_name
-        self.directory = os.path.join('ansible_collections', namespace, name)
+        self.directory = os.path.join('assible_collections', namespace, name)
 
 
 class LayoutProvider(PathProvider):

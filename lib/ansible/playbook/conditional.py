@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -25,12 +25,12 @@ import re
 from jinja2.compiler import generate
 from jinja2.exceptions import UndefinedError
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleUndefinedVariable
-from ansible.module_utils.six import text_type
-from ansible.module_utils._text import to_native
-from ansible.playbook.attribute import FieldAttribute
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleError, AssibleUndefinedVariable
+from assible.module_utils.six import text_type
+from assible.module_utils._text import to_native
+from assible.playbook.attribute import FieldAttribute
+from assible.utils.display import Display
 
 display = Display()
 
@@ -54,7 +54,7 @@ class Conditional:
         # is used as a mix-in with a playbook base class
         if not hasattr(self, '_loader'):
             if loader is None:
-                raise AnsibleError("a loader must be specified when using Conditional() directly")
+                raise AssibleError("a loader must be specified when using Conditional() directly")
             else:
                 self._loader = loader
         super(Conditional, self).__init__()
@@ -109,7 +109,7 @@ class Conditional:
                     break
 
         except Exception as e:
-            raise AnsibleError("The conditional check '%s' failed. The error was: %s" % (to_native(conditional), to_native(e)), obj=ds)
+            raise AssibleError("The conditional check '%s' failed. The error was: %s" % (to_native(conditional), to_native(e)), obj=ds)
 
         return result
 
@@ -145,7 +145,7 @@ class Conditional:
                                    ' (if you would like to evaluate input string from prompt) or " is truthy"'
                                    ' (if you would like to apply Python\'s evaluation method) to the expression in the future. '
                                    'Also see CONDITIONAL_BARE_VARS configuration toggle' % original,
-                                   version="2.12", collection_name='ansible.builtin')
+                                   version="2.12", collection_name='assible.builtin')
             if not isinstance(conditional, text_type) or conditional == "":
                 return conditional
 
@@ -165,7 +165,7 @@ class Conditional:
                         if disable_lookups:
                             if inside_call and node.s.startswith("__"):
                                 # calling things with a dunder is generally bad at this point...
-                                raise AnsibleError(
+                                raise AssibleError(
                                     "Invalid access found in the conditional: '%s'" % conditional
                                 )
                             elif inside_yield:
@@ -193,7 +193,7 @@ class Conditional:
                 cnv = CleansingNodeVisitor()
                 cnv.visit(parsed)
             except Exception as e:
-                raise AnsibleError("Invalid conditional detected: %s" % to_native(e))
+                raise AssibleError("Invalid conditional detected: %s" % to_native(e))
 
             # and finally we generate and template the presented string and look at the resulting string
             presented = "{%% if %s %%} True {%% else %%} False {%% endif %%}" % conditional
@@ -203,8 +203,8 @@ class Conditional:
             elif val == "False":
                 return False
             else:
-                raise AnsibleError("unable to evaluate conditional: %s" % original)
-        except (AnsibleUndefinedVariable, UndefinedError) as e:
+                raise AssibleError("unable to evaluate conditional: %s" % original)
+        except (AssibleUndefinedVariable, UndefinedError) as e:
             # the templating failed, meaning most likely a variable was undefined. If we happened
             # to be looking for an undefined variable, return True, otherwise fail
             try:
@@ -228,7 +228,7 @@ class Conditional:
                         else:
                             return True
                 # as nothing above matched the failed var name, re-raise here to
-                # trigger the AnsibleUndefinedVariable exception again below
+                # trigger the AssibleUndefinedVariable exception again below
                 raise
             except Exception:
-                raise AnsibleUndefinedVariable("error while evaluating conditional (%s): %s" % (original, e))
+                raise AssibleUndefinedVariable("error while evaluating conditional (%s): %s" % (original, e))

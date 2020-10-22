@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -14,7 +14,7 @@ import sys
 
 from jinja2 import Environment, FileSystemLoader
 
-from ansible.module_utils._text import to_bytes
+from assible.module_utils._text import to_bytes
 
 # Pylint doesn't understand Python3 namespace modules.
 from ..change_detection import update_file_if_different  # pylint: disable=relative-beyond-top-level
@@ -109,14 +109,14 @@ def opt_doc_list(parser):
 def opts_docs(cli_class_name, cli_module_name):
     ''' generate doc structure from options '''
 
-    cli_name = 'ansible-%s' % cli_module_name
+    cli_name = 'assible-%s' % cli_module_name
     if cli_module_name == 'adhoc':
-        cli_name = 'ansible'
+        cli_name = 'assible'
 
     # WIth no action/subcommand
     # shared opts set
     # instantiate each cli and ask its options
-    cli_klass = getattr(__import__("ansible.cli.%s" % cli_module_name,
+    cli_klass = getattr(__import__("assible.cli.%s" % cli_module_name,
                                    fromlist=[cli_class_name]), cli_class_name)
     cli = cli_klass([cli_name])
 
@@ -253,7 +253,7 @@ class GenerateMan(Command):
         cli_list = []
         cli_bin_name_list = []
 
-        # for binary in os.listdir('../../lib/ansible/cli'):
+        # for binary in os.listdir('../../lib/assible/cli'):
         for cli_module_name in cli_modules:
             binary = os.path.basename(os.path.expanduser(cli_module_name))
 
@@ -267,13 +267,13 @@ class GenerateMan(Command):
             if cli_name == 'adhoc':
                 cli_class_name = 'AdHocCLI'
                 # myclass = 'AdHocCLI'
-                output[cli_name] = 'ansible.1.rst.in'
-                cli_bin_name = 'ansible'
+                output[cli_name] = 'assible.1.rst.in'
+                cli_bin_name = 'assible'
             else:
                 # myclass = "%sCLI" % libname.capitalize()
                 cli_class_name = "%sCLI" % cli_name.capitalize()
-                output[cli_name] = 'ansible-%s.1.rst.in' % cli_name
-                cli_bin_name = 'ansible-%s' % cli_name
+                output[cli_name] = 'assible-%s.1.rst.in' % cli_name
+                cli_bin_name = 'assible-%s' % cli_name
 
             # FIXME:
             allvars[cli_name] = opts_docs(cli_class_name, cli_name)

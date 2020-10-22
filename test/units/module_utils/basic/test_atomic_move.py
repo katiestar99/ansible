@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2016 Toshio Kuratomi <tkuratomi@ansible.com>
-# (c) 2017 Ansible Project
+# (c) 2016 Toshio Kuratomi <tkuratomi@assible.com>
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -14,7 +14,7 @@ from itertools import product
 
 import pytest
 
-from ansible.module_utils import basic
+from assible.module_utils import basic
 
 
 @pytest.fixture

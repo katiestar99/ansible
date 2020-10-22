@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2016 Toshio Kuratomi <tkuratomi@ansible.com>
-# (c) 2017 Ansible Project
+# (c) 2016 Toshio Kuratomi <tkuratomi@assible.com>
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -13,17 +13,17 @@ import json
 from units.mock.procenv import ModuleTestCase, swap_stdin_and_argv
 
 from units.compat.mock import patch, MagicMock, mock_open, Mock
-from ansible.module_utils.six.moves import builtins
+from assible.module_utils.six.moves import builtins
 
 realimport = builtins.__import__
 
 
 class TestSELinux(ModuleTestCase):
-    def test_module_utils_basic_ansible_module_selinux_mls_enabled(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_selinux_mls_enabled(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -39,11 +39,11 @@ class TestSELinux(ModuleTestCase):
                 self.assertEqual(am.selinux_mls_enabled(), True)
         delattr(basic, 'selinux')
 
-    def test_module_utils_basic_ansible_module_selinux_initial_context(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_selinux_initial_context(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -53,11 +53,11 @@ class TestSELinux(ModuleTestCase):
         am.selinux_mls_enabled.return_value = True
         self.assertEqual(am.selinux_initial_context(), [None, None, None, None])
 
-    def test_module_utils_basic_ansible_module_selinux_enabled(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_selinux_enabled(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -85,11 +85,11 @@ class TestSELinux(ModuleTestCase):
                 self.assertEqual(am.selinux_enabled(), True)
         delattr(basic, 'selinux')
 
-    def test_module_utils_basic_ansible_module_selinux_default_context(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_selinux_default_context(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -121,11 +121,11 @@ class TestSELinux(ModuleTestCase):
 
         delattr(basic, 'selinux')
 
-    def test_module_utils_basic_ansible_module_selinux_context(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_selinux_context(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -163,16 +163,16 @@ class TestSELinux(ModuleTestCase):
 
         delattr(basic, 'selinux')
 
-    def test_module_utils_basic_ansible_module_is_special_selinux_path(self):
-        from ansible.module_utils import basic
+    def test_module_utils_basic_assible_module_is_special_selinux_path(self):
+        from assible.module_utils import basic
 
-        args = json.dumps(dict(ANSIBLE_MODULE_ARGS={'_ansible_selinux_special_fs': "nfs,nfsd,foos",
-                                                    '_ansible_remote_tmp': "/tmp",
-                                                    '_ansible_keep_remote_files': False}))
+        args = json.dumps(dict(ASSIBLE_MODULE_ARGS={'_assible_selinux_special_fs': "nfs,nfsd,foos",
+                                                    '_assible_remote_tmp': "/tmp",
+                                                    '_assible_keep_remote_files': False}))
 
         with swap_stdin_and_argv(stdin_data=args):
-            basic._ANSIBLE_ARGS = None
-            am = basic.AnsibleModule(
+            basic._ASSIBLE_ARGS = None
+            am = basic.AssibleModule(
                 argument_spec=dict(),
             )
 
@@ -208,11 +208,11 @@ class TestSELinux(ModuleTestCase):
                 self.assertEqual(am.is_special_selinux_path('/some/path/that/should/be/nfs'), (True, ['foo_u', 'foo_r', 'foo_t', 's0']))
                 self.assertEqual(am.is_special_selinux_path('/weird/random/fstype/path'), (True, ['foo_u', 'foo_r', 'foo_t', 's0']))
 
-    def test_module_utils_basic_ansible_module_set_context_if_different(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_set_context_if_different(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 

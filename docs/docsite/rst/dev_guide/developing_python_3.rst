@@ -1,20 +1,20 @@
 .. _developing_python_3:
 
 ********************
-Ansible and Python 3
+Assible and Python 3
 ********************
 
-The ``ansible-base`` code runs on both Python 2 and Python 3 because we want Ansible to be able to manage a wide
-variety of machines. Contributors to ansible-base and to Ansible Collections should be aware of the tips in this document so that they can write code that will run on the same versions of Python as the rest of Ansible.
+The ``assible-base`` code runs on both Python 2 and Python 3 because we want Assible to be able to manage a wide
+variety of machines. Contributors to assible-base and to Assible Collections should be aware of the tips in this document so that they can write code that will run on the same versions of Python as the rest of Assible.
 
 .. contents::
    :local:
 
 To ensure that your code runs on Python 3 as well as on Python 2, learn the tips and tricks and idioms
-described here. Most of these considerations apply to all three types of Ansible code:
+described here. Most of these considerations apply to all three types of Assible code:
 
-1. controller-side code - code that runs on the machine where you invoke :command:`/usr/bin/ansible`
-2. modules - the code which Ansible transmits to and invokes on the managed machine.
+1. controller-side code - code that runs on the machine where you invoke :command:`/usr/bin/assible`
+2. modules - the code which Assible transmits to and invokes on the managed machine.
 3. shared ``module_utils`` code - the common code that's used by modules to perform tasks and sometimes used by controller-side code as well
 
 However, the three types of code do not use the same string strategy. If you're developing a module or some ``module_utils`` code, be sure to read the section on string strategy carefully.
@@ -41,12 +41,12 @@ only function with a newer version of Python.
 
 .. note:: Python 2.4 Module-side Support:
 
-    Support for Python 2.4 and Python 2.5 was dropped in Ansible-2.4.  RHEL-5
+    Support for Python 2.4 and Python 2.5 was dropped in Assible-2.4.  RHEL-5
     (and its rebuilds like CentOS-5) were supported until April of 2017.
-    Ansible-2.3 was released in April of 2017 and was the last Ansible release
+    Assible-2.3 was released in April of 2017 and was the last Assible release
     to support Python 2.4 on the module-side.
 
-Developing Ansible code that supports Python 2 and Python 3
+Developing Assible code that supports Python 2 and Python 3
 ===========================================================
 
 The best place to start learning about writing code that supports both Python 2 and Python 3
@@ -82,7 +82,7 @@ may work until a user causes an exception by entering non-ASCII input.
 Python 3 forces programmers to proactively define a strategy for
 working with strings in their program so that they don't mix text and byte strings unintentionally.
 
-Ansible uses different strategies for working with strings in controller-side code, in
+Assible uses different strategies for working with strings in controller-side code, in
 :ref: `modules <module_string_strategy>`, and in :ref:`module_utils <module_utils_string_strategy>` code.
 
 .. _controller_string_strategy:
@@ -116,7 +116,7 @@ to yield text but instead do the conversion explicitly ourselves. For example:
 
 .. code-block:: python
 
-    from ansible.module_utils._text import to_text
+    from assible.module_utils._text import to_text
 
     with open('filename-with-utf8-data.txt', 'rb') as my_file:
         b_data = my_file.read()
@@ -128,7 +128,7 @@ to yield text but instead do the conversion explicitly ourselves. For example:
             # of code.
             pass
 
-.. note:: Much of Ansible assumes that all encoded text is UTF-8.  At some
+.. note:: Much of Assible assumes that all encoded text is UTF-8.  At some
     point, if there is demand for other encodings we may change that, but for
     now it is safe to assume that bytes are UTF-8.
 
@@ -136,7 +136,7 @@ Writing to files is the opposite process:
 
 .. code-block:: python
 
-    from ansible.module_utils._text import to_bytes
+    from assible.module_utils._text import to_bytes
 
     with open('filename.txt', 'wb') as my_file:
         my_file.write(to_bytes(some_text_string))
@@ -160,7 +160,7 @@ works on both versions:
 
     import os.path
 
-    from ansible.module_utils._text import to_bytes
+    from assible.module_utils._text import to_bytes
 
     filename = u'/var/tmp/くらとみ.txt'
     f = open(to_bytes(filename), 'wb')
@@ -199,7 +199,7 @@ interfaces are all byte-oriented so the Python interface is byte oriented as
 well.  On both Python 2 and Python 3, byte strings should be given to Python's
 subprocess library and byte strings should be expected back from it.
 
-One of the main places in Ansible's controller code that we interact with
+One of the main places in Assible's controller code that we interact with
 other programs is the connection plugins' ``exec_command`` methods.  These
 methods transform any text strings they receive in the command (and arguments
 to the command) to execute into bytes and return stdout and stderr as byte strings
@@ -212,7 +212,7 @@ Module string strategy: Native String
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In modules we use a strategy known as Native Strings. This makes things
-easier on the community members who maintain so many of Ansible's
+easier on the community members who maintain so many of Assible's
 modules, by not breaking backwards compatibility by
 mandating that all strings inside of modules are text and converting between
 text and bytes at the borders.
@@ -232,7 +232,7 @@ coded to expect bytes on Python 2 and text on Python 3.
 Module_utils string strategy: hybrid
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In ``module_utils`` code we use a hybrid string strategy. Although Ansible's
+In ``module_utils`` code we use a hybrid string strategy. Although Assible's
 ``module_utils`` code is largely like module code, some pieces of it are
 used by the controller as well. So it needs to be compatible with modules
 and with the controller's assumptions, particularly the string strategy.
@@ -246,9 +246,9 @@ In ``module_utils`` code:
 * Functions that return strings **must** document whether they return strings of the same type as they were given or native strings.
 
 Module-utils functions are therefore often very defensive in nature.
-They convert their string parameters into text (using ``ansible.module_utils._text.to_text``)
+They convert their string parameters into text (using ``assible.module_utils._text.to_text``)
 at the beginning of the function, do their work, and then convert
-the return values into the native string type (using ``ansible.module_utils._text.to_native``)
+the return values into the native string type (using ``assible.module_utils._text.to_native``)
 or back to the string type that their parameters received.
 
 Tips, tricks, and idioms for Python 2/Python 3 compatibility
@@ -302,23 +302,23 @@ We do not prefix the text strings instead because we only operate
 on byte strings at the borders, so there are fewer variables that need bytes
 than text.
 
-Import Ansible's bundled Python ``six`` library
+Import Assible's bundled Python ``six`` library
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The third-party Python `six <https://pypi.org/project/six/>`_ library exists
-to help projects create code that runs on both Python 2 and Python 3.  Ansible
+to help projects create code that runs on both Python 2 and Python 3.  Assible
 includes a version of the library in module_utils so that other modules can use it
 without requiring that it is installed on the remote system.  To make use of
 it, import it like this:
 
 .. code-block:: python
 
-    from ansible.module_utils import six
+    from assible.module_utils import six
 
-.. note:: Ansible can also use a system copy of six
+.. note:: Assible can also use a system copy of six
 
-    Ansible will use a system copy of six if the system copy is a later
-    version than the one Ansible bundles.
+    Assible will use a system copy of six if the system copy is a later
+    version than the one Assible bundles.
 
 Handle exceptions with ``as``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -357,7 +357,7 @@ Use ``str.format()`` for Python 2.6 compatibility
 
 Starting in Python 2.6, strings gained a method called ``format()`` to put
 strings together.  However, one commonly used feature of ``format()`` wasn't
-added until Python 2.7, so you need to remember not to use it in Ansible code:
+added until Python 2.7, so you need to remember not to use it in Assible code:
 
 .. code-block:: python
 
@@ -383,13 +383,13 @@ does have support for the older, percent-formatting.
 
 .. code-block:: python
 
-    b_command_line = b'ansible-playbook --become-user %s -K %s' % (user, playbook_file)
+    b_command_line = b'assible-playbook --become-user %s -K %s' % (user, playbook_file)
 
 .. note:: Percent formatting added in Python 3.5
 
     Percent formatting of byte strings was added back into Python 3 in 3.5.
     This isn't a problem for us because Python 3.5 is our minimum version.
-    However, if you happen to be testing Ansible code with Python 3.4 or
+    However, if you happen to be testing Assible code with Python 3.4 or
     earlier, you will find that the byte string formatting here won't work.
     Upgrade to Python 3.5 to test.
 
@@ -401,4 +401,4 @@ does have support for the older, percent-formatting.
 Testing modules on Python 3
 ===================================
 
-Ansible modules are slightly harder to code to support Python 3 than normal code from other projects. A lot of mocking has to go into unit testing an Ansible module, so it's harder to test that your changes have fixed everything or to to make sure that later commits haven't regressed the Python 3 support. Review our :ref:`testing <developing_testing>` pages for more information.
+Assible modules are slightly harder to code to support Python 3 than normal code from other projects. A lot of mocking has to go into unit testing an Assible module, so it's harder to test that your changes have fixed everything or to to make sure that later commits haven't regressed the Python 3 support. Review our :ref:`testing <developing_testing>` pages for more information.

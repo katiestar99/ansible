@@ -11,9 +11,9 @@
     that:
       - lookup('varnames', '^qz_.+', wantlist=True) == ['qz_1', 'qz_2']
       - lookup('varnames', '^qz_.+', '^qa.*', wantlist=True) == ['qz_1', 'qz_2', 'qa_1']
-      - "'ansible_python_interpreter' in lookup('varnames', '^ansible_.*', wantlist=True)"
+      - "'assible_python_interpreter' in lookup('varnames', '^assible_.*', wantlist=True)"
       - lookup('varnames', '^doesnotexist.*', wantlist=True) == []
-      - lookup('varnames', '^doesnotexist.*', '.*python_inter.*', wantlist=True) == ['ansible_python_interpreter']
+      - lookup('varnames', '^doesnotexist.*', '.*python_inter.*', wantlist=True) == ['assible_python_interpreter']
       - lookup('varnames', '^q.*_\d', wantlist=True) == ['qz_1', 'qz_2', 'qa_1']
       - lookup('varnames', '^q.*_\d') == 'qz_1,qz_2,qa_1'
 

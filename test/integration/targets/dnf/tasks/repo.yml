@@ -61,7 +61,7 @@
     # ============================================================================
     - name: Install dinginessentail-1:1.0-2
       dnf:
-        name: "dinginessentail-1:1.0-2.{{ ansible_architecture }}"
+        name: "dinginessentail-1:1.0-2.{{ assible_architecture }}"
         state: present
       register: dnf_result
 
@@ -103,7 +103,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-1 from a file (downgrade)
       dnf:
-        name: "{{ repodir }}/dinginessentail-1.0-1.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-1.{{ assible_architecture }}.rpm"
         state: present
         allow_downgrade: True
         disable_gpg_check: True
@@ -131,7 +131,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-1 from a file
       dnf:
-        name: "{{ repodir }}/dinginessentail-1.0-1.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-1.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: True
       register: dnf_result
@@ -153,7 +153,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-1 from a file again
       dnf:
-        name: "{{ repodir }}/dinginessentail-1.0-1.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-1.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: True
       register: dnf_result
@@ -170,7 +170,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-2 from a file
       dnf:
-        name: "{{ repodir }}/dinginessentail-1.0-2.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-2.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: True
       register: dnf_result
@@ -192,7 +192,7 @@
     # ============================================================================
     - name: Install dinginessentail-1.0-2 from a file again
       dnf:
-        name: "{{ repodir }}/dinginessentail-1.0-2.{{ ansible_architecture }}.rpm"
+        name: "{{ repodir }}/dinginessentail-1.0-2.{{ assible_architecture }}.rpm"
         state: present
         disable_gpg_check: True
       register: dnf_result
@@ -280,7 +280,7 @@
         - rpm_main_result.rc == 0
         - rpm_weak_result.rc == 1  # the weak dependency shouldn't be installed
 
-    # https://github.com/ansible/ansible/issues/55938
+    # https://github.com/assible/assible/issues/55938
     - name: Install dinginessentail-*
       dnf:
         name: dinginessentail-*

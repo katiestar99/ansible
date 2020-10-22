@@ -49,9 +49,9 @@ Various resources exist to start learning ACI, here is a list of interesting art
 
 Using the ACI modules
 ---------------------
-The Ansible ACI modules provide a user-friendly interface to managing your ACI environment using Ansible playbooks.
+The Assible ACI modules provide a user-friendly interface to managing your ACI environment using Assible playbooks.
 
-For instance ensuring that a specific tenant exists, is done using the following Ansible task using the aci_tenant module:
+For instance ensuring that a specific tenant exists, is done using the following Assible task using the aci_tenant module:
 
 .. code-block:: yaml
 
@@ -65,7 +65,7 @@ For instance ensuring that a specific tenant exists, is done using the following
         description: Customer XYZ
         state: present
 
-A complete list of existing ACI modules is available on the content tab of the `ACI collection on Ansible Galaxy <https://galaxy.ansible.com/cisco/aci>`_.
+A complete list of existing ACI modules is available on the content tab of the `ACI collection on Assible Galaxy <https://galaxy.assible.com/cisco/aci>`_.
 
 If you want to learn how to write your own ACI modules to contribute, look at the :ref:`Developing Cisco ACI modules <aci_dev_guide>` section.
 
@@ -104,14 +104,14 @@ After registering the return values of the aci_tenant task as shown above, you c
 
 Running on the controller locally
 .................................
-As originally designed, Ansible modules are shipped to and run on the remote target(s), however the ACI modules (like most network-related modules) do not run on the network devices or controller (in this case the APIC), but they talk directly to the APIC's REST interface.
+As originally designed, Assible modules are shipped to and run on the remote target(s), however the ACI modules (like most network-related modules) do not run on the network devices or controller (in this case the APIC), but they talk directly to the APIC's REST interface.
 
-For this very reason, the modules need to run on the local Ansible controller (or are delegated to another system that *can* connect to the APIC).
+For this very reason, the modules need to run on the local Assible controller (or are delegated to another system that *can* connect to the APIC).
 
 
 Gathering facts
 ```````````````
-Because we run the modules on the Ansible controller gathering facts will not work. That is why when using these ACI modules it is mandatory to disable facts gathering. You can do this globally in your ``ansible.cfg`` or by adding ``gather_facts: no`` to every play.
+Because we run the modules on the Assible controller gathering facts will not work. That is why when using these ACI modules it is mandatory to disable facts gathering. You can do this globally in your ``assible.cfg`` or by adding ``gather_facts: no`` to every play.
 
 .. code-block:: yaml
    :emphasize-lines: 3
@@ -126,16 +126,16 @@ Because we run the modules on the Ansible controller gathering facts will not wo
 
 Delegating to localhost
 ```````````````````````
-So let us assume we have our target configured in the inventory using the FQDN name as the ``ansible_host`` value, as shown below.
+So let us assume we have our target configured in the inventory using the FQDN name as the ``assible_host`` value, as shown below.
 
 .. code-block:: yaml
    :emphasize-lines: 3
 
     apics:
       my-apic-1:
-        ansible_host: apic01.fqdn.intra
-        ansible_user: admin
-        ansible_password: my-password
+        assible_host: apic01.fqdn.intra
+        assible_user: admin
+        assible_password: my-password
 
 One way to set this up is to add to every task the directive: ``delegate_to: localhost``.
 
@@ -144,15 +144,15 @@ One way to set this up is to add to every task the directive: ``delegate_to: loc
 
     - name: Query all tenants
       aci_tenant:
-        host: '{{ ansible_host }}'
-        username: '{{ ansible_user }}'
-        password: '{{ ansible_password }}'
+        host: '{{ assible_host }}'
+        username: '{{ assible_user }}'
+        password: '{{ assible_password }}'
 
         state: query
       delegate_to: localhost
       register: all_tenants
 
-If one would forget to add this directive, Ansible will attempt to connect to the APIC using SSH and attempt to copy the module and run it remotely. This will fail with a clear error, yet may be confusing to some.
+If one would forget to add this directive, Assible will attempt to connect to the APIC using SSH and attempt to copy the module and run it remotely. This will fail with a clear error, yet may be confusing to some.
 
 
 Using the local connection method
@@ -166,10 +166,10 @@ In this case the inventory may look like this:
 
     apics:
       my-apic-1:
-        ansible_host: apic01.fqdn.intra
-        ansible_user: admin
-        ansible_password: my-password
-        ansible_connection: local
+        assible_host: apic01.fqdn.intra
+        assible_user: admin
+        assible_password: my-password
+        assible_connection: local
 
 But used tasks do not need anything special added.
 
@@ -177,9 +177,9 @@ But used tasks do not need anything special added.
 
     - name: Query all tenants
       aci_tenant:
-        host: '{{ ansible_host }}'
-        username: '{{ ansible_user }}'
-        password: '{{ ansible_password }}'
+        host: '{{ assible_host }}'
+        username: '{{ assible_user }}'
+        password: '{{ assible_password }}'
 
         state: query
       register: all_tenants
@@ -189,7 +189,7 @@ But used tasks do not need anything special added.
 
 Common parameters
 .................
-Every Ansible ACI module accepts the following parameters that influence the module's communication with the APIC REST API:
+Every Assible ACI module accepts the following parameters that influence the module's communication with the APIC REST API:
 
     host
         Hostname or IP address of the APIC.
@@ -261,7 +261,7 @@ The following values are returned when ``output_level: info``:
     sent
         The sent config payload, based on user-supplied values and the existing configuration.
 
-The following values are returned when ``output_level: debug`` or ``ANSIBLE_DEBUG=1``:
+The following values are returned when ``output_level: debug`` or ``ASSIBLE_DEBUG=1``:
 
     filter_string
         The filter used for specific APIC queries.
@@ -286,8 +286,8 @@ More information
 Various resources exist to start learn more about ACI programmability, we recommend the following links:
 
 - :ref:`Developing Cisco ACI modules <aci_dev_guide>`
-- `Jacob McGill: Automating Cisco ACI with Ansible <https://blogs.cisco.com/developer/automating-cisco-aci-with-ansible-eliminates-repetitive-day-to-day-tasks>`_
-- `Cisco DevNet Learning Labs about ACI and Ansible <https://learninglabs.cisco.com/labs/tags/ACI,Ansible>`_
+- `Jacob McGill: Automating Cisco ACI with Assible <https://blogs.cisco.com/developer/automating-cisco-aci-with-assible-eliminates-repetitive-day-to-day-tasks>`_
+- `Cisco DevNet Learning Labs about ACI and Assible <https://learninglabs.cisco.com/labs/tags/ACI,Assible>`_
 
 
 .. _aci_guide_auth:
@@ -310,7 +310,7 @@ Password-based authentication is very simple to work with, but it is not the mos
 
 .. warning:: Never store passwords in plain text.
 
-The "Vault" feature of Ansible allows you to keep sensitive data such as passwords or keys in encrypted files, rather than as plain text in your playbooks or roles. These vault files can then be distributed or placed in source control. See :ref:`playbooks_vault` for more information.
+The "Vault" feature of Assible allows you to keep sensitive data such as passwords or keys in encrypted files, rather than as plain text in your playbooks or roles. These vault files can then be distributed or placed in source control. See :ref:`playbooks_vault` for more information.
 
 
 Signature-based authentication using certificates
@@ -339,11 +339,11 @@ Perform the following steps:
 - Click the name of the user you want to add a certificate to, in the :guilabel:`User Certificates` area
 - Click the :guilabel:`+` sign and in the :guilabel:`Create X509 Certificate` enter a certificate name in the :guilabel:`Name` field
 
-  * If you use the basename of your private key here, you don't need to enter ``certificate_name`` in Ansible
+  * If you use the basename of your private key here, you don't need to enter ``certificate_name`` in Assible
 
 - Copy and paste your X.509 certificate in the :guilabel:`Data` field.
 
-You can automate this by using the following Ansible task:
+You can automate this by using the following Assible task:
 
 .. code-block:: yaml
 
@@ -360,7 +360,7 @@ You can automate this by using the following Ansible task:
 .. note:: Signature-based authentication only works with local users.
 
 
-Use signature-based authentication with Ansible
+Use signature-based authentication with Assible
 ```````````````````````````````````````````````
 You need the following parameters with your ACI module(s) for it to work:
 
@@ -387,7 +387,7 @@ or you can use the private key content:
 .. hint:: If you use a certificate name in ACI that matches the private key's basename, you can leave out the ``certificate_name`` parameter like the example above.
 
 
-Using Ansible Vault to encrypt the private key
+Using Assible Vault to encrypt the private key
 ``````````````````````````````````````````````
 .. versionadded:: 2.8
 
@@ -395,13 +395,13 @@ To start, encrypt the private key and give it a strong password.
 
 .. code-block:: bash
 
-    ansible-vault encrypt admin.key
+    assible-vault encrypt admin.key
 
 Use a text editor to open the private-key. You should have an encrypted cert now.
 
 .. code-block:: bash
 
-    $ANSIBLE_VAULT;1.1;AES256
+    $ASSIBLE_VAULT;1.1;AES256
     56484318584354658465121889743213151843149454864654151618131547984132165489484654
     45641818198456456489479874513215489484843614848456466655432455488484654848489498
     ....
@@ -411,7 +411,7 @@ Copy and paste the new encrypted cert into your playbook as a new variable.
 .. code-block:: yaml
 
     private_key: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
+          $ASSIBLE_VAULT;1.1;AES256
           56484318584354658465121889743213151843149454864654151618131547984132165489484654
           45641818198456456489479874513215489484843614848456466655432455488484654848489498
           ....
@@ -428,20 +428,20 @@ When running the playbook, use "--ask-vault-pass" to decrypt the private key.
 
 .. code-block:: bash
 
-    ansible-playbook site.yaml --ask-vault-pass
+    assible-playbook site.yaml --ask-vault-pass
 
 
 More information
 ````````````````
 - Detailed information about Signature-based Authentication is available from `Cisco APIC Signature-Based Transactions <https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/kb/b_KB_Signature_Based_Transactions.html>`_.
-- More information on Ansible Vault can be found on the :ref:`Ansible Vault <vault>` page.
+- More information on Assible Vault can be found on the :ref:`Assible Vault <vault>` page.
 
 
 .. _aci_guide_rest:
 
-Using ACI REST with Ansible
+Using ACI REST with Assible
 ---------------------------
-While already a lot of ACI modules exists in the Ansible distribution, and the most common actions can be performed with these existing modules, there's always something that may not be possible with off-the-shelf modules.
+While already a lot of ACI modules exists in the Assible distribution, and the most common actions can be performed with these existing modules, there's always something that may not be possible with off-the-shelf modules.
 
 The aci_rest module provides you with direct access to the APIC REST API and enables you to perform any task not already covered by the existing modules. This may seem like a complex undertaking, but you can generate the needed REST payload for any action performed in the ACI web interface effortlessly.
 
@@ -492,7 +492,7 @@ For instance, if you would like to ensure a specific tenant exists on ACI, these
             }
           }
 
-**YAML** (Ansible-style REST)
+**YAML** (Assible-style REST)
 
 .. code-block:: yaml
 
@@ -508,7 +508,7 @@ For instance, if you would like to ensure a specific tenant exists on ACI, these
               name: customer-xyz
               descr: Customer XYZ
 
-**Ansible task** (Dedicated module)
+**Assible task** (Dedicated module)
 
 .. code-block:: yaml
 
@@ -521,14 +521,14 @@ For instance, if you would like to ensure a specific tenant exists on ACI, these
         state: present
 
 
-.. hint:: The XML format is more practical when there is a need to template the REST payload (inline), but the YAML format is more convenient for maintaining your infrastructure-as-code and feels more naturally integrated with Ansible playbooks. The dedicated modules offer a more simple, abstracted, but also a more limited experience. Use what feels best for your use-case.
+.. hint:: The XML format is more practical when there is a need to template the REST payload (inline), but the YAML format is more convenient for maintaining your infrastructure-as-code and feels more naturally integrated with Assible playbooks. The dedicated modules offer a more simple, abstracted, but also a more limited experience. Use what feels best for your use-case.
 
 
 More information
 ................
 Plenty of resources exist to learn about ACI's APIC REST interface, we recommend the links below:
 
-- `The ACI collection on Ansible Galaxy <https://galaxy.ansible.com/cisco/aci>`_
+- `The ACI collection on Assible Galaxy <https://galaxy.assible.com/cisco/aci>`_
 - `APIC REST API Configuration Guide <https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/2-x/rest_cfg/2_1_x/b_Cisco_APIC_REST_API_Configuration_Guide.html>`_ -- Detailed guide on how the APIC REST API is designed and used, incl. many examples
 - `APIC Management Information Model reference <https://developer.cisco.com/docs/apic-mim-ref/>`_ -- Complete reference of the APIC object model
 - `Cisco DevNet Learning Labs about ACI and REST <https://learninglabs.cisco.com/labs/tags/ACI,REST>`_
@@ -611,24 +611,24 @@ The aci_rest module is a wrapper around the APIC REST API. As a result any issue
 All below issues either have been reported to the vendor, and most can simply be avoided.
 
     Too many consecutive API calls may result in connection throttling
-        Starting with ACI v3.1 the APIC will actively throttle password-based authenticated connection rates over a specific threshold. This is as part of an anti-DDOS measure but can act up when using Ansible with ACI using password-based authentication. Currently, one solution is to increase this threshold within the nginx configuration, but using signature-based authentication is recommended.
+        Starting with ACI v3.1 the APIC will actively throttle password-based authenticated connection rates over a specific threshold. This is as part of an anti-DDOS measure but can act up when using Assible with ACI using password-based authentication. Currently, one solution is to increase this threshold within the nginx configuration, but using signature-based authentication is recommended.
 
         **NOTE:** It is advisable to use signature-based authentication with ACI as it not only prevents connection-throttling, but also improves general performance when using the ACI modules.
 
 
-    Specific requests may not reflect changes correctly (`#35401 <https://github.com/ansible/ansible/issues/35041>`_)
+    Specific requests may not reflect changes correctly (`#35401 <https://github.com/assible/assible/issues/35041>`_)
         There is a known issue where specific requests to the APIC do not properly reflect changed in the resulting output, even when we request those changes explicitly from the APIC. In one instance using the path ``api/node/mo/uni/infra.xml`` fails, where ``api/node/mo/uni/infra/.xml`` does work correctly.
 
         **NOTE:** A workaround is to register the task return values (for example, ``register: this``) and influence when the task should report a change by adding: ``changed_when: this.imdata != []``.
 
 
-    Specific requests are known to not be idempotent (`#35050 <https://github.com/ansible/ansible/issues/35050>`_)
+    Specific requests are known to not be idempotent (`#35050 <https://github.com/assible/assible/issues/35050>`_)
         The behaviour of the APIC is inconsistent to the use of ``status="created"`` and ``status="deleted"``. The result is that when you use ``status="created"`` in your payload the resulting tasks are not idempotent and creation will fail when the object was already created. However this is not the case with ``status="deleted"`` where such call to an non-existing object does not cause any failure whatsoever.
 
         **NOTE:** A workaround is to avoid using ``status="created"`` and instead use ``status="modified"`` when idempotency is essential to your workflow..
 
 
-    Setting user password is not idempotent (`#35544 <https://github.com/ansible/ansible/issues/35544>`_)
+    Setting user password is not idempotent (`#35544 <https://github.com/assible/assible/issues/35544>`_)
         Due to an inconsistency in the APIC REST API, a task that sets the password of a locally-authenticated user is not idempotent. The APIC will complain with message ``Password history check: user dag should not use previous 5 passwords``.
 
         **NOTE:** There is no workaround for this issue.
@@ -636,26 +636,26 @@ All below issues either have been reported to the vendor, and most can simply be
 
 .. _aci_guide_community:
 
-ACI Ansible community
+ACI Assible community
 ---------------------
-If you have specific issues with the ACI modules, or a feature request, or you like to contribute to the ACI project by proposing changes or documentation updates, look at the Ansible Community wiki ACI page at: https://github.com/ansible/community/wiki/Network:-ACI
+If you have specific issues with the ACI modules, or a feature request, or you like to contribute to the ACI project by proposing changes or documentation updates, look at the Assible Community wiki ACI page at: https://github.com/assible/community/wiki/Network:-ACI
 
-You will find our roadmap, an overview of open ACI issues and pull-requests, and more information about who we are. If you have an interest in using ACI with Ansible, feel free to join! We occasionally meet online to track progress and prepare for new Ansible releases.
+You will find our roadmap, an overview of open ACI issues and pull-requests, and more information about who we are. If you have an interest in using ACI with Assible, feel free to join! We occasionally meet online to track progress and prepare for new Assible releases.
 
 
 .. seealso::
 
-   `ACI collection on Ansible Galaxy <https://galaxy.ansible.com/cisco/aci>`_
+   `ACI collection on Assible Galaxy <https://galaxy.assible.com/cisco/aci>`_
        View the content tab for a complete list of supported ACI modules.
    :ref:`Developing Cisco ACI modules <aci_dev_guide>`
        A walkthrough on how to develop new Cisco ACI modules to contribute back.
-   `ACI community <https://github.com/ansible/community/wiki/Network:-ACI>`_
-       The Ansible ACI community wiki page, includes roadmap, ideas and development documentation.
+   `ACI community <https://github.com/assible/community/wiki/Network:-ACI>`_
+       The Assible ACI community wiki page, includes roadmap, ideas and development documentation.
    :ref:`network_guide`
-       A detailed guide on how to use Ansible for automating network infrastructure.
-   `Network Working Group <https://github.com/ansible/community/tree/master/group-network>`_
-       The Ansible Network community page, includes contact information and meeting information.
-   `#ansible-network <https://webchat.freenode.net/?channels=ansible-network>`_
-       The #ansible-network IRC chat channel on Freenode.net.
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+       A detailed guide on how to use Assible for automating network infrastructure.
+   `Network Working Group <https://github.com/assible/community/tree/master/group-network>`_
+       The Assible Network community page, includes contact information and meeting information.
+   `#assible-network <https://webchat.freenode.net/?channels=assible-network>`_
+       The #assible-network IRC chat channel on Freenode.net.
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!

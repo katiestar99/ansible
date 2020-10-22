@@ -117,7 +117,7 @@
       - "file6a_result.changed == false"
 
 #
-# Test creating a link to a directory https://github.com/ansible/ansible/issues/1369
+# Test creating a link to a directory https://github.com/assible/assible/issues/1369
 #
 - name: create soft link to directory using absolute path
   file:
@@ -310,7 +310,7 @@
       - 'file10_target_stat["stat"]["mode"] == "0644"'
 
 
-# https://github.com/ansible/ansible/issues/56928
+# https://github.com/assible/assible/issues/56928
 - block:
 
   - name: Create a testing file

@@ -1,19 +1,19 @@
 # (c) 2016 RedHat
 #
-# This file is part of Ansible.
+# This file is part of Assible.
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -23,16 +23,16 @@ import random
 import re
 import time
 
-from ansible.errors import AnsibleError
-from ansible.module_utils.six import text_type
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.module_utils._text import to_native
-from ansible.plugins import AnsiblePlugin
+from assible.errors import AssibleError
+from assible.module_utils.six import text_type
+from assible.module_utils.six.moves import shlex_quote
+from assible.module_utils._text import to_native
+from assible.plugins import AssiblePlugin
 
 _USER_HOME_PATH_RE = re.compile(r'^~[_.A-Za-z0-9][-_.A-Za-z0-9]*$')
 
 
-class ShellBase(AnsiblePlugin):
+class ShellBase(AssiblePlugin):
     def __init__(self):
 
         super(ShellBase, self).__init__()
@@ -50,7 +50,7 @@ class ShellBase(AnsiblePlugin):
         # Make sure all system_tmpdirs are absolute otherwise they'd be relative to the login dir
         # which is almost certainly going to fail in a cornercase.
         if not all(os.path.isabs(d) for d in normalized_paths):
-            raise AnsibleError('The configured system_tmpdirs contains a relative path: {0}. All'
+            raise AssibleError('The configured system_tmpdirs contains a relative path: {0}. All'
                                ' system_tmpdirs must be absolute'.format(to_native(normalized_paths)))
 
         self.set_option('system_tmpdirs', normalized_paths)
@@ -77,7 +77,7 @@ class ShellBase(AnsiblePlugin):
 
     @staticmethod
     def _generate_temp_dir_name():
-        return 'ansible-tmp-%s-%s-%s' % (time.time(), os.getpid(), random.randint(0, 2**48))
+        return 'assible-tmp-%s-%s-%s' % (time.time(), os.getpid(), random.randint(0, 2**48))
 
     def env_prefix(self, **kwargs):
         return ' '.join(['%s=%s' % (k, shlex_quote(text_type(v))) for k, v in kwargs.items()])

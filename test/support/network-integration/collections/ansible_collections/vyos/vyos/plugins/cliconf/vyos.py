@@ -1,20 +1,20 @@
 #
 # (c) 2017 Red Hat Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 from __future__ import absolute_import, division, print_function
 
@@ -22,7 +22,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-author: Ansible Networking Team
+author: Assible Networking Team
 cliconf: vyos
 short_description: Use vyos cliconf to run command on VyOS platform
 description:
@@ -34,16 +34,16 @@ version_added: "2.4"
 import re
 import json
 
-from ansible.errors import AnsibleConnectionFailure
-from ansible.module_utils._text import to_text
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
+from assible.errors import AssibleConnectionFailure
+from assible.module_utils._text import to_text
+from assible.module_utils.common._collections_compat import Mapping
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
-from ansible.plugins.cliconf import CliconfBase
+from assible.plugins.cliconf import CliconfBase
 
 
 class Cliconf(CliconfBase):
@@ -118,10 +118,10 @@ class Cliconf(CliconfBase):
             if commit:
                 try:
                     self.commit(comment)
-                except AnsibleConnectionFailure as e:
+                except AssibleConnectionFailure as e:
                     msg = "commit failed: %s" % e.message
                     self.discard_changes()
-                    raise AnsibleConnectionFailure(msg)
+                    raise AssibleConnectionFailure(msg)
                 else:
                     self.send_command("exit")
             else:
@@ -287,7 +287,7 @@ class Cliconf(CliconfBase):
 
             try:
                 out = self.send_command(**cmd)
-            except AnsibleConnectionFailure as e:
+            except AssibleConnectionFailure as e:
                 if check_rc:
                     raise
                 out = getattr(e, "err", e)

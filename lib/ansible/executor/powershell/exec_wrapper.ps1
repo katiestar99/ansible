@@ -1,4 +1,4 @@
-# (c) 2018 Ansible Project
+# (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 begin {
@@ -11,7 +11,7 @@ begin {
     # as a script scoped variable so async_watchdog and module_wrapper can
     # access the functions when creating their Runspaces
     $script:common_functions = {
-        Function ConvertFrom-AnsibleJson {
+        Function ConvertFrom-AssibleJson {
             <#
             .SYNOPSIS
             Converts a JSON string to a Hashtable/Array in the fastest way
@@ -62,7 +62,7 @@ begin {
             }
         }
 
-        Function Format-AnsibleException {
+        Function Format-AssibleException {
             <#
             .SYNOPSIS
             Formats a PowerShell ErrorRecord to a string that's fit for human
@@ -99,10 +99,10 @@ $($ErrorRecord.InvocationInfo.PositionMessage)
     # common wrapper functions used in the exec wrappers, this is defined in a
     # script scoped variable so async_watchdog can pass them into the async job
     $script:wrapper_functions = {
-        Function Write-AnsibleError {
+        Function Write-AssibleError {
             <#
             .SYNOPSIS
-            Writes an error message to a JSON string in the format that Ansible
+            Writes an error message to a JSON string in the format that Assible
             understands. Also optionally adds an exception record if the
             ErrorRecord is passed through.
             #>
@@ -116,17 +116,17 @@ $($ErrorRecord.InvocationInfo.PositionMessage)
             }
             if ($null -ne $ErrorRecord) {
                 $result.msg += ": $($ErrorRecord.Exception.Message)"
-                $result.exception = (Format-AnsibleException -ErrorRecord $ErrorRecord)
+                $result.exception = (Format-AssibleException -ErrorRecord $ErrorRecord)
             }
             Write-Output -InputObject (ConvertTo-Json -InputObject $result -Depth 99 -Compress)
         }
 
-        Function Write-AnsibleLog {
+        Function Write-AssibleLog {
             <#
             .SYNOPSIS
             Used as a debugging tool to log events to a file as they run in the
             exec wrappers. By default this is a noop function but the $log_path
-            can be manually set to enable it. Manually set ANSIBLE_EXEC_DEBUG as
+            can be manually set to enable it. Manually set ASSIBLE_EXEC_DEBUG as
             an env value on the Windows host that this is run on to enable.
             #>
             param(
@@ -134,7 +134,7 @@ $($ErrorRecord.InvocationInfo.PositionMessage)
                 [Parameter(Position=1)][String]$Wrapper
             )
 
-            $log_path = $env:ANSIBLE_EXEC_DEBUG
+            $log_path = $env:ASSIBLE_EXEC_DEBUG
             if ($log_path) {
                 $log_path = [System.Environment]::ExpandEnvironmentVariables($log_path)
                 $parent_path = [System.IO.Path]::GetDirectoryName($log_path)
@@ -166,14 +166,14 @@ $($ErrorRecord.InvocationInfo.PositionMessage)
 } process {
     $json_raw += [String]$input
 } end {
-    Write-AnsibleLog "INFO - starting exec_wrapper" "exec_wrapper"
+    Write-AssibleLog "INFO - starting exec_wrapper" "exec_wrapper"
     if (-not $json_raw) {
-        Write-AnsibleError -Message "internal error: no input given to PowerShell exec wrapper"
+        Write-AssibleError -Message "internal error: no input given to PowerShell exec wrapper"
         exit 1
     }
 
-    Write-AnsibleLog "INFO - converting json raw to a payload" "exec_wrapper"
-    $payload = ConvertFrom-AnsibleJson -InputObject $json_raw
+    Write-AssibleLog "INFO - converting json raw to a payload" "exec_wrapper"
+    $payload = ConvertFrom-AssibleJson -InputObject $json_raw
 
     # TODO: handle binary modules
     # TODO: handle persistence
@@ -184,9 +184,9 @@ $($ErrorRecord.InvocationInfo.PositionMessage)
         # right version
         $actual_os_version = [Version](Get-Item -Path $env:SystemRoot\System32\kernel32.dll).VersionInfo.ProductVersion
 
-        Write-AnsibleLog "INFO - checking if actual os version '$actual_os_version' is less than the min os version '$min_os_version'" "exec_wrapper"
+        Write-AssibleLog "INFO - checking if actual os version '$actual_os_version' is less than the min os version '$min_os_version'" "exec_wrapper"
         if ($actual_os_version -lt $min_os_version) {
-            Write-AnsibleError -Message "internal error: This module cannot run on this OS as it requires a minimum version of $min_os_version, actual was $actual_os_version"
+            Write-AssibleError -Message "internal error: This module cannot run on this OS as it requires a minimum version of $min_os_version, actual was $actual_os_version"
             exit 1
         }
     }
@@ -194,16 +194,16 @@ $($ErrorRecord.InvocationInfo.PositionMessage)
         $min_ps_version = [Version]$payload.min_ps_version
         $actual_ps_version = $PSVersionTable.PSVersion
 
-        Write-AnsibleLog "INFO - checking if actual PS version '$actual_ps_version' is less than the min PS version '$min_ps_version'" "exec_wrapper"
+        Write-AssibleLog "INFO - checking if actual PS version '$actual_ps_version' is less than the min PS version '$min_ps_version'" "exec_wrapper"
         if ($actual_ps_version -lt $min_ps_version) {
-            Write-AnsibleError -Message "internal error: This module cannot run as it requires a minimum PowerShell version of $min_ps_version, actual was $actual_ps_version"
+            Write-AssibleError -Message "internal error: This module cannot run as it requires a minimum PowerShell version of $min_ps_version, actual was $actual_ps_version"
             exit 1
         }
     }
 
     # pop 0th action as entrypoint
     $action = $payload.actions[0]
-    Write-AnsibleLog "INFO - running action $action" "exec_wrapper"
+    Write-AssibleLog "INFO - running action $action" "exec_wrapper"
 
     $entrypoint = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($payload.($action)))
     $entrypoint = [ScriptBlock]::Create($entrypoint)
@@ -222,8 +222,8 @@ $($ErrorRecord.InvocationInfo.PositionMessage)
             $output
         }
     } catch {
-        Write-AnsibleError -Message "internal error: failed to run exec_wrapper action $action" -ErrorRecord $_
+        Write-AssibleError -Message "internal error: failed to run exec_wrapper action $action" -ErrorRecord $_
         exit 1
     }
-    Write-AnsibleLog "INFO - ending exec_wrapper" "exec_wrapper"
+    Write-AssibleLog "INFO - ending exec_wrapper" "exec_wrapper"
 }

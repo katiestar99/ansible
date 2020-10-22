@@ -1,20 +1,20 @@
 # (c) 2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2018, Ansible Project
+# (c) 2018, Assible Project
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -24,16 +24,16 @@ import time
 import errno
 from abc import ABCMeta, abstractmethod
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.module_utils.six import with_metaclass
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.module_utils.common._collections_compat import MutableMapping
-from ansible.plugins import AnsiblePlugin
-from ansible.plugins.loader import cache_loader
-from ansible.utils.collection_loader import resource_from_fqcr
-from ansible.utils.display import Display
-from ansible.vars.fact_cache import FactCache as RealFactCache
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.module_utils.six import with_metaclass
+from assible.module_utils._text import to_bytes, to_text
+from assible.module_utils.common._collections_compat import MutableMapping
+from assible.plugins import AssiblePlugin
+from assible.plugins.loader import cache_loader
+from assible.utils.collection_loader import resource_from_fqcr
+from assible.utils.display import Display
+from assible.vars.fact_cache import FactCache as RealFactCache
 
 display = Display()
 
@@ -46,15 +46,15 @@ class FactCache(RealFactCache):
     there was no facility to use it as anything else.
     """
     def __init__(self, *args, **kwargs):
-        display.deprecated('ansible.plugins.cache.FactCache has been moved to'
-                           ' ansible.vars.fact_cache.FactCache.  If you are looking for the class'
+        display.deprecated('assible.plugins.cache.FactCache has been moved to'
+                           ' assible.vars.fact_cache.FactCache.  If you are looking for the class'
                            ' to subclass for a cache plugin, you want'
-                           ' ansible.plugins.cache.BaseCacheModule or one of its subclasses.',
-                           version='2.12', collection_name='ansible.builtin')
+                           ' assible.plugins.cache.BaseCacheModule or one of its subclasses.',
+                           version='2.12', collection_name='assible.builtin')
         super(FactCache, self).__init__(*args, **kwargs)
 
 
-class BaseCacheModule(AnsiblePlugin):
+class BaseCacheModule(AssiblePlugin):
 
     # Backwards compat only.  Just import the global display instead
     _display = display
@@ -62,8 +62,8 @@ class BaseCacheModule(AnsiblePlugin):
     def __init__(self, *args, **kwargs):
         # Third party code is not using cache_loader to load plugin - fall back to previous behavior
         if not hasattr(self, '_load_name'):
-            display.deprecated('Rather than importing custom CacheModules directly, use ansible.plugins.loader.cache_loader',
-                               version='2.14', collection_name='ansible.builtin')
+            display.deprecated('Rather than importing custom CacheModules directly, use assible.plugins.loader.cache_loader',
+                               version='2.14', collection_name='assible.builtin')
             self._load_name = self.__module__.split('.')[-1]
             self._load_name = resource_from_fqcr(self.__module__)
         super(BaseCacheModule, self).__init__()
@@ -124,18 +124,18 @@ class BaseFileCacheModule(BaseCacheModule):
 
     def validate_cache_connection(self):
         if not self._cache_dir:
-            raise AnsibleError("error, '%s' cache plugin requires the 'fact_caching_connection' config option "
+            raise AssibleError("error, '%s' cache plugin requires the 'fact_caching_connection' config option "
                                "to be set (to a writeable directory path)" % self.plugin_name)
 
         if not os.path.exists(self._cache_dir):
             try:
                 os.makedirs(self._cache_dir)
             except (OSError, IOError) as e:
-                raise AnsibleError("error in '%s' cache plugin while trying to create cache dir %s : %s" % (self.plugin_name, self._cache_dir, to_bytes(e)))
+                raise AssibleError("error in '%s' cache plugin while trying to create cache dir %s : %s" % (self.plugin_name, self._cache_dir, to_bytes(e)))
         else:
             for x in (os.R_OK, os.W_OK, os.X_OK):
                 if not os.access(self._cache_dir, x):
-                    raise AnsibleError("error in '%s' cache, configured path (%s) does not have necessary permissions (rwx), disabling plugin" % (
+                    raise AssibleError("error in '%s' cache, configured path (%s) does not have necessary permissions (rwx), disabling plugin" % (
                         self.plugin_name, self._cache_dir))
 
     def _get_cache_file_name(self, key):
@@ -164,13 +164,13 @@ class BaseFileCacheModule(BaseCacheModule):
                 display.warning("error in '%s' cache plugin while trying to read %s : %s. "
                                 "Most likely a corrupt file, so erasing and failing." % (self.plugin_name, cachefile, to_bytes(e)))
                 self.delete(key)
-                raise AnsibleError("The cache file %s was corrupt, or did not otherwise contain valid data. "
+                raise AssibleError("The cache file %s was corrupt, or did not otherwise contain valid data. "
                                    "It has been removed, so you can re-run your command now." % cachefile)
             except (OSError, IOError) as e:
                 display.warning("error in '%s' cache plugin while trying to read %s : %s" % (self.plugin_name, cachefile, to_bytes(e)))
                 raise KeyError
             except Exception as e:
-                raise AnsibleError("Error while decoding the cache file %s: %s" % (cachefile, to_bytes(e)))
+                raise AssibleError("Error while decoding the cache file %s: %s" % (cachefile, to_bytes(e)))
 
         return self._cache.get(key)
 
@@ -261,7 +261,7 @@ class BaseFileCacheModule(BaseCacheModule):
 
         This method reads from the file on disk and takes care of any parsing
         and transformation of the data before returning it.  The value
-        returned should be what Ansible would expect if it were uncached data.
+        returned should be what Assible would expect if it were uncached data.
 
         .. note:: Filehandles have advantages but calling code doesn't know
             whether this file is text or binary, should be decoded, or accessed via
@@ -291,7 +291,7 @@ class CachePluginAdjudicator(MutableMapping):
 
         self._plugin = cache_loader.get(plugin_name, **kwargs)
         if not self._plugin:
-            raise AnsibleError('Unable to load the cache plugin (%s).' % plugin_name)
+            raise AssibleError('Unable to load the cache plugin (%s).' % plugin_name)
 
         self._plugin_name = plugin_name
 

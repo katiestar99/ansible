@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -9,12 +9,12 @@ connection: test_connection_override
 short_description: test connection plugin used in tests
 description:
 - This is a test connection plugin used for shell testing
-author: ansible (@core)
+author: assible (@core)
 version_added: historical
 options:
 '''
 
-from ansible.plugins.connection import ConnectionBase
+from assible.plugins.connection import ConnectionBase
 
 
 class Connection(ConnectionBase):

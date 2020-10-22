@@ -1,6 +1,6 @@
 # test code for filters
 # Copyright: (c) 2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Note: |groupby is already tested by the `groupby_filter` target.
@@ -21,7 +21,7 @@
     dest: "{{ output_dir }}/py26json.templated"
     mode: 0644
 
-- name: 9851 - Verify that we don't trigger https://github.com/ansible/ansible/issues/9851
+- name: 9851 - Verify that we don't trigger https://github.com/assible/assible/issues/9851
   copy:
     content: " [{{ item | to_nice_json }}]"
     dest: "{{ output_dir }}/9851.out"
@@ -77,10 +77,10 @@
       - "'y' == [1]|map('extract',['x','y'])|list|first"
       - "42 == ['x']|map('extract',{'x':42,'y':31})|list|first"
       - "31 == ['x','y']|map('extract',{'x':42,'y':31})|list|last"
-      - "'local' == ['localhost']|map('extract',hostvars,'ansible_connection')|list|first"
-      - "'local' == ['localhost']|map('extract',hostvars,['ansible_connection'])|list|first"
+      - "'local' == ['localhost']|map('extract',hostvars,'assible_connection')|list|first"
+      - "'local' == ['localhost']|map('extract',hostvars,['assible_connection'])|list|first"
   # map was added to jinja2 in version 2.7
-  when: lookup('pipe', ansible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.7', '>=')
+  when: lookup('pipe', assible_python.executable ~ ' -c "import jinja2; print(jinja2.__version__)"') is version('2.7', '>=')
 
 - name: Test extract filter with defaults
   vars:
@@ -161,10 +161,10 @@
 - name: Test base64 filter
   assert:
     that:
-    - "'Ansible - くらとみ\n' | b64encode == 'QW5zaWJsZSAtIOOBj+OCieOBqOOBvwo='"
-    - "'QW5zaWJsZSAtIOOBj+OCieOBqOOBvwo=' | b64decode == 'Ansible - くらとみ\n'"
-    - "'Ansible - くらとみ\n' | b64encode(encoding='utf-16-le') == 'QQBuAHMAaQBiAGwAZQAgAC0AIABPMIkwaDB/MAoA'"
-    - "'QQBuAHMAaQBiAGwAZQAgAC0AIABPMIkwaDB/MAoA' | b64decode(encoding='utf-16-le') == 'Ansible - くらとみ\n'"
+    - "'Assible - くらとみ\n' | b64encode == 'QW5zaWJsZSAtIOOBj+OCieOBqOOBvwo='"
+    - "'QW5zaWJsZSAtIOOBj+OCieOBqOOBvwo=' | b64decode == 'Assible - くらとみ\n'"
+    - "'Assible - くらとみ\n' | b64encode(encoding='utf-16-le') == 'QQBuAHMAaQBiAGwAZQAgAC0AIABPMIkwaDB/MAoA'"
+    - "'QQBuAHMAaQBiAGwAZQAgAC0AIABPMIkwaDB/MAoA' | b64decode(encoding='utf-16-le') == 'Assible - くらとみ\n'"
 
 - set_fact:
     x:

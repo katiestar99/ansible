@@ -36,8 +36,8 @@ class UnversionedSource(SourceProvider):
             '.idea',
             '.pytest_cache',
             '__pycache__',
-            'ansible.egg-info',
-            'ansible_base.egg-info',
+            'assible.egg-info',
+            'assible_base.egg-info',
         )
 
         kill_sub_dir = {

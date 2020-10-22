@@ -32,14 +32,14 @@ class NiosProvider(CloudProvider):
 
     DOCKER_SIMULATOR_NAME = 'nios-simulator'
 
-    DOCKER_IMAGE = 'quay.io/ansible/nios-test-container:1.3.0'
+    DOCKER_IMAGE = 'quay.io/assible/nios-test-container:1.3.0'
     """Default image to run the nios simulator.
 
     The simulator must be pinned to a specific version
     to guarantee CI passes with the version used.
 
     It's source source itself resides at:
-    https://github.com/ansible/nios-test-container
+    https://github.com/assible/nios-test-container
     """
 
     def __init__(self, args):
@@ -49,10 +49,10 @@ class NiosProvider(CloudProvider):
         """
         super(NiosProvider, self).__init__(args)
 
-        self.__container_from_env = os.environ.get('ANSIBLE_NIOSSIM_CONTAINER')
+        self.__container_from_env = os.environ.get('ASSIBLE_NIOSSIM_CONTAINER')
         """Overrides target container, might be used for development.
 
-        Use ANSIBLE_NIOSSIM_CONTAINER=whatever_you_want if you want
+        Use ASSIBLE_NIOSSIM_CONTAINER=whatever_you_want if you want
         to use other image. Omit/empty otherwise.
         """
 
@@ -179,7 +179,7 @@ class NiosEnvironment(CloudEnvironment):
         """
         :rtype: CloudEnvironmentConfig
         """
-        ansible_vars = dict(
+        assible_vars = dict(
             nios_provider=dict(
                 host=self._get_cloud_config('NIOS_HOST'),
                 username='admin',
@@ -188,5 +188,5 @@ class NiosEnvironment(CloudEnvironment):
         )
 
         return CloudEnvironmentConfig(
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )

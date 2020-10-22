@@ -3,8 +3,8 @@
 # Copyright: (c) 2014, Paul Durivage <paul.durivage@rackspace.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.AccessToken
-#Requires -Module Ansible.ModuleUtils.Legacy
+#AssibleRequires -CSharpUtil Assible.AccessToken
+#Requires -Module Assible.ModuleUtils.Legacy
 
 ########
 $ADS_UF_PASSWD_CANT_CHANGE = 64
@@ -43,10 +43,10 @@ Function Test-LocalCredential {
     param([String]$Username, [String]$Password)
 
     try {
-        $handle = [Ansible.AccessToken.TokenUtil]::LogonUser($Username, $null, $Password, "Network", "Default")
+        $handle = [Assible.AccessToken.TokenUtil]::LogonUser($Username, $null, $Password, "Network", "Default")
         $handle.Dispose()
         $valid_credentials = $true
-    } catch [Ansible.AccessToken.Win32Exception] {
+    } catch [Assible.AccessToken.Win32Exception] {
         # following errors indicate the creds are correct but the user was
         # unable to log on for other reasons, which we don't care about
         $success_codes = @(
@@ -77,19 +77,19 @@ $result = @{
     changed = $false
 };
 
-$username = Get-AnsibleParam -obj $params -name "name" -type "str" -failifempty $true
-$fullname = Get-AnsibleParam -obj $params -name "fullname" -type "str"
-$description = Get-AnsibleParam -obj $params -name "description" -type "str"
-$password = Get-AnsibleParam -obj $params -name "password" -type "str"
-$state = Get-AnsibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent","query"
-$update_password = Get-AnsibleParam -obj $params -name "update_password" -type "str" -default "always" -validateset "always","on_create"
-$password_expired = Get-AnsibleParam -obj $params -name "password_expired" -type "bool"
-$password_never_expires = Get-AnsibleParam -obj $params -name "password_never_expires" -type "bool"
-$user_cannot_change_password = Get-AnsibleParam -obj $params -name "user_cannot_change_password" -type "bool"
-$account_disabled = Get-AnsibleParam -obj $params -name "account_disabled" -type "bool"
-$account_locked = Get-AnsibleParam -obj $params -name "account_locked" -type "bool"
-$groups = Get-AnsibleParam -obj $params -name "groups"
-$groups_action = Get-AnsibleParam -obj $params -name "groups_action" -type "str" -default "replace" -validateset "add","remove","replace"
+$username = Get-AssibleParam -obj $params -name "name" -type "str" -failifempty $true
+$fullname = Get-AssibleParam -obj $params -name "fullname" -type "str"
+$description = Get-AssibleParam -obj $params -name "description" -type "str"
+$password = Get-AssibleParam -obj $params -name "password" -type "str"
+$state = Get-AssibleParam -obj $params -name "state" -type "str" -default "present" -validateset "present","absent","query"
+$update_password = Get-AssibleParam -obj $params -name "update_password" -type "str" -default "always" -validateset "always","on_create"
+$password_expired = Get-AssibleParam -obj $params -name "password_expired" -type "bool"
+$password_never_expires = Get-AssibleParam -obj $params -name "password_never_expires" -type "bool"
+$user_cannot_change_password = Get-AssibleParam -obj $params -name "user_cannot_change_password" -type "bool"
+$account_disabled = Get-AssibleParam -obj $params -name "account_disabled" -type "bool"
+$account_locked = Get-AssibleParam -obj $params -name "account_locked" -type "bool"
+$groups = Get-AssibleParam -obj $params -name "groups"
+$groups_action = Get-AssibleParam -obj $params -name "groups_action" -type "str" -default "replace" -validateset "add","remove","replace"
 
 If ($null -ne $account_locked -and $account_locked) {
     Fail-Json $result "account_locked must be set to 'no' if provided"

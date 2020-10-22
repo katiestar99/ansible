@@ -1,6 +1,6 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 $ErrorActionPreference = "Stop"
 
@@ -16,9 +16,9 @@ $result = @{
     changed = $false
 }
 
-#ConvertFrom-AnsibleJso
+#ConvertFrom-AssibleJso
 $input_json  = '{"string":"string","float":3.1415926,"dict":{"string":"string","int":1},"list":["entry 1","entry 2"],"null":null,"int":1}'
-$actual = ConvertFrom-AnsibleJson -InputObject $input_json
+$actual = ConvertFrom-AssibleJson -InputObject $input_json
 Assert-Equals -actual $actual.GetType() -expected ([Hashtable])
 Assert-Equals -actual $actual.string.GetType() -expected ([String])
 Assert-Equals -actual $actual.string -expected "string"

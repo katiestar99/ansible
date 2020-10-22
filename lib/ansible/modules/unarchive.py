@@ -3,9 +3,9 @@
 
 # Copyright: (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 # Copyright: (c) 2013, Dylan Martin <dmartin@seattlecentral.edu>
-# Copyright: (c) 2015, Toshio Kuratomi <tkuratomi@ansible.com>
+# Copyright: (c) 2015, Toshio Kuratomi <tkuratomi@assible.com>
 # Copyright: (c) 2016, Dag Wieers <dag@wieers.com>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -21,7 +21,7 @@ description:
      - The C(unarchive) module unpacks an archive. It will not unpack a compressed file that does not contain an archive.
      - By default, it will copy the source file from the local system to the target before unpacking.
      - Set C(remote_src=yes) to unpack an archive which already exists on the target.
-     - If checksum validation is desired, use M(ansible.builtin.get_url) or M(ansible.builtin.uri) instead to fetch the file and set C(remote_src=yes).
+     - If checksum validation is desired, use M(assible.builtin.get_url) or M(assible.builtin.uri) instead to fetch the file and set C(remote_src=yes).
      - For Windows targets, use the M(community.windows.win_unzip) module instead.
 options:
   src:
@@ -29,7 +29,7 @@ options:
       - If C(remote_src=no) (default), local path to archive file to copy to the target server; can be absolute or relative. If C(remote_src=yes), path on the
         target server to existing archive file to unpack.
       - If C(remote_src=yes) and C(src) contains C(://), the remote machine will download the file from the URL first. (version_added 2.0). This is only for
-        simple cases, for full download support use the M(ansible.builtin.get_url) module.
+        simple cases, for full download support use the M(assible.builtin.get_url) module.
     type: path
     required: true
   dest:
@@ -78,7 +78,7 @@ options:
     version_added: "2.1"
   remote_src:
     description:
-      - Set to C(yes) to indicate the archived file is already on the remote system and not local to the Ansible controller.
+      - Set to C(yes) to indicate the archived file is already on the remote system and not local to the Assible controller.
       - This option is mutually exclusive with C(copy).
     type: bool
     default: no
@@ -155,9 +155,9 @@ import time
 import traceback
 from zipfile import ZipFile, BadZipfile
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.urls import fetch_file
-from ansible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.urls import fetch_file
+from assible.module_utils._text import to_bytes, to_native, to_text
 
 try:  # python 3.3+
     from shlex import quote
@@ -527,7 +527,7 @@ class ZipArchive(object):
                             mode = int(self.file_args['mode'], 8)
                         except Exception as e:
                             try:
-                                mode = AnsibleModule._symbolic_mode_to_octal(st, self.file_args['mode'])
+                                mode = AssibleModule._symbolic_mode_to_octal(st, self.file_args['mode'])
                             except ValueError as e:
                                 self.module.fail_json(path=path, msg="%s" % to_native(e), exception=traceback.format_exc())
                 # Only special files require no umask-handling
@@ -678,7 +678,7 @@ class TgzArchive(object):
 
             # We don't allow absolute filenames.  If the user wants to unarchive rooted in "/"
             # they need to use "dest: '/'".  This follows the defaults for gtar, pax, etc.
-            # Allowing absolute filenames here also causes bugs: https://github.com/ansible/ansible/issues/21397
+            # Allowing absolute filenames here also causes bugs: https://github.com/assible/assible/issues/21397
             if filename.startswith('/'):
                 filename = filename[1:]
 
@@ -817,7 +817,7 @@ def pick_handler(src, dest, file_args, module):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         # not checking because of daisy chain to file module
         argument_spec=dict(
             src=dict(type='path', required=True),

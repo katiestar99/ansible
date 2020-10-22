@@ -2,16 +2,16 @@
 .. _porting_2.11_guide_base:
 
 *******************************
-Ansible-base 2.11 Porting Guide
+Assible-base 2.11 Porting Guide
 *******************************
 
-This section discusses the behavioral changes between Ansible-base 2.10 and Ansible-base 2.11.
+This section discusses the behavioral changes between Assible-base 2.10 and Assible-base 2.11.
 
-It is intended to assist in updating your playbooks, plugins and other parts of your Ansible infrastructure so they will work with this version of Ansible-base.
+It is intended to assist in updating your playbooks, plugins and other parts of your Assible infrastructure so they will work with this version of Assible-base.
 
-We suggest you read this page along with the `Ansible-base Changelog for 2.11 <https://github.com/ansible/ansible/blob/stable-2.11/changelogs/CHANGELOG-v2.11.rst>`_ to understand what updates you may need to make.
+We suggest you read this page along with the `Assible-base Changelog for 2.11 <https://github.com/assible/assible/blob/stable-2.11/changelogs/CHANGELOG-v2.11.rst>`_ to understand what updates you may need to make.
 
-Ansible-base is mainly of interest for developers and users who only want to use a small, controlled subset of the available collections. Regular users should install ansible.
+Assible-base is mainly of interest for developers and users who only want to use a small, controlled subset of the available collections. Regular users should install assible.
 
 The complete list of porting guides can be found at :ref:`porting guides <porting_guides>`.
 
@@ -59,7 +59,7 @@ No notable changes
 Noteworthy module changes
 -------------------------
 
-* facts - On NetBSD, ``ansible_virtualization_type`` now tries to report a more accurate result than ``xen`` when virtualized and not running on Xen.
+* facts - On NetBSD, ``assible_virtualization_type`` now tries to report a more accurate result than ``xen`` when virtualized and not running on Xen.
 * facts - Virtualization facts now include ``virtualization_tech_guest`` and ``virtualization_tech_host`` keys. These are lists of virtualization technologies that a guest is a part of, or that a host provides, respectively. As an example, a host may be set up to provide both KVM and VirtualBox, and these will be included in ``virtualization_tech_host``, and a podman container running on a VM powered by KVM will have a ``virtualization_tech_guest`` of ``["kvm", "podman", "container"]``.
 * The parameter ``filter`` type is changed from ``string`` to ``list`` in the :ref:`setup <setup_module>` module in order to use more than one filter. Previous behaviour (using a ``string``) still remains and works as a single filter.
 

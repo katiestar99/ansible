@@ -1,19 +1,19 @@
 # (c) 2012-2014, Chris Meyers <chris.meyers.fsu@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -27,7 +27,7 @@ import types
 from units.compat import unittest
 from units.compat.mock import MagicMock
 
-from ansible.plugins.callback import CallbackBase
+from assible.plugins.callback import CallbackBase
 
 
 class TestCallback(unittest.TestCase):
@@ -60,11 +60,11 @@ class TestCallbackResults(unittest.TestCase):
 
     def test_get_item_label_no_log(self):
         cb = CallbackBase()
-        results = {'item': 'some_item', '_ansible_no_log': True}
+        results = {'item': 'some_item', '_assible_no_log': True}
         res = cb._get_item_label(results)
         self.assertEqual(res, "(censored due to no_log)")
 
-        results = {'item': 'some_item', '_ansible_no_log': False}
+        results = {'item': 'some_item', '_assible_no_log': False}
         res = cb._get_item_label(results)
         self.assertEqual(res, "some_item")
 
@@ -78,7 +78,7 @@ class TestCallbackResults(unittest.TestCase):
 
         cb._clean_results(result, 'debug')
 
-        # See https://github.com/ansible/ansible/issues/33723
+        # See https://github.com/assible/assible/issues/33723
         self.assertTrue('a' in result)
         self.assertTrue('b' in result)
         self.assertFalse('invocation' in result)
@@ -121,14 +121,14 @@ class TestCallbackDumpResults(object):
     def test_internal_keys(self):
         cb = CallbackBase()
         result = {'item': 'some_item',
-                  '_ansible_some_var': 'SENTINEL',
-                  'testing_ansible_out': 'should_be_left_in LEFTIN',
+                  '_assible_some_var': 'SENTINEL',
+                  'testing_assible_out': 'should_be_left_in LEFTIN',
                   'invocation': 'foo --bar whatever [some_json]',
                   'some_dict_key': {'a_sub_dict_for_key': 'baz'},
-                  'bad_dict_key': {'_ansible_internal_blah': 'SENTINEL'},
+                  'bad_dict_key': {'_assible_internal_blah': 'SENTINEL'},
                   'changed': True}
         json_out = cb._dump_results(result)
-        assert '"_ansible_' not in json_out
+        assert '"_assible_' not in json_out
         assert 'SENTINEL' not in json_out
         assert 'LEFTIN' in json_out
 
@@ -144,7 +144,7 @@ class TestCallbackDumpResults(object):
     def test_verbose(self):
         cb = CallbackBase()
         result = {'item': 'some_item LEFTIN',
-                  '_ansible_verbose_always': 'chicane'}
+                  '_assible_verbose_always': 'chicane'}
         json_out = cb._dump_results(result)
         assert 'SENTINEL' not in json_out
         assert 'LEFTIN' in json_out
@@ -153,7 +153,7 @@ class TestCallbackDumpResults(object):
         cb = CallbackBase()
         result = {'item': 'some_item LEFTIN',
                   'diff': ['remove stuff', 'added LEFTIN'],
-                  '_ansible_verbose_always': 'chicane'}
+                  '_assible_verbose_always': 'chicane'}
         json_out = cb._dump_results(result)
         assert 'SENTINEL' not in json_out
         assert 'LEFTIN' in json_out

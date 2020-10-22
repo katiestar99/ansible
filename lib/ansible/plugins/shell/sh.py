@@ -1,5 +1,5 @@
 # Copyright (c) 2014, Chris Church <chris@ninemoreminutes.com>
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -14,8 +14,8 @@ extends_documentation_fragment:
   - shell_common
 '''
 
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.plugins.shell import ShellBase
+from assible.module_utils.six.moves import shlex_quote
+from assible.plugins.shell import ShellBase
 
 
 class ShellModule(ShellBase):
@@ -50,7 +50,7 @@ class ShellModule(ShellBase):
         #
         # If a check fails we error before invoking the hash functions because
         # hash functions may successfully take the hash of a directory on BSDs
-        # (UFS filesystem?) which is not what the rest of the ansible code expects
+        # (UFS filesystem?) which is not what the rest of the assible code expects
         #
         # If all of the available hashing methods fail we fail with an rc of 0.
         # This logic is added to the end of the cmd at the bottom of this function.

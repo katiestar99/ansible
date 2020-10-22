@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,16 +21,16 @@ __metaclass__ = type
 
 from abc import abstractmethod
 
-from ansible.errors import AnsibleFileNotFound
-from ansible.plugins import AnsiblePlugin
-from ansible.utils.display import Display
+from assible.errors import AssibleFileNotFound
+from assible.plugins import AssiblePlugin
+from assible.utils.display import Display
 
 display = Display()
 
 __all__ = ['LookupBase']
 
 
-class LookupBase(AnsiblePlugin):
+class LookupBase(AssiblePlugin):
 
     def __init__(self, loader=None, templar=None, **kwargs):
 
@@ -79,7 +79,7 @@ class LookupBase(AnsiblePlugin):
         When the playbook specifies a lookup, this method is run.  The
         arguments to the lookup become the arguments to this method.  One
         additional keyword argument named ``variables`` is added to the method
-        call.  It contains the variables available to ansible at the time the
+        call.  It contains the variables available to assible at the time the
         lookup is templated.  For instance::
 
             "{{ lookup('url', 'https://toshio.fedorapeople.org/one.txt', validate_certs=True) }}"
@@ -94,13 +94,13 @@ class LookupBase(AnsiblePlugin):
         this case, it is converted into a list.
 
         Errors encountered during execution should be returned by raising
-        AnsibleError() with a message describing the error.
+        AssibleError() with a message describing the error.
 
         Any strings returned by this method that could ever contain non-ascii
         must be converted into python's unicode type as the strings will be run
         through jinja2 which has this requirement.  You can use::
 
-            from ansible.module_utils._text import to_text
+            from assible.module_utils._text import to_text
             result_string = to_text(result_string)
         """
         pass
@@ -110,15 +110,15 @@ class LookupBase(AnsiblePlugin):
         Return a file (needle) in the task's expected search path.
         '''
 
-        if 'ansible_search_path' in myvars:
-            paths = myvars['ansible_search_path']
+        if 'assible_search_path' in myvars:
+            paths = myvars['assible_search_path']
         else:
             paths = [self.get_basedir(myvars)]
 
         result = None
         try:
             result = self._loader.path_dwim_relative_stack(paths, subdir, needle)
-        except AnsibleFileNotFound:
+        except AssibleFileNotFound:
             if not ignore_missing:
                 self._display.warning("Unable to find '%s' in expected paths (use -vvvvv to see paths)" % needle)
 

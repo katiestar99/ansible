@@ -15,7 +15,7 @@ def main():
                 match = re.search(r'([^a-zA-Z0-9_]get_exception[^a-zA-Z0-9_])', text)
 
                 if match:
-                    if path == 'lib/ansible/module_utils/basic.py' and basic_allow_once:
+                    if path == 'lib/assible/module_utils/basic.py' and basic_allow_once:
                         # basic.py is allowed to import get_exception for backwards compatibility but should not call it anywhere
                         basic_allow_once = False
                         continue

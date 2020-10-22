@@ -3,7 +3,7 @@ Cleanup Request
 
 Hi!
 
-Thanks very much for your submission to Ansible.  It sincerely means a lot to us. 
+Thanks very much for your submission to Assible.  It sincerely means a lot to us. 
 
 We do require submissions to be free of merge commits, which cause difficulties in reviewing and merging code, and also affect the history of the source tree.
 To resolve this problem, it may be helpful to create a new branch and cherry-pick commits onto it.
@@ -19,8 +19,8 @@ We'll work things in priority order, so just wanted you to be aware of the queue
 We will definitely see your comments on this issue when reading this ticket, but may not be able to reply promptly.  You may also wish to join one of our two mailing lists
 which are very active:
 
-   * https://groups.google.com/forum/#!forum/ansible-project - for user questions, tips, and tricks
-   * https://groups.google.com/forum/#!forum/ansible-devel - for strategy, future planning, and questions about writing code
+   * https://groups.google.com/forum/#!forum/assible-project - for user questions, tips, and tricks
+   * https://groups.google.com/forum/#!forum/assible-devel - for strategy, future planning, and questions about writing code
 
-Thank you once again for this and your interest in Ansible!
+Thank you once again for this and your interest in Assible!
 

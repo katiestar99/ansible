@@ -4,22 +4,22 @@
 # LSB header
 
 ### BEGIN INIT INFO
-# Provides: ansible-test
+# Provides: assible-test
 # Default-Start: 3 4 5
 # Default-Stop: 0 1 2 6
-# Short-Description: test daemon for ansible
-# Description: This is a test daemon used by ansible for testing only
+# Short-Description: test daemon for assible
+# Description: This is a test daemon used by assible for testing only
 ### END INIT INFO
 
 # chkconfig header
 
 # chkconfig: 345 99 99
-# description:  This is a test daemon used by ansible for testing only
+# description:  This is a test daemon used by assible for testing only
 #
-# processname: /usr/sbin/ansible_test_service
+# processname: /usr/sbin/assible_test_service
 
 # Sanity checks.
-[ -x /usr/sbin/ansible_test_service ] || exit 0
+[ -x /usr/sbin/assible_test_service ] || exit 0
 
 DEBIAN_VERSION=/etc/debian_version
 SUSE_RELEASE=/etc/SuSE-release
@@ -32,8 +32,8 @@ else
     . /etc/rc.d/init.d/functions
 fi
 
-SERVICE=ansible_test_service
-PROCESS=ansible_test_service
+SERVICE=assible_test_service
+PROCESS=assible_test_service
 CONFIG_ARGS=" "
 if [ -f $DEBIAN_VERSION ]; then
     LOCKFILE=/var/lock/$SERVICE
@@ -44,15 +44,15 @@ fi
 RETVAL=0
 
 start() {
-    echo -n "Starting ansible test daemon: "
+    echo -n "Starting assible test daemon: "
     if [ -f $SUSE_RELEASE ]; then
-        startproc -p /var/run/${SERVICE}.pid -f /usr/sbin/ansible_test_service
+        startproc -p /var/run/${SERVICE}.pid -f /usr/sbin/assible_test_service
         rc_status -v
     elif [ -e $DEBIAN_VERSION ]; then
         if [ -f $LOCKFILE ]; then
             echo -n "already started, lock file found"
             RETVAL=1
-        elif /usr/sbin/ansible_test_service; then
+        elif /usr/sbin/assible_test_service; then
             echo -n "OK"
             RETVAL=0
         fi
@@ -66,13 +66,13 @@ start() {
 }
 
 stop() {
-    echo -n "Stopping ansible test daemon: "
+    echo -n "Stopping assible test daemon: "
     if [ -f $SUSE_RELEASE ]; then
-        killproc -TERM /usr/sbin/ansible_test_service
+        killproc -TERM /usr/sbin/assible_test_service
         rc_status -v
     elif [ -f $DEBIAN_VERSION ]; then
         # Added this since Debian's start-stop-daemon doesn't support spawned processes
-        if ps -ef | grep "/usr/sbin/ansible_test_service" | grep -v grep | awk '{print $2}' | xargs kill &> /dev/null; then
+        if ps -ef | grep "/usr/sbin/assible_test_service" | grep -v grep | awk '{print $2}' | xargs kill &> /dev/null; then
             echo -n "OK"
             RETVAL=0
         else
@@ -102,16 +102,16 @@ case "$1" in
         ;;
     status)
         if [ -f $SUSE_RELEASE ]; then
-            echo -n "Checking for ansible test service "
-            checkproc /usr/sbin/ansible_test_service
+            echo -n "Checking for assible test service "
+            checkproc /usr/sbin/assible_test_service
             rc_status -v
         elif [ -f $DEBIAN_VERSION ]; then
             if [ -f $LOCKFILE ]; then
                 RETVAL=0
-                echo "ansible test is running."
+                echo "assible test is running."
             else
                 RETVAL=1
-                echo "ansible test is stopped."
+                echo "assible test is stopped."
             fi
         else
             status $PROCESS

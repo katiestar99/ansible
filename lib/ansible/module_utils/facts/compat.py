@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -29,34 +29,34 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.module_utils.facts.namespace import PrefixFactNamespace
-from ansible.module_utils.facts import default_collectors
-from ansible.module_utils.facts import ansible_collector
+from assible.module_utils.facts.namespace import PrefixFactNamespace
+from assible.module_utils.facts import default_collectors
+from assible.module_utils.facts import assible_collector
 
 
 def get_all_facts(module):
-    '''compat api for ansible 2.2/2.3 module_utils.facts.get_all_facts method
+    '''compat api for assible 2.2/2.3 module_utils.facts.get_all_facts method
 
-    Expects module to be an instance of AnsibleModule, with a 'gather_subset' param.
+    Expects module to be an instance of AssibleModule, with a 'gather_subset' param.
 
-    returns a dict mapping the bare fact name ('default_ipv4' with no 'ansible_' namespace) to
+    returns a dict mapping the bare fact name ('default_ipv4' with no 'assible_' namespace) to
     the fact value.'''
 
     gather_subset = module.params['gather_subset']
-    return ansible_facts(module, gather_subset=gather_subset)
+    return assible_facts(module, gather_subset=gather_subset)
 
 
-def ansible_facts(module, gather_subset=None):
-    '''Compat api for ansible 2.0/2.2/2.3 module_utils.facts.ansible_facts method
+def assible_facts(module, gather_subset=None):
+    '''Compat api for assible 2.0/2.2/2.3 module_utils.facts.assible_facts method
 
     2.3/2.3 expects a gather_subset arg.
     2.0/2.1 does not except a gather_subset arg
 
     So make gather_subsets an optional arg, defaulting to configured DEFAULT_GATHER_TIMEOUT
 
-    'module' should be an instance of an AnsibleModule.
+    'module' should be an instance of an AssibleModule.
 
-    returns a dict mapping the bare fact name ('default_ipv4' with no 'ansible_' namespace) to
+    returns a dict mapping the bare fact name ('default_ipv4' with no 'assible_' namespace) to
     the fact value.
     '''
 
@@ -72,10 +72,10 @@ def ansible_facts(module, gather_subset=None):
     all_collector_classes = default_collectors.collectors
 
     # don't add a prefix
-    namespace = PrefixFactNamespace(namespace_name='ansible', prefix='')
+    namespace = PrefixFactNamespace(namespace_name='assible', prefix='')
 
     fact_collector = \
-        ansible_collector.get_ansible_collector(all_collector_classes=all_collector_classes,
+        assible_collector.get_assible_collector(all_collector_classes=all_collector_classes,
                                                 namespace=namespace,
                                                 filter_spec=filter_spec,
                                                 gather_subset=gather_subset,

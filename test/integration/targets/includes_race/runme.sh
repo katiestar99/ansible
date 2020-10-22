@@ -2,4 +2,4 @@
 
 set -eux
 
-ansible-playbook test_includes_race.yml -i inventory -v "$@"
+assible-playbook test_includes_race.yml -i inventory -v "$@"

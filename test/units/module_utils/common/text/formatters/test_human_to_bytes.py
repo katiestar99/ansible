@@ -8,7 +8,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.text.formatters import human_to_bytes
+from assible.module_utils.common.text.formatters import human_to_bytes
 
 
 NUM_IN_METRIC = {

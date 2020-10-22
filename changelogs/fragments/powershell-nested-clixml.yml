@@ -1,2 +1,2 @@
 bugfixes:
-- powershell - fix the CLIXML parser when it contains nested CLIXML objects - https://github.com/ansible/ansible/issues/69550
+- powershell - fix the CLIXML parser when it contains nested CLIXML objects - https://github.com/assible/assible/issues/69550

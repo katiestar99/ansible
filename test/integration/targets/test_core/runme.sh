@@ -2,4 +2,4 @@
 
 set -eu
 
-ANSIBLE_ROLES_PATH=../ ansible-playbook --vault-password-file vault-password runme.yml -i inventory "${@}"
+ASSIBLE_ROLES_PATH=../ assible-playbook --vault-password-file vault-password runme.yml -i inventory "${@}"

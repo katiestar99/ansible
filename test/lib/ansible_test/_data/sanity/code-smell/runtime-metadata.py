@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Schema validation of ansible-base's ansible_builtin_runtime.yml and collection's meta/runtime.yml"""
+"""Schema validation of assible-base's assible_builtin_runtime.yml and collection's meta/runtime.yml"""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -16,8 +16,8 @@ from voluptuous import All, Any, MultipleInvalid, PREVENT_EXTRA
 from voluptuous import Required, Schema, Invalid
 from voluptuous.humanize import humanize_error
 
-from ansible.module_utils.six import string_types
-from ansible.utils.version import SemanticVersion
+from assible.module_utils.six import string_types
+from assible.utils.version import SemanticVersion
 
 
 def isodate(value):
@@ -40,16 +40,16 @@ def isodate(value):
     return value
 
 
-def removal_version(value, is_ansible):
+def removal_version(value, is_assible):
     """Validate a removal version string."""
     msg = (
-        'Removal version must be a string' if is_ansible else
+        'Removal version must be a string' if is_assible else
         'Removal version must be a semantic version (https://semver.org/)'
     )
     if not isinstance(value, string_types):
         raise Invalid(msg)
     try:
-        if is_ansible:
+        if is_assible:
             version = StrictVersion()
             version.parse(value)
         else:
@@ -68,7 +68,7 @@ def any_value(value):
     return value
 
 
-def validate_metadata_file(path, is_ansible):
+def validate_metadata_file(path, is_assible):
     """Validate explicit runtime metadata file"""
     try:
         with open(path, 'r') as f_path:
@@ -83,7 +83,7 @@ def validate_metadata_file(path, is_ansible):
         return
 
     # Updates to schema MUST also be reflected in the documentation
-    # ~https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html
+    # ~https://docs.assible.com/assible/devel/dev_guide/developing_collections.html
 
     # plugin_routing schema
 
@@ -91,7 +91,7 @@ def validate_metadata_file(path, is_ansible):
         # The first schema validates the input, and the second makes sure no extra keys are specified
         Schema(
             {
-                'removal_version': partial(removal_version, is_ansible=is_ansible),
+                'removal_version': partial(removal_version, is_assible=is_assible),
                 'removal_date': Any(isodate),
                 'warning_text': Any(*string_types),
             }
@@ -162,8 +162,8 @@ def validate_metadata_file(path, is_ansible):
         # All of these are optional
         ('plugin_routing'): Any(plugin_schema),
         ('import_redirection'): Any(None, *list_dict_import_redirection_schema),
-        # requires_ansible: In the future we should validate this with SpecifierSet
-        ('requires_ansible'): Any(*string_types),
+        # requires_assible: In the future we should validate this with SpecifierSet
+        ('requires_assible'): Any(*string_types),
         ('action_groups'): dict,
     }, extra=PREVENT_EXTRA)
 
@@ -189,7 +189,7 @@ def main():
             print('%s:%d:%d: %s' % (path, 0, 0, ("Should be called '%s'" % collection_runtime_file)))
             continue
 
-        validate_metadata_file(path, is_ansible=path not in (collection_legacy_file, collection_runtime_file))
+        validate_metadata_file(path, is_assible=path not in (collection_legacy_file, collection_runtime_file))
 
 
 if __name__ == '__main__':

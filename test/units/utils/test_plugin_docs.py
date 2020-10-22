@@ -9,7 +9,7 @@ import copy
 
 import pytest
 
-from ansible.utils.plugin_docs import (
+from assible.utils.plugin_docs import (
     add_collection_to_versions_and_dates,
 )
 

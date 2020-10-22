@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -9,7 +9,7 @@ DOCUMENTATION = """
     short_description: Substitute User
     description:
         - This become plugins allows your remote/login user to execute commands as another user via the su utility.
-    author: ansible (@core)
+    author: assible (@core)
     version_added: "2.8"
     options:
         become_user:
@@ -21,11 +21,11 @@ DOCUMENTATION = """
               - section: su_become_plugin
                 key: user
             vars:
-              - name: ansible_become_user
-              - name: ansible_su_user
+              - name: assible_become_user
+              - name: assible_su_user
             env:
-              - name: ANSIBLE_BECOME_USER
-              - name: ANSIBLE_SU_USER
+              - name: ASSIBLE_BECOME_USER
+              - name: ASSIBLE_SU_USER
         become_exe:
             description: Su executable
             default: su
@@ -35,11 +35,11 @@ DOCUMENTATION = """
               - section: su_become_plugin
                 key: executable
             vars:
-              - name: ansible_become_exe
-              - name: ansible_su_exe
+              - name: assible_become_exe
+              - name: assible_su_exe
             env:
-              - name: ANSIBLE_BECOME_EXE
-              - name: ANSIBLE_SU_EXE
+              - name: ASSIBLE_BECOME_EXE
+              - name: ASSIBLE_SU_EXE
         become_flags:
             description: Options to pass to su
             default: ''
@@ -49,21 +49,21 @@ DOCUMENTATION = """
               - section: su_become_plugin
                 key: flags
             vars:
-              - name: ansible_become_flags
-              - name: ansible_su_flags
+              - name: assible_become_flags
+              - name: assible_su_flags
             env:
-              - name: ANSIBLE_BECOME_FLAGS
-              - name: ANSIBLE_SU_FLAGS
+              - name: ASSIBLE_BECOME_FLAGS
+              - name: ASSIBLE_SU_FLAGS
         become_pass:
             description: Password to pass to su
             required: False
             vars:
-              - name: ansible_become_password
-              - name: ansible_become_pass
-              - name: ansible_su_pass
+              - name: assible_become_password
+              - name: assible_become_pass
+              - name: assible_su_pass
             env:
-              - name: ANSIBLE_BECOME_PASS
-              - name: ANSIBLE_SU_PASS
+              - name: ASSIBLE_BECOME_PASS
+              - name: ASSIBLE_SU_PASS
             ini:
               - section: su_become_plugin
                 key: password
@@ -76,16 +76,16 @@ DOCUMENTATION = """
               - section: su_become_plugin
                 key: localized_prompts
             vars:
-              - name: ansible_su_prompt_l10n
+              - name: assible_su_prompt_l10n
             env:
-              - name: ANSIBLE_SU_PROMPT_L10N
+              - name: ASSIBLE_SU_PROMPT_L10N
 """
 
 import re
 
-from ansible.module_utils._text import to_bytes
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.plugins.become import BecomeBase
+from assible.module_utils._text import to_bytes
+from assible.module_utils.six.moves import shlex_quote
+from assible.plugins.become import BecomeBase
 
 
 class BecomeModule(BecomeBase):

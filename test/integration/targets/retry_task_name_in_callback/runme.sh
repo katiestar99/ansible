@@ -8,6 +8,6 @@ OUTFILE="callback_retry_task_name.out"
 trap 'rm -rf "${OUTFILE}"' EXIT
 
 EXPECTED_REGEX="^.*TASK.*18236 callback task template fix OUTPUT 2"
-ansible-playbook "$@" -i ../../inventory test.yml | tee "${OUTFILE}"
+assible-playbook "$@" -i ../../inventory test.yml | tee "${OUTFILE}"
 echo "Grepping for ${EXPECTED_REGEX} in stdout."
 grep -e "${EXPECTED_REGEX}" "${OUTFILE}"

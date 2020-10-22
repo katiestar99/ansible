@@ -4,7 +4,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -50,7 +50,7 @@ options:
     type: json
   managed_policies:
     description:
-      - A list of managed policy ARNs or, since Ansible 2.4, a list of either managed policy ARNs or friendly names.
+      - A list of managed policy ARNs or, since Assible 2.4, a list of either managed policy ARNs or friendly names.
       - To remove all policies set I(purge_polices=true) and I(managed_policies=[None]).
       - To embed an inline policy, use M(iam_policy).
     aliases: ['managed_policy']
@@ -64,7 +64,7 @@ options:
   purge_policies:
     description:
       - When I(purge_policies=true) any managed policies not listed in I(managed_policies) will be detatched.
-      - By default I(purge_policies=true).  In Ansible 2.14 this will be changed to I(purge_policies=false).
+      - By default I(purge_policies=true).  In Assible 2.14 this will be changed to I(purge_policies=false).
     version_added: "2.5"
     type: bool
     aliases: ['purge_policy', 'purge_managed_policies']
@@ -204,14 +204,14 @@ iam_role:
 
 import json
 
-from ansible.module_utils.aws.core import AnsibleAWSModule
-from ansible.module_utils.ec2 import camel_dict_to_snake_dict, compare_policies
-from ansible.module_utils.ec2 import AWSRetry, ansible_dict_to_boto3_tag_list, boto3_tag_list_to_ansible_dict, compare_aws_tags
+from assible.module_utils.aws.core import AssibleAWSModule
+from assible.module_utils.ec2 import camel_dict_to_snake_dict, compare_policies
+from assible.module_utils.ec2 import AWSRetry, assible_dict_to_boto3_tag_list, boto3_tag_list_to_assible_dict, compare_aws_tags
 
 try:
     from botocore.exceptions import ClientError, BotoCoreError
 except ImportError:
-    pass  # caught by AnsibleAWSModule
+    pass  # caught by AssibleAWSModule
 
 
 def compare_assume_role_policy_doc(current_policy_doc, new_policy_doc):
@@ -278,7 +278,7 @@ def generate_create_params(module):
     if module.params.get('boundary') is not None:
         params['PermissionsBoundary'] = module.params.get('boundary')
     if module.params.get('tags') is not None:
-        params['Tags'] = ansible_dict_to_boto3_tag_list(module.params.get('tags'))
+        params['Tags'] = assible_dict_to_boto3_tag_list(module.params.get('tags'))
 
     return params
 
@@ -580,7 +580,7 @@ def get_role_tags(connection, module):
     if not hasattr(connection, 'list_role_tags'):
         return {}
     try:
-        return boto3_tag_list_to_ansible_dict(connection.list_role_tags(RoleName=role_name, aws_retry=True)['Tags'])
+        return boto3_tag_list_to_assible_dict(connection.list_role_tags(RoleName=role_name, aws_retry=True)['Tags'])
     except (ClientError, BotoCoreError) as e:
         module.fail_json_aws(e, msg="Unable to list tags for role {0}".format(role_name))
 
@@ -589,13 +589,13 @@ def update_role_tags(connection, module, params, role):
     new_tags = params.get('Tags')
     if new_tags is None:
         return False
-    new_tags = boto3_tag_list_to_ansible_dict(new_tags)
+    new_tags = boto3_tag_list_to_assible_dict(new_tags)
 
     role_name = module.params.get('name')
     purge_tags = module.params.get('purge_tags')
 
     try:
-        existing_tags = boto3_tag_list_to_ansible_dict(connection.list_role_tags(RoleName=role_name, aws_retry=True)['Tags'])
+        existing_tags = boto3_tag_list_to_assible_dict(connection.list_role_tags(RoleName=role_name, aws_retry=True)['Tags'])
     except (ClientError, KeyError):
         existing_tags = {}
 
@@ -606,7 +606,7 @@ def update_role_tags(connection, module, params, role):
             if tags_to_remove:
                 connection.untag_role(RoleName=role_name, TagKeys=tags_to_remove, aws_retry=True)
             if tags_to_add:
-                connection.tag_role(RoleName=role_name, Tags=ansible_dict_to_boto3_tag_list(tags_to_add), aws_retry=True)
+                connection.tag_role(RoleName=role_name, Tags=assible_dict_to_boto3_tag_list(tags_to_add), aws_retry=True)
         except (ClientError, BotoCoreError) as e:
             module.fail_json_aws(e, msg='Unable to set tags for role %s' % role_name)
 
@@ -631,14 +631,14 @@ def main():
         tags=dict(type='dict'),
         purge_tags=dict(type='bool', default=True),
     )
-    module = AnsibleAWSModule(argument_spec=argument_spec,
+    module = AssibleAWSModule(argument_spec=argument_spec,
                               required_if=[('state', 'present', ['assume_role_policy_document'])],
                               supports_check_mode=True)
 
     if module.params.get('purge_policies') is None:
-        module.deprecate('In Ansible 2.14 the default value of purge_policies will change from true to false.'
+        module.deprecate('In Assible 2.14 the default value of purge_policies will change from true to false.'
                          '  To maintain the existing behaviour explicity set purge_policies=true',
-                         version='2.14', collection_name='ansible.builtin')
+                         version='2.14', collection_name='assible.builtin')
 
     if module.params.get('boundary'):
         if module.params.get('create_instance_profile'):

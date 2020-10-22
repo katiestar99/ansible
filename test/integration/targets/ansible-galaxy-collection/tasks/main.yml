@@ -8,10 +8,10 @@
     path: '{{ galaxy_dir }}/scratch'
     state: directory
 
-- name: run ansible-galaxy collection init tests
+- name: run assible-galaxy collection init tests
   import_tasks: init.yml
 
-- name: run ansible-galaxy collection build tests
+- name: run assible-galaxy collection build tests
   import_tasks: build.yml
 
 - name: configure pulp
@@ -20,17 +20,17 @@
 - name: configure galaxy_ng
   include_tasks: galaxy_ng.yml
 
-- name: create test ansible.cfg that contains the Galaxy server list
+- name: create test assible.cfg that contains the Galaxy server list
   template:
-    src: ansible.cfg.j2
-    dest: '{{ galaxy_dir }}/ansible.cfg'
+    src: assible.cfg.j2
+    dest: '{{ galaxy_dir }}/assible.cfg'
 
-- name: run ansible-galaxy collection publish tests for {{ test_name }}
+- name: run assible-galaxy collection publish tests for {{ test_name }}
   include_tasks: publish.yml
   args:
     apply:
       environment:
-        ANSIBLE_CONFIG: '{{ galaxy_dir }}/ansible.cfg'
+        ASSIBLE_CONFIG: '{{ galaxy_dir }}/assible.cfg'
   vars:
     test_name: '{{ item.name }}'
     test_server: '{{ item.server }}'
@@ -53,12 +53,12 @@
 - name: setup test collections for install and download test
   loop:
     # For pulp interactions, we only upload to galaxy_ng which shares
-    # the same repo and distribution with pulp_ansible
+    # the same repo and distribution with pulp_assible
     # However, we use galaxy_ng only, since collections are unique across
     # pulp repositories, and galaxy_ng maintains a 2nd list of published collections
     - galaxy_ng
   environment:
-    ANSIBLE_CONFIG: '{{ galaxy_dir }}/ansible.cfg'
+    ASSIBLE_CONFIG: '{{ galaxy_dir }}/assible.cfg'
   async: 300
   poll: 0
   register: setup_collections
@@ -68,7 +68,7 @@
 
 - name: Wait for setup_collections
   async_status:
-    jid: '{{ item.ansible_job_id }}'
+    jid: '{{ item.assible_job_id }}'
     mode: status
   retries: 300
   delay: 1
@@ -82,7 +82,7 @@
   pause:
     seconds: 5
 
-- name: run ansible-galaxy collection install tests for {{ test_name }}
+- name: run assible-galaxy collection install tests for {{ test_name }}
   include_tasks: install.yml
   vars:
     test_name: '{{ item.name }}'
@@ -92,7 +92,7 @@
   args:
     apply:
       environment:
-        ANSIBLE_CONFIG: '{{ galaxy_dir }}/ansible.cfg'
+        ASSIBLE_CONFIG: '{{ galaxy_dir }}/assible.cfg'
   loop:
   - name: galaxy_ng
     server: '{{ galaxy_ng_server }}'
@@ -108,10 +108,10 @@
 # servers defined in the config. We hardcode to -vvv as that's what level the
 # message is shown
 - name: test install fallback on server list
-  command: ansible-galaxy collection install fake.fake -vvv
+  command: assible-galaxy collection install fake.fake -vvv
   ignore_errors: yes
   environment:
-    ANSIBLE_CONFIG: '{{ galaxy_dir }}/ansible.cfg'
+    ASSIBLE_CONFIG: '{{ galaxy_dir }}/assible.cfg'
   register: missing_fallback
 
 - name: assert test install fallback on server list
@@ -122,9 +122,9 @@
     - '"Collection ''fake.fake'' is not available from server pulp_v3" in missing_fallback.stdout'
     - '"Collection ''fake.fake'' is not available from server galaxy_ng" in missing_fallback.stdout'
 
-- name: run ansible-galaxy collection download tests
+- name: run assible-galaxy collection download tests
   include_tasks: download.yml
   args:
     apply:
       environment:
-        ANSIBLE_CONFIG: '{{ galaxy_dir }}/ansible.cfg'
+        ASSIBLE_CONFIG: '{{ galaxy_dir }}/assible.cfg'

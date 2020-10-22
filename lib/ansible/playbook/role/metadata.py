@@ -1,19 +1,19 @@
-# (c) 2014 Michael DeHaan, <michael@ansible.com>
+# (c) 2014 Michael DeHaan, <michael@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,14 +21,14 @@ __metaclass__ = type
 
 import os
 
-from ansible.errors import AnsibleParserError, AnsibleError
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import string_types
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.base import Base
-from ansible.playbook.collectionsearch import CollectionSearch
-from ansible.playbook.helpers import load_list_of_roles
-from ansible.playbook.role.requirement import RoleRequirement
+from assible.errors import AssibleParserError, AssibleError
+from assible.module_utils._text import to_native
+from assible.module_utils.six import string_types
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.base import Base
+from assible.playbook.collectionsearch import CollectionSearch
+from assible.playbook.helpers import load_list_of_roles
+from assible.playbook.role.requirement import RoleRequirement
 
 __all__ = ['RoleMetadata']
 
@@ -54,7 +54,7 @@ class RoleMetadata(Base, CollectionSearch):
         '''
 
         if not isinstance(data, dict):
-            raise AnsibleParserError("the 'meta/main.yml' for role %s is not a dictionary" % owner.get_name())
+            raise AssibleParserError("the 'meta/main.yml' for role %s is not a dictionary" % owner.get_name())
 
         m = RoleMetadata(owner=owner).load_data(data, variable_manager=variable_manager, loader=loader)
         return m
@@ -68,7 +68,7 @@ class RoleMetadata(Base, CollectionSearch):
         roles = []
         if ds:
             if not isinstance(ds, list):
-                raise AnsibleParserError("Expected role dependencies to be a list.", obj=self._ds)
+                raise AssibleParserError("Expected role dependencies to be a list.", obj=self._ds)
 
             for role_def in ds:
                 if isinstance(role_def, string_types) or 'role' in role_def or 'name' in role_def:
@@ -80,8 +80,8 @@ class RoleMetadata(Base, CollectionSearch):
                     if def_parsed.get('name'):
                         role_def['name'] = def_parsed['name']
                     roles.append(role_def)
-                except AnsibleError as exc:
-                    raise AnsibleParserError(to_native(exc), obj=role_def, orig_exc=exc)
+                except AssibleError as exc:
+                    raise AssibleParserError(to_native(exc), obj=role_def, orig_exc=exc)
 
         current_role_path = None
         collection_search_list = None
@@ -98,15 +98,15 @@ class RoleMetadata(Base, CollectionSearch):
                 collection_search_list = [c for c in collection_search_list if c != owner_collection]
                 collection_search_list.insert(0, owner_collection)
             # ensure fallback role search works
-            if 'ansible.legacy' not in collection_search_list:
-                collection_search_list.append('ansible.legacy')
+            if 'assible.legacy' not in collection_search_list:
+                collection_search_list.append('assible.legacy')
 
         try:
             return load_list_of_roles(roles, play=self._owner._play, current_role_path=current_role_path,
                                       variable_manager=self._variable_manager, loader=self._loader,
                                       collection_search_list=collection_search_list)
         except AssertionError as e:
-            raise AnsibleParserError("A malformed list of role dependencies was encountered.", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed list of role dependencies was encountered.", obj=self._ds, orig_exc=e)
 
     def _load_galaxy_info(self, attr, ds):
         '''

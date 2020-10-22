@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # originally copied from AWX's scan_services module to bring this functionality
@@ -19,12 +19,12 @@ version_added: "2.5"
 requirements: ["Any of the following supported init systems: systemd, sysv, upstart, AIX SRC"]
 
 notes:
-  - When accessing the C(ansible_facts.services) facts collected by this module,
+  - When accessing the C(assible_facts.services) facts collected by this module,
     it is recommended to not use "dot notation" because services can have a C(-)
     character in their name which would result in invalid "dot notation", such as
-    C(ansible_facts.services.zuul-gateway). It is instead recommended to
+    C(assible_facts.services.zuul-gateway). It is instead recommended to
     using the string value of the service name as the key in order to obtain
-    the fact data value like C(ansible_facts.services['zuul-gateway'])
+    the fact data value like C(assible_facts.services['zuul-gateway'])
   - AIX SRC was added in version 2.11.
 
 author:
@@ -36,13 +36,13 @@ EXAMPLES = r'''
   service_facts:
 
 - debug:
-    var: ansible_facts.services
+    var: assible_facts.services
 
 '''
 
 RETURN = r'''
-ansible_facts:
-  description: Facts to add to ansible_facts about the services on the system
+assible_facts:
+  description: Facts to add to assible_facts about the services on the system
   returned: always
   type: complex
   contains:
@@ -82,7 +82,7 @@ ansible_facts:
 
 import platform
 import re
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 class BaseService(object):
@@ -260,7 +260,7 @@ class AIXScanService(BaseService):
 
 
 def main():
-    module = AnsibleModule(argument_spec=dict(), supports_check_mode=True)
+    module = AssibleModule(argument_spec=dict(), supports_check_mode=True)
     module.run_command_environ_update = dict(LANG="C", LC_ALL="C")
     service_modules = (ServiceScanService, SystemctlScanService, AIXScanService)
     all_services = {}
@@ -275,7 +275,7 @@ def main():
     if len(all_services) == 0:
         results = dict(skipped=True, msg="Failed to find any services. Sometimes this is due to insufficient privileges.")
     else:
-        results = dict(ansible_facts=dict(services=all_services))
+        results = dict(assible_facts=dict(services=all_services))
         if incomplete_warning:
             results['msg'] = "WARNING: Could not find status for all services. Sometimes this is due to insufficient privileges."
     module.exit_json(**results)

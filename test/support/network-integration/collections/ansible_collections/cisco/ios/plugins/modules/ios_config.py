@@ -1,22 +1,22 @@
 #!/usr/bin/python
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": ["preview"],
     "supported_by": "network",
@@ -53,7 +53,7 @@ options:
     description:
     - Specifies the source path to the file that contains the configuration or configuration
       template to load.  The path to the source file can either be the full path on
-      the Ansible control host or a relative path from the playbook or role root directory.  This
+      the Assible control host or a relative path from the playbook or role root directory.  This
       argument is mutually exclusive with I(lines), I(parents).
   before:
     description:
@@ -103,7 +103,7 @@ options:
     - This argument will cause the module to create a full backup of the current C(running-config)
       from the remote device before any changes are made. If the C(backup_options)
       value is not given, the backup file is written to the C(backup) folder in the
-      playbook root directory or role root directory, if playbook is part of an ansible
+      playbook root directory or role root directory, if playbook is part of an assible
       role. If the directory does not exist, it is created.
     type: bool
     default: 'no'
@@ -134,7 +134,7 @@ options:
       to startup-config.  If the argument is set to I(never), the running-config will
       never be copied to the startup-config.  If the argument is set to I(changed),
       then the running-config will only be copied to the startup-config if the task
-      has made a change. I(changed) was added in Ansible 2.5.
+      has made a change. I(changed) was added in Assible 2.5.
     default: never
     choices:
     - always
@@ -143,7 +143,7 @@ options:
     - changed
   diff_against:
     description:
-    - When using the C(ansible-playbook --diff) command line argument the module can
+    - When using the C(assible-playbook --diff) command line argument the module can
       generate diffs against different sources.
     - When this option is configure as I(startup), the module will return the diff
       of the running-config against the startup-config.
@@ -271,7 +271,7 @@ EXAMPLES = """
       - no boot system
       - boot system flash bootflash:{{new_image}}
     host: "{{ inventory_hostname }}"
-  when: ansible_net_version != version
+  when: assible_net_version != version
 
 - name: render a Jinja2 template onto an IOS device
   ios_config:
@@ -302,7 +302,7 @@ backup_path:
   description: The full path to the backup file
   returned: when backup is yes
   type: str
-  sample: /playbooks/ansible/backup/ios_config.2016-07-16@22:28:34
+  sample: /playbooks/assible/backup/ios_config.2016-07-16@22:28:34
 filename:
   description: The name of the backup file
   returned: when backup is yes and filename is not specified in backup options
@@ -312,7 +312,7 @@ shortname:
   description: The full path to the backup file excluding the timestamp
   returned: when backup is yes and filename is not specified in backup options
   type: str
-  sample: /playbooks/ansible/backup/ios_config
+  sample: /playbooks/assible/backup/ios_config
 date:
   description: The date extracted from the backup file name
   returned: when backup is yes
@@ -326,21 +326,21 @@ time:
 """
 import json
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.connection import ConnectionError
-from ansible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
+from assible.module_utils._text import to_text
+from assible.module_utils.connection import ConnectionError
+from assible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
     run_commands,
     get_config,
 )
-from ansible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
+from assible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
     get_defaults_flag,
     get_connection,
 )
-from ansible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
+from assible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
     ios_argument_spec,
 )
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
+from assible.module_utils.basic import AssibleModule
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
     dumps,
 )
@@ -439,7 +439,7 @@ def main():
         ("diff_against", "intended", ["intended_config"]),
     ]
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         mutually_exclusive=mutually_exclusive,
         required_if=required_if,

@@ -1,4 +1,4 @@
-# Copyright (c) 2018, Ansible Project
+# Copyright (c) 2018, Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import (absolute_import, division, print_function)
@@ -6,7 +6,7 @@ __metaclass__ = type
 
 import os
 
-from ansible.module_utils.common.file import is_executable
+from assible.module_utils.common.file import is_executable
 
 
 def get_bin_path(arg, opt_dirs=None, required=None):

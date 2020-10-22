@@ -8,7 +8,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -38,7 +38,7 @@ options:
     - "The size of the physical extent. I(pesize) must be a power of 2 of at least 1 sector
        (where the sector size is the largest sector size of the PVs currently used in the VG),
        or at least 128KiB."
-    - Since Ansible 2.6, pesize can be optionally suffixed by a UNIT (k/K/m/M/g/G), default unit is megabyte.
+    - Since Assible 2.6, pesize can be optionally suffixed by a UNIT (k/K/m/M/g/G), default unit is megabyte.
     type: str
     default: "4"
   pv_options:
@@ -101,7 +101,7 @@ EXAMPLES = r'''
 import itertools
 import os
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def parse_vgs(data):
@@ -141,7 +141,7 @@ def parse_pvs(module, data):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             vg=dict(type='str', required=True),
             pvs=dict(type='list'),

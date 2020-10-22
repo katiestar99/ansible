@@ -57,7 +57,7 @@ def get_csharp_module_utils_name(path):  # type: (str) -> str
     base_path = data_context().content.module_utils_csharp_path
 
     if data_context().content.collection:
-        prefix = 'ansible_collections.' + data_context().content.collection.prefix + 'plugins.module_utils.'
+        prefix = 'assible_collections.' + data_context().content.collection.prefix + 'plugins.module_utils.'
     else:
         prefix = ''
 
@@ -84,9 +84,9 @@ def extract_csharp_module_utils_imports(path, module_utils, is_pure_csharp):
     """
     imports = set()
     if is_pure_csharp:
-        pattern = re.compile(r'(?i)^using\s((?:Ansible|AnsibleCollections)\..+);$')
+        pattern = re.compile(r'(?i)^using\s((?:Assible|AssibleCollections)\..+);$')
     else:
-        pattern = re.compile(r'(?i)^#\s*ansiblerequires\s+-csharputil\s+((?:Ansible|ansible.collections|\.)\..+)')
+        pattern = re.compile(r'(?i)^#\s*assiblerequires\s+-csharputil\s+((?:Assible|assible.collections|\.)\..+)')
 
     with open_text_file(path) as module_file:
         for line_number, line in enumerate(module_file, 1):
@@ -99,8 +99,8 @@ def extract_csharp_module_utils_imports(path, module_utils, is_pure_csharp):
 
             if import_name in module_utils:
                 imports.add(import_name)
-            elif data_context().content.is_ansible or \
-                    import_name.startswith('ansible_collections.%s' % data_context().content.prefix):
+            elif data_context().content.is_assible or \
+                    import_name.startswith('assible_collections.%s' % data_context().content.prefix):
                 display.warning('%s:%d Invalid module_utils import: %s' % (path, line_number, import_name))
 
     return imports

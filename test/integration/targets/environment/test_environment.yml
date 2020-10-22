@@ -10,15 +10,15 @@
     - test1:
         key1: val1
   environment:
-    PATH: '{{ansible_env.PATH + ":/lola"}}'
+    PATH: '{{assible_env.PATH + ":/lola"}}'
     lola: 'ido'
   tasks:
-    - name: ensure special case with ansible_env is skipped but others still work
+    - name: ensure special case with assible_env is skipped but others still work
       assert:
         that:
-            - target_path.stdout == ansible_env.PATH
-            - "'/lola' not in ansible_env.PATH"
-            - ansible_env.lola == 'ido'
+            - target_path.stdout == assible_env.PATH
+            - "'/lola' not in assible_env.PATH"
+            - assible_env.lola == 'ido'
 
     - name: check that envvar does not exist
       shell: echo $key1

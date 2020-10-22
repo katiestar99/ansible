@@ -10,14 +10,14 @@ with_list
 .. code-block:: yaml+jinja
 
     - name: with_list
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       with_list:
         - one
         - two
 
     - name: with_list -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       loop:
         - one
@@ -31,12 +31,12 @@ with_items
 .. code-block:: yaml+jinja
 
     - name: with_items
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       with_items: "{{ items }}"
 
     - name: with_items -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       loop: "{{ items|flatten(levels=1) }}"
 
@@ -48,12 +48,12 @@ with_indexed_items
 .. code-block:: yaml+jinja
 
     - name: with_indexed_items
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0 }} - {{ item.1 }}"
       with_indexed_items: "{{ items }}"
 
     - name: with_indexed_items -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ index }} - {{ item }}"
       loop: "{{ items|flatten(levels=1) }}"
       loop_control:
@@ -67,12 +67,12 @@ with_flattened
 .. code-block:: yaml+jinja
 
     - name: with_flattened
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       with_flattened: "{{ items }}"
 
     - name: with_flattened -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       loop: "{{ items|flatten }}"
 
@@ -84,14 +84,14 @@ with_together
 .. code-block:: yaml+jinja
 
     - name: with_together
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0 }} - {{ item.1 }}"
       with_together:
         - "{{ list_one }}"
         - "{{ list_two }}"
 
     - name: with_together -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0 }} - {{ item.1 }}"
       loop: "{{ list_one|zip(list_two)|list }}"
 
@@ -100,7 +100,7 @@ Another example with complex data
 .. code-block:: yaml+jinja
 
     - name: with_together -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0 }} - {{ item.1 }} - {{ item.2 }}"
       loop: "{{ data[0]|zip(*data[1:])|list }}"
       vars:
@@ -117,17 +117,17 @@ with_dict
 .. code-block:: yaml+jinja
 
     - name: with_dict
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.key }} - {{ item.value }}"
       with_dict: "{{ dictionary }}"
 
     - name: with_dict -> loop (option 1)
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.key }} - {{ item.value }}"
       loop: "{{ dictionary|dict2items }}"
 
     - name: with_dict -> loop (option 2)
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0 }} - {{ item.1 }}"
       loop: "{{ dictionary|dictsort }}"
 
@@ -139,12 +139,12 @@ with_sequence
 .. code-block:: yaml+jinja
 
     - name: with_sequence
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       with_sequence: start=0 end=4 stride=2 format=testuser%02x
 
     - name: with_sequence -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ 'testuser%02x' | format(item) }}"
       # range is exclusive of the end point
       loop: "{{ range(0, 4 + 1, 2)|list }}"
@@ -157,14 +157,14 @@ with_subelements
 .. code-block:: yaml+jinja
 
     - name: with_subelements
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0.name }} - {{ item.1 }}"
       with_subelements:
         - "{{ users }}"
         - mysql.hosts
 
     - name: with_subelements -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0.name }} - {{ item.1 }}"
       loop: "{{ users|subelements('mysql.hosts') }}"
 
@@ -176,14 +176,14 @@ with_nested/with_cartesian
 .. code-block:: yaml+jinja
 
     - name: with_nested
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0 }} - {{ item.1 }}"
       with_nested:
         - "{{ list_one }}"
         - "{{ list_two }}"
 
     - name: with_nested -> loop
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.0 }} - {{ item.1 }}"
       loop: "{{ list_one|product(list_two)|list }}"
 
@@ -195,11 +195,11 @@ with_random_choice
 .. code-block:: yaml+jinja
 
     - name: with_random_choice
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       with_random_choice: "{{ my_list }}"
 
     - name: with_random_choice -> loop (No loop is needed here)
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ my_list|random }}"
       tags: random

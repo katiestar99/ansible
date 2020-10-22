@@ -1,6 +1,6 @@
 ---
 - debug:
-    msg: "START vyos_lldp_interfaces round trip integration tests on connection={{ ansible_connection }}"
+    msg: "START vyos_lldp_interfaces round trip integration tests on connection={{ assible_connection }}"
 
 - include_tasks: _remove_config.yaml
 
@@ -45,7 +45,7 @@
 
     - name: Revert back to base config using facts round trip
       vyos.vyos.vyos_lldp_interfaces:
-        config: "{{ ansible_facts['network_resources']['lldp_interfaces'] }}"
+        config: "{{ assible_facts['network_resources']['lldp_interfaces'] }}"
         state: overridden
       register: revert
 

@@ -9,16 +9,16 @@ Deploy a virtual machine from a template
 Introduction
 ============
 
-This guide will show you how to utilize Ansible to clone a virtual machine from already existing VMware template or existing VMware guest.
+This guide will show you how to utilize Assible to clone a virtual machine from already existing VMware template or existing VMware guest.
 
 Scenario Requirements
 =====================
 
 * Software
 
-    * Ansible 2.5 or later must be installed
+    * Assible 2.5 or later must be installed
 
-    * The Python module ``Pyvmomi`` must be installed on the Ansible (or Target host if not executing against localhost)
+    * The Python module ``Pyvmomi`` must be installed on the Assible (or Target host if not executing against localhost)
 
     * Installing the latest ``Pyvmomi`` via ``pip`` is recommended [as the OS provided packages are usually out of date and incompatible]
 
@@ -28,7 +28,7 @@ Scenario Requirements
 
 * Access / Credentials
 
-    * Ansible (or the target server) must have network access to the either vCenter server or the ESXi server you will be deploying to
+    * Assible (or the target server) must have network access to the either vCenter server or the ESXi server you will be deploying to
 
     * Username and Password
 
@@ -79,7 +79,7 @@ Caveats
 Example Description
 ===================
 
-In this use case / example, we will be selecting a virtual machine template and cloning it into a specific folder in our Datacenter / Cluster.  The following Ansible playbook showcases the basic parameters that are needed for this.
+In this use case / example, we will be selecting a virtual machine template and cloning it into a specific folder in our Datacenter / Cluster.  The following Assible playbook showcases the basic parameters that are needed for this.
 
 .. code-block:: yaml
 
@@ -103,11 +103,11 @@ In this use case / example, we will be selecting a virtual machine template and 
           wait_for_ip_address: yes
 
 
-Since Ansible utilizes the VMware API to perform actions, in this use case we will be connecting directly to the API from our localhost. This means that our playbooks will not be running from the vCenter or ESXi Server. We do not necessarily need to collect facts about our localhost, so the ``gather_facts`` parameter will be disabled. You can run these modules against another server that would then connect to the API if your localhost does not have access to vCenter. If so, the required Python modules will need to be installed on that target server.
+Since Assible utilizes the VMware API to perform actions, in this use case we will be connecting directly to the API from our localhost. This means that our playbooks will not be running from the vCenter or ESXi Server. We do not necessarily need to collect facts about our localhost, so the ``gather_facts`` parameter will be disabled. You can run these modules against another server that would then connect to the API if your localhost does not have access to vCenter. If so, the required Python modules will need to be installed on that target server.
 
-To begin, there are a few bits of information we will need. First and foremost is the hostname of the ESXi server or vCenter server. After this, you will need the username and password for this server. For now, you will be entering these directly, but in a more advanced playbook this can be abstracted out and stored in a more secure fashion using  :ref:`ansible-vault` or using `Ansible Tower credentials <https://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html>`_. If your vCenter or ESXi server is not setup with proper CA certificates that can be verified from the Ansible server, then it is necessary to disable validation of these certificates by using the ``validate_certs`` parameter. To do this you need to set ``validate_certs=False`` in your playbook.
+To begin, there are a few bits of information we will need. First and foremost is the hostname of the ESXi server or vCenter server. After this, you will need the username and password for this server. For now, you will be entering these directly, but in a more advanced playbook this can be abstracted out and stored in a more secure fashion using  :ref:`assible-vault` or using `Assible Tower credentials <https://docs.assible.com/assible-tower/latest/html/userguide/credentials.html>`_. If your vCenter or ESXi server is not setup with proper CA certificates that can be verified from the Assible server, then it is necessary to disable validation of these certificates by using the ``validate_certs`` parameter. To do this you need to set ``validate_certs=False`` in your playbook.
 
-Now you need to supply the information about the virtual machine which will be created. Give your virtual machine a name, one that conforms to all VMware requirements for naming conventions.  Next, select the display name of the template from which you want to clone new virtual machine. This must match what's displayed in VMware Web UI exactly. Then you can specify a folder to place this new virtual machine in. This path can either be a relative path or a full path to the folder including the Datacenter. You may need to specify a state for the virtual machine.  This simply tells the module which action you want to take, in this case you will be ensure that the virtual machine exists and is powered on.  An optional parameter is ``wait_for_ip_address``, this will tell Ansible to wait for the virtual machine to fully boot up and VMware Tools is running before completing this task.
+Now you need to supply the information about the virtual machine which will be created. Give your virtual machine a name, one that conforms to all VMware requirements for naming conventions.  Next, select the display name of the template from which you want to clone new virtual machine. This must match what's displayed in VMware Web UI exactly. Then you can specify a folder to place this new virtual machine in. This path can either be a relative path or a full path to the folder including the Datacenter. You may need to specify a state for the virtual machine.  This simply tells the module which action you want to take, in this case you will be ensure that the virtual machine exists and is powered on.  An optional parameter is ``wait_for_ip_address``, this will tell Assible to wait for the virtual machine to fully boot up and VMware Tools is running before completing this task.
 
 
 What to expect

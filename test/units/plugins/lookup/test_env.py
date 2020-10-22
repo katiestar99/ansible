@@ -8,7 +8,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.plugins.loader import lookup_loader
+from assible.plugins.loader import lookup_loader
 
 
 @pytest.mark.parametrize('env_var,exp_value', [
@@ -16,7 +16,7 @@ from ansible.plugins.loader import lookup_loader
     ('equation', 'a=b*100')
 ])
 def test_env_var_value(monkeypatch, env_var, exp_value):
-    monkeypatch.setattr('ansible.utils.py3compat.environ.get', lambda x, y: exp_value)
+    monkeypatch.setattr('assible.utils.py3compat.environ.get', lambda x, y: exp_value)
 
     env_lookup = lookup_loader.get('env')
     retval = env_lookup.run([env_var], None)
@@ -28,7 +28,7 @@ def test_env_var_value(monkeypatch, env_var, exp_value):
     ('the_var', 'ãnˈsiβle')
 ])
 def test_utf8_env_var_value(monkeypatch, env_var, exp_value):
-    monkeypatch.setattr('ansible.utils.py3compat.environ.get', lambda x, y: exp_value)
+    monkeypatch.setattr('assible.utils.py3compat.environ.get', lambda x, y: exp_value)
 
     env_lookup = lookup_loader.get('env')
     retval = env_lookup.run([env_var], None)

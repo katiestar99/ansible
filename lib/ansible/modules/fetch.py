@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # This is a virtual module that is entirely implemented as an action plugin and runs on the controller
@@ -15,7 +15,7 @@ DOCUMENTATION = r'''
 module: fetch
 short_description: Fetch files from remote nodes
 description:
-- This module works like M(ansible.builtin.copy), but in reverse.
+- This module works like M(assible.builtin.copy), but in reverse.
 - It is used for fetching files from remote machines and storing them locally in a file tree, organized by hostname.
 - Files that already exist at I(dest) will be overwritten if they are different than the I(src).
 - This module is also supported for Windows targets.
@@ -38,8 +38,8 @@ options:
     version_added: '1.1'
     description:
     - When set to C(yes), the task will fail if the remote file cannot be read for any reason.
-    - Prior to Ansible 2.5, setting this would only fail if the source file was missing.
-    - The default was changed to C(yes) in Ansible 2.5.
+    - Prior to Assible 2.5, setting this would only fail if the source file was missing.
+    - The default was changed to C(yes) in Assible 2.5.
     type: bool
     default: yes
   validate_checksum:
@@ -58,24 +58,24 @@ options:
     type: bool
     default: no
 notes:
-- When running fetch with C(become), the M(ansible.builtin.slurp) module will also be
+- When running fetch with C(become), the M(assible.builtin.slurp) module will also be
   used to fetch the contents of the file for determining the remote
   checksum. This effectively doubles the transfer size, and
   depending on the file size can consume all available memory on the
   remote or local hosts causing a C(MemoryError). Due to this it is
   advisable to run this module without C(become) whenever possible.
-- Prior to Ansible 2.5 this module would not fail if reading the remote
+- Prior to Assible 2.5 this module would not fail if reading the remote
   file was impossible unless C(fail_on_missing) was set.
-- In Ansible 2.5 or later, playbook authors are encouraged to use
+- In Assible 2.5 or later, playbook authors are encouraged to use
   C(fail_when) or C(ignore_errors) to get this ability. They may
   also explicitly set C(fail_on_missing) to C(no) to get the
   non-failing behaviour.
 - This module is also supported for Windows targets.
 seealso:
-- module: ansible.builtin.copy
-- module: ansible.builtin.slurp
+- module: assible.builtin.copy
+- module: assible.builtin.slurp
 author:
-- Ansible Core Team
+- Assible Core Team
 - Michael DeHaan
 '''
 

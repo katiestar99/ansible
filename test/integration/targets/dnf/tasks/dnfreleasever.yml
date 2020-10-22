@@ -1,6 +1,6 @@
 # make an installroot
 - name: Create installroot
-  command: mktemp -d "{{ remote_tmp_dir }}/ansible.test.XXXXXX"
+  command: mktemp -d "{{ remote_tmp_dir }}/assible.test.XXXXXX"
   register: dnfroot
 
 - name: Make a necessary directory
@@ -11,14 +11,14 @@
 
 - name: Populate directory
   copy:
-    content: "{{ansible_distribution_version}}\n"
+    content: "{{assible_distribution_version}}\n"
     dest: "/{{dnfroot.stdout}}/etc/dnf/vars/releasever"
 
 - name: attempt releasever to the installroot
   dnf:
     name: filesystem
     installroot: '/{{dnfroot.stdout}}'
-    releasever: '{{ansible_distribution_version|int - 1}}'
+    releasever: '{{assible_distribution_version|int - 1}}'
   register: dnf_result
 
 - name: check filesystem version
@@ -39,7 +39,7 @@
 - name: verify the version
   assert:
     that:
-      - "rpm_result.stdout.find('fc' ~ (ansible_distribution_version|int - 1)) != -1"
+      - "rpm_result.stdout.find('fc' ~ (assible_distribution_version|int - 1)) != -1"
 
 - name: cleanup installroot
   file:

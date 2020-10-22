@@ -1,5 +1,5 @@
 # (c) 2012, Daniel Hokka Zakrisson <daniel@hozac.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -10,7 +10,7 @@ DOCUMENTATION = """
     version_added: "0.9"
     short_description: read file contents
     description:
-        - This lookup returns the contents from a file on the Ansible controller's file system.
+        - This lookup returns the contents from a file on the Assible controller's file system.
     options:
       _terms:
         description: path(s) of files to read
@@ -49,10 +49,10 @@ RETURN = """
     elements: str
 """
 
-from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.plugins.lookup import LookupBase
-from ansible.module_utils._text import to_text
-from ansible.utils.display import Display
+from assible.errors import AssibleError, AssibleParserError
+from assible.plugins.lookup import LookupBase
+from assible.module_utils._text import to_text
+from assible.utils.display import Display
 
 display = Display()
 
@@ -79,8 +79,8 @@ class LookupModule(LookupBase):
                         contents = contents.rstrip()
                     ret.append(contents)
                 else:
-                    raise AnsibleParserError()
-            except AnsibleParserError:
-                raise AnsibleError("could not locate file in lookup: %s" % term)
+                    raise AssibleParserError()
+            except AssibleParserError:
+                raise AssibleError("could not locate file in lookup: %s" % term)
 
         return ret

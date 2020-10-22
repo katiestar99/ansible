@@ -22,7 +22,7 @@ digraph G {
 
         subgraph cluster_4 {
             "facts" -> "gathered host facts"
-            "facts" -> "host facts from /etc/ansible/facts.d"
+            "facts" -> "host facts from /etc/assible/facts.d"
             "facts" -> "set_fact"
             "facts" -> "include_vars"
         }

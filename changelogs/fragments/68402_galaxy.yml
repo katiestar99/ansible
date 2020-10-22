@@ -1,2 +1,2 @@
 minor_changes:
-- galaxy - add documentation about galaxy parameters in examples/ansible.cfg (https://github.com/ansible/ansible/issues/68402).
+- galaxy - add documentation about galaxy parameters in examples/assible.cfg (https://github.com/assible/assible/issues/68402).

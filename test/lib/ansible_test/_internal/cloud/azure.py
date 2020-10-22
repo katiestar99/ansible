@@ -28,13 +28,13 @@ from ..http import (
 )
 
 from ..core_ci import (
-    AnsibleCoreCI,
+    AssibleCoreCI,
 )
 
 
 class AzureCloudProvider(CloudProvider):
     """Azure cloud provider plugin. Sets up cloud resources before delegation."""
-    SHERLOCK_CONFIG_PATH = os.path.expanduser('~/.ansible-sherlock-ci.cfg')
+    SHERLOCK_CONFIG_PATH = os.path.expanduser('~/.assible-sherlock-ci.cfg')
 
     def __init__(self, args):
         """
@@ -52,7 +52,7 @@ class AzureCloudProvider(CloudProvider):
         if os.path.isfile(self.config_static_path):
             return
 
-        aci = self._create_ansible_core_ci()
+        aci = self._create_assible_core_ci()
 
         if aci.available:
             return
@@ -106,7 +106,7 @@ class AzureCloudProvider(CloudProvider):
             if not self.args.explain:
                 response = result.json()
         else:
-            aci = self._create_ansible_core_ci()
+            aci = self._create_assible_core_ci()
 
             aci_result = aci.start()
 
@@ -132,11 +132,11 @@ class AzureCloudProvider(CloudProvider):
 
         self._write_config(config)
 
-    def _create_ansible_core_ci(self):
+    def _create_assible_core_ci(self):
         """
-        :rtype: AnsibleCoreCI
+        :rtype: AssibleCoreCI
         """
-        return AnsibleCoreCI(self.args, 'azure', 'azure', persist=False, stage=self.args.remote_stage, provider=self.args.remote_provider)
+        return AssibleCoreCI(self.args, 'azure', 'azure', persist=False, stage=self.args.remote_stage, provider=self.args.remote_provider)
 
 
 class AzureCloudEnvironment(CloudEnvironment):
@@ -150,15 +150,15 @@ class AzureCloudEnvironment(CloudEnvironment):
         display.sensitive.add(env_vars.get('AZURE_SECRET'))
         display.sensitive.add(env_vars.get('AZURE_PASSWORD'))
 
-        ansible_vars = dict(
+        assible_vars = dict(
             resource_prefix=self.resource_prefix,
         )
 
-        ansible_vars.update(dict((key.lower(), value) for key, value in env_vars.items()))
+        assible_vars.update(dict((key.lower(), value) for key, value in env_vars.items()))
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )
 
     def on_failure(self, target, tries):
@@ -168,7 +168,7 @@ class AzureCloudEnvironment(CloudEnvironment):
         """
         if not tries and self.managed:
             display.notice('If %s failed due to permissions, the test policy may need to be updated. '
-                           'For help, consult @mattclay or @gundalow on GitHub or #ansible-devel on IRC.' % target.name)
+                           'For help, consult @mattclay or @gundalow on GitHub or #assible-devel on IRC.' % target.name)
 
 
 def get_config(config_path):

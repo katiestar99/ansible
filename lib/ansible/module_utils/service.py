@@ -1,10 +1,10 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
-# Copyright (c) Ansible Inc, 2016
+# Copyright (c) Assible Inc, 2016
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -38,8 +38,8 @@ import shlex
 import subprocess
 import traceback
 
-from ansible.module_utils.six import PY2, b
-from ansible.module_utils._text import to_bytes, to_text
+from assible.module_utils.six import PY2, b
+from assible.module_utils._text import to_bytes, to_text
 
 
 def sysv_is_enabled(name, runlevel=None):
@@ -111,7 +111,7 @@ def fail_if_missing(module, found, service, msg=''):
     This function will return an error or exit gracefully depending on check mode status
     and if the service is missing or not.
 
-    :arg module: is an  AnsibleModule object, used for it's utility methods
+    :arg module: is an  AssibleModule object, used for it's utility methods
     :arg found: boolean indicating if services was found or not
     :arg service: name of service
     :kw msg: extra info to append to error/success msg when missing
@@ -166,7 +166,7 @@ def daemonize(module, cmd):
     '''
     Execute a command while detaching as a daemon, returns rc, stdout, and stderr.
 
-    :arg module: is an  AnsibleModule object, used for it's utility methods
+    :arg module: is an  AssibleModule object, used for it's utility methods
     :arg cmd: is a list or string representing the command and options to run
 
     This is complex because daemonization is hard for people.

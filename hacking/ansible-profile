@@ -6,10 +6,10 @@ import cProfile
 import sys
 import traceback
 
-import ansible.constants as C
-from ansible.module_utils._text import to_text
+import assible.constants as C
+from assible.module_utils._text import to_text
 
-#__requires__ = ['ansible']
+#__requires__ = ['assible']
 try:
     import pkg_resources
 except Exception:
@@ -25,11 +25,11 @@ myclass = "%sCLI" % target.capitalize()
 
 try:
     # define cli
-    mycli = getattr(__import__("ansible.cli.%s" % target, fromlist=[myclass]), myclass)
+    mycli = getattr(__import__("assible.cli.%s" % target, fromlist=[myclass]), myclass)
 except ImportError as e:
     msg = getattr(e, 'msg', getattr(e, message, ''))
     if msg.endswith(' %s' % target):
-        raise Exception("Ansible sub-program not implemented: %s" % target)
+        raise Exception("Assible sub-program not implemented: %s" % target)
     else:
         raise
 

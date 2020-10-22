@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -7,11 +7,11 @@ __metaclass__ = type
 import os
 import time
 
-from ansible import constants as C
-from ansible.executor.module_common import get_action_args_with_defaults
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.action import ActionBase
-from ansible.utils.vars import merge_hash
+from assible import constants as C
+from assible.executor.module_common import get_action_args_with_defaults
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.action import ActionBase
+from assible.utils.vars import merge_hash
 
 
 class ActionModule(ActionBase):
@@ -21,7 +21,7 @@ class ActionModule(ActionBase):
         mod_args = self._task.args.copy()
 
         # deal with 'setup specific arguments'
-        if fact_module not in ['ansible.legacy.setup', 'ansible.builtin.setup', 'setup']:
+        if fact_module not in ['assible.legacy.setup', 'assible.builtin.setup', 'setup']:
             # network facts modules must support gather_subset
             if self._connection._load_name not in ('network_cli', 'httpapi', 'netconf'):
                 subset = mod_args.pop('gather_subset', None)
@@ -41,13 +41,13 @@ class ActionModule(ActionBase):
         mod_args = dict((k, v) for k, v in mod_args.items() if v is not None)
 
         # handle module defaults
-        mod_args = get_action_args_with_defaults(fact_module, mod_args, self._task.module_defaults, self._templar, self._task._ansible_internal_redirect_list)
+        mod_args = get_action_args_with_defaults(fact_module, mod_args, self._task.module_defaults, self._templar, self._task._assible_internal_redirect_list)
 
         return mod_args
 
     def _combine_task_result(self, result, task_result):
         filtered_res = {
-            'ansible_facts': task_result.get('ansible_facts', {}),
+            'assible_facts': task_result.get('assible_facts', {}),
             'warnings': task_result.get('warnings', []),
             'deprecations': task_result.get('deprecations', []),
         }
@@ -60,14 +60,14 @@ class ActionModule(ActionBase):
         self._supports_check_mode = True
 
         result = super(ActionModule, self).run(tmp, task_vars)
-        result['ansible_facts'] = {}
+        result['assible_facts'] = {}
 
         modules = C.config.get_config_value('FACTS_MODULES', variables=task_vars)
-        parallel = task_vars.pop('ansible_facts_parallel', self._task.args.pop('parallel', None))
+        parallel = task_vars.pop('assible_facts_parallel', self._task.args.pop('parallel', None))
         if 'smart' in modules:
             connection_map = C.config.get_config_value('CONNECTION_FACTS_MODULES', variables=task_vars)
-            network_os = self._task.args.get('network_os', task_vars.get('ansible_network_os', task_vars.get('ansible_facts', {}).get('network_os')))
-            modules.extend([connection_map.get(network_os or self._connection._load_name, 'ansible.legacy.setup')])
+            network_os = self._task.args.get('network_os', task_vars.get('assible_network_os', task_vars.get('assible_facts', {}).get('network_os')))
+            modules.extend([connection_map.get(network_os or self._connection._load_name, 'assible.legacy.setup')])
             modules.pop(modules.index('smart'))
 
         failed = {}
@@ -102,8 +102,8 @@ class ActionModule(ActionBase):
 
             while jobs:
                 for module in jobs:
-                    poll_args = {'jid': jobs[module]['ansible_job_id'], '_async_dir': os.path.dirname(jobs[module]['results_file'])}
-                    res = self._execute_module(module_name='ansible.legacy.async_status', module_args=poll_args, task_vars=task_vars, wrap_async=False)
+                    poll_args = {'jid': jobs[module]['assible_job_id'], '_async_dir': os.path.dirname(jobs[module]['results_file'])}
+                    res = self._execute_module(module_name='assible.legacy.async_status', module_args=poll_args, task_vars=task_vars, wrap_async=False)
                     if res.get('finished', 0) == 1:
                         if res.get('failed', False):
                             failed[module] = res
@@ -130,9 +130,9 @@ class ActionModule(ActionBase):
             result['failed_modules'] = failed
 
         # tell executor facts were gathered
-        result['ansible_facts']['_ansible_facts_gathered'] = True
+        result['assible_facts']['_assible_facts_gathered'] = True
 
         # hack to keep --verbose from showing all the setup module result
-        result['_ansible_verbose_override'] = True
+        result['_assible_verbose_override'] = True
 
         return result

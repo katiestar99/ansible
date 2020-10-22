@@ -1,1 +1,1 @@
-verbosity: "{{ '' if not ansible_verbosity else '-' ~ ('v' * ansible_verbosity) }}"
+verbosity: "{{ '' if not assible_verbosity else '-' ~ ('v' * assible_verbosity) }}"

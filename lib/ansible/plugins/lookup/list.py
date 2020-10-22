@@ -1,4 +1,4 @@
-# (c) 2012-17 Ansible Project
+# (c) 2012-17 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
     name: list
-    author: Ansible Core Team
+    author: Assible Core Team
     version_added: "2.0"
     short_description: simply returns what it is given.
     description:
@@ -31,14 +31,14 @@ RETURN = """
     elements: raw
 """
 
-from ansible.module_utils.common._collections_compat import Sequence
-from ansible.plugins.lookup import LookupBase
-from ansible.errors import AnsibleError
+from assible.module_utils.common._collections_compat import Sequence
+from assible.plugins.lookup import LookupBase
+from assible.errors import AssibleError
 
 
 class LookupModule(LookupBase):
 
     def run(self, terms, **kwargs):
         if not isinstance(terms, Sequence):
-            raise AnsibleError("with_list expects a list")
+            raise AssibleError("with_list expects a list")
         return terms

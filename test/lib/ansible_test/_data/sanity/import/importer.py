@@ -9,7 +9,7 @@ def main():
     Main program function used to isolate globals from imported code.
     Changes to globals in imported modules on Python 2.x will overwrite our own globals.
     """
-    import ansible
+    import assible
     import contextlib
     import datetime
     import json
@@ -22,11 +22,11 @@ def main():
     import types
     import warnings
 
-    ansible_path = os.path.dirname(os.path.dirname(ansible.__file__))
+    assible_path = os.path.dirname(os.path.dirname(assible.__file__))
     temp_path = os.environ['SANITY_TEMP_PATH'] + os.path.sep
     external_python = os.environ.get('SANITY_EXTERNAL_PYTHON') or sys.executable
     collection_full_name = os.environ.get('SANITY_COLLECTION_FULL_NAME')
-    collection_root = os.environ.get('ANSIBLE_COLLECTIONS_PATH')
+    collection_root = os.environ.get('ASSIBLE_COLLECTIONS_PATH')
 
     try:
         # noinspection PyCompatibility
@@ -44,9 +44,9 @@ def main():
 
     if collection_full_name:
         # allow importing code from collections when testing a collection
-        from ansible.module_utils.common.text.converters import to_bytes, to_text, to_native, text_type
-        from ansible.utils.collection_loader._collection_finder import _AnsibleCollectionFinder
-        from ansible.utils.collection_loader import _collection_finder
+        from assible.module_utils.common.text.converters import to_bytes, to_text, to_native, text_type
+        from assible.utils.collection_loader._collection_finder import _AssibleCollectionFinder
+        from assible.utils.collection_loader import _collection_finder
 
         yaml_to_json_path = os.path.join(os.path.dirname(__file__), 'yaml_to_json.py')
         yaml_to_dict_cache = {}
@@ -93,33 +93,33 @@ def main():
 
         _collection_finder._meta_yml_to_dict = yaml_to_dict  # pylint: disable=protected-access
 
-        collection_loader = _AnsibleCollectionFinder(paths=[collection_root])
+        collection_loader = _AssibleCollectionFinder(paths=[collection_root])
         # noinspection PyProtectedMember
         collection_loader._install()  # pylint: disable=protected-access
     else:
         # do not support collection loading when not testing a collection
         collection_loader = None
 
-    # remove all modules under the ansible package
-    list(map(sys.modules.pop, [m for m in sys.modules if m.partition('.')[0] == ansible.__name__]))
+    # remove all modules under the assible package
+    list(map(sys.modules.pop, [m for m in sys.modules if m.partition('.')[0] == assible.__name__]))
 
-    # pre-load an empty ansible package to prevent unwanted code in __init__.py from loading
-    # this more accurately reflects the environment that AnsiballZ runs modules under
-    # it also avoids issues with imports in the ansible package that are not allowed
-    ansible_module = types.ModuleType(ansible.__name__)
-    ansible_module.__file__ = ansible.__file__
-    ansible_module.__path__ = ansible.__path__
-    ansible_module.__package__ = ansible.__package__
+    # pre-load an empty assible package to prevent unwanted code in __init__.py from loading
+    # this more accurately reflects the environment that AssiballZ runs modules under
+    # it also avoids issues with imports in the assible package that are not allowed
+    assible_module = types.ModuleType(assible.__name__)
+    assible_module.__file__ = assible.__file__
+    assible_module.__path__ = assible.__path__
+    assible_module.__package__ = assible.__package__
 
-    sys.modules[ansible.__name__] = ansible_module
+    sys.modules[assible.__name__] = assible_module
 
-    class ImporterAnsibleModuleException(Exception):
-        """Exception thrown during initialization of ImporterAnsibleModule."""
+    class ImporterAssibleModuleException(Exception):
+        """Exception thrown during initialization of ImporterAssibleModule."""
 
-    class ImporterAnsibleModule:
-        """Replacement for AnsibleModule to support import testing."""
+    class ImporterAssibleModule:
+        """Replacement for AssibleModule to support import testing."""
         def __init__(self, *args, **kwargs):
-            raise ImporterAnsibleModuleException()
+            raise ImporterAssibleModuleException()
 
     class RestrictedModuleLoader:
         """Python module loader that restricts inappropriate imports."""
@@ -137,23 +137,23 @@ def main():
             if fullname in self.loaded_modules:
                 return None  # ignore modules that are already being loaded
 
-            if is_name_in_namepace(fullname, ['ansible']):
-                if fullname in ('ansible.module_utils.basic', 'ansible.module_utils.common.removed'):
+            if is_name_in_namepace(fullname, ['assible']):
+                if fullname in ('assible.module_utils.basic', 'assible.module_utils.common.removed'):
                     return self  # intercept loading so we can modify the result
 
-                if is_name_in_namepace(fullname, ['ansible.module_utils', self.name]):
+                if is_name_in_namepace(fullname, ['assible.module_utils', self.name]):
                     return None  # module_utils and module under test are always allowed
 
-                if any(os.path.exists(candidate_path) for candidate_path in convert_ansible_name_to_absolute_paths(fullname)):
-                    return self  # restrict access to ansible files that exist
+                if any(os.path.exists(candidate_path) for candidate_path in convert_assible_name_to_absolute_paths(fullname)):
+                    return self  # restrict access to assible files that exist
 
-                return None  # ansible file does not exist, do not restrict access
+                return None  # assible file does not exist, do not restrict access
 
-            if is_name_in_namepace(fullname, ['ansible_collections']):
+            if is_name_in_namepace(fullname, ['assible_collections']):
                 if not collection_loader:
                     return self  # restrict access to collections when we are not testing a collection
 
-                if is_name_in_namepace(fullname, ['ansible_collections...plugins.module_utils', self.name]):
+                if is_name_in_namepace(fullname, ['assible_collections...plugins.module_utils', self.name]):
                     return None  # module_utils and module under test are always allowed
 
                 if collection_loader.find_module(fullname, path):
@@ -168,20 +168,20 @@ def main():
             """Raise an ImportError.
             :type fullname: str
             """
-            if fullname == 'ansible.module_utils.basic':
+            if fullname == 'assible.module_utils.basic':
                 module = self.__load_module(fullname)
 
-                # stop Ansible module execution during AnsibleModule instantiation
-                module.AnsibleModule = ImporterAnsibleModule
-                # no-op for _load_params since it may be called before instantiating AnsibleModule
+                # stop Assible module execution during AssibleModule instantiation
+                module.AssibleModule = ImporterAssibleModule
+                # no-op for _load_params since it may be called before instantiating AssibleModule
                 module._load_params = lambda *args, **kwargs: {}  # pylint: disable=protected-access
 
                 return module
 
-            if fullname == 'ansible.module_utils.common.removed':
+            if fullname == 'assible.module_utils.common.removed':
                 module = self.__load_module(fullname)
 
-                # no-op for removed_module since it is called in place of AnsibleModule instantiation
+                # no-op for removed_module since it is called in place of AssibleModule instantiation
                 module.removed_module = lambda *args, **kwargs: None
 
                 return module
@@ -218,11 +218,11 @@ def main():
         if name in sys.modules:
             return  # cannot be tested because it has already been loaded
 
-        is_ansible_module = (path.startswith('lib/ansible/modules/') or path.startswith('plugins/modules/')) and os.path.basename(path) != '__init__.py'
-        run_main = is_ansible_module
+        is_assible_module = (path.startswith('lib/assible/modules/') or path.startswith('plugins/modules/')) and os.path.basename(path) != '__init__.py'
+        run_main = is_assible_module
 
-        if path == 'lib/ansible/modules/async_wrapper.py':
-            # async_wrapper is a non-standard Ansible module (does not use AnsibleModule) so we cannot test the main function
+        if path == 'lib/assible/modules/async_wrapper.py':
+            # async_wrapper is a non-standard Assible module (does not use AssibleModule) so we cannot test the main function
             run_main = False
 
         capture_normal = Capture()
@@ -239,8 +239,8 @@ def main():
                     with restrict_imports(path, name, messages):
                         with capture_output(capture_main):
                             runpy.run_module(name, run_name='__main__', alter_sys=True)
-        except ImporterAnsibleModuleException:
-            # module instantiated AnsibleModule without raising an exception
+        except ImporterAssibleModuleException:
+            # module instantiated AssibleModule without raising an exception
             pass
         except BaseException as ex:  # pylint: disable=locally-disabled, broad-except
             # intentionally catch all exceptions, including calls to sys.exit
@@ -304,8 +304,8 @@ def main():
                 if not part:
                     truncated_name[idx] = part
 
-            # example: name=ansible, allowed_name=ansible.module_utils
-            # example: name=ansible.module_utils.system.ping, allowed_name=ansible.module_utils
+            # example: name=assible, allowed_name=assible.module_utils
+            # example: name=assible.module_utils.system.ping, allowed_name=assible.module_utils
             if truncated_name == truncated_namespace:
                 return True
 
@@ -329,14 +329,14 @@ def main():
         for module in sorted(changed):
             report_message(path, 0, 0, 'reload', 'reloading of "%s" in sys.modules is not supported' % module, messages)
 
-    def convert_ansible_name_to_absolute_paths(name):
+    def convert_assible_name_to_absolute_paths(name):
         """Calculate the module path from the given name.
         :type name: str
         :rtype: list[str]
         """
         return [
-            os.path.join(ansible_path, name.replace('.', os.path.sep)),
-            os.path.join(ansible_path, name.replace('.', os.path.sep)) + '.py',
+            os.path.join(assible_path, name.replace('.', os.path.sep)),
+            os.path.join(assible_path, name.replace('.', os.path.sep)) + '.py',
         ]
 
     def convert_relative_path_to_name(path):
@@ -355,9 +355,9 @@ def main():
 
         if collection_loader:
             # when testing collections the relative paths (and names) being tested are within the collection under test
-            name = 'ansible_collections.%s.%s' % (collection_full_name, name)
+            name = 'assible_collections.%s.%s' % (collection_full_name, name)
         else:
-            # when testing ansible all files being imported reside under the lib directory
+            # when testing assible all files being imported reside under the lib directory
             name = name[len('lib/'):]
 
         return name
@@ -433,7 +433,7 @@ def main():
             check_sys_modules(path, snapshot, messages)
 
             for key in set(sys.modules.keys()) - set(snapshot.keys()):
-                if is_name_in_namepace(key, ('ansible', 'ansible_collections')):
+                if is_name_in_namepace(key, ('assible', 'assible_collections')):
                     del sys.modules[key]  # only unload our own code since we know it's native Python
 
     @contextlib.contextmanager

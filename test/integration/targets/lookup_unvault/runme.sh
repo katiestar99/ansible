@@ -3,4 +3,4 @@
 set -eux
 
 # run tests
-ansible-playbook unvault.yml --vault-password-file='secret' -v "$@"
+assible-playbook unvault.yml --vault-password-file='secret' -v "$@"

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2014, Brian Coca <briancoca+ansible@gmail.com>
+# Copyright: (c) 2014, Brian Coca <briancoca+assible@gmail.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -42,7 +42,7 @@ options:
     description:
       - The type of the value supplied.
       - It is highly recommended to add I(no_log=True) to task while specifying I(vtype=password).
-      - C(seen) was added in Ansible 2.2.
+      - C(seen) was added in Assible 2.2.
     type: str
     choices: [ boolean, error, multiselect, note, password, seen, select, string, text, title ]
   value:
@@ -94,8 +94,8 @@ EXAMPLES = r'''
   no_log: True
 '''
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils._text import to_text
+from assible.module_utils.basic import AssibleModule
 
 
 def get_selections(module, pkg):
@@ -131,7 +131,7 @@ def set_selection(module, pkg, question, vtype, value, unseen):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(type='str', required=True, aliases=['pkg']),
             question=dict(type='str', aliases=['selection', 'setting']),

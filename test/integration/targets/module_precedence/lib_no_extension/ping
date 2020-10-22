@@ -2,27 +2,27 @@
 # -*- coding: utf-8 -*-
 
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2016, Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2016, Toshio Kuratomi <tkuratomi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -35,24 +35,24 @@ short_description: Try to connect to host, verify a usable python and return C(p
 description:
    - A trivial test module, this module always returns C(pong) on successful
      contact. It does not make sense in playbooks, but it is useful from
-     C(/usr/bin/ansible) to verify the ability to login and that a usable python is configured.
+     C(/usr/bin/assible) to verify the ability to login and that a usable python is configured.
    - This is NOT ICMP ping, this is just a trivial test module.
 options: {}
 author:
-    - "Ansible Core Team"
+    - "Assible Core Team"
     - "Michael DeHaan"
 '''
 
 EXAMPLES = '''
 # Test we can logon to 'webservers' and execute python with json lib.
-ansible webservers -m ping
+assible webservers -m ping
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             data=dict(required=False, default=None),
         ),

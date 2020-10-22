@@ -1,31 +1,31 @@
 # test code for the template module
 # (c) 2014, Michael DeHaan <michael.dehaan@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 - set_fact:
     output_dir: "{{ lookup('env', 'OUTPUT_DIR') }}"
 
 - name: show python interpreter
   debug:
-     msg: "{{ ansible_python['executable'] }}"
+     msg: "{{ assible_python['executable'] }}"
 
 - name: show jinja2 version
   debug:
-     msg: "{{ lookup('pipe', '{{ ansible_python[\"executable\"] }} -c \"import jinja2; print(jinja2.__version__)\"') }}"
+     msg: "{{ lookup('pipe', '{{ assible_python[\"executable\"] }} -c \"import jinja2; print(jinja2.__version__)\"') }}"
 
 - name: get default group
   shell: id -gn
@@ -72,7 +72,7 @@
       - 'template_results is changed'
       - 'stat_results.stat["exists"]'
 
-# test for import with context on jinja-2.9 See https://github.com/ansible/ansible/issues/20494
+# test for import with context on jinja-2.9 See https://github.com/assible/assible/issues/20494
 - name: fill in a template using import with context ala issue 20494
   template: src=import_with_context.j2 dest={{output_dir}}/import_with_context.templated mode=0644
   register: template_result
@@ -90,7 +90,7 @@
         - 'diff_result.stdout == ""'
         - "diff_result.rc == 0"
 
-# test for nested include https://github.com/ansible/ansible/issues/34886
+# test for nested include https://github.com/assible/assible/issues/34886
 - name: test if parent variables are defined in nested include
   template: src=for_loop.j2 dest={{output_dir}}/for_loop.templated mode=0644
 
@@ -105,7 +105,7 @@
         - '"bar" in for_loop_out.stdout'
         - '"bam" in for_loop_out.stdout'
 
-# test for 'import as' on jinja-2.9 See https://github.com/ansible/ansible/issues/20494
+# test for 'import as' on jinja-2.9 See https://github.com/assible/assible/issues/20494
 - name: fill in a template using import as ala fails2 case in issue 20494
   template: src=import_as.j2 dest={{output_dir}}/import_as.templated mode=0644
   register: import_as_template_result
@@ -123,7 +123,7 @@
         - 'import_as_diff_result.stdout == ""'
         - "import_as_diff_result.rc == 0"
 
-# test for 'import as with context' on jinja-2.9 See https://github.com/ansible/ansible/issues/20494
+# test for 'import as with context' on jinja-2.9 See https://github.com/assible/assible/issues/20494
 - name: fill in a template using import as with context ala fails2 case in issue 20494
   template: src=import_as_with_context.j2 dest={{output_dir}}/import_as_with_context.templated mode=0644
   register: import_as_with_context_template_result
@@ -180,7 +180,7 @@
 # VERIFY lstrip_blocks
 
 - name: Check support for lstrip_blocks in Jinja2
-  shell: "{{ ansible_python.executable }} -c 'import jinja2; jinja2.defaults.LSTRIP_BLOCKS'"
+  shell: "{{ assible_python.executable }} -c 'import jinja2; jinja2.defaults.LSTRIP_BLOCKS'"
   register: lstrip_block_support
   ignore_errors: True
 
@@ -230,8 +230,8 @@
 
 # VERIFY CONTENTS
 
-- name: check what python version ansible is running on
-  command: "{{ ansible_python.executable }} -c 'import distutils.sysconfig ; print(distutils.sysconfig.get_python_version())'"
+- name: check what python version assible is running on
+  command: "{{ assible_python.executable }} -c 'import distutils.sysconfig ; print(distutils.sysconfig.get_python_version())'"
   register: pyver
   delegate_to: localhost
 
@@ -431,7 +431,7 @@
 
 #
 # template module can overwrite a file that's been hard linked
-# https://github.com/ansible/ansible/issues/10834
+# https://github.com/assible/assible/issues/10834
 #
 
 - name: ensure test dir is absent
@@ -598,7 +598,7 @@
 # Check that mode=preserve works with template
 - name: Create a template which has strange permissions
   copy:
-    content: !unsafe '{{ ansible_managed }}\n'
+    content: !unsafe '{{ assible_managed }}\n'
     dest: '{{ output_dir }}/foo-template.j2'
     mode: 0547
   delegate_to: localhost

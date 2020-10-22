@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -35,12 +35,12 @@ except Exception:
     # need to take charge of calling it.
     pass
 
-from ansible.errors import AnsibleConnectionFailure
-from ansible.executor.task_executor import TaskExecutor
-from ansible.executor.task_result import TaskResult
-from ansible.module_utils._text import to_text
-from ansible.utils.display import Display
-from ansible.utils.multiprocessing import context as multiprocessing_context
+from assible.errors import AssibleConnectionFailure
+from assible.executor.task_executor import TaskExecutor
+from assible.executor.task_result import TaskResult
+from assible.module_utils._text import to_text
+from assible.utils.display import Display
+from assible.utils.multiprocessing import context as multiprocessing_context
 
 __all__ = ['WorkerProcess']
 
@@ -177,7 +177,7 @@ class WorkerProcess(multiprocessing_context.Process):
             )
             display.debug("done sending task result for task %s" % self._task._uuid)
 
-        except AnsibleConnectionFailure:
+        except AssibleConnectionFailure:
             self._host.vars = dict()
             self._host.groups = []
             self._final_q.send_task_result(

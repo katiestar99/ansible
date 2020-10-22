@@ -3,7 +3,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -34,7 +34,7 @@ options:
     description:
     - Maximum seconds to wait for shutdown to occur.
     - Increase this timeout for very slow hardware, large update applications, etc.
-    - This option has been removed since Ansible 2.5 as the win_reboot behavior has changed.
+    - This option has been removed since Assible 2.5 as the win_reboot behavior has changed.
     type: int
     default: 600
     aliases: [ shutdown_timeout_sec ]
@@ -60,7 +60,7 @@ options:
     description:
     - Message to display to users.
     type: str
-    default: Reboot initiated by Ansible
+    default: Reboot initiated by Assible
   boot_time_command:
     description:
       - Command to run that returns a unique string indicating the last time the system was booted.

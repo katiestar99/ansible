@@ -14,7 +14,7 @@ script:
   - export apb_name=APB_NAME
 
   # Download test shim.
-  - wget -O ${PWD}/apb-test.sh https://raw.githubusercontent.com/ansibleplaybookbundle/apb-test-shim/master/apb-test.sh
+  - wget -O ${PWD}/apb-test.sh https://raw.githubusercontent.com/assibleplaybookbundle/apb-test-shim/master/apb-test.sh
   - chmod +x ${PWD}/apb-test.sh
 
   # Run tests.
@@ -22,4 +22,4 @@ script:
 
 # Uncomment to allow travis to notify galaxy
 # notifications:
-#  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+#  webhooks: https://galaxy.assible.com/api/v1/notifications/

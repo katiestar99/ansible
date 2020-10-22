@@ -4,7 +4,7 @@
 NXOS Platform Options
 ***************************************
 
-The `Cisco NXOS <https://galaxy.ansible.com/cisco/nxos>`_ supports multiple connections. This page offers details on how each connection works in Ansible and how to use it.
+The `Cisco NXOS <https://galaxy.assible.com/cisco/nxos>`_ supports multiple connections. This page offers details on how each connection works in Assible and how to use it.
 
 .. contents::
   :local:
@@ -26,12 +26,12 @@ Connections available
 
     Indirect Access       via a bastion (jump host)                   via a web proxy
 
-    Connection Settings   ``ansible_connection:``                     ``ansible_connection:``
-                            ``ansible.netcommon.network_cli``             ``ansible.netcommon.httpapi``
+    Connection Settings   ``assible_connection:``                     ``assible_connection:``
+                            ``assible.netcommon.network_cli``             ``assible.netcommon.httpapi``
 
-    |enable_mode|         supported: use ``ansible_become: yes``      not supported by NX-API
-                          with ``ansible_become_method: enable``
-                          and ``ansible_become_password:``
+    |enable_mode|         supported: use ``assible_become: yes``      not supported by NX-API
+                          with ``assible_become_method: enable``
+                          and ``assible_become_password:``
 
     Returned Data Format  ``stdout[0].``                              ``stdout[0].messages[0].``
     ====================  ==========================================  =========================
@@ -39,9 +39,9 @@ Connections available
 .. |enable_mode| replace:: Enable Mode |br| (Privilege Escalation) |br| supported as of 2.5.3
 
 
-The ``ansible_connection: local`` has been deprecated. Please use ``ansible_connection: ansible.netcommon.network_cli`` or ``ansible_connection: ansible.netcommon.httpapi`` instead.
+The ``assible_connection: local`` has been deprecated. Please use ``assible_connection: assible.netcommon.network_cli`` or ``assible_connection: assible.netcommon.httpapi`` instead.
 
-Using CLI in Ansible
+Using CLI in Assible
 ====================
 
 Example CLI ``group_vars/nxos.yml``
@@ -49,18 +49,18 @@ Example CLI ``group_vars/nxos.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.network_cli
-   ansible_network_os: cisco.nxos.nxos
-   ansible_user: myuser
-   ansible_password: !vault...
-   ansible_become: yes
-   ansible_become_method: enable
-   ansible_become_password: !vault...
-   ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection: assible.netcommon.network_cli
+   assible_network_os: cisco.nxos.nxos
+   assible_user: myuser
+   assible_password: !vault...
+   assible_become: yes
+   assible_become_method: enable
+   assible_become_password: !vault...
+   assible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
 
-- If you are using SSH keys (including an ssh-agent) you can remove the ``ansible_password`` configuration.
-- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``ansible_ssh_common_args`` configuration.
+- If you are using SSH keys (including an ssh-agent) you can remove the ``assible_password`` configuration.
+- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``assible_ssh_common_args`` configuration.
 - If you are accessing your host through a bastion/jump host, you cannot include your SSH password in the ``ProxyCommand`` directive. To prevent secrets from leaking out (for example in ``ps`` output), SSH does not support providing passwords via environment variables.
 
 Example CLI task
@@ -72,17 +72,17 @@ Example CLI task
      cisco.nxos.nxos_config:
        backup: yes
      register: backup_nxos_location
-     when: ansible_network_os == 'cisco.nxos.nxos'
+     when: assible_network_os == 'cisco.nxos.nxos'
 
 
 
-Using NX-API in Ansible
+Using NX-API in Assible
 =======================
 
 Enabling NX-API
 ---------------
 
-Before you can use NX-API to connect to a switch, you must enable NX-API. To enable NX-API on a new switch via Ansible, use the ``nxos_nxapi`` module via the CLI connection. Set up group_vars/nxos.yml just like in the CLI example above, then run a playbook task like this:
+Before you can use NX-API to connect to a switch, you must enable NX-API. To enable NX-API on a new switch via Assible, use the ``nxos_nxapi`` module via the CLI connection. Set up group_vars/nxos.yml just like in the CLI example above, then run a playbook task like this:
 
 .. code-block:: yaml
 
@@ -90,7 +90,7 @@ Before you can use NX-API to connect to a switch, you must enable NX-API. To ena
       cisco.nxos.nxos_nxapi:
           enable_http: yes
           enable_https: yes
-      when: ansible_network_os == 'cisco.nxos.nxos'
+      when: assible_network_os == 'cisco.nxos.nxos'
 
 To find out more about the options for enabling HTTP/HTTPS and local http see the :ref:`nxos_nxapi <nxos_nxapi_module>` module documentation.
 
@@ -101,10 +101,10 @@ Example NX-API ``group_vars/nxos.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.httpapi
-   ansible_network_os: cisco.nxos.nxos
-   ansible_user: myuser
-   ansible_password: !vault...
+   assible_connection: assible.netcommon.httpapi
+   assible_network_os: cisco.nxos.nxos
+   assible_user: myuser
+   assible_password: !vault...
    proxy_env:
      http_proxy: http://proxy.example.com:8080
 
@@ -122,7 +122,7 @@ Example NX-API task
        backup: yes
      register: backup_nxos_location
      environment: "{{ proxy_env }}"
-     when: ansible_network_os == 'cisco.nxos.nxos'
+     when: assible_network_os == 'cisco.nxos.nxos'
 
 In this example the ``proxy_env`` variable defined in ``group_vars`` gets passed to the ``environment`` option of the module used in the task.
 
@@ -131,7 +131,7 @@ In this example the ``proxy_env`` variable defined in ``group_vars`` gets passed
 Cisco Nexus platform support matrix
 ===================================
 
-The following platforms and software versions have been certified by Cisco to work with this version of Ansible.
+The following platforms and software versions have been certified by Cisco to work with this version of Assible.
 
 .. table:: Platform / Software Minimum Requirements
      :align: center

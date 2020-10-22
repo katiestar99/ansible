@@ -1,10 +1,10 @@
 #1powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#AnsibleRequires -CSharpUtil Ansible.Test
+#Requires -Module Assible.ModuleUtils.Legacy
+#AssibleRequires -CSharpUtil Assible.Test
 
 $result = @{
-    res = [Ansible.Test.OutputTest]::GetString()
+    res = [Assible.Test.OutputTest]::GetString()
     changed = $false
 }
 

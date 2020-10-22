@@ -9,12 +9,12 @@ __metaclass__ = type
 
 import os
 
-from ansible.errors import AnsibleError, AnsibleAction, _AnsibleActionDone, AnsibleActionFail
-from ansible.module_utils._text import to_native
-from ansible.module_utils.common.collections import Mapping
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.module_utils.six import text_type
-from ansible.plugins.action import ActionBase
+from assible.errors import AssibleError, AssibleAction, _AssibleActionDone, AssibleActionFail
+from assible.module_utils._text import to_native
+from assible.module_utils.common.collections import Mapping
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils.six import text_type
+from assible.plugins.action import ActionBase
 
 
 class ActionModule(ActionBase):
@@ -39,8 +39,8 @@ class ActionModule(ActionBase):
             if remote_src:
                 # everything is remote, so we just execute the module
                 # without changing any of the module arguments
-                # call with ansible.legacy prefix to prevent collections collisions while allowing local override
-                raise _AnsibleActionDone(result=self._execute_module(module_name='ansible.legacy.uri',
+                # call with assible.legacy prefix to prevent collections collisions while allowing local override
+                raise _AssibleActionDone(result=self._execute_module(module_name='assible.legacy.uri',
                                                                      task_vars=task_vars, wrap_async=self._task.async_val))
 
             kwargs = {}
@@ -48,8 +48,8 @@ class ActionModule(ActionBase):
             if src:
                 try:
                     src = self._find_needle('files', src)
-                except AnsibleError as e:
-                    raise AnsibleActionFail(to_native(e))
+                except AssibleError as e:
+                    raise AssibleActionFail(to_native(e))
 
                 tmp_src = self._connection._shell.join_path(self._connection._shell.tmpdir, os.path.basename(src))
                 kwargs['src'] = tmp_src
@@ -57,7 +57,7 @@ class ActionModule(ActionBase):
                 self._fixup_perms2((self._connection._shell.tmpdir, tmp_src))
             elif body_format == 'form-multipart':
                 if not isinstance(body, Mapping):
-                    raise AnsibleActionFail(
+                    raise AssibleActionFail(
                         'body must be mapping, cannot be type %s' % body.__class__.__name__
                     )
                 for field, value in body.items():
@@ -70,8 +70,8 @@ class ActionModule(ActionBase):
 
                     try:
                         filename = self._find_needle('files', filename)
-                    except AnsibleError as e:
-                        raise AnsibleActionFail(to_native(e))
+                    except AssibleError as e:
+                        raise AssibleActionFail(to_native(e))
 
                     tmp_src = self._connection._shell.join_path(
                         self._connection._shell.tmpdir,
@@ -85,9 +85,9 @@ class ActionModule(ActionBase):
             new_module_args = self._task.args.copy()
             new_module_args.update(kwargs)
 
-            # call with ansible.legacy prefix to prevent collections collisions while allowing local override
-            result.update(self._execute_module('ansible.legacy.uri', module_args=new_module_args, task_vars=task_vars, wrap_async=self._task.async_val))
-        except AnsibleAction as e:
+            # call with assible.legacy prefix to prevent collections collisions while allowing local override
+            result.update(self._execute_module('assible.legacy.uri', module_args=new_module_args, task_vars=task_vars, wrap_async=self._task.async_val))
+        except AssibleAction as e:
             result.update(e.result)
         finally:
             if not self._task.async_val:

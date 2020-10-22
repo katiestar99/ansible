@@ -8,7 +8,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.network import (
+from assible.module_utils.common.network import (
     to_masklen,
     to_netmask,
     to_subnet,

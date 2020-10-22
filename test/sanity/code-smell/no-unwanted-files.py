@@ -19,11 +19,11 @@ def main():
     )
 
     skip_paths = set([
-        'lib/ansible/config/ansible_builtin_runtime.yml',  # not included in the sanity ignore file since it won't exist until after migration
+        'lib/assible/config/assible_builtin_runtime.yml',  # not included in the sanity ignore file since it won't exist until after migration
     ])
 
     skip_directories = (
-        'lib/ansible/galaxy/data/',
+        'lib/assible/galaxy/data/',
     )
 
     for path in paths:
@@ -33,8 +33,8 @@ def main():
         if any(path.startswith(skip_directory) for skip_directory in skip_directories):
             continue
 
-        if path.startswith('lib/') and not path.startswith('lib/ansible/'):
-            print('%s: all "lib" content must reside in the "lib/ansible" directory' % path)
+        if path.startswith('lib/') and not path.startswith('lib/assible/'):
+            print('%s: all "lib" content must reside in the "lib/assible" directory' % path)
             continue
 
         ext = os.path.splitext(path)[1]

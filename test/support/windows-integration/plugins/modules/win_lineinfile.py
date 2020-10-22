@@ -3,7 +3,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -20,7 +20,7 @@ options:
     description:
       - The path of the file to modify.
       - Note that the Windows path delimiter C(\) must be escaped as C(\\) when the line is double quoted.
-      - Before Ansible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
+      - Before Assible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
     type: path
     required: yes
     aliases: [ dest, destfile, name ]
@@ -101,7 +101,7 @@ options:
     choices: [ unix, windows ]
     default: windows
 notes:
-  - As of Ansible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
+  - As of Assible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
 seealso:
 - module: assemble
 - module: lineinfile
@@ -110,7 +110,7 @@ author:
 '''
 
 EXAMPLES = r'''
-# Before Ansible 2.3, option 'dest', 'destfile' or 'name' was used instead of 'path'
+# Before Assible 2.3, option 'dest', 'destfile' or 'name' was used instead of 'path'
 - name: Insert path without converting \r\n
   win_lineinfile:
     path: c:\file.txt

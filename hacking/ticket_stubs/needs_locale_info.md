@@ -1,6 +1,6 @@
 This issue may be related to locale or text encoding. To help troubleshoot and reproduce the issue, we need some additional information.
 
-If running ansible from the command line, try to gather this information from the same shell and terminal.
+If running assible from the command line, try to gather this information from the same shell and terminal.
 
 To collect the locale, language and text encoding settings, use the ```locale``` command:
 ``` shell

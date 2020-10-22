@@ -1,32 +1,32 @@
-# (c) 2014 Michael DeHaan, <michael@ansible.com>
+# (c) 2014 Michael DeHaan, <michael@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import ansible.constants as C
-from ansible.errors import AnsibleParserError, AnsibleError, AnsibleAssertionError
-from ansible.module_utils.six import iteritems, string_types
-from ansible.module_utils._text import to_text
-from ansible.parsing.splitter import parse_kv, split_args
-from ansible.plugins.loader import module_loader, action_loader
-from ansible.template import Templar
-from ansible.utils.sentinel import Sentinel
+import assible.constants as C
+from assible.errors import AssibleParserError, AssibleError, AssibleAssertionError
+from assible.module_utils.six import iteritems, string_types
+from assible.module_utils._text import to_text
+from assible.parsing.splitter import parse_kv, split_args
+from assible.plugins.loader import module_loader, action_loader
+from assible.template import Templar
+from assible.utils.sentinel import Sentinel
 
 
 # For filtering out modules correctly below
@@ -106,12 +106,12 @@ class ModuleArgsParser:
         task_ds = {} if task_ds is None else task_ds
 
         if not isinstance(task_ds, dict):
-            raise AnsibleAssertionError("the type of 'task_ds' should be a dict, but is a %s" % type(task_ds))
+            raise AssibleAssertionError("the type of 'task_ds' should be a dict, but is a %s" % type(task_ds))
         self._task_ds = task_ds
         self._collection_list = collection_list
         # delayed local imports to prevent circular import
-        from ansible.playbook.task import Task
-        from ansible.playbook.handler import Handler
+        from assible.playbook.task import Task
+        from assible.playbook.handler import Handler
         # store the valid Task/Handler attrs for quick access
         self._task_attrs = set(Task._valid_attrs.keys())
         self._task_attrs.update(set(Handler._valid_attrs.keys()))
@@ -152,12 +152,12 @@ class ModuleArgsParser:
                 if templar.is_template(additional_args):
                     final_args['_variable_params'] = additional_args
                 else:
-                    raise AnsibleParserError("Complex args containing variables cannot use bare variables (without Jinja2 delimiters), "
+                    raise AssibleParserError("Complex args containing variables cannot use bare variables (without Jinja2 delimiters), "
                                              "and must use the full variable style ('{{var_name}}')")
             elif isinstance(additional_args, dict):
                 final_args.update(additional_args)
             else:
-                raise AnsibleParserError('Complex args must be a dictionary or variable string ("{{var}}").')
+                raise AssibleParserError('Complex args must be a dictionary or variable string ("{{var}}").')
 
         # how we normalize depends if we figured out what the module name is
         # yet.  If we have already figured it out, it's a 'new style' invocation.
@@ -180,8 +180,8 @@ class ModuleArgsParser:
         if args and action not in FREEFORM_ACTIONS:
             for arg in args:
                 arg = to_text(arg)
-                if arg.startswith('_ansible_'):
-                    raise AnsibleError("invalid parameter specified for action '%s': '%s'" % (action, arg))
+                if arg.startswith('_assible_'):
+                    raise AssibleError("invalid parameter specified for action '%s': '%s'" % (action, arg))
 
         # finally, update the args we're going to return with the ones
         # which were normalized above
@@ -214,7 +214,7 @@ class ModuleArgsParser:
             # this can happen with modules which take no params, like ping:
             args = None
         else:
-            raise AnsibleParserError("unexpected parameter type in action: %s" % type(thing), obj=self._task_ds)
+            raise AssibleParserError("unexpected parameter type in action: %s" % type(thing), obj=self._task_ds)
         return args
 
     def _normalize_old_style_args(self, thing):
@@ -251,7 +251,7 @@ class ModuleArgsParser:
 
         else:
             # need a dict or a string, so giving up
-            raise AnsibleParserError("unexpected parameter type in action: %s" % type(thing), obj=self._task_ds)
+            raise AssibleParserError("unexpected parameter type in action: %s" % type(thing), obj=self._task_ds)
 
         return (action, args)
 
@@ -286,7 +286,7 @@ class ModuleArgsParser:
         if 'local_action' in self._task_ds:
             # local_action is similar but also implies a delegate_to
             if action is not None:
-                raise AnsibleParserError("action and local_action are mutually exclusive", obj=self._task_ds)
+                raise AssibleParserError("action and local_action are mutually exclusive", obj=self._task_ds)
             thing = self._task_ds.get('local_action', '')
             delegate_to = 'localhost'
             action, args = self._normalize_parameters(thing, action=action, additional_args=additional_args)
@@ -318,7 +318,7 @@ class ModuleArgsParser:
             if is_action_candidate:
                 # finding more than one module name is a problem
                 if action is not None:
-                    raise AnsibleParserError("conflicting action statements: %s, %s" % (action, item), obj=self._task_ds)
+                    raise AssibleParserError("conflicting action statements: %s, %s" % (action, item), obj=self._task_ds)
                 action = item
                 thing = value
                 action, args = self._normalize_parameters(thing, action=action, additional_args=additional_args)
@@ -327,11 +327,11 @@ class ModuleArgsParser:
         if action is None:
             if non_task_ds:  # there was one non-task action, but we couldn't find it
                 bad_action = list(non_task_ds.keys())[0]
-                raise AnsibleParserError("couldn't resolve module/action '{0}'. This often indicates a "
+                raise AssibleParserError("couldn't resolve module/action '{0}'. This often indicates a "
                                          "misspelling, missing collection, or incorrect module path.".format(bad_action),
                                          obj=self._task_ds)
             else:
-                raise AnsibleParserError("no module/action detected in task.",
+                raise AssibleParserError("no module/action detected in task.",
                                          obj=self._task_ds)
         elif args.get('_raw_params', '') != '' and action not in RAW_PARAM_MODULES:
             templar = Templar(loader=None)
@@ -339,7 +339,7 @@ class ModuleArgsParser:
             if templar.is_template(raw_params):
                 args['_variable_params'] = raw_params
             else:
-                raise AnsibleParserError("this task '%s' has extra params, which is only allowed in the following modules: %s" % (action,
+                raise AssibleParserError("this task '%s' has extra params, which is only allowed in the following modules: %s" % (action,
                                                                                                                                   ", ".join(RAW_PARAM_MODULES)),
                                          obj=self._task_ds)
 

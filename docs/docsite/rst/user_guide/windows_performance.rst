@@ -3,10 +3,10 @@
 Windows performance
 ===================
 This document offers some performance optimizations you might like to apply to
-your Windows hosts to speed them up specifically in the context of using Ansible
+your Windows hosts to speed them up specifically in the context of using Assible
 with them, and generally.
 
-Optimise PowerShell performance to reduce Ansible task overhead
+Optimise PowerShell performance to reduce Assible task overhead
 ---------------------------------------------------------------
 To speed up the startup of PowerShell by around 10x, run the following
 PowerShell snippet in an Administrator session. Expect it to take tens of
@@ -39,7 +39,7 @@ seconds.
     }
     Optimize-PowershellAssemblies
 
-PowerShell is used by every Windows Ansible module. This optimisation reduces
+PowerShell is used by every Windows Assible module. This optimisation reduces
 the time PowerShell takes to start up, removing that overhead from every invocation.
 
 This snippet uses `the native image generator, ngen <https://docs.microsoft.com/en-us/dotnet/framework/tools/ngen-exe-native-image-generator#WhenToUse>`_

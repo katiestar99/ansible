@@ -1,5 +1,5 @@
 ---
-- debug: msg="START cli/config_check.yaml on connection={{ ansible_connection }}"
+- debug: msg="START cli/config_check.yaml on connection={{ assible_connection }}"
 
 - name: setup- ensure interface is not present
   vyos.vyos.vyos_config:
@@ -60,4 +60,4 @@
     that:
       - "{{ result.filtered|length }} == 2"
 
-- debug: msg="END cli/config_check.yaml on connection={{ ansible_connection }}"
+- debug: msg="END cli/config_check.yaml on connection={{ assible_connection }}"

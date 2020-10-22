@@ -5,13 +5,13 @@
 Migrating Roles to Roles in Collections on Galaxy
 *************************************************
 
-You can migrate any existing standalone role into a collection and host the collection on Galaxy. With Ansible collections, you can distribute many roles in a single cohesive unit of re-usable automation. Inside a collection, you can share custom plugins across all roles in the collection instead of duplicating them in each role's :file:`library/`` directory.
+You can migrate any existing standalone role into a collection and host the collection on Galaxy. With Assible collections, you can distribute many roles in a single cohesive unit of re-usable automation. Inside a collection, you can share custom plugins across all roles in the collection instead of duplicating them in each role's :file:`library/`` directory.
 
-You must migrate roles to collections if you want to distribute them as certified Ansible content.
+You must migrate roles to collections if you want to distribute them as certified Assible content.
 
 .. note::
 
-	If you want to import your collection to Galaxy, you need a `Galaxy namespace <https://galaxy.ansible.com/docs/contributing/namespaces.html>`_.
+	If you want to import your collection to Galaxy, you need a `Galaxy namespace <https://galaxy.assible.com/docs/contributing/namespaces.html>`_.
 
 See :ref:`developing_collections` for details on collections.
 
@@ -89,13 +89,13 @@ Migrating a role to a collection
 
 To migrate from a standalone role that contains no plugins to a collection role:
 
-1. Create a local :file:`ansible_collections` directory and ``cd`` to this new directory.
+1. Create a local :file:`assible_collections` directory and ``cd`` to this new directory.
 
-2. Create a collection. If you want to import this collection to Ansible Galaxy, you need a `Galaxy namespace <https://galaxy.ansible.com/docs/contributing/namespaces.html>`_.
+2. Create a collection. If you want to import this collection to Assible Galaxy, you need a `Galaxy namespace <https://galaxy.assible.com/docs/contributing/namespaces.html>`_.
 
 .. code-block:: bash
 
-  $ ansible-galaxy collection init mynamespace.mycollection
+  $ assible-galaxy collection init mynamespace.mycollection
 
 This creates the collection directory structure.
 
@@ -118,13 +118,13 @@ Migrating a role with plugins to a collection
 
 To migrate from a standalone role that has plugins to a collection role:
 
-1. Create a local :file:`ansible_collections directory` and ``cd`` to this new directory.
+1. Create a local :file:`assible_collections directory` and ``cd`` to this new directory.
 
-2. Create a collection. If you want to import this collection to Ansible Galaxy, you need a `Galaxy namespace <https://galaxy.ansible.com/docs/contributing/namespaces.html>`_.
+2. Create a collection. If you want to import this collection to Assible Galaxy, you need a `Galaxy namespace <https://galaxy.assible.com/docs/contributing/namespaces.html>`_.
 
 .. code-block:: bash
 
-  $ ansible-galaxy collection init mynamespace.mycollection
+  $ assible-galaxy collection init mynamespace.mycollection
 
 This creates the collection directory structure.
 
@@ -197,7 +197,7 @@ To migrate other role plugins to a collection:
 
 If you have a custom ``module_utils`` or import from ``__init__.py``, you must also:
 
-#. Change the Python namespace for custom ``module_utils`` to use the :abbr:`FQCN (Fully Qualified Collection Name)` along with the ``ansible_collections`` convention. See :ref:`update_module_utils_role`.
+#. Change the Python namespace for custom ``module_utils`` to use the :abbr:`FQCN (Fully Qualified Collection Name)` along with the ``assible_collections`` convention. See :ref:`update_module_utils_role`.
 
 #. Change how you import from ``__init__.py``. See :ref:`update_init_role`.
 
@@ -207,36 +207,36 @@ If you have a custom ``module_utils`` or import from ``__init__.py``, you must a
 Updating ``module_utils``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If any of your custom modules use a custom module utility, once you migrate to a collection you cannot address the module utility in the top level ``ansible.module_utils`` Python namespace. Ansible does not merge content from collections into the Ansible internal Python namespace. Update any Python import statements that refer to custom module utilities when you migrate your custom content to collections. See :ref:`module_utils in collections <collection_module_utils>` for more details.
+If any of your custom modules use a custom module utility, once you migrate to a collection you cannot address the module utility in the top level ``assible.module_utils`` Python namespace. Assible does not merge content from collections into the Assible internal Python namespace. Update any Python import statements that refer to custom module utilities when you migrate your custom content to collections. See :ref:`module_utils in collections <collection_module_utils>` for more details.
 
-When coding with ``module_utils`` in a collection, the Python import statement needs to take into account the :abbr:`FQCN (Fully Qualified Collection Name)` along with the ``ansible_collections`` convention. The resulting Python import looks similar to the following example:
+When coding with ``module_utils`` in a collection, the Python import statement needs to take into account the :abbr:`FQCN (Fully Qualified Collection Name)` along with the ``assible_collections`` convention. The resulting Python import looks similar to the following example:
 
 .. code-block:: text
 
-  from ansible_collections.{namespace}.{collectionname}.plugins.module_utils.{util} import {something}
+  from assible_collections.{namespace}.{collectionname}.plugins.module_utils.{util} import {something}
 
 .. note::
 
 	You need to follow the same rules in changing paths and using namespaced names for subclassed plugins.
 
-The following example code snippets show a Python and a PowerShell module using both default Ansible ``module_utils`` and those provided by a collection. In this example the namespace is ``ansible_example`` and the collection is ``community``.
+The following example code snippets show a Python and a PowerShell module using both default Assible ``module_utils`` and those provided by a collection. In this example the namespace is ``assible_example`` and the collection is ``community``.
 
-In the Python example the ``module_utils`` is ``helper`` and the :abbr:`FQCN (Fully Qualified Collection Name)` is ``ansible_example.community.plugins.module_utils.helper``:
+In the Python example the ``module_utils`` is ``helper`` and the :abbr:`FQCN (Fully Qualified Collection Name)` is ``assible_example.community.plugins.module_utils.helper``:
 
 .. code-block:: text
 
-  from ansible.module_utils.basic import AnsibleModule
-  from ansible.module_utils._text import to_text
-  from ansible.module_utils.six.moves.urllib.parse import urlencode
-  from ansible.module_utils.six.moves.urllib.error import HTTPError
-  from ansible_collections.ansible_example.community.plugins.module_utils.helper import HelperRequest
+  from assible.module_utils.basic import AssibleModule
+  from assible.module_utils._text import to_text
+  from assible.module_utils.six.moves.urllib.parse import urlencode
+  from assible.module_utils.six.moves.urllib.error import HTTPError
+  from assible_collections.assible_example.community.plugins.module_utils.helper import HelperRequest
 
   argspec = dict(
 	  name=dict(required=True, type='str'),
 	  state=dict(choices=['present', 'absent'], required=True),
   )
 
-  module = AnsibleModule(
+  module = AssibleModule(
 	  argument_spec=argspec,
 	  supports_check_mode=True
   )
@@ -247,19 +247,19 @@ In the Python example the ``module_utils`` is ``helper`` and the :abbr:`FQCN (Fu
        data=data
  )
 
-In the PowerShell example the ``module_utils`` is ``hyperv`` and the :abbr:`FQCN (Fully Qualified Collection Name)` is ``ansible_example.community.plugins.module_utils.hyperv``:
+In the PowerShell example the ``module_utils`` is ``hyperv`` and the :abbr:`FQCN (Fully Qualified Collection Name)` is ``assible_example.community.plugins.module_utils.hyperv``:
 
 .. code-block:: powershell
 
   #!powershell
-  #AnsibleRequires -CSharpUtil Ansible.Basic
-  #AnsibleRequires -PowerShell ansible_collections.ansible_example.community.plugins.module_utils.hyperv
+  #AssibleRequires -CSharpUtil Assible.Basic
+  #AssibleRequires -PowerShell assible_collections.assible_example.community.plugins.module_utils.hyperv
 
   $spec = @{
 	  name = @{ required = $true; type = "str" }
   	state = @{ required = $true; choices = @("present", "absent") }
   }
-  $module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+  $module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 
   Invoke-HyperVFunction -Name $module.Params.name
 
@@ -271,11 +271,11 @@ In the PowerShell example the ``module_utils`` is ``hyperv`` and the :abbr:`FQCN
 Importing from __init__.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Because of the way that the CPython interpreter does imports, combined with the way the Ansible plugin loader works, if your custom embedded module or plugin requires importing something from an :file:`__init__.py` file, that also becomes part of your collection. You can either originate the content inside a standalone role or use the file name in the Python import statement. The following example is an :file:`__init__.py` file that is part of a callback plugin found inside a collection named ``ansible_example.community``.
+Because of the way that the CPython interpreter does imports, combined with the way the Assible plugin loader works, if your custom embedded module or plugin requires importing something from an :file:`__init__.py` file, that also becomes part of your collection. You can either originate the content inside a standalone role or use the file name in the Python import statement. The following example is an :file:`__init__.py` file that is part of a callback plugin found inside a collection named ``assible_example.community``.
 
 .. code-block:: python
 
-  from ansible_collections.ansible_example.community.plugins.callback.__init__ import CustomBaseClass
+  from assible_collections.assible_example.community.plugins.callback.__init__ import CustomBaseClass
 
 
 Example: Migrating a standalone role with plugins to a collection
@@ -300,7 +300,7 @@ In this example we have a standalone role called ``my-standalone-role.webapp`` t
 
 .. code-block:: bash
 
-  $ ansible-galaxy collection init acme.webserver
+  $ assible-galaxy collection init acme.webserver
   - Collection acme.webserver was created successfully
   $ tree acme -d 1
   acme
@@ -338,12 +338,12 @@ Example: Supporting standalone roles and migrated collection roles in a downstre
 
 A standalone role can co-exist with its collection role counterpart (for example, as part of a support lifecycle of a product). This should only be done for a transition period, but these two can exist in downstream in packages such as RPMs. For example, the RHEL system roles could coexist with an `example of a RHEL system roles collection <https://github.com/maxamillion/collection-rhel-system-roles>`_ and provide existing backwards compatibility with the downstream RPM.
 
-This section walks through an example creating this coexistence in a downstream RPM and requires Ansible 2.9.0 or later.
+This section walks through an example creating this coexistence in a downstream RPM and requires Assible 2.9.0 or later.
 
 To deliver a role as both a standalone role and a collection role:
 
-#. Place the collection in  :file:`/usr/share/ansible/collections/ansible_collections/`.
-#. Copy the contents of the role inside the collection into a directory named after the standalone role and place the standalone role in  :file:`/usr/share/ansible/roles/`.
+#. Place the collection in  :file:`/usr/share/assible/collections/assible_collections/`.
+#. Copy the contents of the role inside the collection into a directory named after the standalone role and place the standalone role in  :file:`/usr/share/assible/roles/`.
 
 All previously bundled modules and plugins used in the standalone role are now referenced by :abbr:`FQCN (Fully Qualified Collection Name)` so even though they are no longer embedded, they can be found from the collection contents.This is an example of how the content inside the collection is a unique entity and does not have to be bound to a role or otherwise. You could alternately create two separate collections: one for the modules and plugins and another for the standalone role to migrate to. The role must use the modules and plugins as :abbr:`FQCN (Fully Qualified Collection Name)`.
 
@@ -351,24 +351,24 @@ The following is an example RPM spec file that accomplishes this using this exam
 
 .. code-block:: text
 
-  Name: acme-ansible-content
-  Summary: Ansible Collection for deploying and configuring ACME webapp
+  Name: acme-assible-content
+  Summary: Assible Collection for deploying and configuring ACME webapp
   Version: 1.0.0
   Release: 1%{?dist}
   License: GPLv3+
   Source0: acme-webserver-1.0.0.tar.gz
 
-  Url: https://github.com/acme/webserver-ansible-collection
+  Url: https://github.com/acme/webserver-assible-collection
   BuildArch: noarch
 
   %global roleprefix my-standalone-role.
   %global collection_namespace acme
   %global collection_name webserver
 
-  %global collection_dir %{_datadir}/ansible/collections/ansible_collections/%{collection_namespace}/%{collection_name}
+  %global collection_dir %{_datadir}/assible/collections/assible_collections/%{collection_namespace}/%{collection_name}
 
   %description
-  Ansible Collection and standalone role (for backward compatibility and migration) to deploy, configure, and manage the ACME webapp software.
+  Assible Collection and standalone role (for backward compatibility and migration) to deploy, configure, and manage the ACME webapp software.
 
   %prep
   %setup -qc
@@ -380,10 +380,10 @@ The following is an example RPM spec file that accomplishes this using this exam
   mkdir -p %{buildroot}/%{collection_dir}
   cp -r ./* %{buildroot}/%{collection_dir}/
 
-  mkdir -p %{buildroot}/%{_datadir}/ansible/roles
+  mkdir -p %{buildroot}/%{_datadir}/assible/roles
   for role in %{buildroot}/%{collection_dir}/roles/*
     do
-	   cp -pR ${role} %{buildroot}/%{_datadir}/ansible/roles/%{roleprefix}$(basename ${role})
+	   cp -pR ${role} %{buildroot}/%{_datadir}/assible/roles/%{roleprefix}$(basename ${role})
 
 	   mkdir -p %{buildroot}/%{_pkgdocdir}/$(basename ${role})
 	   for docfile in README.md COPYING LICENSE
@@ -397,13 +397,13 @@ The following is an example RPM spec file that accomplishes this using this exam
 
 
   %files
-  %dir %{_datadir}/ansible
-  %dir %{_datadir}/ansible/roles
-  %dir %{_datadir}/ansible/collections
-  %dir %{_datadir}/ansible/collections/ansible_collections
-  %{_datadir}/ansible/roles/
+  %dir %{_datadir}/assible
+  %dir %{_datadir}/assible/roles
+  %dir %{_datadir}/assible/collections
+  %dir %{_datadir}/assible/collections/assible_collections
+  %{_datadir}/assible/roles/
   %doc %{_pkgdocdir}/*/README.md
-  %doc %{_datadir}/ansible/roles/%{roleprefix}*/README.md
+  %doc %{_datadir}/assible/roles/%{roleprefix}*/README.md
   %{collection_dir}
   %doc %{collection_dir}/roles/*/README.md
   %license %{_pkgdocdir}/*/COPYING

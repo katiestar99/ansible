@@ -12,7 +12,7 @@ DOCUMENTATION = '''
 ---
 module: git
 author:
-    - "Ansible Core Team"
+    - "Assible Core Team"
     - "Michael DeHaan"
 version_added: "0.0.1"
 short_description: Deploy software (or files) from git checkouts
@@ -240,21 +240,21 @@ EXAMPLES = '''
 
 - name: Checkout a github repo and use refspec to fetch all pull requests
   git:
-    repo: https://github.com/ansible/ansible-examples.git
-    dest: /src/ansible-examples
+    repo: https://github.com/assible/assible-examples.git
+    dest: /src/assible-examples
     refspec: '+refs/pull/*:refs/heads/*'
 
 - name: Create git archive from repo
   git:
-    repo: https://github.com/ansible/ansible-examples.git
-    dest: /src/ansible-examples
-    archive: /tmp/ansible-examples.zip
+    repo: https://github.com/assible/assible-examples.git
+    dest: /src/assible-examples
+    archive: /tmp/assible-examples.zip
 
 - name: Clone a repo with separate git directory
   git:
-    repo: https://github.com/ansible/ansible-examples.git
-    dest: /src/ansible-examples
-    separate_git_dir: /src/ansible-examples.git
+    repo: https://github.com/assible/assible-examples.git
+    dest: /src/assible-examples
+    separate_git_dir: /src/assible-examples.git
 
 # Example clone of a single branch
 - git:
@@ -305,9 +305,9 @@ import shutil
 import tempfile
 from distutils.version import LooseVersion
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.six import b, string_types
-from ansible.module_utils._text import to_native, to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.six import b, string_types
+from assible.module_utils._text import to_native, to_text
 
 
 def relocate_repo(module, result, repo_dir, old_repo_dir, worktree_dir):
@@ -330,7 +330,7 @@ def relocate_repo(module, result, repo_dir, old_repo_dir, worktree_dir):
 
 def head_splitter(headfile, remote, module=None, fail_on_error=False):
     '''Extract the head reference'''
-    # https://github.com/ansible/ansible-modules-core/pull/907
+    # https://github.com/assible/assible-modules-core/pull/907
 
     res = None
     if os.path.exists(headfile):
@@ -359,7 +359,7 @@ def unfrackgitpath(path):
     if path is None:
         return None
 
-    # copied from ansible.utils.path
+    # copied from assible.utils.path
     return os.path.normpath(os.path.realpath(os.path.expanduser(os.path.expandvars(path))))
 
 
@@ -729,7 +729,7 @@ def get_repo_path(dest, bare):
 def get_head_branch(git_path, module, dest, remote, bare=False):
     '''
     Determine what branch HEAD is associated with.  This is partly
-    taken from lib/ansible/utils/__init__.py.  It finds the correct
+    taken from lib/assible/utils/__init__.py.  It finds the correct
     path to .git/HEAD and reads from that file the branch that HEAD is
     associated with.  In the case of a detached HEAD, this will look
     up the branch in .git/refs/remotes/<remote>/HEAD.
@@ -1083,7 +1083,7 @@ def create_archive(git_path, module, dest, archive, archive_prefix, version, rep
 # ===========================================
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             dest=dict(type='path'),
             repo=dict(required=True, aliases=['name']),

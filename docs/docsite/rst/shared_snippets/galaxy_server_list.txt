@@ -1,27 +1,27 @@
 
 
-By default, ``ansible-galaxy`` uses https://galaxy.ansible.com as the Galaxy server (as listed in the :file:`ansible.cfg` file under :ref:`galaxy_server`).
+By default, ``assible-galaxy`` uses https://galaxy.assible.com as the Galaxy server (as listed in the :file:`assible.cfg` file under :ref:`galaxy_server`).
 
-You can use either option below to configure ``ansible-galaxy collection`` to use other servers (such as Red Hat Automation Hub or a custom Galaxy server):
+You can use either option below to configure ``assible-galaxy collection`` to use other servers (such as Red Hat Automation Hub or a custom Galaxy server):
 
-* Set the server list in the :ref:`galaxy_server_list` configuration option in :ref:`ansible_configuration_settings_locations`.
+* Set the server list in the :ref:`galaxy_server_list` configuration option in :ref:`assible_configuration_settings_locations`.
 * Use the ``--server`` command line argument to limit to an individual server.
 
-To configure a Galaxy server list in ``ansible.cfg``:
+To configure a Galaxy server list in ``assible.cfg``:
 
 
 #. Add the ``server_list``  option under the ``[galaxy]`` section to one or more server names.
 #. Create a new section for each server name.
 #. Set the ``url`` option for each server name.
-#. Optionally, set the API token for each server name. Go to https://galaxy.ansible.com/me/preferences and click :guilabel:`Show API key`.
+#. Optionally, set the API token for each server name. Go to https://galaxy.assible.com/me/preferences and click :guilabel:`Show API key`.
 
 .. note::
-    The ``url`` option for each server name must end with a forward slash ``/``. If you do not set the API token in your Galaxy server list, use the ``--api-key`` argument to pass in the token to  the ``ansible-galaxy collection publish`` command.
+    The ``url`` option for each server name must end with a forward slash ``/``. If you do not set the API token in your Galaxy server list, use the ``--api-key`` argument to pass in the token to  the ``assible-galaxy collection publish`` command.
 
 For Automation Hub, you additionally need to:
 
 #. Set the ``auth_url`` option for each server name.
-#. Set the API token for each server name. Go to https://cloud.redhat.com/ansible/automation-hub/token/ and click ::guilabel:`Get API token` from the version dropdown to copy your API token.
+#. Set the API token for each server name. Go to https://cloud.redhat.com/assible/automation-hub/token/ and click ::guilabel:`Get API token` from the version dropdown to copy your API token.
 
 The following example shows how to configure multiple servers:
 
@@ -41,11 +41,11 @@ The following example shows how to configure multiple servers:
     password=my_pass
 
     [galaxy_server.release_galaxy]
-    url=https://galaxy.ansible.com/
+    url=https://galaxy.assible.com/
     token=my_token
 
     [galaxy_server.test_galaxy]
-    url=https://galaxy-dev.ansible.com/
+    url=https://galaxy-dev.assible.com/
     token=my_test_token
 
 .. note::
@@ -67,12 +67,12 @@ define the following keys:
 * ``password``: The password to use, in conjunction with ``username``, for basic authentication.
 * ``auth_url``: The URL of a Keycloak server 'token_endpoint' if using SSO authentication (for example, Automation Hub). Mutually exclusive with ``username``. Requires ``token``.
 
-As well as defining these server options in the ``ansible.cfg`` file, you can also define them as environment variables.
-The environment variable is in the form ``ANSIBLE_GALAXY_SERVER_{{ id }}_{{ key }}`` where ``{{ id }}`` is the upper
+As well as defining these server options in the ``assible.cfg`` file, you can also define them as environment variables.
+The environment variable is in the form ``ASSIBLE_GALAXY_SERVER_{{ id }}_{{ key }}`` where ``{{ id }}`` is the upper
 case form of the server identifier and ``{{ key }}`` is the key to define. For example I can define ``token`` for
-``release_galaxy`` by setting ``ANSIBLE_GALAXY_SERVER_RELEASE_GALAXY_TOKEN=secret_token``.
+``release_galaxy`` by setting ``ASSIBLE_GALAXY_SERVER_RELEASE_GALAXY_TOKEN=secret_token``.
 
-For operations that use only one Galaxy server (for example, the ``publish``, ``info``, or ``install`` commands). the ``ansible-galaxy collection`` command uses the first entry in the
+For operations that use only one Galaxy server (for example, the ``publish``, ``info``, or ``install`` commands). the ``assible-galaxy collection`` command uses the first entry in the
 ``server_list``, unless you pass in an explicit server with the ``--server`` argument.
 
 .. note::

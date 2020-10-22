@@ -1,15 +1,15 @@
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = """
     name: vars
-    author: Ansible Core Team
+    author: Assible Core Team
     version_added: "2.5"
     short_description: Lookup templated value of variables
     description:
-      - 'Retrieves the value of an Ansible variable. Note: Only returns top level variable names.'
+      - 'Retrieves the value of an Assible variable. Note: Only returns top level variable names.'
     options:
       _terms:
         description: The variable names to look up.
@@ -41,7 +41,7 @@ EXAMPLES = """
     myvar: notename
 
 - name: find several related variables
-  debug: msg="{{ lookup('vars', 'ansible_play_hosts', 'ansible_play_batch', 'ansible_play_hosts_all') }}"
+  debug: msg="{{ lookup('vars', 'assible_play_hosts', 'assible_play_batch', 'assible_play_hosts_all') }}"
 
 - name: Access nested variables
   debug: msg="{{ lookup('vars', 'variabl' + myvar).sub_var }}"
@@ -52,7 +52,7 @@ EXAMPLES = """
     myvar: ename
 
 - name: alternate way to find some 'prefixed vars' in loop
-  debug: msg="{{ lookup('vars', 'ansible_play_' + item) }}"
+  debug: msg="{{ lookup('vars', 'assible_play_' + item) }}"
   loop:
     - hosts
     - batch
@@ -67,9 +67,9 @@ _value:
   elements: raw
 """
 
-from ansible.errors import AnsibleError, AnsibleUndefinedVariable
-from ansible.module_utils.six import string_types
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleError, AssibleUndefinedVariable
+from assible.module_utils.six import string_types
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):
@@ -85,7 +85,7 @@ class LookupModule(LookupBase):
         ret = []
         for term in terms:
             if not isinstance(term, string_types):
-                raise AnsibleError('Invalid setting identifier, "%s" is not a string, its a %s' % (term, type(term)))
+                raise AssibleError('Invalid setting identifier, "%s" is not a string, its a %s' % (term, type(term)))
 
             try:
                 try:
@@ -94,10 +94,10 @@ class LookupModule(LookupBase):
                     try:
                         value = myvars['hostvars'][myvars['inventory_hostname']][term]
                     except KeyError:
-                        raise AnsibleUndefinedVariable('No variable found with this name: %s' % term)
+                        raise AssibleUndefinedVariable('No variable found with this name: %s' % term)
 
                 ret.append(self._templar.template(value, fail_on_undefined=True))
-            except AnsibleUndefinedVariable:
+            except AssibleUndefinedVariable:
                 if default is not None:
                     ret.append(default)
                 else:

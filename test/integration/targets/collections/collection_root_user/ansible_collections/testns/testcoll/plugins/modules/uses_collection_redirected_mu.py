@@ -5,7 +5,7 @@ __metaclass__ = type
 import json
 import sys
 
-from ansible_collections.testns.testcoll.plugins.module_utils.moved_out_root import importme
+from assible_collections.testns.testcoll.plugins.module_utils.moved_out_root import importme
 from ..module_utils.formerly_testcoll_pkg import thing as movedthing  # pylint: disable=relative-beyond-top-level
 from ..module_utils.formerly_testcoll_pkg.submod import thing as submodmovedthing  # pylint: disable=relative-beyond-top-level
 

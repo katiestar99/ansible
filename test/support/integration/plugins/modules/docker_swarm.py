@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-# Copyright 2016 Red Hat | Ansible
+# Copyright 2016 Red Hat | Assible
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -274,18 +274,18 @@ import traceback
 try:
     from docker.errors import DockerException, APIError
 except ImportError:
-    # missing Docker SDK for Python handled in ansible.module_utils.docker.common
+    # missing Docker SDK for Python handled in assible.module_utils.docker.common
     pass
 
-from ansible.module_utils.docker.common import (
+from assible.module_utils.docker.common import (
     DockerBaseClass,
     DifferenceTracker,
     RequestException,
 )
 
-from ansible.module_utils.docker.swarm import AnsibleDockerSwarmClient
+from assible.module_utils.docker.swarm import AssibleDockerSwarmClient
 
-from ansible.module_utils._text import to_native
+from assible.module_utils._text import to_native
 
 
 class TaskParameters(DockerBaseClass):
@@ -319,7 +319,7 @@ class TaskParameters(DockerBaseClass):
         self.subnet_size = None
 
     @staticmethod
-    def from_ansible_params(client):
+    def from_assible_params(client):
         result = TaskParameters()
         for key, value in client.module.params.items():
             if key in result.__dict__:
@@ -434,7 +434,7 @@ class SwarmManager(DockerBaseClass):
         self.node_id = client.module.params['node_id']
 
         self.differences = DifferenceTracker()
-        self.parameters = TaskParameters.from_ansible_params(client)
+        self.parameters = TaskParameters.from_assible_params(client)
 
         self.created = False
 
@@ -450,7 +450,7 @@ class SwarmManager(DockerBaseClass):
         if self.state == 'inspect':
             self.client.module.deprecate(
                 "The 'inspect' state is deprecated, please use 'docker_swarm_info' to inspect swarm cluster",
-                version='2.12', collection_name='ansible.builtin')
+                version='2.12', collection_name='assible.builtin')
 
         choice_map.get(self.state)()
 
@@ -534,7 +534,7 @@ class SwarmManager(DockerBaseClass):
                 self.results['actions'].append("No modification")
                 self.results['changed'] = False
                 return
-            update_parameters = TaskParameters.from_ansible_params(self.client)
+            update_parameters = TaskParameters.from_assible_params(self.client)
             update_parameters.update_parameters(self.client)
             if not self.check_mode:
                 self.client.update_swarm(
@@ -653,7 +653,7 @@ def main():
         subnet_size=dict(docker_py_version='4.0.0', docker_api_version='1.39'),
     )
 
-    client = AnsibleDockerSwarmClient(
+    client = AssibleDockerSwarmClient(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=required_if,

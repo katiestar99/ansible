@@ -4,23 +4,23 @@
 .. _porting_2.10_guide:
 
 ==========================
-Ansible 2.10 Porting Guide
+Assible 2.10 Porting Guide
 ==========================
 
 .. warning::
 
-         In Ansible 2.10, many plugins and modules have migrated to Collections on `Ansible Galaxy <https://galaxy.ansible.com>`_. Your playbooks should continue to work without any changes. We recommend you start using the fully-qualified collection name (FQCN) in your playbooks as the explicit and authoritative indicator of which collection to use as some collections may contain duplicate module names.
+         In Assible 2.10, many plugins and modules have migrated to Collections on `Assible Galaxy <https://galaxy.assible.com>`_. Your playbooks should continue to work without any changes. We recommend you start using the fully-qualified collection name (FQCN) in your playbooks as the explicit and authoritative indicator of which collection to use as some collections may contain duplicate module names.
 
-This section discusses the behavioral changes between Ansible 2.9 and Ansible 2.10.
+This section discusses the behavioral changes between Assible 2.9 and Assible 2.10.
 
-It is intended to assist in updating your playbooks, plugins and other parts of your Ansible infrastructure so they will work with this version of Ansible.
+It is intended to assist in updating your playbooks, plugins and other parts of your Assible infrastructure so they will work with this version of Assible.
 
-We suggest you read this page along with the `Ansible Changelog for 2.10 <https://github.com/ansible-community/ansible-build-data/blob/main/2.10/CHANGELOG-v2.10.rst>`_ to understand what updates you may need to make.
+We suggest you read this page along with the `Assible Changelog for 2.10 <https://github.com/assible-community/assible-build-data/blob/main/2.10/CHANGELOG-v2.10.rst>`_ to understand what updates you may need to make.
 
-Since 2.10, Ansible consists of two parts:
+Since 2.10, Assible consists of two parts:
 
-* ansible-base, which includes the command line tools with a small selection of plugins and modules, and
-* a `set of collections <https://github.com/ansible-community/ansible-build-data/blob/main/2.10/ansible.in>`_.
+* assible-base, which includes the command line tools with a small selection of plugins and modules, and
+* a `set of collections <https://github.com/assible-community/assible-build-data/blob/main/2.10/assible.in>`_.
 
 The :ref:`porting_2.10_guide_base` is included in this porting guide. The complete list of porting guides can be found at :ref:`porting guides <porting_guides>`.
 
@@ -34,7 +34,7 @@ Playbook
 
 * Fixed a bug on boolean keywords that made random strings return 'False', now they should return an error if they are not a proper boolean
   Example: ``diff: yes-`` was returning ``False``.
-* A new fact, ``ansible_processor_nproc`` reflects the number of vcpus
+* A new fact, ``assible_processor_nproc`` reflects the number of vcpus
   available to processes (falls back to the number of vcpus available to
   the scheduler).
 
@@ -48,7 +48,7 @@ No notable changes
 Deprecated
 ==========
 
-* Windows Server 2008 and 2008 R2 will no longer be supported or tested in the next Ansible release, see :ref:`windows_faq_server2008`.
+* Windows Server 2008 and 2008 R2 will no longer be supported or tested in the next Assible release, see :ref:`windows_faq_server2008`.
 
 
 Modules
@@ -58,7 +58,7 @@ Modules
 
 	Links on this page may not point to the most recent versions of modules. We will update them when we can.
 
-* Version 2.10.0 of ansible-base changed the default mode of file-based tasks to ``0o600 & ~umask`` when the user did not specify a ``mode`` parameter on file-based tasks. This was in response to a CVE report which we have reconsidered. As a result, the mode change has been reverted in 2.10.1, and mode will now default to ``0o666 & ~umask`` as in previous versions of Ansible.
+* Version 2.10.0 of assible-base changed the default mode of file-based tasks to ``0o600 & ~umask`` when the user did not specify a ``mode`` parameter on file-based tasks. This was in response to a CVE report which we have reconsidered. As a result, the mode change has been reverted in 2.10.1, and mode will now default to ``0o666 & ~umask`` as in previous versions of Assible.
 * If you changed any tasks to specify less restrictive permissions while using 2.10.0, those changes will be unnecessary (but will do no harm) in 2.10.1.
 * To avoid the issue raised in CVE-2020-1736, specify a ``mode`` parameter in all file-based tasks that accept it.
 
@@ -68,8 +68,8 @@ Modules
 Noteworthy module changes
 -------------------------
 
-* Ansible modules created with ``add_file_common_args=True`` added a number of undocumented arguments which were mostly there to ease implementing certain action plugins. The undocumented arguments ``src``, ``follow``, ``force``, ``content``, ``backup``, ``remote_src``, ``regexp``, ``delimiter``, and ``directory_mode`` are now no longer added. Modules relying on these options to be added need to specify them by themselves.
-* Ansible no longer looks for Python modules in the current working directory (typically the ``remote_user``'s home directory) when an Ansible module is run. This is to fix becoming an unprivileged user on OpenBSD and to mitigate any attack vector if the current working directory is writable by a malicious user. Install any Python modules needed to run the Ansible modules on the managed node in a system-wide location or in another directory which is in the ``remote_user``'s ``$PYTHONPATH`` and readable by the ``become_user``.
+* Assible modules created with ``add_file_common_args=True`` added a number of undocumented arguments which were mostly there to ease implementing certain action plugins. The undocumented arguments ``src``, ``follow``, ``force``, ``content``, ``backup``, ``remote_src``, ``regexp``, ``delimiter``, and ``directory_mode`` are now no longer added. Modules relying on these options to be added need to specify them by themselves.
+* Assible no longer looks for Python modules in the current working directory (typically the ``remote_user``'s home directory) when an Assible module is run. This is to fix becoming an unprivileged user on OpenBSD and to mitigate any attack vector if the current working directory is writable by a malicious user. Install any Python modules needed to run the Assible modules on the managed node in a system-wide location or in another directory which is in the ``remote_user``'s ``$PYTHONPATH`` and readable by the ``become_user``.
 
 
 Plugins
@@ -78,7 +78,7 @@ Plugins
 Lookup plugin names case-sensitivity
 ------------------------------------
 
-* Prior to Ansible ``2.10`` lookup plugin names passed in as an argument to the ``lookup()`` function were treated as case-insensitive as opposed to lookups invoked via ``with_<lookup_name>``. ``2.10`` brings consistency to ``lookup()`` and ``with_`` to be both case-sensitive.
+* Prior to Assible ``2.10`` lookup plugin names passed in as an argument to the ``lookup()`` function were treated as case-insensitive as opposed to lookups invoked via ``with_<lookup_name>``. ``2.10`` brings consistency to ``lookup()`` and ``with_`` to be both case-sensitive.
 
 Noteworthy plugin changes
 -------------------------
@@ -89,7 +89,7 @@ Noteworthy plugin changes
 Action plugins which execute modules should use fully-qualified module names
 ----------------------------------------------------------------------------
 
-* Action plugins that call modules should pass explicit, fully-qualified module names to ``_execute_module()`` whenever possible (eg, ``ansible.builtin.file`` rather than ``file``). This ensures that the task's collection search order is not consulted to resolve the module. Otherwise, a module from a collection earlier in the search path could be used when not intended.
+* Action plugins that call modules should pass explicit, fully-qualified module names to ``_execute_module()`` whenever possible (eg, ``assible.builtin.file`` rather than ``file``). This ensures that the task's collection search order is not consulted to resolve the module. Otherwise, a module from a collection earlier in the search path could be used when not intended.
 
 Porting custom scripts
 ======================
@@ -105,8 +105,8 @@ Major Changes
 community.kubernetes
 ~~~~~~~~~~~~~~~~~~~~
 
-- k8s - Add support for template parameter (https://github.com/ansible-collections/community.kubernetes/pull/230).
-- k8s_* - Add support for vaulted kubeconfig and src (https://github.com/ansible-collections/community.kubernetes/pull/193).
+- k8s - Add support for template parameter (https://github.com/assible-collections/community.kubernetes/pull/230).
+- k8s_* - Add support for vaulted kubeconfig and src (https://github.com/assible-collections/community.kubernetes/pull/193).
 
 Deprecated Features
 -------------------
@@ -123,9 +123,9 @@ Porting Guide for v2.10.0
 Known Issues
 ------------
 
-- Due to a limitation in pip, you cannot ``pip install --upgrade`` from ansible-2.9 or earlier to ansible-2.10 or higher. Instead, you must explicitly use ``pip uninstall ansible`` before pip installing the new version. If you attempt to upgrade Ansible with pip without first uninstalling, the installer warns you to uninstall first.
-- The individual collections that make up the ansible-2.10.0 package can be viewed independently. However, they are not currently listed by ansible-galaxy. To view these collections with ansible-galaxy, explicitly specify where ansible has installed the collections -- ``COLLECTION_INSTALL=$(python -c 'import ansible, os.path ; print("%s/../ansible_collections" % os.path.dirname(ansible.__file__))') ansible-galaxy collection list -p "$COLLECTION_INSTALL"``.
-- These fortios modules are not automatically redirected from their 2.9.x names to the new 2.10.x names within collections. You must modify your playbooks to use fully qualified collection names for them. You can use the documentation (https://docs.ansible.com/ansible/2.10/collections/fortinet/fortios/) for the ``fortinet.fortios`` collection to determine what the fully qualified collection names are.
+- Due to a limitation in pip, you cannot ``pip install --upgrade`` from assible-2.9 or earlier to assible-2.10 or higher. Instead, you must explicitly use ``pip uninstall assible`` before pip installing the new version. If you attempt to upgrade Assible with pip without first uninstalling, the installer warns you to uninstall first.
+- The individual collections that make up the assible-2.10.0 package can be viewed independently. However, they are not currently listed by assible-galaxy. To view these collections with assible-galaxy, explicitly specify where assible has installed the collections -- ``COLLECTION_INSTALL=$(python -c 'import assible, os.path ; print("%s/../assible_collections" % os.path.dirname(assible.__file__))') assible-galaxy collection list -p "$COLLECTION_INSTALL"``.
+- These fortios modules are not automatically redirected from their 2.9.x names to the new 2.10.x names within collections. You must modify your playbooks to use fully qualified collection names for them. You can use the documentation (https://docs.assible.com/assible/2.10/collections/fortinet/fortios/) for the ``fortinet.fortios`` collection to determine what the fully qualified collection names are.
 
   * fortios_address
   * fortios_config
@@ -147,7 +147,7 @@ Breaking Changes
 ----------------
 
 - cisco.nxos.nxos_igmp_interface - no longer supports the deprecated ``oif_prefix`` and ``oif_source`` options. These have been superceeded by ``oif_ps``.
-- community.grafana.grafana_dashboard - the parameter ``message`` is renamed to ``commit_message`` since ``message`` is used by Ansible Core engine internally.
+- community.grafana.grafana_dashboard - the parameter ``message`` is renamed to ``commit_message`` since ``message`` is used by Assible Core engine internally.
 - purestorage.flashblade.purefb_fs - no longer supports the deprecated ``nfs`` option. This has been superceeded by ``nfsv3``.
 
 amazon.aws
@@ -155,12 +155,12 @@ amazon.aws
 
 - aws_s3 - can now delete versioned buckets even when they are not empty - set mode to delete to delete a versioned bucket and everything in it.
 
-ansible.windows
+assible.windows
 ~~~~~~~~~~~~~~~
 
-- setup - Make sure ``ansible_date_time.epoch`` is seconds since EPOCH in UTC to mirror the POSIX facts. The ``ansible_date_time.epoch_local`` contains seconds since EPOCH in the local timezone for backwards compatibility
-- setup - Will now add the IPv6 scope on link local addresses for ``ansible_ip_addresses``
-- setup - ``ansible_processor`` will now return the index before the other values to match the POSIX fact behaviour
+- setup - Make sure ``assible_date_time.epoch`` is seconds since EPOCH in UTC to mirror the POSIX facts. The ``assible_date_time.epoch_local`` contains seconds since EPOCH in the local timezone for backwards compatibility
+- setup - Will now add the IPv6 scope on link local addresses for ``assible_ip_addresses``
+- setup - ``assible_processor`` will now return the index before the other values to match the POSIX fact behaviour
 - win_find - No longer filters by size on directories, this feature had a lot of bugs, slowed down the module, and not a supported scenario with the ``find`` module.
 - win_find - module has been refactored to better match the behaviour of the ``find`` module. Here is what has changed:
     * When the directory specified by ``paths`` does not exist or is a file, it will no longer fail and will just warn the user
@@ -195,32 +195,32 @@ cisco.meraki
 community.general
 ~~~~~~~~~~~~~~~~~
 
-- The environment variable for the auth context for the oc.py connection plugin has been corrected (K8S_CONTEXT).  It was using an initial lowercase k by mistake. (https://github.com/ansible-collections/community.general/pull/377).
-- bigpanda - the parameter ``message`` was renamed to ``deployment_message`` since ``message`` is used by Ansible Core engine internally.
-- cisco_spark - the module option ``message`` was renamed to ``msg``, as ``message`` is used internally in Ansible Core engine (https://github.com/ansible/ansible/issues/39295)
-- datadog - the parameter ``message`` was renamed to ``notification_message`` since ``message`` is used by Ansible Core engine internally.
-- docker_container - no longer passes information on non-anonymous volumes or binds as ``Volumes`` to the Docker daemon. This increases compatibility with the ``docker`` CLI program. Note that if you specify ``volumes: strict`` in ``comparisons``, this could cause existing containers created with docker_container from Ansible 2.9 or earlier to restart.
+- The environment variable for the auth context for the oc.py connection plugin has been corrected (K8S_CONTEXT).  It was using an initial lowercase k by mistake. (https://github.com/assible-collections/community.general/pull/377).
+- bigpanda - the parameter ``message`` was renamed to ``deployment_message`` since ``message`` is used by Assible Core engine internally.
+- cisco_spark - the module option ``message`` was renamed to ``msg``, as ``message`` is used internally in Assible Core engine (https://github.com/assible/assible/issues/39295)
+- datadog - the parameter ``message`` was renamed to ``notification_message`` since ``message`` is used by Assible Core engine internally.
+- docker_container - no longer passes information on non-anonymous volumes or binds as ``Volumes`` to the Docker daemon. This increases compatibility with the ``docker`` CLI program. Note that if you specify ``volumes: strict`` in ``comparisons``, this could cause existing containers created with docker_container from Assible 2.9 or earlier to restart.
 - docker_container - support for port ranges was adjusted to be more compatible to the ``docker`` command line utility: a one-port container range combined with a multiple-port host range will no longer result in only the first host port be used, but the whole range being passed to Docker so that a free port in that range will be used.
 - hashi_vault lookup - now returns the latest version when using the KV v2 secrets engine. Previously, it returned all versions of the secret which required additional steps to extract and filter the desired version.
-- log_plays callback - add missing information to the logs generated by the callback plugin. This changes the log message format (https://github.com/ansible-collections/community.general/pull/442).
-- pkgng - passing ``name: *`` with ``state: absent`` will no longer remove every installed package from the system. It is now a noop. (https://github.com/ansible-collections/community.general/pull/569).
-- pkgng - passing ``name: *`` with ``state: latest`` or ``state: present`` will no longer install every package from the configured package repositories. Instead, ``name: *, state: latest`` will upgrade all already-installed packages, and ``name: *, state: present`` is a noop. (https://github.com/ansible-collections/community.general/pull/569).
+- log_plays callback - add missing information to the logs generated by the callback plugin. This changes the log message format (https://github.com/assible-collections/community.general/pull/442).
+- pkgng - passing ``name: *`` with ``state: absent`` will no longer remove every installed package from the system. It is now a noop. (https://github.com/assible-collections/community.general/pull/569).
+- pkgng - passing ``name: *`` with ``state: latest`` or ``state: present`` will no longer install every package from the configured package repositories. Instead, ``name: *, state: latest`` will upgrade all already-installed packages, and ``name: *, state: present`` is a noop. (https://github.com/assible-collections/community.general/pull/569).
 
 community.network
 ~~~~~~~~~~~~~~~~~
 
-- routeros_facts - allow multiple addresses and neighbors per interface. This makes ``ansible_net_neighbors`` a list instead of a dict (https://github.com/ansible-collections/community.network/pull/6).
+- routeros_facts - allow multiple addresses and neighbors per interface. This makes ``assible_net_neighbors`` a list instead of a dict (https://github.com/assible-collections/community.network/pull/6).
 
 community.vmware
 ~~~~~~~~~~~~~~~~
 
-- vmware_datastore_maintenancemode - now returns ``datastore_status`` instead of Ansible internal key ``results``.
-- vmware_guest_custom_attributes - does not require VM name which was a required parameter for releases prior to Ansible 2.10.
+- vmware_datastore_maintenancemode - now returns ``datastore_status`` instead of Assible internal key ``results``.
+- vmware_guest_custom_attributes - does not require VM name which was a required parameter for releases prior to Assible 2.10.
 - vmware_guest_find - the ``datacenter`` option has been removed.
-- vmware_host_kernel_manager - now returns ``host_kernel_status`` instead of Ansible internal key ``results``.
-- vmware_host_ntp - now returns ``host_ntp_status`` instead of Ansible internal key ``results``.
-- vmware_host_service_manager - now returns ``host_service_status`` instead of Ansible internal key ``results``.
-- vmware_tag - now returns ``tag_status`` instead of Ansible internal key ``results``.
+- vmware_host_kernel_manager - now returns ``host_kernel_status`` instead of Assible internal key ``results``.
+- vmware_host_ntp - now returns ``host_ntp_status`` instead of Assible internal key ``results``.
+- vmware_host_service_manager - now returns ``host_service_status`` instead of Assible internal key ``results``.
+- vmware_tag - now returns ``tag_status`` instead of Assible internal key ``results``.
 - vmware_vmkernel - the options ``ip_address`` and ``subnet_mask`` have been removed; use the suboptions ``ip_address`` and ``subnet_mask`` of the ``network`` option instead.
 
 community.windows
@@ -231,21 +231,21 @@ community.windows
 community.zabbix
 ~~~~~~~~~~~~~~~~
 
-- zabbix_javagateway - options ``javagateway_pidfile``, ``javagateway_listenip``, ``javagateway_listenport`` and ``javagateway_startpollers`` renamed to ``zabbix_javagateway_xyz`` (see `UPGRADE.md <https://github.com/ansible-collections/community.zabbix/blob/main/docs/UPGRADE.md>`_).
+- zabbix_javagateway - options ``javagateway_pidfile``, ``javagateway_listenip``, ``javagateway_listenport`` and ``javagateway_startpollers`` renamed to ``zabbix_javagateway_xyz`` (see `UPGRADE.md <https://github.com/assible-collections/community.zabbix/blob/main/docs/UPGRADE.md>`_).
 
 netbox.netbox
 ~~~~~~~~~~~~~
 
-- Change ``ip-addresses`` key in netbox inventory plugin to ``ip_addresses`` (https://github.com/netbox-community/ansible_modules/issues/139)
-- Changed ``group`` to ``tenant_group`` in ``netbox_tenant.py`` (https://github.com/netbox-community/ansible_modules/issues/9)
-- Changed ``role`` to ``prefix_role`` in ``netbox_prefix.py`` (https://github.com/netbox-community/ansible_modules/issues/9)
-- Module failures when required fields arent provided (https://github.com/netbox-community/ansible_modules/issues/24)
-- Renamed ``netbox_interface`` to ``netbox_device_interface`` (https://github.com/netbox-community/ansible_modules/issues/9)
+- Change ``ip-addresses`` key in netbox inventory plugin to ``ip_addresses`` (https://github.com/netbox-community/assible_modules/issues/139)
+- Changed ``group`` to ``tenant_group`` in ``netbox_tenant.py`` (https://github.com/netbox-community/assible_modules/issues/9)
+- Changed ``role`` to ``prefix_role`` in ``netbox_prefix.py`` (https://github.com/netbox-community/assible_modules/issues/9)
+- Module failures when required fields arent provided (https://github.com/netbox-community/assible_modules/issues/24)
+- Renamed ``netbox_interface`` to ``netbox_device_interface`` (https://github.com/netbox-community/assible_modules/issues/9)
 - This version has a few breaking changes due to new namespace and collection name. I felt it necessary to change the name of the lookup plugin and inventory plugin just not to have a non descriptive namespace call to use them. Below is an example:
   ``netbox.netbox.netbox`` would be used for both inventory plugin and lookup plugin, but in different contexts so no collision will arise, but confusion will.
   I renamed the lookup plugin to ``nb_lookup`` so it will be used with the FQCN ``netbox.netbox.nb_lookup``.
   The inventory plugin will now be called within an inventory file by ``netbox.netbox.nb_inventory``
-- To pass in integers via Ansible Jinja filters for a key in ``data`` that
+- To pass in integers via Assible Jinja filters for a key in ``data`` that
   requires querying an endpoint is now done by making it a dictionary with
   an ``id`` key. The previous behavior was to just pass in an integer and
   it was converted when normalizing the data, but some people may have names
@@ -271,7 +271,7 @@ netbox.netbox
 - ``pynetbox`` changed to using ``requests.Session()`` to manage the HTTP session
   which broke passing in ``ssl_verify`` when building the NetBox API client.
   This PR makes ``pynetbox 5.0.4+`` the new required version of `pynetbox` for
-  the Ansible modules and lookup plugin. (https://github.com/netbox-community/ansible_modules/pull/269)
+  the Assible modules and lookup plugin. (https://github.com/netbox-community/assible_modules/pull/269)
 
 theforeman.foreman
 ~~~~~~~~~~~~~~~~~~
@@ -290,31 +290,31 @@ theforeman.foreman
 Major Changes
 -------------
 
-Ansible-base
+Assible-base
 ~~~~~~~~~~~~
 
-- Both ansible-doc and ansible-console's help command will error for modules and plugins whose return documentation cannot be parsed as YAML. All modules and plugins passing ``ansible-test sanity --test yamllint`` will not be affected by this.
-- Collections may declare a list of supported/tested Ansible versions for the collection. A warning is issued if a collection does not support the Ansible version that loads it (can also be configured as silent or a fatal error). Collections that do not declare supported Ansible versions do not issue a warning/error.
+- Both assible-doc and assible-console's help command will error for modules and plugins whose return documentation cannot be parsed as YAML. All modules and plugins passing ``assible-test sanity --test yamllint`` will not be affected by this.
+- Collections may declare a list of supported/tested Assible versions for the collection. A warning is issued if a collection does not support the Assible version that loads it (can also be configured as silent or a fatal error). Collections that do not declare supported Assible versions do not issue a warning/error.
 - Plugin routing allows collections to declare deprecation, redirection targets, and removals for all plugin types.
-- Plugins that import module_utils and other ansible namespaces that have moved to collections should continue to work unmodified.
-- Routing data built into Ansible 2.10 ensures that 2.9 content should work unmodified on 2.10. Formerly included modules and plugins that were moved to collections are still accessible by their original unqualified names, so long as their destination collections are installed.
-- When deprecations are done in code, they to specify a ``collection_name`` so that deprecation warnings can mention which collection - or ansible-base - is deprecating a feature. This affects all ``Display.deprecated()`` or ``AnsibleModule.deprecate()`` or ``Ansible.Basic.Deprecate()`` calls, and ``removed_in_version``/``removed_at_date`` or ``deprecated_aliases`` in module argument specs.
-- ansible-test now uses a different ``default`` test container for Ansible Collections
+- Plugins that import module_utils and other assible namespaces that have moved to collections should continue to work unmodified.
+- Routing data built into Assible 2.10 ensures that 2.9 content should work unmodified on 2.10. Formerly included modules and plugins that were moved to collections are still accessible by their original unqualified names, so long as their destination collections are installed.
+- When deprecations are done in code, they to specify a ``collection_name`` so that deprecation warnings can mention which collection - or assible-base - is deprecating a feature. This affects all ``Display.deprecated()`` or ``AssibleModule.deprecate()`` or ``Assible.Basic.Deprecate()`` calls, and ``removed_in_version``/``removed_at_date`` or ``deprecated_aliases`` in module argument specs.
+- assible-test now uses a different ``default`` test container for Assible Collections
 
 amazon.aws
 ~~~~~~~~~~
 
 - ec2 module_utils - The ``AWSRetry`` decorator no longer catches ``NotFound`` exceptions by default.  ``NotFound`` exceptions need to be explicitly added using ``catch_extra_error_codes``.  Some AWS modules may see an increase in transient failures due to AWS''s eventual consistency model.
 
-ansible.netcommon
+assible.netcommon
 ~~~~~~~~~~~~~~~~~
 
-- Add libssh connection plugin and refactor network_cli (https://github.com/ansible-collections/ansible.netcommon/pull/30)
+- Add libssh connection plugin and refactor network_cli (https://github.com/assible-collections/assible.netcommon/pull/30)
 
-ansible.posix
+assible.posix
 ~~~~~~~~~~~~~
 
-- Bootstrap Collection (https://github.com/ansible-collections/ansible.posix/pull/1).
+- Bootstrap Collection (https://github.com/assible-collections/assible.posix/pull/1).
 
 cisco.meraki
 ~~~~~~~~~~~~
@@ -335,31 +335,31 @@ community.general
 community.grafana
 ~~~~~~~~~~~~~~~~~
 
-- Add changelog management for ansible 2.10 (#112)
+- Add changelog management for assible 2.10 (#112)
 - grafana_datasource ; adding additional_json_data param
 
 community.kubernetes
 ~~~~~~~~~~~~~~~~~~~~
 
-- Add changelog and fragments and document changelog process (https://github.com/ansible-collections/community.kubernetes/pull/131).
-- helm - New module for managing Helm charts (https://github.com/ansible-collections/community.kubernetes/pull/61).
-- helm_info - New module for retrieving Helm chart information (https://github.com/ansible-collections/community.kubernetes/pull/61).
-- helm_plugin - new module to manage Helm plugins (https://github.com/ansible-collections/community.kubernetes/pull/154).
-- helm_plugin_info - new modules to gather information about Helm plugins (https://github.com/ansible-collections/community.kubernetes/pull/154).
-- helm_repository - New module for managing Helm repositories (https://github.com/ansible-collections/community.kubernetes/pull/61).
-- k8s - Inventory source migrated from Ansible 2.9 to Kubernetes collection.
-- k8s - Lookup plugin migrated from Ansible 2.9 to Kubernetes collection.
-- k8s - Module migrated from Ansible 2.9 to Kubernetes collection.
-- k8s_auth - Module migrated from Ansible 2.9 to Kubernetes collection.
-- k8s_config_resource_name - Filter plugin migrated from Ansible 2.9 to Kubernetes collection.
-- k8s_exec - New module for executing commands on pods via Kubernetes API (https://github.com/ansible-collections/community.kubernetes/pull/14).
-- k8s_exec - Return rc for the command executed (https://github.com/ansible-collections/community.kubernetes/pull/158).
-- k8s_info - Module migrated from Ansible 2.9 to Kubernetes collection.
-- k8s_log - New module for retrieving pod logs (https://github.com/ansible-collections/community.kubernetes/pull/16).
-- k8s_scale - Module migrated from Ansible 2.9 to Kubernetes collection.
-- k8s_service - Module migrated from Ansible 2.9 to Kubernetes collection.
-- kubectl - Connection plugin migrated from Ansible 2.9 to Kubernetes collection.
-- openshift - Inventory source migrated from Ansible 2.9 to Kubernetes collection.
+- Add changelog and fragments and document changelog process (https://github.com/assible-collections/community.kubernetes/pull/131).
+- helm - New module for managing Helm charts (https://github.com/assible-collections/community.kubernetes/pull/61).
+- helm_info - New module for retrieving Helm chart information (https://github.com/assible-collections/community.kubernetes/pull/61).
+- helm_plugin - new module to manage Helm plugins (https://github.com/assible-collections/community.kubernetes/pull/154).
+- helm_plugin_info - new modules to gather information about Helm plugins (https://github.com/assible-collections/community.kubernetes/pull/154).
+- helm_repository - New module for managing Helm repositories (https://github.com/assible-collections/community.kubernetes/pull/61).
+- k8s - Inventory source migrated from Assible 2.9 to Kubernetes collection.
+- k8s - Lookup plugin migrated from Assible 2.9 to Kubernetes collection.
+- k8s - Module migrated from Assible 2.9 to Kubernetes collection.
+- k8s_auth - Module migrated from Assible 2.9 to Kubernetes collection.
+- k8s_config_resource_name - Filter plugin migrated from Assible 2.9 to Kubernetes collection.
+- k8s_exec - New module for executing commands on pods via Kubernetes API (https://github.com/assible-collections/community.kubernetes/pull/14).
+- k8s_exec - Return rc for the command executed (https://github.com/assible-collections/community.kubernetes/pull/158).
+- k8s_info - Module migrated from Assible 2.9 to Kubernetes collection.
+- k8s_log - New module for retrieving pod logs (https://github.com/assible-collections/community.kubernetes/pull/16).
+- k8s_scale - Module migrated from Assible 2.9 to Kubernetes collection.
+- k8s_service - Module migrated from Assible 2.9 to Kubernetes collection.
+- kubectl - Connection plugin migrated from Assible 2.9 to Kubernetes collection.
+- openshift - Inventory source migrated from Assible 2.9 to Kubernetes collection.
 
 community.libvirt
 ~~~~~~~~~~~~~~~~~
@@ -370,15 +370,15 @@ community.libvirt
 gluster.gluster
 ~~~~~~~~~~~~~~~
 
-- geo_rep - Added the independent module of geo rep with other gluster modules (https://github.com/gluster/gluster-ansible-collection/pull/2).
+- geo_rep - Added the independent module of geo rep with other gluster modules (https://github.com/gluster/gluster-assible-collection/pull/2).
 
 ovirt.ovirt
 ~~~~~~~~~~~
 
-- ovirt_disk - Add backup (https://github.com/oVirt/ovirt-ansible-collection/pull/57).
-- ovirt_disk - Support direct upload/download (https://github.com/oVirt/ovirt-ansible-collection/pull/35).
-- ovirt_host - Add ssh_port (https://github.com/oVirt/ovirt-ansible-collection/pull/60).
-- ovirt_vm_os_info - Creation of module (https://github.com/oVirt/ovirt-ansible-collection/pull/26).
+- ovirt_disk - Add backup (https://github.com/oVirt/ovirt-assible-collection/pull/57).
+- ovirt_disk - Support direct upload/download (https://github.com/oVirt/ovirt-assible-collection/pull/35).
+- ovirt_host - Add ssh_port (https://github.com/oVirt/ovirt-assible-collection/pull/60).
+- ovirt_vm_os_info - Creation of module (https://github.com/oVirt/ovirt-assible-collection/pull/26).
 
 purestorage.flasharray
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -422,17 +422,17 @@ purestorage.flashblade
 Removed Features
 ----------------
 
-Ansible-base
+Assible-base
 ~~~~~~~~~~~~
 
-- core - remove support for ``check_invalid_arguments`` in ``AnsibleModule``, ``AzureModule`` and ``UTMModule``.
+- core - remove support for ``check_invalid_arguments`` in ``AssibleModule``, ``AzureModule`` and ``UTMModule``.
 
-ansible.netcommon
+assible.netcommon
 ~~~~~~~~~~~~~~~~~
 
 - module_utils.network.common.utils.ComplexDict has been removed
 
-ansible.windows
+assible.windows
 ~~~~~~~~~~~~~~~
 
 - win_stat - removed the deprecated ``get_md55`` option and ``md5`` return value.
@@ -445,20 +445,20 @@ community.crypto
 community.general
 ~~~~~~~~~~~~~~~~~
 
-- conjur_variable lookup - has been moved to the ``cyberark.conjur`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/ansible-collections/community.general/pull/570).
+- conjur_variable lookup - has been moved to the ``cyberark.conjur`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/assible-collections/community.general/pull/570).
 - core - remove support for ``check_invalid_arguments`` in ``UTMModule``.
-- digital_ocean_* - all DigitalOcean modules have been moved to the ``community.digitalocean`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/ansible-collections/community.general/pull/622).
-- infini_* - all infinidat modules have been moved to the ``infinidat.infinibox`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/ansible-collections/community.general/pull/607).
-- logicmonitor - the module has been removed in 1.0.0 since it is unmaintained and the API used by the module has been turned off in 2017 (https://github.com/ansible-collections/community.general/issues/539, https://github.com/ansible-collections/community.general/pull/541).
-- logicmonitor_facts - the module has been removed in 1.0.0 since it is unmaintained and the API used by the module has been turned off in 2017 (https://github.com/ansible-collections/community.general/issues/539, https://github.com/ansible-collections/community.general/pull/541).
-- mysql_* - all MySQL modules have been moved to the ``community.mysql`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/ansible-collections/community.general/pull/633).
+- digital_ocean_* - all DigitalOcean modules have been moved to the ``community.digitalocean`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/assible-collections/community.general/pull/622).
+- infini_* - all infinidat modules have been moved to the ``infinidat.infinibox`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/assible-collections/community.general/pull/607).
+- logicmonitor - the module has been removed in 1.0.0 since it is unmaintained and the API used by the module has been turned off in 2017 (https://github.com/assible-collections/community.general/issues/539, https://github.com/assible-collections/community.general/pull/541).
+- logicmonitor_facts - the module has been removed in 1.0.0 since it is unmaintained and the API used by the module has been turned off in 2017 (https://github.com/assible-collections/community.general/issues/539, https://github.com/assible-collections/community.general/pull/541).
+- mysql_* - all MySQL modules have been moved to the ``community.mysql`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/assible-collections/community.general/pull/633).
 - pacman - Removed deprecated ``recurse`` option, use ``extra_args=--recursive`` instead
-- proxysql_* - all ProxySQL modules have been moved to the ``community.proxysql`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/ansible-collections/community.general/pull/624).
+- proxysql_* - all ProxySQL modules have been moved to the ``community.proxysql`` collection. A redirection is active, which will be removed in version 2.0.0 (https://github.com/assible-collections/community.general/pull/624).
 
 community.network
 ~~~~~~~~~~~~~~~~~
 
-- onyx - all onyx modules and plugins have been moved to the mellanox.onyx collection. Redirects have been added that will be removed in community.network 2.0.0 (https://github.com/ansible-collections/community.network/pull/83).
+- onyx - all onyx modules and plugins have been moved to the mellanox.onyx collection. Redirects have been added that will be removed in community.network 2.0.0 (https://github.com/assible-collections/community.network/pull/83).
 
 community.vmware
 ~~~~~~~~~~~~~~~~
@@ -479,7 +479,7 @@ Deprecated Features
 
 - The vyos.vyos.vyos_static_route module has been deprecated and will be removed in a later release; use vyos.vyos.vyos_static_routes instead.
 
-Ansible-base
+Assible-base
 ~~~~~~~~~~~~
 
 - Using the DefaultCallback without the correspodning doc_fragment or copying the documentation.
@@ -490,8 +490,8 @@ amazon.aws
 ~~~~~~~~~~
 
 - All AWS Modules - ``aws_access_key``, ``aws_secret_key`` and ``security_token`` will be made mutually exclusive with ``profile`` after 2022-06-01.
-- cloudformation - The ``template_format`` option had no effect since Ansible 2.3 and will be removed after 2022-06-01
-- cloudformation - the ``template_format`` option has been deprecated and will be removed in a later release. It has been ignored by the module since Ansible 2.3.
+- cloudformation - The ``template_format`` option had no effect since Assible 2.3 and will be removed after 2022-06-01
+- cloudformation - the ``template_format`` option has been deprecated and will be removed in a later release. It has been ignored by the module since Assible 2.3.
 - data_pipeline - The ``version`` option had no effect and will be removed in after 2022-06-01
 - ec2 - in a later release, the ``group`` and ``group_id`` options will become mutually exclusive.  Currently ``group_id`` is ignored if you pass both.
 - ec2_ami - The ``no_device`` alias ``NoDevice`` has been deprecated  and will be removed after 2022-06-01
@@ -499,13 +499,13 @@ amazon.aws
 - ec2_eip - The ``wait_timeout`` option had no effect and will be removed after 2022-06-01
 - ec2_key - The ``wait_timeout`` option had no effect and will be removed after 2022-06-01
 - ec2_key - The ``wait`` option had no effect and will be removed after 2022-06-01
-- ec2_key - the ``wait_timeout`` option has been deprecated and will be removed in a later release. It has had no effect since Ansible 2.5.
-- ec2_key - the ``wait`` option has been deprecated and will be removed in a later release. It has had no effect since Ansible 2.5.
+- ec2_key - the ``wait_timeout`` option has been deprecated and will be removed in a later release. It has had no effect since Assible 2.5.
+- ec2_key - the ``wait`` option has been deprecated and will be removed in a later release. It has had no effect since Assible 2.5.
 - ec2_lc - The ``associate_public_ip_address`` option had no effect and will be removed after 2022-06-01
 - ec2_tag - deprecate the ``list`` option in favor of ec2_tag_info
 - ec2_tag - support for ``list`` as a state has been deprecated and will be removed in a later release.  The ``ec2_tag_info`` can be used to fetch the tags on an EC2 resource.
 
-ansible.windows
+assible.windows
 ~~~~~~~~~~~~~~~
 
 - win_domain_computer - Deprecated the undocumented ``log_path`` option. This option will be removed in a major release after ``2022-07-01``.
@@ -518,11 +518,11 @@ ansible.windows
 community.aws
 ~~~~~~~~~~~~~
 
-- cloudformation - The ``template_format`` option had no effect since Ansible 2.3 and will be removed after 2022-06-01
+- cloudformation - The ``template_format`` option had no effect since Assible 2.3 and will be removed after 2022-06-01
 - data_pipeline - The ``version`` option had no effect and will be removed after 2022-06-01
 - data_pipeline - the ``version`` option has been deprecated and will be removed in a later release. It has always been ignored by the module.
 - ec2_eip - The ``wait_timeout`` option had no effect and will be removed after 2022-06-01
-- ec2_eip - the ``wait_timeout`` option has been deprecated and will be removed in a later release. It has had no effect since Ansible 2.3.
+- ec2_eip - the ``wait_timeout`` option has been deprecated and will be removed in a later release. It has had no effect since Assible 2.3.
 - ec2_key - The ``wait_timeout`` option had no effect and will be removed after 2022-06-01
 - ec2_key - The ``wait`` option had no effect and will be removed after 2022-06-01
 - ec2_lc - The ``associate_public_ip_address`` option had no effect and will be removed after 2022-06-01
@@ -565,7 +565,7 @@ community.general
 - redfish_config - the ``bios_attribute_name`` and ``bios_attribute_value`` options will be removed. To maintain the existing behavior use the ``bios_attributes`` option instead.
 - redfish_config and redfish_command - the behavior to select the first System, Manager, or Chassis resource to modify when multiple are present will be removed. Use the new ``resource_id`` option to specify target resource to modify.
 - redfish_config, redfish_command - Behavior to modify the first System, Mananger, or Chassis resource when multiple are present is deprecated. Use the new ``resource_id`` option to specify target resource to modify.
-- xbps - the ``force`` option never had any effect. It is now deprecated, and will be removed in 3.0.0 (https://github.com/ansible-collections/community.general/pull/568).
+- xbps - the ``force`` option never had any effect. It is now deprecated, and will be removed in 3.0.0 (https://github.com/assible-collections/community.general/pull/568).
 
 community.vmware
 ~~~~~~~~~~~~~~~~

@@ -33,7 +33,7 @@
     test_override:
     register: result
 
-  - name: Make sure the we used the local facts.py, not the one shipped with ansible
+  - name: Make sure the we used the local facts.py, not the one shipped with assible
     assert:
       that:
         - 'result["data"] == "overridden facts.py"'

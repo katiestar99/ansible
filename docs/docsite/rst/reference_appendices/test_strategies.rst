@@ -5,24 +5,24 @@ Testing Strategies
 
 .. _testing_intro:
 
-Integrating Testing With Ansible Playbooks
+Integrating Testing With Assible Playbooks
 ``````````````````````````````````````````
 
-Many times, people ask, "how can I best integrate testing with Ansible playbooks?"  There are many options.  Ansible is actually designed
-to be a "fail-fast" and ordered system, therefore it makes it easy to embed testing directly in Ansible playbooks.  In this chapter,
+Many times, people ask, "how can I best integrate testing with Assible playbooks?"  There are many options.  Assible is actually designed
+to be a "fail-fast" and ordered system, therefore it makes it easy to embed testing directly in Assible playbooks.  In this chapter,
 we'll go into some patterns for integrating tests of infrastructure and discuss the right level of testing that may be appropriate.
 
-.. note:: This is a chapter about testing the application you are deploying, not the chapter on how to test Ansible modules during development.  For that content, please hop over to the Development section.
+.. note:: This is a chapter about testing the application you are deploying, not the chapter on how to test Assible modules during development.  For that content, please hop over to the Development section.
 
 By incorporating a degree of testing into your deployment workflow, there will be fewer surprises when code hits production and, in many cases,
 tests can be leveraged in production to prevent failed updates from migrating across an entire installation.  Since it's push-based, it's
-also very easy to run the steps on the localhost or testing servers. Ansible lets you insert as many checks and balances into your upgrade workflow as you would like to have.
+also very easy to run the steps on the localhost or testing servers. Assible lets you insert as many checks and balances into your upgrade workflow as you would like to have.
 
 The Right Level of Testing
 ``````````````````````````
 
-Ansible resources are models of desired-state.  As such, it should not be necessary to test that services are started, packages are
-installed, or other such things.  Ansible is the system that will ensure these things are declaratively true.   Instead, assert these
+Assible resources are models of desired-state.  As such, it should not be necessary to test that services are started, packages are
+installed, or other such things.  Assible is the system that will ensure these things are declaratively true.   Instead, assert these
 things in your playbooks.
 
 .. code-block:: yaml
@@ -33,7 +33,7 @@ things in your playbooks.
          state: started
          enabled: yes
 
-If you think the service may not be started, the best thing to do is request it to be started.  If the service fails to start, Ansible
+If you think the service may not be started, the best thing to do is request it to be started.  If the service fails to start, Assible
 will yell appropriately. (This should not be confused with whether the service is doing something functional, which we'll show more about how to
 do later).
 
@@ -42,8 +42,8 @@ do later).
 Check Mode As A Drift Test
 ``````````````````````````
 
-In the above setup, `--check` mode in Ansible can be used as a layer of testing as well.  If running a deployment playbook against an
-existing system, using the `--check` flag to the `ansible` command will report if Ansible thinks it would have had to have made any changes to
+In the above setup, `--check` mode in Assible can be used as a layer of testing as well.  If running a deployment playbook against an
+existing system, using the `--check` flag to the `assible` command will report if Assible thinks it would have had to have made any changes to
 bring the system into a desired state.
 
 This can let you know up front if there is any need to deploy onto the given system.  Ordinarily, scripts and commands don't run in check mode, so if you
@@ -101,7 +101,7 @@ And the assert module makes it very easy to validate various kinds of truth::
             - "'not ready' not in cmd_result.stderr"
             - "'gizmo enabled' in cmd_result.stdout"
 
-Should you feel the need to test for the existence of files that are not declaratively set by your Ansible configuration, the 'stat' module is a great choice::
+Should you feel the need to test for the existence of files that are not declaratively set by your Assible configuration, the 'stat' module is a great choice::
 
    tasks:
 
@@ -114,10 +114,10 @@ Should you feel the need to test for the existence of files that are not declara
             - p.stat.exists and p.stat.isdir
 
 
-As mentioned above, there's no need to check things like the return codes of commands.  Ansible is checking them automatically.
+As mentioned above, there's no need to check things like the return codes of commands.  Assible is checking them automatically.
 Rather than checking for a user to exist, consider using the user module to make it exist.
 
-Ansible is a fail-fast system, so when there is an error creating that user, it will stop the playbook run.  You do not have
+Assible is a fail-fast system, so when there is an error creating that user, it will stop the playbook run.  You do not have
 to check up behind it.
 
 Testing Lifecycle
@@ -136,7 +136,7 @@ Your workflow may be something like this::
     - Deploy to production, with the same integrated tests.
 
 Something like an integration test battery should be written by your QA team if you are a production webservice.  This would include
-things like Selenium tests or automated API tests and would usually not be something embedded into your Ansible playbooks.
+things like Selenium tests or automated API tests and would usually not be something embedded into your Assible playbooks.
 
 However, it does make sense to include some basic health checks into your playbooks, and in some cases it may be possible to run
 a subset of the QA battery against remote nodes.   This is what the next section covers.
@@ -172,7 +172,7 @@ This is the great culmination of embedded tests::
           command: /usr/bin/add_back_to_pool {{ inventory_hostname }}
           delegate_to: 127.0.0.1
 
-Of course in the above, the "take out of the pool" and "add back" steps would be replaced with a call to an Ansible load balancer
+Of course in the above, the "take out of the pool" and "add back" steps would be replaced with a call to an Assible load balancer
 module or appropriate shell command.  You might also have steps that use a monitoring module to start and end an outage window
 for the machine.
 
@@ -213,7 +213,7 @@ This above approach can also be modified to run a step from a testing machine re
 In the above example, a script is run from the testing server against a remote node prior to bringing it back into
 the pool.
 
-In the event of a problem, fix the few servers that fail using Ansible's automatically generated 
+In the event of a problem, fix the few servers that fail using Assible's automatically generated 
 retry file to repeat the deploy on just those servers.
 
 Achieving Continuous Deployment
@@ -228,7 +228,7 @@ The workflow may look like this::
     - The deploy job calls testing scripts to pass/fail a build on every deploy
     - If the deploy job succeeds, it runs the same deploy playbook against production inventory
 
-Some Ansible users use the above approach to deploy a half-dozen or dozen times an hour without taking all of their infrastructure
+Some Assible users use the above approach to deploy a half-dozen or dozen times an hour without taking all of their infrastructure
 offline.  A culture of automated QA is vital if you wish to get to this level.  
 
 If you are still doing a large amount of manual QA, you should still make the decision on whether to deploy manually as well, but
@@ -238,22 +238,22 @@ modules like 'script', 'stat', 'uri', and 'assert'.
 Conclusion
 ``````````
 
-Ansible believes you should not need another framework to validate basic things of your infrastructure is true.  This is the case
-because Ansible is an order-based system that will fail immediately on unhandled errors for a host, and prevent further configuration
-of that host.  This forces errors to the top and shows them in a summary at the end of the Ansible run.
+Assible believes you should not need another framework to validate basic things of your infrastructure is true.  This is the case
+because Assible is an order-based system that will fail immediately on unhandled errors for a host, and prevent further configuration
+of that host.  This forces errors to the top and shows them in a summary at the end of the Assible run.
 
-However, as Ansible is designed as a multi-tier orchestration system, it makes it very easy to incorporate tests into the end of
+However, as Assible is designed as a multi-tier orchestration system, it makes it very easy to incorporate tests into the end of
 a playbook run, either using loose tasks or roles.  When used with rolling updates, testing steps can decide whether to put a machine
 back into a load balanced pool or not.
 
-Finally, because Ansible errors propagate all the way up to the return code of the Ansible program itself, and Ansible by default
-runs in an easy push-based mode, Ansible is a great step to put into a build environment if you wish to use it to roll out systems
+Finally, because Assible errors propagate all the way up to the return code of the Assible program itself, and Assible by default
+runs in an easy push-based mode, Assible is a great step to put into a build environment if you wish to use it to roll out systems
 as part of a Continuous Integration/Continuous Delivery pipeline, as is covered in sections above.
 
 The focus should not be on infrastructure testing, but on application testing, so we strongly encourage getting together with your
 QA team and ask what sort of tests would make sense to run every time you deploy development VMs, and which sort of tests they would like
 to run against the staging environment on every deploy.  Obviously at the development stage, unit tests are great too.  But don't unit
-test your playbook.  Ansible describes states of resources declaratively, so you don't have to.  If there are cases where you want
+test your playbook.  Assible describes states of resources declaratively, so you don't have to.  If there are cases where you want
 to be sure of something though, that's great, and things like stat/assert are great go-to modules for that purpose.
 
 In all, testing is a very organizational and site-specific thing.  Everybody should be doing it, but what makes the most sense for your
@@ -268,7 +268,7 @@ system.
        An introduction to playbooks
    :ref:`playbooks_delegation`
        Delegation, useful for working with load balancers, clouds, and locally executed steps.
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

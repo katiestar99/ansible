@@ -1,5 +1,5 @@
-ansible-base (%VERSION%-%RELEASE%~%DIST%) %DIST%; urgency=low
+assible-base (%VERSION%-%RELEASE%~%DIST%) %DIST%; urgency=low
 
   * %VERSION% release
 
- -- Ansible, Inc. <info@ansible.com>  %DATE%
+ -- Assible, Inc. <info@assible.com>  %DATE%

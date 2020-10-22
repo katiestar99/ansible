@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2015, Jon Hawkesworth (@jhawkesworth) <figs@unity.demon.co.uk>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -141,13 +141,13 @@ EXAMPLES = r'''
 - name: Copy a single file where the source is on the remote host
   win_copy:
     src: C:\Temp\foo.txt
-    dest: C:\ansible\foo.txt
+    dest: C:\assible\foo.txt
     remote_src: yes
 
 - name: Copy a folder recursively where the source is on the remote host
   win_copy:
     src: C:\Temp
-    dest: C:\ansible
+    dest: C:\assible
     remote_src: yes
 
 - name: Set the contents of a file
@@ -160,12 +160,12 @@ EXAMPLES = r'''
     src: NuGet.config
     dest: '%AppData%\NuGet\NuGet.config'
   vars:
-    ansible_become_user: user
-    ansible_become_password: pass
+    assible_become_user: user
+    assible_become_password: pass
     # The tmp dir must be set when using win_copy as another user
     # This ensures the become user will have permissions for the operation
-    # Make sure to specify a folder both the ansible_user and the become_user have access to (i.e not %TEMP% which is user specific and requires Admin)
-    ansible_remote_tmp: 'c:\tmp'
+    # Make sure to specify a folder both the assible_user and the become_user have access to (i.e not %TEMP% which is user specific and requires Admin)
+    assible_remote_tmp: 'c:\tmp'
 '''
 
 RETURN = r'''
@@ -183,7 +183,7 @@ src:
     description: Source file used for the copy on the target machine.
     returned: changed
     type: str
-    sample: /home/httpd/.ansible/tmp/ansible-tmp-1423796390.97-147729857856000/source
+    sample: /home/httpd/.assible/tmp/assible-tmp-1423796390.97-147729857856000/source
 checksum:
     description: SHA1 checksum of the file after running copy.
     returned: success, src is a file

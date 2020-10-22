@@ -1,19 +1,19 @@
 # (c) 2012, Jeroen Hoekx <jeroen@hoekx.be>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -23,12 +23,12 @@ import re
 import operator as py_operator
 from distutils.version import LooseVersion, StrictVersion
 
-from ansible import errors
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common._collections_compat import MutableMapping, MutableSequence
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.utils.display import Display
-from ansible.utils.version import SemanticVersion
+from assible import errors
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common._collections_compat import MutableMapping, MutableSequence
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.utils.display import Display
+from assible.utils.version import SemanticVersion
 
 display = Display()
 
@@ -36,7 +36,7 @@ display = Display()
 def failed(result):
     ''' Test if task result yields failed '''
     if not isinstance(result, MutableMapping):
-        raise errors.AnsibleFilterError("The 'failed' test expects a dictionary")
+        raise errors.AssibleFilterError("The 'failed' test expects a dictionary")
     return result.get('failed', False)
 
 
@@ -48,7 +48,7 @@ def success(result):
 def unreachable(result):
     ''' Test if task result yields unreachable '''
     if not isinstance(result, MutableMapping):
-        raise errors.AnsibleFilterError("The 'unreachable' test expects a dictionary")
+        raise errors.AssibleFilterError("The 'unreachable' test expects a dictionary")
     return result.get('unreachable', False)
 
 
@@ -60,7 +60,7 @@ def reachable(result):
 def changed(result):
     ''' Test if task result yields changed '''
     if not isinstance(result, MutableMapping):
-        raise errors.AnsibleFilterError("The 'changed' test expects a dictionary")
+        raise errors.AssibleFilterError("The 'changed' test expects a dictionary")
     if 'changed' not in result:
         changed = False
         if (
@@ -80,14 +80,14 @@ def changed(result):
 def skipped(result):
     ''' Test if task result yields skipped '''
     if not isinstance(result, MutableMapping):
-        raise errors.AnsibleFilterError("The 'skipped' test expects a dictionary")
+        raise errors.AssibleFilterError("The 'skipped' test expects a dictionary")
     return result.get('skipped', False)
 
 
 def started(result):
     ''' Test if async task has started '''
     if not isinstance(result, MutableMapping):
-        raise errors.AnsibleFilterError("The 'started' test expects a dictionary")
+        raise errors.AssibleFilterError("The 'started' test expects a dictionary")
     if 'started' in result:
         # For async tasks, return status
         # NOTE: The value of started is 0 or 1, not False or True :-/
@@ -101,7 +101,7 @@ def started(result):
 def finished(result):
     ''' Test if async task has finished '''
     if not isinstance(result, MutableMapping):
-        raise errors.AnsibleFilterError("The 'finished' test expects a dictionary")
+        raise errors.AssibleFilterError("The 'finished' test expects a dictionary")
     if 'finished' in result:
         # For async tasks, return status
         # NOTE: The value of finished is 0 or 1, not False or True :-/
@@ -166,7 +166,7 @@ def version_compare(value, version, operator='eq', strict=None, version_type=Non
     }
 
     if strict is not None and version_type is not None:
-        raise errors.AnsibleFilterError("Cannot specify both 'strict' and 'version_type'")
+        raise errors.AssibleFilterError("Cannot specify both 'strict' and 'version_type'")
 
     Version = LooseVersion
     if strict:
@@ -175,14 +175,14 @@ def version_compare(value, version, operator='eq', strict=None, version_type=Non
         try:
             Version = type_map[version_type]
         except KeyError:
-            raise errors.AnsibleFilterError(
+            raise errors.AssibleFilterError(
                 "Invalid version type (%s). Must be one of %s" % (version_type, ', '.join(map(repr, type_map)))
             )
 
     if operator in op_map:
         operator = op_map[operator]
     else:
-        raise errors.AnsibleFilterError(
+        raise errors.AssibleFilterError(
             'Invalid operator type (%s). Must be one of %s' % (operator, ', '.join(map(repr, op_map)))
         )
 
@@ -190,7 +190,7 @@ def version_compare(value, version, operator='eq', strict=None, version_type=Non
         method = getattr(py_operator, operator)
         return method(Version(to_text(value)), Version(to_text(version)))
     except Exception as e:
-        raise errors.AnsibleFilterError('Version comparison failed: %s' % to_native(e))
+        raise errors.AssibleFilterError('Version comparison failed: %s' % to_native(e))
 
 
 def truthy(value, convert_bool=False):
@@ -222,7 +222,7 @@ def falsy(value, convert_bool=False):
 
 
 class TestModule(object):
-    ''' Ansible core jinja2 tests '''
+    ''' Assible core jinja2 tests '''
 
     def tests(self):
         return {

@@ -2,5 +2,5 @@
 
 set -eux
 
-ansible-playbook test_handler_race.yml -i inventory -v "$@"
+assible-playbook test_handler_race.yml -i inventory -v "$@"
 

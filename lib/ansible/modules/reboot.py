@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -15,7 +15,7 @@ notes:
     to specify locations to search if the default paths do not work.
 description:
     - Reboot a machine, wait for it to go down, come back up, and respond to commands.
-    - For Windows targets, use the M(ansible.windows.win_reboot) module instead.
+    - For Windows targets, use the M(assible.windows.win_reboot) module instead.
 version_added: "2.7"
 options:
   pre_reboot_delay:
@@ -53,7 +53,7 @@ options:
     description:
       - Message to display to users before reboot.
     type: str
-    default: Reboot initiated by Ansible
+    default: Reboot initiated by Assible
 
   search_paths:
     description:
@@ -71,7 +71,7 @@ options:
     default: 'cat /proc/sys/kernel/random/boot_id'
     version_added: '2.10'
 seealso:
-- module: ansible.windows.win_reboot
+- module: assible.windows.win_reboot
 author:
     - Matt Davis (@nitzmahone)
     - Sam Doran (@samdoran)

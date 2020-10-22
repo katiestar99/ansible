@@ -20,14 +20,14 @@ author:
 '''
 
 EXAMPLES = r'''
-- name: Return ansible_facts
+- name: Return assible_facts
   my_namespace.my_collection.my_test_facts:
 '''
 
 RETURN = r'''
 # These are examples of possible return values, and in general should use other names for return values.
-ansible_facts:
-  description: Facts to add to ansible_facts.
+assible_facts:
+  description: Facts to add to assible_facts.
   returned: always
   type: dict
   contains:
@@ -45,7 +45,7 @@ ansible_facts:
       sample: '42'
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def run_module():
@@ -59,14 +59,14 @@ def run_module():
     # for consumption, for example, in a subsequent task
     result = dict(
         changed=False,
-        ansible_facts=dict(),
+        assible_facts=dict(),
     )
 
-    # the AnsibleModule object will be our abstraction working with Ansible
+    # the AssibleModule object will be our abstraction working with Assible
     # this includes instantiation, a couple of common attr would be the
     # args/params passed to the execution, as well as if the module
     # supports check mode
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=module_args,
         supports_check_mode=True
     )
@@ -79,12 +79,12 @@ def run_module():
 
     # manipulate or modify the state as needed (this is going to be the
     # part where your module will do what it needs to do)
-    result['ansible_facts'] = {
+    result['assible_facts'] = {
         'foo': 'bar',
         'answer': '42',
     }
     # in the event of a successful module execution, you will want to
-    # simple AnsibleModule.exit_json(), passing the key/value results
+    # simple AssibleModule.exit_json(), passing the key/value results
     module.exit_json(**result)
 
 

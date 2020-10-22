@@ -8,7 +8,7 @@
 # this is a windows documentation stub.  actual code lives in the .ps1
 # file of the same name
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -126,7 +126,7 @@ feature_result:
             type: bool
             sample: true
         restart_needed:
-            description: DEPRECATED in Ansible 2.4 (refer to C(reboot_required) instead). True when the target server requires a reboot as a
+            description: DEPRECATED in Assible 2.4 (refer to C(reboot_required) instead). True when the target server requires a reboot as a
                          result of installing or removing this feature.
             returned: always
             type: bool

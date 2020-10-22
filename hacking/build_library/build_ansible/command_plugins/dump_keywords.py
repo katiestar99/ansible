@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -16,7 +16,7 @@ import jinja2
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
-from ansible.module_utils._text import to_bytes
+from assible.module_utils._text import to_bytes
 
 # Pylint doesn't understand Python3 namespace modules.
 from ..change_detection import update_file_if_different  # pylint: disable=relative-beyond-top-level
@@ -40,9 +40,9 @@ def extract_keywords(keyword_definitions):
     pb_keywords = {}
     for pb_class_name in PLAYBOOK_CLASS_NAMES:
         if pb_class_name == 'Play':
-            module_name = 'ansible.playbook'
+            module_name = 'assible.playbook'
         else:
-            module_name = 'ansible.playbook.{0}'.format(pb_class_name.lower())
+            module_name = 'assible.playbook.{0}'.format(pb_class_name.lower())
         module = importlib.import_module(module_name)
         playbook_class = getattr(module, pb_class_name, None)
         if playbook_class is None:

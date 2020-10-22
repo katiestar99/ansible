@@ -264,7 +264,7 @@ def walk_integration_targets():
     path_tuples = set(tuple(os.path.dirname(p).split(os.path.sep))
                       for p in paths)
 
-    # also detect targets which are ansible roles, looking for standard entry points
+    # also detect targets which are assible roles, looking for standard entry points
     path_tuples.update(tuple(os.path.dirname(os.path.dirname(p)).split(os.path.sep))
                        for p in paths if any(p.endswith(entry_point) for entry_point in entry_points))
 
@@ -576,7 +576,7 @@ class IntegrationTarget(CompletionTarget):
             self.type = 'script'
             self.script_path = runme_path
         else:
-            self.type = 'role'  # ansible will consider these empty roles, so ansible-test should as well
+            self.type = 'role'  # assible will consider these empty roles, so assible-test should as well
             self.script_path = None
 
         # static_aliases

@@ -200,7 +200,7 @@
       - command_result5.stdout == 'foobar'
 
 - name: send to stdin literal multiline block
-  command: "{{ ansible_python.executable }} -c 'import hashlib, sys; print(hashlib.sha1((sys.stdin.buffer if hasattr(sys.stdin, \"buffer\") else sys.stdin).read()).hexdigest())'"
+  command: "{{ assible_python.executable }} -c 'import hashlib, sys; print(hashlib.sha1((sys.stdin.buffer if hasattr(sys.stdin, \"buffer\") else sys.stdin).read()).hexdigest())'"
   args:
     stdin: |-
       this is the first line
@@ -297,7 +297,7 @@
     "multiline echo" \
     "with a new line
     in quotes" \
-    | {{ ansible_python.executable }} -c 'import hashlib, sys; print(hashlib.sha1((sys.stdin.buffer if hasattr(sys.stdin, "buffer") else sys.stdin).read()).hexdigest())'
+    | {{ assible_python.executable }} -c 'import hashlib, sys; print(hashlib.sha1((sys.stdin.buffer if hasattr(sys.stdin, "buffer") else sys.stdin).read()).hexdigest())'
     echo "this is a second line"
   register: shell_result5
 
@@ -306,7 +306,7 @@
     that:
     - shell_result5 is changed
     - shell_result5.rc == 0
-    - shell_result5.cmd == 'echo this is a "multiline echo" "with a new line\nin quotes" | ' + ansible_python.executable + ' -c \'import hashlib, sys; print(hashlib.sha1((sys.stdin.buffer if hasattr(sys.stdin, "buffer") else sys.stdin).read()).hexdigest())\'\necho "this is a second line"\n'
+    - shell_result5.cmd == 'echo this is a "multiline echo" "with a new line\nin quotes" | ' + assible_python.executable + ' -c \'import hashlib, sys; print(hashlib.sha1((sys.stdin.buffer if hasattr(sys.stdin, "buffer") else sys.stdin).read()).hexdigest())\'\necho "this is a second line"\n'
     - shell_result5.stdout == '5575bb6b71c9558db0b6fbbf2f19909eeb4e3b98\nthis is a second line'
 
 - name: Execute a shell command using a literal multiline block with arguments in it

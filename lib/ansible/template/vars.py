@@ -1,19 +1,19 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,16 +21,16 @@ __metaclass__ = type
 
 from jinja2.utils import missing
 
-from ansible.errors import AnsibleError, AnsibleUndefinedVariable
-from ansible.module_utils.six import iteritems
-from ansible.module_utils._text import to_native
-from ansible.module_utils.common._collections_compat import Mapping
+from assible.errors import AssibleError, AssibleUndefinedVariable
+from assible.module_utils.six import iteritems
+from assible.module_utils._text import to_native
+from assible.module_utils.common._collections_compat import Mapping
 
 
-__all__ = ['AnsibleJ2Vars']
+__all__ = ['AssibleJ2Vars']
 
 
-class AnsibleJ2Vars(Mapping):
+class AssibleJ2Vars(Mapping):
     '''
     Helper class to template all variable content before jinja2 sees it. This is
     done by hijacking the variable storage that jinja2 uses, and overriding __contains__
@@ -97,18 +97,18 @@ class AnsibleJ2Vars(Mapping):
 
         # HostVars is special, return it as-is, as is the special variable
         # 'vars', which contains the vars structure
-        from ansible.vars.hostvars import HostVars
+        from assible.vars.hostvars import HostVars
         if isinstance(variable, dict) and varname == "vars" or isinstance(variable, HostVars) or hasattr(variable, '__UNSAFE__'):
             return variable
         else:
             value = None
             try:
                 value = self._templar.template(variable)
-            except AnsibleUndefinedVariable as e:
-                raise AnsibleUndefinedVariable("%s: %s" % (to_native(variable), e.message))
+            except AssibleUndefinedVariable as e:
+                raise AssibleUndefinedVariable("%s: %s" % (to_native(variable), e.message))
             except Exception as e:
                 msg = getattr(e, 'message', None) or to_native(e)
-                raise AnsibleError("An unhandled exception occurred while templating '%s'. "
+                raise AssibleError("An unhandled exception occurred while templating '%s'. "
                                    "Error was a %s, original message: %s" % (to_native(variable), type(e), msg))
 
             return value
@@ -127,4 +127,4 @@ class AnsibleJ2Vars(Mapping):
         new_locals = self._locals.copy()
         new_locals.update(locals)
 
-        return AnsibleJ2Vars(self._templar, self._globals, locals=new_locals, *self._extras)
+        return AssibleJ2Vars(self._templar, self._globals, locals=new_locals, *self._extras)

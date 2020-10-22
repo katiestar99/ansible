@@ -33,7 +33,7 @@ MR access points are enterprise-class, high-performance access points for the en
 Using the Meraki modules
 ========================
 
-Meraki modules provide a user-friendly interface to manage your Meraki environment using Ansible. For example, details about SNMP settings for a particular organization can be discovered using the module `meraki_snmp <meraki_snmp_module>`.
+Meraki modules provide a user-friendly interface to manage your Meraki environment using Assible. For example, details about SNMP settings for a particular organization can be discovered using the module `meraki_snmp <meraki_snmp_module>`.
 
 .. code-block:: yaml
 
@@ -59,7 +59,7 @@ Information about a particular object can be queried. For example, the `meraki_a
 Common Parameters
 =================
 
-All Ansible Meraki modules support the following parameters which affect communication with the Meraki Dashboard API. Most of these should only be used by Meraki developers and not the general public.
+All Assible Meraki modules support the following parameters which affect communication with the Meraki Dashboard API. Most of these should only be used by Meraki developers and not the general public.
 
     host
         Hostname or IP of Meraki Dashboard.
@@ -97,14 +97,14 @@ Meraki Authentication
 
 All API access with the Meraki Dashboard requires an API key. An API key can be generated from the organization's settings page. Each play in a playbook requires the ``api_key`` parameter to be specified.
 
-The "Vault" feature of Ansible allows you to keep sensitive data such as passwords or keys in encrypted files, rather than as plain text in your playbooks or roles. These vault files can then be distributed or placed in source control. See :ref:`playbooks_vault` for more information.
+The "Vault" feature of Assible allows you to keep sensitive data such as passwords or keys in encrypted files, rather than as plain text in your playbooks or roles. These vault files can then be distributed or placed in source control. See :ref:`playbooks_vault` for more information.
 
 Meraki's API returns a 404 error if the API key is not correct. It does not provide any specific error saying the key is incorrect. If you receive a 404 error, check the API key first.
 
 Returned Data Structures
 ========================
 
-Meraki and its related Ansible modules return most information in the form of a list. For example, this is returned information by ``meraki_admin`` querying administrators. It returns a list even though there's only one.
+Meraki and its related Assible modules return most information in the form of a list. For example, this is returned information by ``meraki_admin`` querying administrators. It returns a list even though there's only one.
 
 .. code-block:: json
 
@@ -127,7 +127,7 @@ Since Meraki's response data uses lists instead of properly keyed dictionaries f
 Merging Existing and New Data
 =============================
 
-Ansible's Meraki modules do not allow for manipulating data. For example, you may need to insert a rule in the middle of a firewall ruleset. Ansible and the Meraki modules lack a way to directly merge to manipulate data. However, a playlist can use a few tasks to split the list where you need to insert a rule and then merge them together again with the new rule added. The steps involved are as follows:
+Assible's Meraki modules do not allow for manipulating data. For example, you may need to insert a rule in the middle of a firewall ruleset. Assible and the Meraki modules lack a way to directly merge to manipulate data. However, a playlist can use a few tasks to split the list where you need to insert a rule and then merge them together again with the new rule added. The steps involved are as follows:
 
 1. Create blank "front" and "back" lists.
     ::
@@ -188,6 +188,6 @@ Ansible's Meraki modules do not allow for manipulating data. For example, you ma
 Error Handling
 ==============
 
-Ansible's Meraki modules will often fail if improper or incompatible parameters are specified. However, there will likely be scenarios where the module accepts the information but the Meraki API rejects the data. If this happens, the error will be returned in the ``body`` field for HTTP status of 400 return code.
+Assible's Meraki modules will often fail if improper or incompatible parameters are specified. However, there will likely be scenarios where the module accepts the information but the Meraki API rejects the data. If this happens, the error will be returned in the ``body`` field for HTTP status of 400 return code.
 
 Meraki's API returns a 404 error if the API key is not correct. It does not provide any specific error saying the key is incorrect. If you receive a 404 error, check the API key first. 404 errors can also occur if improper object IDs (ex. ``org_id``) are specified.

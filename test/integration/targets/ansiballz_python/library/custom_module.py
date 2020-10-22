@@ -3,12 +3,12 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ..module_utils.basic import AnsibleModule  # pylint: disable=relative-beyond-top-level
+from ..module_utils.basic import AssibleModule  # pylint: disable=relative-beyond-top-level
 from ..module_utils.custom_util import forty_two  # pylint: disable=relative-beyond-top-level
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict()
     )
 

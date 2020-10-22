@@ -1,13 +1,13 @@
-# unit tests for ansible system cmdline fact collectors
+# unit tests for assible system cmdline fact collectors
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 import pytest
-from ansible.module_utils.facts.system.cmdline import CmdLineFactCollector
+from assible.module_utils.facts.system.cmdline import CmdLineFactCollector
 
 test_data = [
     (

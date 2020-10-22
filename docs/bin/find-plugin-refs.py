@@ -15,7 +15,7 @@ import glob
 import os
 import re
 
-from ansible.module_utils._text import to_text
+from assible.module_utils._text import to_text
 
 
 TOPDIR = os.path.join(os.path.dirname(__file__), '..', 'docsite', 'rst')

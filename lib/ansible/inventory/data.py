@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 #############################################
 from __future__ import (absolute_import, division, print_function)
@@ -21,14 +21,14 @@ __metaclass__ = type
 
 import sys
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.inventory.group import Group
-from ansible.inventory.host import Host
-from ansible.module_utils.six import iteritems, string_types
-from ansible.utils.display import Display
-from ansible.utils.vars import combine_vars
-from ansible.utils.path import basedir
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.inventory.group import Group
+from assible.inventory.host import Host
+from assible.module_utils.six import iteritems, string_types
+from assible.utils.display import Display
+from assible.utils.vars import combine_vars
+from assible.utils.path import basedir
 
 display = Display()
 
@@ -90,9 +90,9 @@ class InventoryData(object):
                 # sys.executable is not set in some cornercases. see issue #13585
                 py_interp = '/usr/bin/python'
                 display.warning('Unable to determine python interpreter from sys.executable. Using /usr/bin/python default. '
-                                'You can correct this by setting ansible_python_interpreter for localhost')
-            new_host.set_variable("ansible_python_interpreter", py_interp)
-            new_host.set_variable("ansible_connection", 'local')
+                                'You can correct this by setting assible_python_interpreter for localhost')
+            new_host.set_variable("assible_python_interpreter", py_interp)
+            new_host.set_variable("assible_connection", 'local')
 
             self.localhost = new_host
 
@@ -159,7 +159,7 @@ class InventoryData(object):
 
         if group:
             if not isinstance(group, string_types):
-                raise AnsibleError("Invalid group name supplied, expected a string but got %s for %s" % (type(group), group))
+                raise AssibleError("Invalid group name supplied, expected a string but got %s for %s" % (type(group), group))
             if group not in self.groups:
                 g = Group(group)
                 if g.name not in self.groups:
@@ -170,7 +170,7 @@ class InventoryData(object):
             else:
                 display.debug("group %s already in inventory" % group)
         else:
-            raise AnsibleError("Invalid empty/false group name provided: %s" % group)
+            raise AssibleError("Invalid empty/false group name provided: %s" % group)
 
         return group
 
@@ -190,7 +190,7 @@ class InventoryData(object):
 
         if host:
             if not isinstance(host, string_types):
-                raise AnsibleError("Invalid host name supplied, expected a string but got %s for %s" % (type(host), host))
+                raise AssibleError("Invalid host name supplied, expected a string but got %s for %s" % (type(host), host))
 
             # TODO: add to_safe_host_name
             g = None
@@ -198,7 +198,7 @@ class InventoryData(object):
                 if group in self.groups:
                     g = self.groups[group]
                 else:
-                    raise AnsibleError("Could not find group %s in inventory" % group)
+                    raise AssibleError("Could not find group %s in inventory" % group)
 
             if host not in self.hosts:
                 h = Host(host, port)
@@ -226,7 +226,7 @@ class InventoryData(object):
                 self._groups_dict_cache = {}
                 display.debug("Added host %s to group %s" % (host, group))
         else:
-            raise AnsibleError("Invalid empty host name provided: %s" % host)
+            raise AssibleError("Invalid empty host name provided: %s" % host)
 
         return host
 
@@ -247,7 +247,7 @@ class InventoryData(object):
         elif entity in self.hosts:
             inv_object = self.hosts[entity]
         else:
-            raise AnsibleError("Could not identify group or host named %s" % entity)
+            raise AssibleError("Could not identify group or host named %s" % entity)
 
         inv_object.set_variable(varname, value)
         display.debug('set %s for %s' % (varname, entity))
@@ -262,11 +262,11 @@ class InventoryData(object):
             elif child in self.hosts:
                 added = g.add_host(self.hosts[child])
             else:
-                raise AnsibleError("%s is not a known host nor group" % child)
+                raise AssibleError("%s is not a known host nor group" % child)
             self._groups_dict_cache = {}
             display.debug('Group %s now contains %s' % (group, child))
         else:
-            raise AnsibleError("%s is not a known group" % group)
+            raise AssibleError("%s is not a known group" % group)
         return added
 
     def get_groups_dict(self):

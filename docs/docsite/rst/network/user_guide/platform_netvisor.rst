@@ -4,8 +4,8 @@
 Pluribus NETVISOR Platform Options
 **********************************
 
-Pluribus NETVISOR Ansible is part of the `community.network <https://galaxy.ansible.com/community/network>`_ collection and only supports CLI connections today. ``httpapi`` modules may be added in future.
-This page offers details on how to use ``ansible.netcommon.network_cli`` on NETVISOR in Ansible.
+Pluribus NETVISOR Assible is part of the `community.network <https://galaxy.assible.com/community/network>`_ collection and only supports CLI connections today. ``httpapi`` modules may be added in future.
+This page offers details on how to use ``assible.netcommon.network_cli`` on NETVISOR in Assible.
 
 .. contents::
   :local:
@@ -27,7 +27,7 @@ Connections available
 
     Indirect Access       via a bastion (jump host)
 
-    Connection Settings   ``ansible_connection: ansible.netcommon.network_cli``
+    Connection Settings   ``assible_connection: assible.netcommon.network_cli``
 
     |enable_mode|         not supported by NETVISOR
 
@@ -36,9 +36,9 @@ Connections available
 
 .. |enable_mode| replace:: Enable Mode |br| (Privilege Escalation)
 
-Pluribus NETVISOR does not support ``ansible_connection: local``. You must use ``ansible_connection: ansible.netcommon.network_cli``.
+Pluribus NETVISOR does not support ``assible_connection: local``. You must use ``assible_connection: assible.netcommon.network_cli``.
 
-Using CLI in Ansible
+Using CLI in Assible
 ====================
 
 Example CLI ``group_vars/netvisor.yml``
@@ -46,15 +46,15 @@ Example CLI ``group_vars/netvisor.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.network_cli
-   ansible_network_os: community.netcommon.netvisor
-   ansible_user: myuser
-   ansible_password: !vault...
-   ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection: assible.netcommon.network_cli
+   assible_network_os: community.netcommon.netvisor
+   assible_user: myuser
+   assible_password: !vault...
+   assible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
 
-- If you are using SSH keys (including an ssh-agent) you can remove the ``ansible_password`` configuration.
-- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``ansible_ssh_common_args`` configuration.
+- If you are using SSH keys (including an ssh-agent) you can remove the ``assible_password`` configuration.
+- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``assible_ssh_common_args`` configuration.
 - If you are accessing your host through a bastion/jump host, you cannot include your SSH password in the ``ProxyCommand`` directive. To prevent secrets from leaking out (for example in ``ps`` output), SSH does not support providing passwords via environment variables.
 
 Example CLI task
@@ -68,7 +68,7 @@ Example CLI task
        pn_scope: "local"
        state: "present"
      register: acc_list
-     when: ansible_network_os == 'community.network.netvisor'
+     when: assible_network_os == 'community.network.netvisor'
 
 
 .. include:: shared_snippets/SSH_warning.txt

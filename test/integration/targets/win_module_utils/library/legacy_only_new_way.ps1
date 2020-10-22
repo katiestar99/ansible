@@ -1,5 +1,5 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 Exit-Json @{ data="success" }

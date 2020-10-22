@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,9 +21,9 @@ __metaclass__ = type
 
 from units.compat import unittest
 from units.compat.mock import patch
-from ansible.playbook.task import Task
-from ansible.parsing.yaml import objects
-from ansible import errors
+from assible.playbook.task import Task
+from assible.parsing.yaml import objects
+from assible import errors
 
 
 basic_command_task = dict(
@@ -72,16 +72,16 @@ class TestTask(unittest.TestCase):
         self.assertEqual(t.action, 'command')
         self.assertEqual(t.args, dict(_raw_params='echo hi'))
 
-    @patch.object(errors.AnsibleError, '_get_error_lines_from_file')
+    @patch.object(errors.AssibleError, '_get_error_lines_from_file')
     def test_load_task_kv_form_error_36848(self, mock_get_err_lines):
-        ds = objects.AnsibleMapping(kv_bad_args_ds)
-        ds.ansible_pos = ('test_task_faux_playbook.yml', 1, 1)
+        ds = objects.AssibleMapping(kv_bad_args_ds)
+        ds.assible_pos = ('test_task_faux_playbook.yml', 1, 1)
         mock_get_err_lines.return_value = (kv_bad_args_str, '')
 
-        with self.assertRaises(errors.AnsibleParserError) as cm:
+        with self.assertRaises(errors.AssibleParserError) as cm:
             Task.load(ds)
 
-        self.assertIsInstance(cm.exception, errors.AnsibleParserError)
+        self.assertIsInstance(cm.exception, errors.AssibleParserError)
         self.assertEqual(cm.exception._obj, ds)
         self.assertEqual(cm.exception._obj, kv_bad_args_ds)
         self.assertIn("The error appears to be in 'test_task_faux_playbook.yml", cm.exception.message)

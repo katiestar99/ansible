@@ -4,8 +4,8 @@
 SLX-OS Platform Options
 ***************************************
 
-Extreme SLX-OS is part of the `community.network <https://galaxy.ansible.com/community/network>`_ collection and only supports CLI connections today. ``httpapi`` modules may be added in future.
-This page offers details on how to use ``ansible.netcommon.network_cli`` on SLX-OS in Ansible.
+Extreme SLX-OS is part of the `community.network <https://galaxy.assible.com/community/network>`_ collection and only supports CLI connections today. ``httpapi`` modules may be added in future.
+This page offers details on how to use ``assible.netcommon.network_cli`` on SLX-OS in Assible.
 
 .. contents::
   :local:
@@ -27,7 +27,7 @@ Connections available
 
     Indirect Access       via a bastion (jump host)
 
-    Connection Settings   ``ansible_connection: ansible.netcommon.network_cli``
+    Connection Settings   ``assible_connection: assible.netcommon.network_cli``
 
     |enable_mode|         not supported by SLX-OS
 
@@ -37,9 +37,9 @@ Connections available
 .. |enable_mode| replace:: Enable Mode |br| (Privilege Escalation)
 
 
-SLX-OS does not support ``ansible_connection: local``. You must use ``ansible_connection: ansible.netcommon.network_cli``.
+SLX-OS does not support ``assible_connection: local``. You must use ``assible_connection: assible.netcommon.network_cli``.
 
-Using CLI in Ansible
+Using CLI in Assible
 ====================
 
 Example CLI ``group_vars/slxos.yml``
@@ -47,15 +47,15 @@ Example CLI ``group_vars/slxos.yml``
 
 .. code-block:: yaml
 
-   ansible_connection: ansible.netcommon.network_cli
-   ansible_network_os: community.network.slxos
-   ansible_user: myuser
-   ansible_password: !vault...
-   ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+   assible_connection: assible.netcommon.network_cli
+   assible_network_os: community.network.slxos
+   assible_user: myuser
+   assible_password: !vault...
+   assible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
 
 
-- If you are using SSH keys (including an ssh-agent) you can remove the ``ansible_password`` configuration.
-- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``ansible_ssh_common_args`` configuration.
+- If you are using SSH keys (including an ssh-agent) you can remove the ``assible_password`` configuration.
+- If you are accessing your host directly (not through a bastion/jump host) you can remove the ``assible_ssh_common_args`` configuration.
 - If you are accessing your host through a bastion/jump host, you cannot include your SSH password in the ``ProxyCommand`` directive. To prevent secrets from leaking out (for example in ``ps`` output), SSH does not support providing passwords via environment variables.
 
 Example CLI task
@@ -67,7 +67,7 @@ Example CLI task
      community.network.slxos_config:
        backup: yes
      register: backup_slxos_location
-     when: ansible_network_os == 'community.network.slxos'
+     when: assible_network_os == 'community.network.slxos'
 
 
 .. include:: shared_snippets/SSH_warning.txt

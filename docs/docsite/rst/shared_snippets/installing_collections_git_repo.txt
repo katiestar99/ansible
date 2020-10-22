@@ -7,13 +7,13 @@ You can install a collection in a git repository by providing the URI to the rep
 .. code-block:: bash
 
    # Install a collection in a repository using the latest commit on the branch 'devel'
-   ansible-galaxy collection install git+https://github.com/organization/repo_name.git,devel
+   assible-galaxy collection install git+https://github.com/organization/repo_name.git,devel
 
    # Install a collection from a private github repository
-   ansible-galaxy collection install git@github.com:organization/repo_name.git
+   assible-galaxy collection install git@github.com:organization/repo_name.git
 
    # Install a collection from a local git repository
-   ansible-galaxy collection install git+file:///home/user/path/to/repo/.git
+   assible-galaxy collection install git+file:///home/user/path/to/repo/.git
 
 In a ``requirements.yml`` file, you can also use the ``type`` and ``version`` keys in addition to using the ``git+repo,version`` syntax for the collection name.
 
@@ -61,7 +61,7 @@ The second is a ``galaxy.yml`` file in each directory in the repository path (on
 Specifying the location to search for collections
 -------------------------------------------------
 
-If you have a different repository structure or only want to install a subset of collections, you can add a fragment to the end of your URI (before the optional comma-separated version) to indicate which path ansible-galaxy should inspect for ``galaxy.yml`` file(s). The path should be a directory to a collection or multiple collections (rather than the path to a ``galaxy.yml`` file).
+If you have a different repository structure or only want to install a subset of collections, you can add a fragment to the end of your URI (before the optional comma-separated version) to indicate which path assible-galaxy should inspect for ``galaxy.yml`` file(s). The path should be a directory to a collection or multiple collections (rather than the path to a ``galaxy.yml`` file).
 
 .. code-block:: text
 
@@ -78,7 +78,7 @@ If you have a different repository structure or only want to install a subset of
 .. code-block:: bash
 
    # Install all collections in a particular namespace
-   ansible-galaxy collection install git+https://github.com/organization/repo_name.git#/namespace/
+   assible-galaxy collection install git+https://github.com/organization/repo_name.git#/namespace/
 
    # Install an individual collection using a specific commit
-   ansible-galaxy collection install git+https://github.com/organization/repo_name.git#/namespace/name/,7b60ddc245bc416b72d8ea6ed7b799885110f5e5
+   assible-galaxy collection install git+https://github.com/organization/repo_name.git#/namespace/name/,7b60ddc245bc416b72d8ea6ed7b799885110f5e5

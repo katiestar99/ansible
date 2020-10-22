@@ -1,7 +1,7 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
-#AnsibleRequires -CSharpUtil Ansible.Process
+#AssibleRequires -CSharpUtil Assible.Process
 
 Function Load-CommandUtils {
     <#
@@ -14,7 +14,7 @@ Function Load-CommandUtils {
         Add-DeprecationWarning -obj $result.Value -message $msg -version 2.12
     } else {
         $module = Get-Variable -Name module -ErrorAction SilentlyContinue
-        if ($null -ne $module -and $module.Value.GetType().FullName -eq "Ansible.Basic.AnsibleModule") {
+        if ($null -ne $module -and $module.Value.GetType().FullName -eq "Assible.Basic.AssibleModule") {
             $module.Value.Deprecate($msg, "2.12")
         }
     }
@@ -54,7 +54,7 @@ Function Get-ExecutablePath {
     if ($null -ne $file) {
         $executable_path = $file.FullName
     } else {
-        $executable_path = [Ansible.Process.ProcessUtil]::SearchPath($executable)
+        $executable_path = [Assible.Process.ProcessUtil]::SearchPath($executable)
     }
     return $executable_path
 }
@@ -104,11 +104,11 @@ Function Run-Command {
 
     # lpApplicationName needs to be the full path to an executable, we do this
     # by getting the executable as the first arg and then getting the full path
-    $arguments = [Ansible.Process.ProcessUtil]::ParseCommandLine($command)
+    $arguments = [Assible.Process.ProcessUtil]::ParseCommandLine($command)
     $executable = Get-ExecutablePath -executable $arguments[0] -directory $working_directory
 
     # run the command and get the results
-    $command_result = [Ansible.Process.ProcessUtil]::CreateProcess($executable, $command, $working_directory, $environment, $stdin, $output_encoding_override)
+    $command_result = [Assible.Process.ProcessUtil]::CreateProcess($executable, $command, $working_directory, $environment, $stdin, $output_encoding_override)
 
     return ,@{
         executable = $executable

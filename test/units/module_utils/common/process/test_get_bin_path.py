@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Ansible Project
+# Copyright (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -7,7 +7,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.process import get_bin_path
+from assible.module_utils.common.process import get_bin_path
 
 
 def test_get_bin_path(mocker):
@@ -16,7 +16,7 @@ def test_get_bin_path(mocker):
     mocker.patch('os.pathsep', ':')
 
     mocker.patch('os.path.isdir', return_value=False)
-    mocker.patch('ansible.module_utils.common.process.is_executable', return_value=True)
+    mocker.patch('assible.module_utils.common.process.is_executable', return_value=True)
 
     # pytest-mock 2.0.0 will throw when os.path.exists is messed with
     # and then another method is patched afterwards. Likely
@@ -33,7 +33,7 @@ def test_get_path_path_raise_valueerror(mocker):
 
     mocker.patch('os.path.exists', return_value=False)
     mocker.patch('os.path.isdir', return_value=False)
-    mocker.patch('ansible.module_utils.common.process.is_executable', return_value=True)
+    mocker.patch('assible.module_utils.common.process.is_executable', return_value=True)
 
     with pytest.raises(ValueError, match='Failed to find required executable notacommand'):
         get_bin_path('notacommand')

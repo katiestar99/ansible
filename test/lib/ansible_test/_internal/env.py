@@ -25,7 +25,7 @@ from .util import (
     find_executable,
     SubprocessError,
     ApplicationError,
-    get_ansible_version,
+    get_assible_version,
     get_available_python_versions,
 )
 
@@ -96,8 +96,8 @@ def show_dump_env(args):
         return
 
     data = dict(
-        ansible=dict(
-            version=get_ansible_version(),
+        assible=dict(
+            version=get_assible_version(),
         ),
         docker=get_docker_details(args),
         environ=os.environ.copy(),

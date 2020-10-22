@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    AnsibleVhdx: '{{ remote_tmp_dir }}\AnsiblePart.vhdx'
+    AssibleVhdx: '{{ remote_tmp_dir }}\AssiblePart.vhdx'
 
 - name: Install FS-Data-Deduplication
   win_feature:

@@ -4,9 +4,9 @@
 This script generated test_cases for test_distribution_version.py.
 
 To do so it outputs the relevant files from /etc/*release, the output of distro.linux_distribution()
-and the current ansible_facts regarding the distribution version.
+and the current assible_facts regarding the distribution version.
 
-This assumes a working ansible version in the path.
+This assumes a working assible version in the path.
 """
 
 from __future__ import (absolute_import, division, print_function)
@@ -18,8 +18,8 @@ import platform
 import subprocess
 import sys
 
-from ansible.module_utils import distro
-from ansible.module_utils._text import to_text
+from assible.module_utils import distro
+from assible.module_utils._text import to_text
 
 
 filelist = [
@@ -58,23 +58,23 @@ dist = distro.linux_distribution(full_distribution_name=False)
 facts = ['distribution', 'distribution_version', 'distribution_release', 'distribution_major_version', 'os_family']
 
 try:
-    b_ansible_out = subprocess.check_output(
-        ['ansible', 'localhost', '-m', 'setup'])
+    b_assible_out = subprocess.check_output(
+        ['assible', 'localhost', '-m', 'setup'])
 except subprocess.CalledProcessError as e:
-    print("ERROR: ansible run failed, output was: \n")
+    print("ERROR: assible run failed, output was: \n")
     print(e.output)
     sys.exit(e.returncode)
 
-ansible_out = to_text(b_ansible_out)
-parsed = json.loads(ansible_out[ansible_out.index('{'):])
-ansible_facts = {}
+assible_out = to_text(b_assible_out)
+parsed = json.loads(assible_out[assible_out.index('{'):])
+assible_facts = {}
 for fact in facts:
     try:
-        ansible_facts[fact] = parsed['ansible_facts']['ansible_' + fact]
+        assible_facts[fact] = parsed['assible_facts']['assible_' + fact]
     except Exception:
-        ansible_facts[fact] = "N/A"
+        assible_facts[fact] = "N/A"
 
-nicename = ansible_facts['distribution'] + ' ' + ansible_facts['distribution_version']
+nicename = assible_facts['distribution'] + ' ' + assible_facts['distribution_version']
 
 output = {
     'name': nicename,
@@ -89,7 +89,7 @@ output = {
     },
     'input': fcont,
     'platform.dist': dist,
-    'result': ansible_facts,
+    'result': assible_facts,
 }
 
 system = platform.system()

@@ -1,19 +1,19 @@
 # (c) 2016, Adrian Likins <alikins@redhat.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -26,14 +26,14 @@ import pytest
 from units.compat.mock import MagicMock
 from units.mock.loader import DictDataLoader
 
-from ansible.playbook.block import Block
-from ansible.playbook.task import Task
-from ansible.playbook.task_include import TaskInclude
-from ansible.playbook.role_include import IncludeRole
-from ansible.executor import task_result
+from assible.playbook.block import Block
+from assible.playbook.task import Task
+from assible.playbook.task_include import TaskInclude
+from assible.playbook.role_include import IncludeRole
+from assible.executor import task_result
 
-from ansible.playbook.included_file import IncludedFile
-from ansible.errors import AnsibleParserError
+from assible.playbook.included_file import IncludedFile
+from assible.errors import AssibleParserError
 
 
 @pytest.fixture
@@ -226,10 +226,10 @@ def test_process_include_simulate_free_block_role_tasks(mock_iterator,
 
     fake_loader = DictDataLoader({
         'include_test.yml': "",
-        '/etc/ansible/roles/foo_role/tasks/task1.yml': """
+        '/etc/assible/roles/foo_role/tasks/task1.yml': """
             - debug: msg=task1
         """,
-        '/etc/ansible/roles/foo_role/tasks/task2.yml': """
+        '/etc/assible/roles/foo_role/tasks/task2.yml': """
             - debug: msg=task2
         """,
     })
@@ -328,5 +328,5 @@ def test_empty_raw_params():
         }
     ]
     for task_ds in task_ds_list:
-        with pytest.raises(AnsibleParserError):
+        with pytest.raises(AssibleParserError):
             TaskInclude.load(task_ds, task_include=parent_task)

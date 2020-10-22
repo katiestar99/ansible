@@ -7,7 +7,7 @@ Setting the remote environment
 
 You can use the ``environment`` keyword at the play, block, or task level to set an environment variable for an action on a remote host. With this keyword, you can enable using a proxy for a task that does http requests, set the required environment variables for language-specific version managers, and more.
 
-When you set a value with ``environment:`` at the play or block level, it is available only to tasks within the play or block that are executed by the same user. The ``environment:`` keyword does not affect Ansible itself, Ansible configuration settings, the environment for other users, or the execution of other plugins like lookups and filters. Variables set with ``environment:`` do not automatically become Ansible facts, even when you set them at the play level. You must include an explicit ``gather_facts`` task in your playbook and set the ``environment`` keyword on that task to turn these values into Ansible facts.
+When you set a value with ``environment:`` at the play or block level, it is available only to tasks within the play or block that are executed by the same user. The ``environment:`` keyword does not affect Assible itself, Assible configuration settings, the environment for other users, or the execution of other plugins like lookups and filters. Variables set with ``environment:`` do not automatically become Assible facts, even when you set them at the play level. You must include an explicit ``gather_facts`` task in your playbook and set the ``environment`` keyword on that task to turn these values into Assible facts.
 
 .. contents::
    :local:
@@ -23,13 +23,13 @@ You can set the environment directly at the task level::
       tasks:
 
         - name: Install cobbler
-          ansible.builtin.package:
+          assible.builtin.package:
             name: cobbler
             state: present
           environment:
             http_proxy: http://proxy.example.com:8080
 
-You can re-use environment settings by defining them as variables in your play and accessing them in a task as you would access any stored Ansible variable::
+You can re-use environment settings by defining them as variables in your play and accessing them in a task as you would access any stored Assible variable::
 
     - hosts: all
       remote_user: root
@@ -42,7 +42,7 @@ You can re-use environment settings by defining them as variables in your play a
       tasks:
 
         - name: Install cobbler
-          ansible.builtin.package:
+          assible.builtin.package:
             name: cobbler
             state: present
           environment: "{{ proxy_env }}"
@@ -74,7 +74,7 @@ These examples show proxy settings, but you can provide any number of settings t
 Working with language-specific version managers
 ===============================================
 
-Some language-specific version managers (such as rbenv and nvm) require you to set environment variables while these tools are in use. When using these tools manually, you usually source some environment variables from a script or from lines added to your shell configuration file. In Ansible, you can do this with the environment keyword at the play level::
+Some language-specific version managers (such as rbenv and nvm) require you to set environment variables while these tools are in use. When using these tools manually, you usually source some environment variables from a script or from lines added to your shell configuration file. In Assible, you can do this with the environment keyword at the play level::
 
     ---
     ### A playbook demonstrating a common npm workflow:
@@ -91,16 +91,16 @@ Some language-specific version managers (such as rbenv and nvm) require you to s
 
       environment:
         NVM_DIR: /var/local/nvm
-        PATH: /var/local/nvm/versions/node/v4.2.1/bin:{{ ansible_env.PATH }}
+        PATH: /var/local/nvm/versions/node/v4.2.1/bin:{{ assible_env.PATH }}
 
       tasks:
       - name: Check for package.json
-        ansible.builtin.stat:
+        assible.builtin.stat:
           path: '{{ node_app_dir }}/package.json'
         register: packagejson
 
       - name: Run npm prune
-        ansible.builtin.command: npm prune
+        assible.builtin.command: npm prune
         args:
           chdir: '{{ node_app_dir }}'
         when: packagejson.stat.exists
@@ -111,7 +111,7 @@ Some language-specific version managers (such as rbenv and nvm) require you to s
         when: packagejson.stat.exists
 
 .. note::
-   The example above uses ``ansible_env`` as part of the PATH. Basing variables on ``ansible_env`` is risky. Ansible populates ``ansible_env`` values by gathering facts, so the value of the variables depends on the remote_user or become_user Ansible used when gathering those facts. If you change remote_user/become_user the values in ``ansible-env`` may not be the ones you expect.
+   The example above uses ``assible_env`` as part of the PATH. Basing variables on ``assible_env`` is risky. Assible populates ``assible_env`` values by gathering facts, so the value of the variables depends on the remote_user or become_user Assible used when gathering those facts. If you change remote_user/become_user the values in ``assible-env`` may not be the ones you expect.
 
 .. warning::
     Environment variables are normally passed in clear text (shell plugin dependent) so they are not a recommended way of passing secrets to the module being executed.
@@ -120,7 +120,7 @@ You can also specify the environment at the task level::
 
     ---
     - name: Install ruby 2.3.1
-      ansible.builtin.command: rbenv install {{ rbenv_ruby_version }}
+      assible.builtin.command: rbenv install {{ rbenv_ruby_version }}
       args:
         creates: '{{ rbenv_root }}/versions/{{ rbenv_ruby_version }}/bin/ruby'
       vars:
@@ -129,13 +129,13 @@ You can also specify the environment at the task level::
       environment:
         CONFIGURE_OPTS: '--disable-install-doc'
         RBENV_ROOT: '{{ rbenv_root }}'
-        PATH: '{{ rbenv_root }}/bin:{{ rbenv_root }}/shims:{{ rbenv_plugins }}/ruby-build/bin:{{ ansible_env.PATH }}'
+        PATH: '{{ rbenv_root }}/bin:{{ rbenv_root }}/shims:{{ rbenv_plugins }}/ruby-build/bin:{{ assible_env.PATH }}'
 
 .. seealso::
 
    :ref:`playbooks_intro`
        An introduction to playbooks
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

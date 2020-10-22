@@ -29,7 +29,7 @@ vars = { http_port = 8080, myvar = 23 }
 
 [web.hosts]
 host1 = {}
-host2 = { ansible_port = 222 }
+host2 = { assible_port = 222 }
 
 [apache.hosts]
 tomcat1 = {}
@@ -58,7 +58,7 @@ myvar = 23
 
 [web.hosts.host1]
 [web.hosts.host2]
-ansible_port = 222
+assible_port = 222
 
 [apache.hosts.tomcat1]
 
@@ -76,8 +76,8 @@ has_java = true
 # Example 3
 [ungrouped.hosts]
 host1 = {}
-host2 = { ansible_host = "127.0.0.1", ansible_port = 44 }
-host3 = { ansible_host = "127.0.0.1", ansible_port = 45 }
+host2 = { assible_host = "127.0.0.1", assible_port = 44 }
+host3 = { assible_host = "127.0.0.1", assible_port = 45 }
 
 [g1.hosts]
 host4 = {}
@@ -90,14 +90,14 @@ import os
 
 from functools import partial
 
-from ansible.errors import AnsibleFileNotFound, AnsibleParserError
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.common._collections_compat import MutableMapping, MutableSequence
-from ansible.module_utils.six import string_types, text_type
-from ansible.parsing.yaml.objects import AnsibleSequence, AnsibleUnicode
-from ansible.plugins.inventory import BaseFileInventoryPlugin
-from ansible.utils.display import Display
-from ansible.utils.unsafe_proxy import AnsibleUnsafeBytes, AnsibleUnsafeText
+from assible.errors import AssibleFileNotFound, AssibleParserError
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.common._collections_compat import MutableMapping, MutableSequence
+from assible.module_utils.six import string_types, text_type
+from assible.parsing.yaml.objects import AssibleSequence, AssibleUnicode
+from assible.plugins.inventory import BaseFileInventoryPlugin
+from assible.utils.display import Display
+from assible.utils.unsafe_proxy import AssibleUnsafeBytes, AssibleUnsafeText
 
 try:
     import toml
@@ -109,17 +109,17 @@ display = Display()
 
 
 if HAS_TOML and hasattr(toml, 'TomlEncoder'):
-    class AnsibleTomlEncoder(toml.TomlEncoder):
+    class AssibleTomlEncoder(toml.TomlEncoder):
         def __init__(self, *args, **kwargs):
-            super(AnsibleTomlEncoder, self).__init__(*args, **kwargs)
+            super(AssibleTomlEncoder, self).__init__(*args, **kwargs)
             # Map our custom YAML object types to dump_funcs from ``toml``
             self.dump_funcs.update({
-                AnsibleSequence: self.dump_funcs.get(list),
-                AnsibleUnicode: self.dump_funcs.get(str),
-                AnsibleUnsafeBytes: self.dump_funcs.get(str),
-                AnsibleUnsafeText: self.dump_funcs.get(str),
+                AssibleSequence: self.dump_funcs.get(list),
+                AssibleUnicode: self.dump_funcs.get(str),
+                AssibleUnsafeBytes: self.dump_funcs.get(str),
+                AssibleUnsafeText: self.dump_funcs.get(str),
             })
-    toml_dumps = partial(toml.dumps, encoder=AnsibleTomlEncoder())
+    toml_dumps = partial(toml.dumps, encoder=AssibleTomlEncoder())
 else:
     def toml_dumps(data):
         return toml.dumps(convert_yaml_objects_to_native(data))
@@ -133,10 +133,10 @@ def convert_yaml_objects_to_native(obj):
     Only used on ``toml<0.10.0`` where ``toml.TomlEncoder`` is missing.
 
     This function recurses an object and ensures we cast any of the types from
-    ``ansible.parsing.yaml.objects`` into their native types, effectively cleansing
+    ``assible.parsing.yaml.objects`` into their native types, effectively cleansing
     the data before we hand it over to ``toml``
 
-    This function doesn't directly check for the types from ``ansible.parsing.yaml.objects``
+    This function doesn't directly check for the types from ``assible.parsing.yaml.objects``
     but instead checks for the types those objects inherit from, to offer more flexibility.
     """
     if isinstance(obj, dict):
@@ -164,7 +164,7 @@ class InventoryModule(BaseFileInventoryPlugin):
         for key, data in group_data.items():
             if key == 'vars':
                 if not isinstance(data, MutableMapping):
-                    raise AnsibleParserError(
+                    raise AssibleParserError(
                         'Invalid "vars" entry for "%s" group, requires a dict, found "%s" instead.' %
                         (group, type(data))
                     )
@@ -173,7 +173,7 @@ class InventoryModule(BaseFileInventoryPlugin):
 
             elif key == 'children':
                 if not isinstance(data, MutableSequence):
-                    raise AnsibleParserError(
+                    raise AssibleParserError(
                         'Invalid "children" entry for "%s" group, requires a list, found "%s" instead.' %
                         (group, type(data))
                     )
@@ -183,7 +183,7 @@ class InventoryModule(BaseFileInventoryPlugin):
 
             elif key == 'hosts':
                 if not isinstance(data, MutableMapping):
-                    raise AnsibleParserError(
+                    raise AssibleParserError(
                         'Invalid "hosts" entry for "%s" group, requires a dict, found "%s" instead.' %
                         (group, type(data))
                     )
@@ -198,27 +198,27 @@ class InventoryModule(BaseFileInventoryPlugin):
 
     def _load_file(self, file_name):
         if not file_name or not isinstance(file_name, string_types):
-            raise AnsibleParserError("Invalid filename: '%s'" % to_native(file_name))
+            raise AssibleParserError("Invalid filename: '%s'" % to_native(file_name))
 
         b_file_name = to_bytes(self.loader.path_dwim(file_name))
         if not self.loader.path_exists(b_file_name):
-            raise AnsibleFileNotFound("Unable to retrieve file contents", file_name=file_name)
+            raise AssibleFileNotFound("Unable to retrieve file contents", file_name=file_name)
 
         try:
             (b_data, private) = self.loader._get_file_contents(file_name)
             return toml.loads(to_text(b_data, errors='surrogate_or_strict'))
         except toml.TomlDecodeError as e:
-            raise AnsibleParserError(
+            raise AssibleParserError(
                 'TOML file (%s) is invalid: %s' % (file_name, to_native(e)),
                 orig_exc=e
             )
         except (IOError, OSError) as e:
-            raise AnsibleParserError(
+            raise AssibleParserError(
                 "An error occurred while trying to read the file '%s': %s" % (file_name, to_native(e)),
                 orig_exc=e
             )
         except Exception as e:
-            raise AnsibleParserError(
+            raise AssibleParserError(
                 "An unexpected error occurred while parsing the file '%s': %s" % (file_name, to_native(e)),
                 orig_exc=e
             )
@@ -226,7 +226,7 @@ class InventoryModule(BaseFileInventoryPlugin):
     def parse(self, inventory, loader, path, cache=True):
         ''' parses the inventory file '''
         if not HAS_TOML:
-            raise AnsibleParserError(
+            raise AssibleParserError(
                 'The TOML inventory plugin requires the python "toml" library'
             )
 
@@ -236,12 +236,12 @@ class InventoryModule(BaseFileInventoryPlugin):
         try:
             data = self._load_file(path)
         except Exception as e:
-            raise AnsibleParserError(e)
+            raise AssibleParserError(e)
 
         if not data:
-            raise AnsibleParserError('Parsed empty TOML file')
+            raise AssibleParserError('Parsed empty TOML file')
         elif data.get('plugin'):
-            raise AnsibleParserError('Plugin configuration TOML file, not TOML inventory')
+            raise AssibleParserError('Plugin configuration TOML file, not TOML inventory')
 
         for group_name in data:
             self._parse_group(group_name, data[group_name])

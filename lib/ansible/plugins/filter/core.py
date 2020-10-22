@@ -1,19 +1,19 @@
 # (c) 2012, Jeroen Hoekx <jeroen@hoekx.be>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -40,42 +40,42 @@ from random import Random, SystemRandom, shuffle
 
 from jinja2.filters import environmentfilter, do_groupby as _do_groupby
 
-from ansible.errors import AnsibleError, AnsibleFilterError, AnsibleFilterTypeError
-from ansible.module_utils.six import iteritems, string_types, integer_types, reraise
-from ansible.module_utils.six.moves import reduce, shlex_quote
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.common.collections import is_sequence
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.parsing.ajson import AnsibleJSONEncoder
-from ansible.parsing.yaml.dumper import AnsibleDumper
-from ansible.template import recursive_check_defined
-from ansible.utils.display import Display
-from ansible.utils.encrypt import passlib_or_crypt
-from ansible.utils.hashing import md5s, checksum_s
-from ansible.utils.unicode import unicode_wrap
-from ansible.utils.vars import merge_hash
+from assible.errors import AssibleError, AssibleFilterError, AssibleFilterTypeError
+from assible.module_utils.six import iteritems, string_types, integer_types, reraise
+from assible.module_utils.six.moves import reduce, shlex_quote
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.common.collections import is_sequence
+from assible.module_utils.common._collections_compat import Mapping
+from assible.parsing.ajson import AssibleJSONEncoder
+from assible.parsing.yaml.dumper import AssibleDumper
+from assible.template import recursive_check_defined
+from assible.utils.display import Display
+from assible.utils.encrypt import passlib_or_crypt
+from assible.utils.hashing import md5s, checksum_s
+from assible.utils.unicode import unicode_wrap
+from assible.utils.vars import merge_hash
 
 display = Display()
 
-UUID_NAMESPACE_ANSIBLE = uuid.UUID('361E6D51-FAEC-444A-9079-341386DA8E2E')
+UUID_NAMESPACE_ASSIBLE = uuid.UUID('361E6D51-FAEC-444A-9079-341386DA8E2E')
 
 
 def to_yaml(a, *args, **kw):
     '''Make verbose, human readable yaml'''
     default_flow_style = kw.pop('default_flow_style', None)
-    transformed = yaml.dump(a, Dumper=AnsibleDumper, allow_unicode=True, default_flow_style=default_flow_style, **kw)
+    transformed = yaml.dump(a, Dumper=AssibleDumper, allow_unicode=True, default_flow_style=default_flow_style, **kw)
     return to_text(transformed)
 
 
 def to_nice_yaml(a, indent=4, *args, **kw):
     '''Make verbose, human readable yaml'''
-    transformed = yaml.dump(a, Dumper=AnsibleDumper, indent=indent, allow_unicode=True, default_flow_style=False, **kw)
+    transformed = yaml.dump(a, Dumper=AssibleDumper, indent=indent, allow_unicode=True, default_flow_style=False, **kw)
     return to_text(transformed)
 
 
 def to_json(a, *args, **kw):
     ''' Convert the value to JSON '''
-    return json.dumps(a, cls=AnsibleJSONEncoder, *args, **kw)
+    return json.dumps(a, cls=AssibleJSONEncoder, *args, **kw)
 
 
 def to_nice_json(a, indent=4, sort_keys=True, *args, **kw):
@@ -104,7 +104,7 @@ def strftime(string_format, second=None):
         try:
             second = float(second)
         except Exception:
-            raise AnsibleFilterError('Invalid value for epoch value (%s)' % second)
+            raise AssibleFilterError('Invalid value for epoch value (%s)' % second)
     return time.strftime(string_format, time.localtime(second))
 
 
@@ -161,7 +161,7 @@ def regex_search(value, regex, *args, **kwargs):
             match = int(re.match(r'\\(\d+)', arg).group(1))
             groups.append(match)
         else:
-            raise AnsibleFilterError('Unknown argument')
+            raise AssibleFilterError('Unknown argument')
 
     flags = 0
     if kwargs.get('ignorecase'):
@@ -204,9 +204,9 @@ def regex_escape(string, re_type='python'):
     # but different from PCRE.  It's possible that re.escape would work here.
     # https://remram44.github.io/regex-cheatsheet/regex.html#programs
     elif re_type == 'posix_extended':
-        raise AnsibleFilterError('Regex type (%s) not yet implemented' % re_type)
+        raise AssibleFilterError('Regex type (%s) not yet implemented' % re_type)
     else:
-        raise AnsibleFilterError('Invalid regex type (%s)' % re_type)
+        raise AssibleFilterError('Invalid regex type (%s)' % re_type)
 
 
 def from_yaml(data):
@@ -235,10 +235,10 @@ def rand(environment, end, start=None, step=None, seed=None):
         return r.randrange(start, end, step)
     elif hasattr(end, '__iter__'):
         if start or step:
-            raise AnsibleFilterError('start and step can only be used with integer values')
+            raise AssibleFilterError('start and step can only be used with integer values')
         return r.choice(end)
     else:
-        raise AnsibleFilterError('random can only be used on sequences and integers')
+        raise AssibleFilterError('random can only be used on sequences and integers')
 
 
 def randomize_list(mylist, seed=None):
@@ -259,7 +259,7 @@ def get_hash(data, hashtype='sha1'):
         h = hashlib.new(hashtype)
     except Exception as e:
         # hash is not supported?
-        raise AnsibleFilterError(e)
+        raise AssibleFilterError(e)
 
     h.update(to_bytes(data, errors='surrogate_or_strict'))
     return h.hexdigest()
@@ -276,17 +276,17 @@ def get_encrypted_password(password, hashtype='sha512', salt=None, salt_size=Non
     hashtype = passlib_mapping.get(hashtype, hashtype)
     try:
         return passlib_or_crypt(password, hashtype, salt=salt, salt_size=salt_size, rounds=rounds)
-    except AnsibleError as e:
-        reraise(AnsibleFilterError, AnsibleFilterError(to_native(e), orig_exc=e), sys.exc_info()[2])
+    except AssibleError as e:
+        reraise(AssibleFilterError, AssibleFilterError(to_native(e), orig_exc=e), sys.exc_info()[2])
 
 
-def to_uuid(string, namespace=UUID_NAMESPACE_ANSIBLE):
+def to_uuid(string, namespace=UUID_NAMESPACE_ASSIBLE):
     uuid_namespace = namespace
     if not isinstance(uuid_namespace, uuid.UUID):
         try:
             uuid_namespace = uuid.UUID(namespace)
         except (AttributeError, ValueError) as e:
-            raise AnsibleFilterError("Invalid value '%s' for 'namespace': %s" % (to_native(namespace), to_native(e)))
+            raise AssibleFilterError("Invalid value '%s' for 'namespace': %s" % (to_native(namespace), to_native(e)))
     # uuid.uuid5() requires bytes on Python 2 and bytes or text or Python 3
     return to_text(uuid.uuid5(uuid_namespace, to_native(string, errors='surrogate_or_strict')))
 
@@ -302,9 +302,9 @@ def mandatory(a, msg=None):
             name = ''
 
         if msg is not None:
-            raise AnsibleFilterError(to_native(msg))
+            raise AssibleFilterError(to_native(msg))
         else:
-            raise AnsibleFilterError("Mandatory variable %s not defined." % name)
+            raise AssibleFilterError("Mandatory variable %s not defined." % name)
 
     return a
 
@@ -313,7 +313,7 @@ def combine(*terms, **kwargs):
     recursive = kwargs.pop('recursive', False)
     list_merge = kwargs.pop('list_merge', 'replace')
     if kwargs:
-        raise AnsibleFilterError("'recursive' and 'list_merge' are the only valid keyword arguments")
+        raise AssibleFilterError("'recursive' and 'list_merge' are the only valid keyword arguments")
 
     # allow the user to do `[dict1, dict2, ...] | combine`
     dictionaries = flatten(terms, levels=1)
@@ -445,7 +445,7 @@ def extract(environment, item, container, morekeys=None):
 def do_groupby(environment, value, attribute):
     """Overridden groupby filter for jinja2, to address an issue with
     jinja2>=2.9.0,<2.9.5 where a namedtuple was returned which
-    has repr that prevents ansible.template.safe_eval.safe_eval from being
+    has repr that prevents assible.template.safe_eval.safe_eval from being
     able to parse and eval the data.
 
     jinja2<2.9.0,>=2.9.5 is not affected, as <2.9.0 uses a tuple, and
@@ -454,7 +454,7 @@ def do_groupby(environment, value, attribute):
     The adaptation here, is to run the jinja2 `do_groupby` function, and
     cast all of the namedtuples to a regular tuple.
 
-    See https://github.com/ansible/ansible/issues/20098
+    See https://github.com/assible/assible/issues/20098
 
     We may be able to remove this in the future.
     """
@@ -504,14 +504,14 @@ def subelements(obj, subelements, skip_missing=False):
     elif isinstance(obj, list):
         element_list = obj[:]
     else:
-        raise AnsibleFilterError('obj must be a list of dicts or a nested dict')
+        raise AssibleFilterError('obj must be a list of dicts or a nested dict')
 
     if isinstance(subelements, list):
         subelement_list = subelements[:]
     elif isinstance(subelements, string_types):
         subelement_list = subelements.split('.')
     else:
-        raise AnsibleFilterTypeError('subelements must be a list or a string')
+        raise AssibleFilterTypeError('subelements must be a list or a string')
 
     results = []
 
@@ -524,11 +524,11 @@ def subelements(obj, subelements, skip_missing=False):
                 if skip_missing:
                     values = []
                     break
-                raise AnsibleFilterError("could not find %r key in iterated item %r" % (subelement, values))
+                raise AssibleFilterError("could not find %r key in iterated item %r" % (subelement, values))
             except TypeError:
-                raise AnsibleFilterTypeError("the key %s should point to a dictionary, got '%s'" % (subelement, values))
+                raise AssibleFilterTypeError("the key %s should point to a dictionary, got '%s'" % (subelement, values))
         if not isinstance(values, list):
-            raise AnsibleFilterTypeError("the key %r should point to a list, got %r" % (subelement, values))
+            raise AssibleFilterTypeError("the key %r should point to a list, got %r" % (subelement, values))
 
         for value in values:
             results.append((element, value))
@@ -541,7 +541,7 @@ def dict_to_list_of_dict_key_value_elements(mydict, key_name='key', value_name='
         with each having a 'key' and 'value' keys that correspond to the keys and values of the original '''
 
     if not isinstance(mydict, Mapping):
-        raise AnsibleFilterTypeError("dict2items requires a dictionary, got %s instead." % type(mydict))
+        raise AssibleFilterTypeError("dict2items requires a dictionary, got %s instead." % type(mydict))
 
     ret = []
     for key in mydict:
@@ -554,7 +554,7 @@ def list_of_dict_key_value_elements_to_dict(mylist, key_name='key', value_name='
         effectively as the reverse of dict2items '''
 
     if not is_sequence(mylist):
-        raise AnsibleFilterTypeError("items2dict requires a list, got %s instead." % type(mylist))
+        raise AssibleFilterTypeError("items2dict requires a list, got %s instead." % type(mylist))
 
     return dict((item[key_name], item[value_name]) for item in mylist)
 
@@ -567,11 +567,11 @@ def path_join(paths):
     elif is_sequence(paths):
         return os.path.join(*paths)
     else:
-        raise AnsibleFilterTypeError("|path_join expects string or sequence, got %s instead." % type(paths))
+        raise AssibleFilterTypeError("|path_join expects string or sequence, got %s instead." % type(paths))
 
 
 class FilterModule(object):
-    ''' Ansible core jinja2 filters '''
+    ''' Assible core jinja2 filters '''
 
     def filters(self):
         return {
@@ -627,7 +627,7 @@ class FilterModule(object):
             'md5': md5s,
             # sha1 hex digest of string
             'sha1': checksum_s,
-            # checksum of string as used by ansible for checksumming files
+            # checksum of string as used by assible for checksumming files
             'checksum': checksum_s,
             # generic hashing
             'password_hash': get_encrypted_password,

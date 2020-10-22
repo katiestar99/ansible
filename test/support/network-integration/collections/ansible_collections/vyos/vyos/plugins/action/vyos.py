@@ -1,20 +1,20 @@
 #
 # (c) 2016 Red Hat Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 from __future__ import absolute_import, division, print_function
 
@@ -23,16 +23,16 @@ __metaclass__ = type
 import sys
 import copy
 
-from ansible_collections.ansible.netcommon.plugins.action.network import (
+from assible_collections.assible.netcommon.plugins.action.network import (
     ActionModule as ActionNetworkModule,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     load_provider,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
     vyos_provider_spec,
 )
-from ansible.utils.display import Display
+from assible.utils.display import Display
 
 display = Display()
 
@@ -56,7 +56,7 @@ class ActionModule(ActionNetworkModule):
         elif self._play_context.connection == "local":
             provider = load_provider(vyos_provider_spec, self._task.args)
             pc = copy.deepcopy(self._play_context)
-            pc.connection = "ansible.netcommon.network_cli"
+            pc.connection = "assible.netcommon.network_cli"
             pc.network_os = "vyos.vyos.vyos"
             pc.remote_addr = provider["host"] or self._play_context.remote_addr
             pc.port = int(provider["port"] or self._play_context.port or 22)
@@ -69,13 +69,13 @@ class ActionModule(ActionNetworkModule):
             )
 
             connection = self._shared_loader_obj.connection_loader.get(
-                "ansible.netcommon.persistent",
+                "assible.netcommon.persistent",
                 pc,
                 sys.stdin,
                 task_uuid=self._task._uuid,
             )
 
-            # TODO: Remove below code after ansible minimal is cut out
+            # TODO: Remove below code after assible minimal is cut out
             if connection is None:
                 pc.connection = "network_cli"
                 pc.network_os = "vyos"
@@ -103,10 +103,10 @@ class ActionModule(ActionNetworkModule):
                 return {
                     "failed": True,
                     "msg": "unable to open shell. Please see: "
-                    + "https://docs.ansible.com/ansible/network_debug_troubleshooting.html#unable-to-open-shell",
+                    + "https://docs.assible.com/assible/network_debug_troubleshooting.html#unable-to-open-shell",
                 }
 
-            task_vars["ansible_socket"] = socket_path
+            task_vars["assible_socket"] = socket_path
             warnings.append(
                 [
                     "connection local support for this module is deprecated and will be removed in version 2.14, use connection %s"

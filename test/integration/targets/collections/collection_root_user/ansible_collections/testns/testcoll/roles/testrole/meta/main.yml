@@ -1,4 +1,4 @@
 collections:
-- ansible.builtin
+- assible.builtin
 - testns.coll_in_sys
 - bogus.fromrolemeta

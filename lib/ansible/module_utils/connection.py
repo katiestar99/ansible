@@ -1,7 +1,7 @@
 #
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -38,10 +38,10 @@ import traceback
 import uuid
 
 from functools import partial
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.module_utils.common.json import AnsibleJSONEncoder
-from ansible.module_utils.six import iteritems
-from ansible.module_utils.six.moves import cPickle
+from assible.module_utils._text import to_bytes, to_text
+from assible.module_utils.common.json import AssibleJSONEncoder
+from assible.module_utils.six import iteritems
+from assible.module_utils.six.moves import cPickle
 
 
 def write_to_file_descriptor(fd, obj):
@@ -144,10 +144,10 @@ class Connection(object):
             )
 
         try:
-            data = json.dumps(req, cls=AnsibleJSONEncoder)
+            data = json.dumps(req, cls=AssibleJSONEncoder)
         except TypeError as exc:
             raise ConnectionError(
-                "Failed to encode some variables as JSON for communication with ansible-connection. "
+                "Failed to encode some variables as JSON for communication with assible-connection. "
                 "The original exception was: %s" % to_text(exc)
             )
 

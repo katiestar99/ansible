@@ -1,19 +1,19 @@
 - name: Run tests
-  when: ansible_facts.distribution in ['CentOS', 'Fedora']
+  when: assible_facts.distribution in ['CentOS', 'Fedora']
   block:
     - name: Include distribution specific variables
       include_vars: "{{ lookup('first_found', params) }}"
       vars:
         params:
           files:
-            - "{{ ansible_facts.distribution }}-{{ ansible_facts.distribution_major_version }}.yml"
-            - "{{ ansible_facts.distribution }}.yml"
+            - "{{ assible_facts.distribution }}-{{ assible_facts.distribution_major_version }}.yml"
+            - "{{ assible_facts.distribution }}.yml"
             - default.yml
           paths:
             - vars
 
     - name: ensure {{ yum_repository_test_package }} is uninstalled to begin with
-      action: "{{ ansible_facts.pkg_mgr }}"
+      action: "{{ assible_facts.pkg_mgr }}"
       args:
         name: "{{ yum_repository_test_package }}"
         state: absent
@@ -40,7 +40,7 @@
         that: not test_repo_remove.changed
 
     - name: install {{ yum_repository_test_package }}, which should fail
-      action: "{{ ansible_facts.pkg_mgr }}"
+      action: "{{ assible_facts.pkg_mgr }}"
       args:
         name: "{{ yum_repository_test_package }}"
         state: present
@@ -87,7 +87,7 @@
           - test_repo_add.changed
 
     - name: install {{ yum_repository_test_package }}
-      action: "{{ ansible_facts.pkg_mgr }}"
+      action: "{{ assible_facts.pkg_mgr }}"
       args:
         name: "{{ yum_repository_test_package }}"
         state: present
@@ -99,7 +99,7 @@
           - test_package_result.changed
 
     - name: remove {{ yum_repository_test_package }}
-      action: "{{ ansible_facts.pkg_mgr }}"
+      action: "{{ assible_facts.pkg_mgr }}"
       args:
         name: "{{ yum_repository_test_package }}"
         state: absent
@@ -176,8 +176,8 @@
           - "{{ yum_repository_test_repo.baseurl }}"
           - "{{ yum_repository_test_repo.baseurl | replace('download[0-9]?\\.', 'download2\\.', 1) }}"
         gpgkey:
-          - gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_facts.distribution_major_version }}
-          - gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG2-KEY-EPEL-{{ ansible_facts.distribution_major_version }}
+          - gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ assible_facts.distribution_major_version }}
+          - gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG2-KEY-EPEL-{{ assible_facts.distribution_major_version }}
         exclude:
           - aaa
           - bbb
@@ -218,4 +218,4 @@
         mirrorlist: "{{ yum_repository_epel.mirrorlist | default(omit) }}"
         gpgkey: "{{ yum_repository_epel.gpgkey }}"
         gpgcheck: yes
-      when: ansible_facts.distribution == 'CentOS'
+      when: assible_facts.distribution == 'CentOS'

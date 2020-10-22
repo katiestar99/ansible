@@ -1,5 +1,5 @@
 ##### SUMMARY
-%(component)s contains call to Display.deprecated or AnsibleModule.deprecate and is scheduled for removal
+%(component)s contains call to Display.deprecated or AssibleModule.deprecate and is scheduled for removal
 
 ```
 %(line)s
@@ -13,7 +13,7 @@
 %(path)s
 ```
 
-##### ANSIBLE VERSION
+##### ASSIBLE VERSION
 ```
 %(version)s
 ```

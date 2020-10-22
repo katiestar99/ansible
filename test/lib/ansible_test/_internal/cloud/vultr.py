@@ -61,11 +61,11 @@ class VultrCloudEnvironment(CloudEnvironment):
 
         display.sensitive.add(env_vars['VULTR_API_KEY'])
 
-        ansible_vars = dict(
+        assible_vars = dict(
             vultr_resource_prefix=self.resource_prefix,
         )
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )

@@ -2,7 +2,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 Set-StrictMode -Version 2
 $ErrorActionPreference = "Stop"
@@ -96,12 +96,12 @@ $parsed_args = Parse-Args $args -supports_check_mode $true
 
 $result = @{changed=$false}
 
-$var_name = Get-AnsibleParam $parsed_args "name" -Default "PATH"
-$elements = Get-AnsibleParam $parsed_args "elements" -FailIfEmpty $result
-$state = Get-AnsibleParam $parsed_args "state" -Default "present" -ValidateSet "present","absent"
-$scope = Get-AnsibleParam $parsed_args "scope" -Default "machine" -ValidateSet "machine","user"
+$var_name = Get-AssibleParam $parsed_args "name" -Default "PATH"
+$elements = Get-AssibleParam $parsed_args "elements" -FailIfEmpty $result
+$state = Get-AssibleParam $parsed_args "state" -Default "present" -ValidateSet "present","absent"
+$scope = Get-AssibleParam $parsed_args "scope" -Default "machine" -ValidateSet "machine","user"
 
-$check_mode = Get-AnsibleParam $parsed_args "_ansible_check_mode" -Default $false
+$check_mode = Get-AssibleParam $parsed_args "_assible_check_mode" -Default $false
 
 If ($elements -is [string]) {
     $elements = @($elements)

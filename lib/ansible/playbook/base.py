@@ -1,5 +1,5 @@
 # Copyright: (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -13,17 +13,17 @@ from functools import partial
 
 from jinja2.exceptions import UndefinedError
 
-from ansible import constants as C
-from ansible import context
-from ansible.module_utils.six import iteritems, string_types, with_metaclass
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.errors import AnsibleParserError, AnsibleUndefinedVariable, AnsibleAssertionError
-from ansible.module_utils._text import to_text, to_native
-from ansible.playbook.attribute import Attribute, FieldAttribute
-from ansible.parsing.dataloader import DataLoader
-from ansible.utils.display import Display
-from ansible.utils.sentinel import Sentinel
-from ansible.utils.vars import combine_vars, isidentifier, get_unique_id
+from assible import constants as C
+from assible import context
+from assible.module_utils.six import iteritems, string_types, with_metaclass
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.errors import AssibleParserError, AssibleUndefinedVariable, AssibleAssertionError
+from assible.module_utils._text import to_text, to_native
+from assible.playbook.attribute import Attribute, FieldAttribute
+from assible.parsing.dataloader import DataLoader
+from assible.utils.display import Display
+from assible.utils.sentinel import Sentinel
+from assible.utils.vars import combine_vars, isidentifier, get_unique_id
 
 display = Display()
 
@@ -201,7 +201,7 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
         ''' walk the input datastructure and assign any values '''
 
         if ds is None:
-            raise AnsibleAssertionError('ds (%s) should not be None but it is.' % ds)
+            raise AssibleAssertionError('ds (%s) should not be None but it is.' % ds)
 
         # cache the datastructure internally
         setattr(self, '_ds', ds)
@@ -258,7 +258,7 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
         value = templar.template(value)
         valid_values = frozenset(('always', 'on_failed', 'on_unreachable', 'on_skipped', 'never'))
         if value and isinstance(value, string_types) and value not in valid_values:
-            raise AnsibleParserError("'%s' is not a valid value for debugger. Must be one of %s" % (value, ', '.join(valid_values)), obj=self.get_ds())
+            raise AssibleParserError("'%s' is not a valid value for debugger. Must be one of %s" % (value, ', '.join(valid_values)), obj=self.get_ds())
         return value
 
     def _validate_attributes(self, ds):
@@ -270,7 +270,7 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
         valid_attrs = frozenset(self._valid_attrs.keys())
         for key in ds:
             if key not in valid_attrs:
-                raise AnsibleParserError("'%s' is not a valid attribute for a %s" % (key, self.__class__.__name__), obj=ds)
+                raise AssibleParserError("'%s' is not a valid attribute for a %s" % (key, self.__class__.__name__), obj=ds)
 
     def validate(self, all_vars=None):
         ''' validation that is done at parse time, not load time '''
@@ -292,7 +292,7 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
                     value = self._attributes[name]
                     if value is not None:
                         if attribute.isa == 'string' and isinstance(value, (list, dict)):
-                            raise AnsibleParserError(
+                            raise AssibleParserError(
                                 "The field '%s' is supposed to be a string type,"
                                 " however the incoming data structure is a %s" % (name, type(value)), obj=self.get_ds()
                             )
@@ -358,11 +358,11 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
             if attribute.listof is not None:
                 for item in value:
                     if not isinstance(item, attribute.listof):
-                        raise AnsibleParserError("the field '%s' should be a list of %s, "
+                        raise AssibleParserError("the field '%s' should be a list of %s, "
                                                  "but the item '%s' is a %s" % (name, attribute.listof, item, type(item)), obj=self.get_ds())
                     elif attribute.required and attribute.listof == string_types:
                         if item is None or item.strip() == "":
-                            raise AnsibleParserError("the field '%s' is required, and cannot have empty values" % (name,), obj=self.get_ds())
+                            raise AssibleParserError("the field '%s' is required, and cannot have empty values" % (name,), obj=self.get_ds())
         elif attribute.isa == 'set':
             if value is None:
                 value = set()
@@ -411,7 +411,7 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
                 if not attribute.required:
                     continue
                 else:
-                    raise AnsibleParserError("the field '%s' is required but was not set" % name)
+                    raise AssibleParserError("the field '%s' is required but was not set" % name)
             elif not attribute.always_post_validate and self.__class__.__name__ not in ('Task', 'Handler', 'PlayContext'):
                 # Intermediate objects like Play() won't have their fields validated by
                 # default, as their values are often inherited by other objects and validated
@@ -447,15 +447,15 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
                 setattr(self, name, value)
             except (TypeError, ValueError) as e:
                 value = getattr(self, name)
-                raise AnsibleParserError("the field '%s' has an invalid value (%s), and could not be converted to an %s."
+                raise AssibleParserError("the field '%s' has an invalid value (%s), and could not be converted to an %s."
                                          "The error was: %s" % (name, value, attribute.isa, e), obj=self.get_ds(), orig_exc=e)
-            except (AnsibleUndefinedVariable, UndefinedError) as e:
+            except (AssibleUndefinedVariable, UndefinedError) as e:
                 if templar._fail_on_undefined_errors and name != 'name':
                     if name == 'args':
                         msg = "The task includes an option with an undefined variable. The error was: %s" % (to_native(e))
                     else:
                         msg = "The field '%s' has an invalid value, which includes an undefined variable. The error was: %s" % (name, to_native(e))
-                    raise AnsibleParserError(msg, obj=self.get_ds(), orig_exc=e)
+                    raise AssibleParserError(msg, obj=self.get_ds(), orig_exc=e)
 
         self._finalized = True
 
@@ -488,10 +488,10 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
             else:
                 raise ValueError
         except ValueError as e:
-            raise AnsibleParserError("Vars in a %s must be specified as a dictionary, or a list of dictionaries" % self.__class__.__name__,
+            raise AssibleParserError("Vars in a %s must be specified as a dictionary, or a list of dictionaries" % self.__class__.__name__,
                                      obj=ds, orig_exc=e)
         except TypeError as e:
-            raise AnsibleParserError("Invalid variable name in vars specified for %s: %s" % (self.__class__.__name__, e), obj=ds, orig_exc=e)
+            raise AssibleParserError("Invalid variable name in vars specified for %s: %s" % (self.__class__.__name__, e), obj=ds, orig_exc=e)
 
     def _extend_value(self, value, new_value, prepend=False):
         '''
@@ -572,7 +572,7 @@ class FieldAttributeBase(with_metaclass(BaseMeta, object)):
         '''
 
         if not isinstance(data, dict):
-            raise AnsibleAssertionError('data (%s) should be a dict but is a %s' % (data, type(data)))
+            raise AssibleAssertionError('data (%s) should be a dict but is a %s' % (data, type(data)))
 
         for (name, attribute) in iteritems(self._valid_attrs):
             if name in data:

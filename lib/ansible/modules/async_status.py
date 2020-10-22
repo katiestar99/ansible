@@ -25,7 +25,7 @@ options:
   mode:
     description:
     - If C(status), obtain the status.
-    - If C(cleanup), clean up the async job cache (by default in C(~/.ansible_async/)) for the specified job I(jid).
+    - If C(cleanup), clean up the async job cache (by default in C(~/.assible_async/)) for the specified job I(jid).
     type: str
     choices: [ cleanup, status ]
     default: status
@@ -35,7 +35,7 @@ seealso:
 - ref: playbooks_async
   description: Detailed information on how to use asynchronous actions and polling.
 author:
-- Ansible Core Team
+- Assible Core Team
 - Michael DeHaan
 '''
 
@@ -51,7 +51,7 @@ EXAMPLES = r'''
 
 - name: Wait for asynchronous job to end
   async_status:
-    jid: '{{ yum_sleeper.ansible_job_id }}'
+    jid: '{{ yum_sleeper.assible_job_id }}'
   register: job_result
   until: job_result.finished
   retries: 100
@@ -59,7 +59,7 @@ EXAMPLES = r'''
 '''
 
 RETURN = r'''
-ansible_job_id:
+assible_job_id:
   description: The asynchronous job id
   returned: success
   type: str
@@ -79,14 +79,14 @@ started:
 import json
 import os
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.six import iteritems
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.six import iteritems
+from assible.module_utils._text import to_native
 
 
 def main():
 
-    module = AnsibleModule(argument_spec=dict(
+    module = AssibleModule(argument_spec=dict(
         jid=dict(type='str', required=True),
         mode=dict(type='str', default='status', choices=['cleanup', 'status']),
         # passed in from the async_status action plugin
@@ -102,11 +102,11 @@ def main():
     log_path = os.path.join(logdir, jid)
 
     if not os.path.exists(log_path):
-        module.fail_json(msg="could not find job", ansible_job_id=jid, started=1, finished=1)
+        module.fail_json(msg="could not find job", assible_job_id=jid, started=1, finished=1)
 
     if mode == 'cleanup':
         os.unlink(log_path)
-        module.exit_json(ansible_job_id=jid, erased=log_path)
+        module.exit_json(assible_job_id=jid, erased=log_path)
 
     # NOT in cleanup mode, assume regular status mode
     # no remote kill mode currently exists, but probably should
@@ -119,14 +119,14 @@ def main():
     except Exception:
         if not data:
             # file not written yet?  That means it is running
-            module.exit_json(results_file=log_path, ansible_job_id=jid, started=1, finished=0)
+            module.exit_json(results_file=log_path, assible_job_id=jid, started=1, finished=0)
         else:
-            module.fail_json(ansible_job_id=jid, results_file=log_path,
+            module.fail_json(assible_job_id=jid, results_file=log_path,
                              msg="Could not parse job output: %s" % data, started=1, finished=1)
 
     if 'started' not in data:
         data['finished'] = 1
-        data['ansible_job_id'] = jid
+        data['assible_job_id'] = jid
     elif 'finished' not in data:
         data['finished'] = 0
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Ansible Project
+# Copyright (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -8,8 +8,8 @@ __metaclass__ = type
 from units.compat import unittest
 from units.compat.mock import patch
 
-from ansible.module_utils import basic
-from ansible.modules.service_facts import AIXScanService
+from assible.module_utils import basic
+from assible.modules.service_facts import AIXScanService
 
 
 # AIX # lssrc -a
@@ -96,10 +96,10 @@ Subsystem         Group            PID          Status
 class TestAIXScanService(unittest.TestCase):
 
     def setUp(self):
-        self.mock1 = patch.object(basic.AnsibleModule, 'get_bin_path', return_value='/usr/sbin/lssrc')
+        self.mock1 = patch.object(basic.AssibleModule, 'get_bin_path', return_value='/usr/sbin/lssrc')
         self.mock1.start()
         self.addCleanup(self.mock1.stop)
-        self.mock2 = patch.object(basic.AnsibleModule, 'run_command', return_value=(0, LSSRC_OUTPUT, ''))
+        self.mock2 = patch.object(basic.AssibleModule, 'run_command', return_value=(0, LSSRC_OUTPUT, ''))
         self.mock2.start()
         self.addCleanup(self.mock2.stop)
         self.mock3 = patch('platform.system', return_value='AIX')
@@ -107,7 +107,7 @@ class TestAIXScanService(unittest.TestCase):
         self.addCleanup(self.mock3.stop)
 
     def test_gather_services(self):
-        svcmod = AIXScanService(basic.AnsibleModule)
+        svcmod = AIXScanService(basic.AssibleModule)
         result = svcmod.gather_services()
 
         self.assertIsInstance(result, dict)

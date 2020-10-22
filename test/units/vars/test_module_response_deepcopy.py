@@ -5,7 +5,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.vars.clean import module_response_deepcopy
+from assible.vars.clean import module_response_deepcopy
 
 import pytest
 

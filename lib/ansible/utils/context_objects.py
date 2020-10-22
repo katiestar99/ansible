@@ -1,4 +1,4 @@
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -11,10 +11,10 @@ Hold command line arguments for use in other modules
 
 from abc import ABCMeta
 
-from ansible.module_utils.common._collections_compat import (Container, Mapping, Sequence, Set)
-from ansible.module_utils.common.collections import ImmutableDict
-from ansible.module_utils.six import add_metaclass, binary_type, text_type
-from ansible.utils.singleton import Singleton
+from assible.module_utils.common._collections_compat import (Container, Mapping, Sequence, Set)
+from assible.module_utils.common.collections import ImmutableDict
+from assible.module_utils.six import add_metaclass, binary_type, text_type
+from assible.utils.singleton import Singleton
 
 
 def _make_immutable(obj):

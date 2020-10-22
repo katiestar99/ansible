@@ -17,7 +17,7 @@ from .util import (
     SubprocessError,
     get_available_python_versions,
     SUPPORTED_PYTHON_VERSIONS,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
     display,
     remove_tree,
 )
@@ -129,7 +129,7 @@ def get_python_real_prefix(args, path):  # type: (EnvironmentConfig, str) -> t.O
     """
     Return the real prefix of the specified interpreter or None if the interpreter is not a virtual environment created by 'virtualenv'.
     """
-    cmd = [path, os.path.join(os.path.join(ANSIBLE_TEST_DATA_ROOT, 'virtualenvcheck.py'))]
+    cmd = [path, os.path.join(os.path.join(ASSIBLE_TEST_DATA_ROOT, 'virtualenvcheck.py'))]
     check_result = json.loads(run_command(args, cmd, capture=True, always=True)[0])
     real_prefix = check_result['real_prefix']
     return real_prefix

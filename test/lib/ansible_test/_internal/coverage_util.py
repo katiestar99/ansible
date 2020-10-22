@@ -64,13 +64,13 @@ def generate_coverage_config(args):  # type: (TestConfig) -> str
     if data_context().content.collection:
         coverage_config = generate_collection_coverage_config(args)
     else:
-        coverage_config = generate_ansible_coverage_config()
+        coverage_config = generate_assible_coverage_config()
 
     return coverage_config
 
 
-def generate_ansible_coverage_config():  # type: () -> str
-    """Generate code coverage configuration for Ansible tests."""
+def generate_assible_coverage_config():  # type: () -> str
+    """Generate code coverage configuration for Assible tests."""
     coverage_config = '''
 [run]
 branch = True
@@ -83,7 +83,7 @@ omit =
     */python*/distutils/*
     */pyshared/*
     */pytest
-    */AnsiballZ_*.py
+    */AssiballZ_*.py
     */test/results/*
 '''
 
@@ -91,7 +91,7 @@ omit =
 
 
 def generate_collection_coverage_config(args):  # type: (TestConfig) -> str
-    """Generate code coverage configuration for Ansible Collection tests."""
+    """Generate code coverage configuration for Assible Collection tests."""
     coverage_config = '''
 [run]
 branch = True

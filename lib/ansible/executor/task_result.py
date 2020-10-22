@@ -5,20 +5,20 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible import constants as C
-from ansible.parsing.dataloader import DataLoader
-from ansible.vars.clean import module_response_deepcopy, strip_internal_keys
+from assible import constants as C
+from assible.parsing.dataloader import DataLoader
+from assible.vars.clean import module_response_deepcopy, strip_internal_keys
 
 _IGNORE = ('failed', 'skipped')
 _PRESERVE = ('attempts', 'changed', 'retries')
-_SUB_PRESERVE = {'_ansible_delegated_vars': ('ansible_host', 'ansible_port', 'ansible_user', 'ansible_connection')}
+_SUB_PRESERVE = {'_assible_delegated_vars': ('assible_host', 'assible_port', 'assible_user', 'assible_connection')}
 
 # stuff callbacks need
 CLEAN_EXCEPTIONS = (
-    '_ansible_verbose_always',  # for debug and other actions, to always expand data (pretty jsonification)
-    '_ansible_item_label',  # to know actual 'item' variable
-    '_ansible_no_log',  # jic we didnt clean up well enough, DON'T LOG
-    '_ansible_verbose_override',  # controls display of ansible_facts, gathering would be very noise with -v otherwise
+    '_assible_verbose_always',  # for debug and other actions, to always expand data (pretty jsonification)
+    '_assible_item_label',  # to know actual 'item' variable
+    '_assible_no_log',  # jic we didnt clean up well enough, DON'T LOG
+    '_assible_verbose_override',  # controls display of assible_facts, gathering would be very noise with -v otherwise
 )
 
 
@@ -128,7 +128,7 @@ class TaskResult:
                     if key in self._result[sub]:
                         subset[sub][key] = self._result[sub][key]
 
-        if isinstance(self._task.no_log, bool) and self._task.no_log or self._result.get('_ansible_no_log', False):
+        if isinstance(self._task.no_log, bool) and self._task.no_log or self._result.get('_assible_no_log', False):
             x = {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result"}
 
             # preserve full

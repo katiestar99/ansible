@@ -8,14 +8,14 @@ import pexpect
 import sys
 import termios
 
-from ansible.module_utils.six import PY2
+from assible.module_utils.six import PY2
 
 args = sys.argv[1:]
 
 env_vars = {
-    'ANSIBLE_ROLES_PATH': './roles',
-    'ANSIBLE_NOCOLOR': 'True',
-    'ANSIBLE_RETRY_FILES_ENABLED': 'False'
+    'ASSIBLE_ROLES_PATH': './roles',
+    'ASSIBLE_NOCOLOR': 'True',
+    'ASSIBLE_RETRY_FILES_ENABLED': 'False'
 }
 
 try:
@@ -35,7 +35,7 @@ playbook = 'pause-1.yml'
 
 # Case 1 - Contiune with enter
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -51,7 +51,7 @@ pause_test.close()
 
 # Case 2 - Continue with C
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -69,7 +69,7 @@ pause_test.close()
 
 # Case 3 - Abort with A
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -89,7 +89,7 @@ playbook = 'pause-2.yml'
 
 # Case 1 - Contiune with enter
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -105,7 +105,7 @@ pause_test.close()
 
 # Case 2 - Contiune with C
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -123,7 +123,7 @@ pause_test.close()
 
 # Case 3 - Abort with A
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -144,7 +144,7 @@ playbook = 'pause-3.yml'
 
 # Case 1 - Wait for task to continue after timeout
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -159,7 +159,7 @@ pause_test.close()
 
 # Case 2 - Contiune with Ctrl + C, C
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -177,7 +177,7 @@ pause_test.close()
 
 # Case 3 - Abort with Ctrl + C, A
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -198,7 +198,7 @@ playbook = 'pause-4.yml'
 
 # Case 1 - Wait for task to continue after timeout
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -214,7 +214,7 @@ pause_test.close()
 
 # Case 2 - Contiune with Ctrl + C, C
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -233,7 +233,7 @@ pause_test.close()
 
 # Case 3 - Abort with Ctrl + C, A
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ
@@ -254,7 +254,7 @@ pause_test.close()
 playbook = 'pause-5.yml'
 
 pause_test = pexpect.spawn(
-    'ansible-playbook',
+    'assible-playbook',
     args=[playbook] + args,
     timeout=10,
     env=os.environ

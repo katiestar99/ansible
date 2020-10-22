@@ -18,10 +18,10 @@ __metaclass__ = type
 from re import findall, search, M
 from copy import deepcopy
 
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.lldp_interfaces.lldp_interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.lldp_interfaces.lldp_interfaces import (
     Lldp_interfacesArgs,
 )
 
@@ -44,10 +44,10 @@ class Lldp_interfacesFacts(object):
 
         self.generated_spec = utils.generate_dict(facts_argument_spec)
 
-    def populate_facts(self, connection, ansible_facts, data=None):
+    def populate_facts(self, connection, assible_facts, data=None):
         """ Populate the facts for lldp_interfaces
         :param connection: the device connection
-        :param ansible_facts: Facts dictionary
+        :param assible_facts: Facts dictionary
         :param data: previously collected conf
         :rtype: dictionary
         :returns: facts
@@ -68,10 +68,10 @@ class Lldp_interfacesFacts(object):
         facts = {}
         if objs:
             facts["lldp_interfaces"] = objs
-            ansible_facts["ansible_network_resources"].update(facts)
+            assible_facts["assible_network_resources"].update(facts)
 
-        ansible_facts["ansible_network_resources"].update(facts)
-        return ansible_facts
+        assible_facts["assible_network_resources"].update(facts)
+        return assible_facts
 
     def render_config(self, conf):
         """

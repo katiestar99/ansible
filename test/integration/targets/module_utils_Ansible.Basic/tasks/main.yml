@@ -1,9 +1,9 @@
 ---
-- name: test Ansible.Basic.cs
-  ansible_basic_tests:
-  register: ansible_basic_test
+- name: test Assible.Basic.cs
+  assible_basic_tests:
+  register: assible_basic_test
 
-- name: assert test Ansible.Basic.cs
+- name: assert test Assible.Basic.cs
   assert:
     that:
-    - ansible_basic_test.data == "success"
+    - assible_basic_test.data == "success"

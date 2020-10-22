@@ -29,14 +29,14 @@ from io import BytesIO, TextIOWrapper
 import yaml
 import yaml.reader
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.six import string_types
+from assible.module_utils._text import to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.six import string_types
 
 
-class AnsibleTextIOWrapper(TextIOWrapper):
+class AssibleTextIOWrapper(TextIOWrapper):
     def write(self, s):
-        super(AnsibleTextIOWrapper, self).write(to_text(s, self.encoding, errors='replace'))
+        super(AssibleTextIOWrapper, self).write(to_text(s, self.encoding, errors='replace'))
 
 
 def find_executable(executable, cwd=None, path=None):
@@ -104,8 +104,8 @@ class CaptureStd():
     def __enter__(self):
         self.sys_stdout = sys.stdout
         self.sys_stderr = sys.stderr
-        sys.stdout = self.stdout = AnsibleTextIOWrapper(BytesIO(), encoding=self.sys_stdout.encoding)
-        sys.stderr = self.stderr = AnsibleTextIOWrapper(BytesIO(), encoding=self.sys_stderr.encoding)
+        sys.stdout = self.stdout = AssibleTextIOWrapper(BytesIO(), encoding=self.sys_stdout.encoding)
+        sys.stderr = self.stderr = AssibleTextIOWrapper(BytesIO(), encoding=self.sys_stderr.encoding)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -121,11 +121,11 @@ class CaptureStd():
 def get_module_name_from_filename(filename, collection):
     # Calculate the module's name so that relative imports work correctly
     if collection:
-        # collection is a relative path, example: ansible_collections/my_namespace/my_collection
+        # collection is a relative path, example: assible_collections/my_namespace/my_collection
         # filename is a relative path, example: plugins/modules/my_module.py
         path = os.path.join(collection, filename)
     else:
-        # filename is a relative path, example: lib/ansible/modules/system/ping.py
+        # filename is a relative path, example: lib/assible/modules/system/ping.py
         path = os.path.relpath(filename, 'lib')
 
     name = os.path.splitext(path)[0].replace(os.path.sep, '.')
@@ -191,12 +191,12 @@ def compare_unordered_lists(a, b):
     return len(a) == len(b) and all(x in b for x in a)
 
 
-class NoArgsAnsibleModule(AnsibleModule):
-    """AnsibleModule that does not actually load params. This is used to get access to the
-    methods within AnsibleModule without having to fake a bunch of data
+class NoArgsAssibleModule(AssibleModule):
+    """AssibleModule that does not actually load params. This is used to get access to the
+    methods within AssibleModule without having to fake a bunch of data
     """
     def _load_params(self):
-        self.params = {'_ansible_selinux_special_fs': [], '_ansible_remote_tmp': '/tmp', '_ansible_keep_remote_files': False, '_ansible_check_mode': False}
+        self.params = {'_assible_selinux_special_fs': [], '_assible_remote_tmp': '/tmp', '_assible_keep_remote_files': False, '_assible_check_mode': False}
 
 
 def parse_isodate(v, allow_date):

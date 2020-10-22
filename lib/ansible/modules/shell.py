@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# There is no actual shell module source, when you use 'shell' in ansible,
+# There is no actual shell module source, when you use 'shell' in assible,
 # it runs the 'command' module with special arguments and it behaves differently.
 # See the command source and the comment "#USE_SHELL".
 
@@ -19,9 +19,9 @@ short_description: Execute shell commands on targets
 description:
      - The C(shell) module takes the command name followed by a list of space-delimited arguments.
      - Either a free form command or C(cmd) parameter is required, see the examples.
-     - It is almost exactly like the M(ansible.builtin.command) module but runs
+     - It is almost exactly like the M(assible.builtin.command) module but runs
        the command through a shell (C(/bin/sh)) on the remote node.
-     - For Windows targets, use the M(ansible.windows.win_shell) module instead.
+     - For Windows targets, use the M(assible.windows.win_shell) module instead.
 version_added: "0.2"
 options:
   free_form:
@@ -73,9 +73,9 @@ options:
     version_added: "2.8"
 notes:
   - If you want to execute a command securely and predictably, it may be
-    better to use the M(ansible.builtin.command) module instead. Best practices
-    when writing playbooks will follow the trend of using M(ansible.builtin.command)
-    unless the M(ansible.builtin.shell) module is explicitly required. When running ad-hoc
+    better to use the M(assible.builtin.command) module instead. Best practices
+    when writing playbooks will follow the trend of using M(assible.builtin.command)
+    unless the M(assible.builtin.shell) module is explicitly required. When running ad-hoc
     commands, use your best judgement.
   - Check mode is supported when passing C(creates) or C(removes). If running
     in check mode and either of these are specified, the module will check for
@@ -85,15 +85,15 @@ notes:
     C({{ var | quote }}) instead of just C({{ var }}) to make sure they
     do not include evil things like semicolons.
   - An alternative to using inline shell scripts with this module is to use
-    the M(ansible.builtin.script) module possibly together with the M(ansible.builtin.template) module.
-  - For rebooting systems, use the M(ansible.builtin.reboot) or M(ansible.windows.win_reboot) module.
+    the M(assible.builtin.script) module possibly together with the M(assible.builtin.template) module.
+  - For rebooting systems, use the M(assible.builtin.reboot) or M(assible.windows.win_reboot) module.
 seealso:
-- module: ansible.builtin.command
-- module: ansible.builtin.raw
-- module: ansible.builtin.script
-- module: ansible.windows.win_shell
+- module: assible.builtin.command
+- module: assible.builtin.raw
+- module: assible.builtin.script
+- module: assible.windows.win_shell
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Michael DeHaan
 '''
 
@@ -149,7 +149,7 @@ EXAMPLES = r'''
 
 # Disabling warnings
 - name: Using curl to connect to a host via SOCKS proxy (unsupported in uri). Ordinarily this would throw a warning
-  shell: curl --socks5 localhost:9000 http://www.ansible.com
+  shell: curl --socks5 localhost:9000 http://www.assible.com
   args:
     warn: no
 '''

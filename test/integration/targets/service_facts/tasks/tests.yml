@@ -1,6 +1,6 @@
-- name: start the ansible test service
+- name: start the assible test service
   service:
-    name: ansible_test
+    name: assible_test
     enabled: yes
     state: started
   register: enable_result
@@ -11,9 +11,9 @@
       - "enable_result.enabled == true"
       - "enable_result is changed"
 
-- name: disable the ansible test service
+- name: disable the assible test service
   service:
-    name: ansible_test
+    name: assible_test
     state: stopped
     enabled: no
   register: start_result
@@ -27,10 +27,10 @@
 - name: Populate service facts
   service_facts:
 
-- name: get ansible_test service's state
+- name: get assible_test service's state
   debug:
-    var: services['ansible_test.service'].state
+    var: services['assible_test.service'].state
 
-- name: ansible_test service's running state should be \"inactive\"
+- name: assible_test service's running state should be \"inactive\"
   assert:
-    that: "services['ansible_test.service'].state == 'inactive'"
+    that: "services['assible_test.service'].state == 'inactive'"

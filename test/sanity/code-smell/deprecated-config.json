@@ -5,6 +5,6 @@
         ".py"
     ],
     "prefixes": [
-        "lib/ansible/"
+        "lib/assible/"
     ]
 }

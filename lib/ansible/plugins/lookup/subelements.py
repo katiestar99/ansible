@@ -1,5 +1,5 @@
 # (c) 2013, Serge van Ginderachter <serge@vanginderachter.be>
-# (c) 2012-17 Ansible Project
+# (c) 2012-17 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -83,11 +83,11 @@ _list:
   description: list of subelements extracted
 """
 
-from ansible.errors import AnsibleError
-from ansible.module_utils.six import string_types
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.lookup import LookupBase
-from ansible.utils.listify import listify_lookup_plugin_terms
+from assible.errors import AssibleError
+from assible.module_utils.six import string_types
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.lookup import LookupBase
+from assible.utils.listify import listify_lookup_plugin_terms
 
 
 FLAGS = ('skip_missing',)
@@ -98,7 +98,7 @@ class LookupModule(LookupBase):
     def run(self, terms, variables, **kwargs):
 
         def _raise_terms_error(msg=""):
-            raise AnsibleError(
+            raise AssibleError(
                 "subelements lookup expects a list of two or three items, " + msg)
 
         terms[0] = listify_lookup_plugin_terms(terms[0], templar=self._templar, loader=self._loader)
@@ -133,7 +133,7 @@ class LookupModule(LookupBase):
         ret = []
         for item0 in elementlist:
             if not isinstance(item0, dict):
-                raise AnsibleError("subelements lookup expects a dictionary, got '%s'" % item0)
+                raise AssibleError("subelements lookup expects a dictionary, got '%s'" % item0)
             if item0.get('skipped', False) is not False:
                 # this particular item is to be skipped
                 continue
@@ -149,18 +149,18 @@ class LookupModule(LookupBase):
                     if skip_missing:
                         continue
                     else:
-                        raise AnsibleError("could not find '%s' key in iterated item '%s'" % (subkey, subvalue))
+                        raise AssibleError("could not find '%s' key in iterated item '%s'" % (subkey, subvalue))
                 if not lastsubkey:
                     if not isinstance(subvalue[subkey], dict):
                         if skip_missing:
                             continue
                         else:
-                            raise AnsibleError("the key %s should point to a dictionary, got '%s'" % (subkey, subvalue[subkey]))
+                            raise AssibleError("the key %s should point to a dictionary, got '%s'" % (subkey, subvalue[subkey]))
                     else:
                         subvalue = subvalue[subkey]
                 else:  # lastsubkey
                     if not isinstance(subvalue[subkey], list):
-                        raise AnsibleError("the key %s should point to a list, got '%s'" % (subkey, subvalue[subkey]))
+                        raise AssibleError("the key %s should point to a list, got '%s'" % (subkey, subvalue[subkey]))
                     else:
                         sublist = subvalue.pop(subkey, [])
             for item1 in sublist:

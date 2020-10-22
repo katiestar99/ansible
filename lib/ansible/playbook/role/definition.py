@@ -1,19 +1,19 @@
-# (c) 2014 Michael DeHaan, <michael@ansible.com>
+# (c) 2014 Michael DeHaan, <michael@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,20 +21,20 @@ __metaclass__ = type
 
 import os
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleAssertionError
-from ansible.module_utils.six import iteritems, string_types
-from ansible.parsing.yaml.objects import AnsibleBaseYAMLObject, AnsibleMapping
-from ansible.playbook.attribute import Attribute, FieldAttribute
-from ansible.playbook.base import Base
-from ansible.playbook.collectionsearch import CollectionSearch
-from ansible.playbook.conditional import Conditional
-from ansible.playbook.taggable import Taggable
-from ansible.template import Templar
-from ansible.utils.collection_loader import AnsibleCollectionRef
-from ansible.utils.collection_loader._collection_finder import _get_collection_role_path
-from ansible.utils.path import unfrackpath
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleError, AssibleAssertionError
+from assible.module_utils.six import iteritems, string_types
+from assible.parsing.yaml.objects import AssibleBaseYAMLObject, AssibleMapping
+from assible.playbook.attribute import Attribute, FieldAttribute
+from assible.playbook.base import Base
+from assible.playbook.collectionsearch import CollectionSearch
+from assible.playbook.conditional import Conditional
+from assible.playbook.taggable import Taggable
+from assible.template import Templar
+from assible.utils.collection_loader import AssibleCollectionRef
+from assible.utils.collection_loader._collection_finder import _get_collection_role_path
+from assible.utils.path import unfrackpath
+from assible.utils.display import Display
 
 __all__ = ['RoleDefinition']
 
@@ -64,7 +64,7 @@ class RoleDefinition(Base, Conditional, Taggable, CollectionSearch):
 
     @staticmethod
     def load(data, variable_manager=None, loader=None):
-        raise AnsibleError("not implemented")
+        raise AssibleError("not implemented")
 
     def preprocess_data(self, ds):
         # role names that are simply numbers can be parsed by PyYAML
@@ -72,8 +72,8 @@ class RoleDefinition(Base, Conditional, Taggable, CollectionSearch):
         if isinstance(ds, int):
             ds = "%s" % ds
 
-        if not isinstance(ds, dict) and not isinstance(ds, string_types) and not isinstance(ds, AnsibleBaseYAMLObject):
-            raise AnsibleAssertionError()
+        if not isinstance(ds, dict) and not isinstance(ds, string_types) and not isinstance(ds, AssibleBaseYAMLObject):
+            raise AssibleAssertionError()
 
         if isinstance(ds, dict):
             ds = super(RoleDefinition, self).preprocess_data(ds)
@@ -84,9 +84,9 @@ class RoleDefinition(Base, Conditional, Taggable, CollectionSearch):
         # we create a new data structure here, using the same
         # object used internally by the YAML parsing code so we
         # can preserve file:line:column information if it exists
-        new_ds = AnsibleMapping()
-        if isinstance(ds, AnsibleBaseYAMLObject):
-            new_ds.ansible_pos = ds.ansible_pos
+        new_ds = AssibleMapping()
+        if isinstance(ds, AssibleBaseYAMLObject):
+            new_ds.assible_pos = ds.assible_pos
 
         # first we pull the role name out of the data structure,
         # and then use that to determine the role path (which may
@@ -123,7 +123,7 @@ class RoleDefinition(Base, Conditional, Taggable, CollectionSearch):
 
         role_name = ds.get('role', ds.get('name'))
         if not role_name or not isinstance(role_name, string_types):
-            raise AnsibleError('role definitions must contain a role name', obj=ds)
+            raise AssibleError('role definitions must contain a role name', obj=ds)
 
         # if we have the required datastructures, and if the role_name
         # contains a variable, try and template it now
@@ -155,7 +155,7 @@ class RoleDefinition(Base, Conditional, Taggable, CollectionSearch):
         role_tuple = None
 
         # try to load as a collection-based role first
-        if self._collection_list or AnsibleCollectionRef.is_valid_fqcr(role_name):
+        if self._collection_list or AssibleCollectionRef.is_valid_fqcr(role_name):
             role_tuple = _get_collection_role_path(role_name, self._collection_list)
 
         if role_tuple:
@@ -165,7 +165,7 @@ class RoleDefinition(Base, Conditional, Taggable, CollectionSearch):
 
         # We didn't find a collection role, look in defined role paths
         # FUTURE: refactor this to be callable from internal so we can properly order
-        # ansible.legacy searches with the collections keyword
+        # assible.legacy searches with the collections keyword
 
         # we always start the search for roles in the base directory of the playbook
         role_search_paths = [
@@ -200,7 +200,7 @@ class RoleDefinition(Base, Conditional, Taggable, CollectionSearch):
             return (role_name, role_path)
 
         searches = (self._collection_list or []) + role_search_paths
-        raise AnsibleError("the role '%s' was not found in %s" % (role_name, ":".join(searches)), obj=self._ds)
+        raise AssibleError("the role '%s' was not found in %s" % (role_name, ":".join(searches)), obj=self._ds)
 
     def _split_role_params(self, ds):
         '''

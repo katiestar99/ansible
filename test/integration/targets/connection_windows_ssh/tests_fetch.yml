@@ -1,5 +1,5 @@
-# This must be a play as we need to invoke it with the ANSIBLE_SCP_IF_SSH env
-# to control the mechanism used. Unfortunately while ansible_scp_if_ssh is
+# This must be a play as we need to invoke it with the ASSIBLE_SCP_IF_SSH env
+# to control the mechanism used. Unfortunately while assible_scp_if_ssh is
 # documented, it isn't actually used hence the separate invocation
 ---
 - name: further fetch tests with metachar characters in filename
@@ -23,7 +23,7 @@
     - name: fetch file with metachar in name
       fetch:
         src: '{{ remote_tmp_dir }}\file ^with &whoami'
-        dest: ansible-test.txt
+        dest: assible-test.txt
         flat: yes
       register: fetch_res
 
@@ -36,6 +36,6 @@
     always:
     - name: remove local copy of file
       file:
-        path: ansible-test.txt
+        path: assible-test.txt
         state: absent
       delegate_to: localhost

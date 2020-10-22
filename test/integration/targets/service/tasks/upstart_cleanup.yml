@@ -1,8 +1,8 @@
 - vars:
     upstart_files:
-      - /etc/init/ansible_test.conf
-      - /etc/init/ansible_test.override
-      - /etc/init/ansible_test_broken.conf
+      - /etc/init/assible_test.conf
+      - /etc/init/assible_test.override
+      - /etc/init/assible_test_broken.conf
   block:
     - name: remove upstart init files
       file:

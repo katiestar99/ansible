@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
@@ -6,9 +6,9 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-from ansible.errors import AnsibleFilterError
-from ansible.module_utils.six.moves.urllib.parse import urlsplit
-from ansible.utils import helpers
+from assible.errors import AssibleFilterError
+from assible.module_utils.six.moves.urllib.parse import urlsplit
+from assible.utils import helpers
 
 
 def split_url(value, query='', alias='urlsplit'):
@@ -19,13 +19,13 @@ def split_url(value, query='', alias='urlsplit'):
     # If no option is supplied, return the entire dictionary.
     if query:
         if query not in results:
-            raise AnsibleFilterError(alias + ': unknown URL component: %s' % query)
+            raise AssibleFilterError(alias + ': unknown URL component: %s' % query)
         return results[query]
     else:
         return results
 
 
-# ---- Ansible filters ----
+# ---- Assible filters ----
 class FilterModule(object):
     ''' URI filter '''
 

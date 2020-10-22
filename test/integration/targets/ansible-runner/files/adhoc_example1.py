@@ -4,13 +4,13 @@ __metaclass__ = type
 import json
 import os
 import sys
-import ansible_runner
+import assible_runner
 
 # the first positional arg should be where the artifacts live
 output_dir = sys.argv[1]
 
 # this calls a single module directly, aka "adhoc" mode
-r = ansible_runner.run(
+r = assible_runner.run(
     private_data_dir=output_dir,
     host_pattern='localhost',
     module='shell',

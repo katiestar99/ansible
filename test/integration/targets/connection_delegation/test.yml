@@ -15,7 +15,7 @@
     delegation_action:
     delegate_to: my_host
     vars:
-      ansible_password: other_password
+      assible_password: other_password
     register: result
 
   - assert:

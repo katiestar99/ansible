@@ -15,13 +15,13 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 from re import findall, search, M
 from copy import deepcopy
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.static_routes.static_routes import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.static_routes.static_routes import (
     Static_routesArgs,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.utils.utils import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.utils.utils import (
     get_route_type,
 )
 
@@ -47,10 +47,10 @@ class Static_routesFacts(object):
     def get_device_data(self, connection):
         return connection.get_config()
 
-    def populate_facts(self, connection, ansible_facts, data=None):
+    def populate_facts(self, connection, assible_facts, data=None):
         """ Populate the facts for static_routes
         :param connection: the device connection
-        :param ansible_facts: Facts dictionary
+        :param assible_facts: Facts dictionary
         :param data: previously collected conf
         :rtype: dictionary
         :returns: facts
@@ -88,7 +88,7 @@ class Static_routesFacts(object):
             if config:
                 objs.append(config)
 
-        ansible_facts["ansible_network_resources"].pop("static_routes", None)
+        assible_facts["assible_network_resources"].pop("static_routes", None)
         facts = {}
         if objs:
             facts["static_routes"] = []
@@ -98,8 +98,8 @@ class Static_routesFacts(object):
             for cfg in params["config"]:
                 facts["static_routes"].append(utils.remove_empties(cfg))
 
-        ansible_facts["ansible_network_resources"].update(facts)
-        return ansible_facts
+        assible_facts["assible_network_resources"].update(facts)
+        return assible_facts
 
     def render_config(self, conf):
         """

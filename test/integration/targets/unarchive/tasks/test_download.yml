@@ -12,12 +12,12 @@
       - pyOpenSSL==16.2.0
     state: present
   when:
-    - ansible_facts.distribution == 'CentOS'
-    - not ansible_facts.python.has_sslcontext
+    - assible_facts.distribution == 'CentOS'
+    - not assible_facts.python.has_sslcontext
 
 - name: unarchive a tar from an URL
   unarchive:
-    src: "https://releases.ansible.com/ansible/ansible-latest.tar.gz"
+    src: "https://releases.assible.com/assible/assible-latest.tar.gz"
     dest: "{{ remote_tmp_dir }}/test-unarchive-tar-gz"
     mode: "0700"
     remote_src: yes

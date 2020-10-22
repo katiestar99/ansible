@@ -21,11 +21,11 @@ import time
 import syslog
 import multiprocessing
 
-from ansible.module_utils._text import to_text
+from assible.module_utils._text import to_text
 
 PY3 = sys.version_info[0] == 3
 
-syslog.openlog('ansible-%s' % os.path.basename(__file__))
+syslog.openlog('assible-%s' % os.path.basename(__file__))
 syslog.syslog(syslog.LOG_NOTICE, 'Invoked with %s' % " ".join(sys.argv[1:]))
 
 # pipe for communication between forked process and parent
@@ -68,7 +68,7 @@ def daemonize_self():
 
 
 # NB: this function copied from module_utils/json_utils.py. Ensure any changes are propagated there.
-# FUTURE: AnsibleModule-ify this module so it's Ansiballz-compatible and can use the module_utils copy of this function.
+# FUTURE: AssibleModule-ify this module so it's Assiballz-compatible and can use the module_utils copy of this function.
 def _filter_non_json_lines(data):
     '''
     Used to filter unrelated output around module JSON output, like messages from
@@ -137,7 +137,7 @@ def _run_module(wrapped_cmd, jid, job_path):
 
     tmp_job_path = job_path + ".tmp"
     jobfile = open(tmp_job_path, "w")
-    jobfile.write(json.dumps({"started": 1, "finished": 0, "ansible_job_id": jid}))
+    jobfile.write(json.dumps({"started": 1, "finished": 0, "assible_job_id": jid}))
     jobfile.close()
     os.rename(tmp_job_path, job_path)
     jobfile = open(tmp_job_path, "w")
@@ -191,7 +191,7 @@ def _run_module(wrapped_cmd, jid, job_path):
             "outdata": outdata,  # temporary notice only
             "stderr": stderr
         }
-        result['ansible_job_id'] = jid
+        result['assible_job_id'] = jid
         jobfile.write(json.dumps(result))
 
     except (ValueError, Exception):
@@ -202,7 +202,7 @@ def _run_module(wrapped_cmd, jid, job_path):
             "stderr": stderr,
             "msg": traceback.format_exc()
         }
-        result['ansible_job_id'] = jid
+        result['assible_job_id'] = jid
         jobfile.write(json.dumps(result))
 
     jobfile.close()
@@ -235,7 +235,7 @@ def main():
         cmd = wrapped_module
     step = 5
 
-    async_dir = os.environ.get('ANSIBLE_ASYNC_DIR', '~/.ansible_async')
+    async_dir = os.environ.get('ASSIBLE_ASYNC_DIR', '~/.assible_async')
 
     # setup job output directory
     jobdir = os.path.expanduser(async_dir)
@@ -260,7 +260,7 @@ def main():
             # Notify the overlord that the async process started
 
             # we need to not return immediately such that the launched command has an attempt
-            # to initialize PRIOR to ansible trying to clean up the launch directory (and argsfile)
+            # to initialize PRIOR to assible trying to clean up the launch directory (and argsfile)
             # this probably could be done with some IPC later.  Modules should always read
             # the argsfile at the very first start of their execution anyway
 
@@ -279,8 +279,8 @@ def main():
                     continue
 
             notice("Return async_wrapper task started.")
-            print(json.dumps({"started": 1, "finished": 0, "ansible_job_id": jid, "results_file": job_path,
-                              "_ansible_suppress_tmpdir_delete": not preserve_tmp}))
+            print(json.dumps({"started": 1, "finished": 0, "assible_job_id": jid, "results_file": job_path,
+                              "_assible_suppress_tmpdir_delete": not preserve_tmp}))
             sys.stdout.flush()
             sys.exit(0)
         else:

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "title": "Ansible Inventory",
-  "description" : "Ansible Inventory for the script inventory plugin",
+  "title": "Assible Inventory",
+  "description" : "Assible Inventory for the script inventory plugin",
   "type": "object",
   "patternProperties": {
 	"^\\w$":{

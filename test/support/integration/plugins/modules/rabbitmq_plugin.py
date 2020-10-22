@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
     'supported_by': 'community'
@@ -84,7 +84,7 @@ disabled:
 '''
 
 import os
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 class RabbitMqPlugins(object):
@@ -136,7 +136,7 @@ def main():
         state=dict(default='enabled', choices=['enabled', 'disabled']),
         prefix=dict(required=False, default=None)
     )
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=arg_spec,
         supports_check_mode=True
     )

@@ -1,4 +1,4 @@
-- shell: '{{ ansible_python.executable }} -c "import tempfile; print(tempfile.mkstemp()[1])"'
+- shell: '{{ assible_python.executable }} -c "import tempfile; print(tempfile.mkstemp()[1])"'
   register: tempfilepath
 
 - set_fact:
@@ -61,7 +61,7 @@
 
 # This task shouldn't fail, previously .attempts was not available to changed_when/failed_when
 # and would cause the conditional to fail due to ``'dict object' has no attribute 'attempts'``
-# https://github.com/ansible/ansible/issues/34139
+# https://github.com/assible/assible/issues/34139
 - name: Test access to attempts in changed_when/failed_when
   shell: 'true'
   register: changed_when_attempts

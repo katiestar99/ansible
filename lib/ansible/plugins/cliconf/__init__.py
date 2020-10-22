@@ -1,20 +1,20 @@
 #
 # (c) 2017 Red Hat Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -22,9 +22,9 @@ __metaclass__ = type
 from abc import abstractmethod
 from functools import wraps
 
-from ansible.plugins import AnsiblePlugin
-from ansible.errors import AnsibleError, AnsibleConnectionFailure
-from ansible.module_utils._text import to_bytes, to_text
+from assible.plugins import AssiblePlugin
+from assible.errors import AssibleError, AssibleConnectionFailure
+from assible.module_utils._text import to_bytes, to_text
 
 try:
     from scp import SCPClient
@@ -38,12 +38,12 @@ def enable_mode(func):
     def wrapped(self, *args, **kwargs):
         prompt = self._connection.get_prompt()
         if not to_text(prompt, errors='surrogate_or_strict').strip().endswith('#'):
-            raise AnsibleError('operation requires privilege escalation')
+            raise AssibleError('operation requires privilege escalation')
         return func(self, *args, **kwargs)
     return wrapped
 
 
-class CliconfBase(AnsiblePlugin):
+class CliconfBase(AssiblePlugin):
     """
     A base class for implementing cli connections
 
@@ -67,7 +67,7 @@ class CliconfBase(AnsiblePlugin):
     :returns: Returns output received from remote device as byte string
 
             Usage:
-            from ansible.module_utils.connection import Connection
+            from assible.module_utils.connection import Connection
 
             conn = Connection()
             conn.get('show lldp neighbors detail'')
@@ -343,7 +343,7 @@ class CliconfBase(AnsiblePlugin):
         ssh = self._connection.paramiko_conn._connect_uncached()
         if proto == 'scp':
             if not HAS_SCP:
-                raise AnsibleError("Required library scp is not installed.  Please install it using `pip install scp`")
+                raise AssibleError("Required library scp is not installed.  Please install it using `pip install scp`")
             with SCPClient(ssh.get_transport(), socket_timeout=timeout) as scp:
                 out = scp.put(source, destination)
         elif proto == 'sftp':
@@ -364,7 +364,7 @@ class CliconfBase(AnsiblePlugin):
         ssh = self._connection.paramiko_conn._connect_uncached()
         if proto == 'scp':
             if not HAS_SCP:
-                raise AnsibleError("Required library scp is not installed.  Please install it using `pip install scp`")
+                raise AssibleError("Required library scp is not installed.  Please install it using `pip install scp`")
             try:
                 with SCPClient(ssh.get_transport(), socket_timeout=timeout) as scp:
                     scp.get(source, destination)
@@ -464,7 +464,7 @@ class CliconfBase(AnsiblePlugin):
         """
         out = self._connection.get_prompt()
         if out is None:
-            raise AnsibleConnectionFailure(message=u'cli prompt is not identified from the last received'
+            raise AssibleConnectionFailure(message=u'cli prompt is not identified from the last received'
                                                    u' response window: %s' % self._connection._last_recv_window)
 
         while True:

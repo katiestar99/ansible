@@ -128,7 +128,7 @@ import re
 
 from distutils.version import LooseVersion
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 class Subversion(object):
@@ -258,7 +258,7 @@ class Subversion(object):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             dest=dict(type='path'),
             repo=dict(type='str', required=True, aliases=['name', 'repository']),

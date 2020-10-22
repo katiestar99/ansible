@@ -7,4 +7,4 @@ Update the Azure integration test requirements file when changes are made to the
 
 .. code-block:: bash
 
-    cp packaging/requirements/requirements-azure.txt test/lib/ansible_test/_data/requirements/integration.cloud.azure.txt
+    cp packaging/requirements/requirements-azure.txt test/lib/assible_test/_data/requirements/integration.cloud.azure.txt

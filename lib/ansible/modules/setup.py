@@ -44,10 +44,10 @@ options:
         description:
             - If supplied, only return facts that match one of the shell-style
               (fnmatch) pattern. An empty list basically means 'no filter'.
-              As of Ansible 2.11, the type has changed from string to list
+              As of Assible 2.11, the type has changed from string to list
               and the default has became an empty list. A simple string is
               still accepted and works as a single pattern. The behaviour
-              prior to Ansible 2.11 remains.
+              prior to Assible 2.11 remains.
         required: false
         type: list
         elements: str
@@ -55,58 +55,58 @@ options:
     fact_path:
         version_added: "1.3"
         description:
-            - Path used for local ansible facts (C(*.fact)) - files in this dir
-              will be run (if executable) and their results be added to C(ansible_local) facts.
+            - Path used for local assible facts (C(*.fact)) - files in this dir
+              will be run (if executable) and their results be added to C(assible_local) facts.
               If a file is not executable it is read instead.
               File/results format can be JSON or INI-format. The default C(fact_path) can be
-              specified in C(ansible.cfg) for when setup is automatically called as part of
+              specified in C(assible.cfg) for when setup is automatically called as part of
               C(gather_facts).
               NOTE - For windows clients, the results will be added to a variable named after the
-              local file (without extension suffix), rather than C(ansible_local).
-            - Since Ansible 2.1, Windows hosts can use C(fact_path). Make sure that this path
+              local file (without extension suffix), rather than C(assible_local).
+            - Since Assible 2.1, Windows hosts can use C(fact_path). Make sure that this path
               exists on the target host. Files in this path MUST be PowerShell scripts C(.ps1)
-              which outputs an object. This object will be formatted by Ansible as json so the
+              which outputs an object. This object will be formatted by Assible as json so the
               script should be outputting a raw hashtable, array, or other primitive object.
         type: path
         required: false
-        default: /etc/ansible/facts.d
+        default: /etc/assible/facts.d
 description:
     - This module is automatically called by playbooks to gather useful
       variables about remote hosts that can be used in playbooks. It can also be
-      executed directly by C(/usr/bin/ansible) to check what variables are
-      available to a host. Ansible provides many I(facts) about the system,
+      executed directly by C(/usr/bin/assible) to check what variables are
+      available to a host. Assible provides many I(facts) about the system,
       automatically.
     - This module is also supported for Windows targets.
 notes:
-    - More ansible facts will be added with successive releases. If I(facter) or
+    - More assible facts will be added with successive releases. If I(facter) or
       I(ohai) are installed, variables from these programs will also be snapshotted
       into the JSON file for usage in templating. These variables are prefixed
       with C(facter_) and C(ohai_) so it's easy to tell their source. All variables are
-      bubbled up to the caller. Using the ansible facts and choosing to not
+      bubbled up to the caller. Using the assible facts and choosing to not
       install I(facter) and I(ohai) means you can avoid Ruby-dependencies on your
       remote systems. (See also M(community.general.facter) and M(community.general.ohai).)
-    - The filter option filters only the first level subkey below ansible_facts.
+    - The filter option filters only the first level subkey below assible_facts.
     - If the target host is Windows, you will not currently have the ability to use
       C(filter) as this is provided by a simpler implementation of the module.
     - This module is also supported for Windows targets.
-    - This module should be run with elevated privileges on BSD systems to gather facts like ansible_product_version.
+    - This module should be run with elevated privileges on BSD systems to gather facts like assible_product_version.
 author:
-    - "Ansible Core Team"
+    - "Assible Core Team"
     - "Michael DeHaan"
 '''
 
 EXAMPLES = """
 # Display facts from all hosts and store them indexed by I(hostname) at C(/tmp/facts).
-# ansible all -m setup --tree /tmp/facts
+# assible all -m setup --tree /tmp/facts
 
-# Display only facts regarding memory found by ansible on all hosts and output them.
-# ansible all -m setup -a 'filter=ansible_*_mb'
+# Display only facts regarding memory found by assible on all hosts and output them.
+# assible all -m setup -a 'filter=assible_*_mb'
 
 # Display only facts returned by facter.
-# ansible all -m setup -a 'filter=facter_*'
+# assible all -m setup -a 'filter=facter_*'
 
 # Collect only facts returned by facter.
-# ansible all -m setup -a 'gather_subset=!all,!any,facter'
+# assible all -m setup -a 'gather_subset=!all,!any,facter'
 
 - name: Collect only facts returned by facter
   setup:
@@ -118,48 +118,48 @@ EXAMPLES = """
 - name: Collect only selected facts
   setup:
     filter:
-      - 'ansible_distribution'
-      - 'ansible_machine_id'
-      - 'ansible_*_mb'
+      - 'assible_distribution'
+      - 'assible_machine_id'
+      - 'assible_*_mb'
 
 # Display only facts about certain interfaces.
-# ansible all -m setup -a 'filter=ansible_eth[0-2]'
+# assible all -m setup -a 'filter=assible_eth[0-2]'
 
 # Restrict additional gathered facts to network and virtual (includes default minimum facts)
-# ansible all -m setup -a 'gather_subset=network,virtual'
+# assible all -m setup -a 'gather_subset=network,virtual'
 
 # Collect only network and virtual (excludes default minimum facts)
-# ansible all -m setup -a 'gather_subset=!all,!any,network,virtual'
+# assible all -m setup -a 'gather_subset=!all,!any,network,virtual'
 
 # Do not call puppet facter or ohai even if present.
-# ansible all -m setup -a 'gather_subset=!facter,!ohai'
+# assible all -m setup -a 'gather_subset=!facter,!ohai'
 
 # Only collect the default minimum amount of facts:
-# ansible all -m setup -a 'gather_subset=!all'
+# assible all -m setup -a 'gather_subset=!all'
 
 # Collect no facts, even the default minimum subset of facts:
-# ansible all -m setup -a 'gather_subset=!all,!min'
+# assible all -m setup -a 'gather_subset=!all,!min'
 
 # Display facts from Windows hosts with custom facts stored in C(C:\\custom_facts).
-# ansible windows -m setup -a "fact_path='c:\\custom_facts'"
+# assible windows -m setup -a "fact_path='c:\\custom_facts'"
 """
 
 # import module snippets
-from ..module_utils.basic import AnsibleModule
+from ..module_utils.basic import AssibleModule
 
-from ansible.module_utils.facts.namespace import PrefixFactNamespace
-from ansible.module_utils.facts import ansible_collector
+from assible.module_utils.facts.namespace import PrefixFactNamespace
+from assible.module_utils.facts import assible_collector
 
-from ansible.module_utils.facts import default_collectors
+from assible.module_utils.facts import default_collectors
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             gather_subset=dict(default=["all"], required=False, type='list', elements='str'),
             gather_timeout=dict(default=10, required=False, type='int'),
             filter=dict(default=[], required=False, type='list', elements='str'),
-            fact_path=dict(default='/etc/ansible/facts.d', required=False, type='path'),
+            fact_path=dict(default='/etc/assible/facts.d', required=False, type='path'),
         ),
         supports_check_mode=True,
     )
@@ -180,11 +180,11 @@ def main():
     all_collector_classes = default_collectors.collectors
 
     # rename namespace_name to root_key?
-    namespace = PrefixFactNamespace(namespace_name='ansible',
-                                    prefix='ansible_')
+    namespace = PrefixFactNamespace(namespace_name='assible',
+                                    prefix='assible_')
 
     fact_collector = \
-        ansible_collector.get_ansible_collector(all_collector_classes=all_collector_classes,
+        assible_collector.get_assible_collector(all_collector_classes=all_collector_classes,
                                                 namespace=namespace,
                                                 filter_spec=filter_spec,
                                                 gather_subset=gather_subset,
@@ -193,7 +193,7 @@ def main():
 
     facts_dict = fact_collector.collect(module=module)
 
-    module.exit_json(ansible_facts=facts_dict)
+    module.exit_json(assible_facts=facts_dict)
 
 
 if __name__ == '__main__':

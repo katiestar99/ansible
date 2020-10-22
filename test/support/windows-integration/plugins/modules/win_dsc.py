@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2015, Trond Hindenes <trond@hindenes.com>, and others
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -48,7 +48,7 @@ options:
       C(CimInstance[]), this means the value should be a dictionary or list
       of dictionaries based on the values required by that option.
     - If the type of the DSC resource option is a C(PSCredential) then there
-      needs to be 2 options set in the Ansible task definition suffixed with
+      needs to be 2 options set in the Assible task definition suffixed with
       C(_username) and C(_password).
     - If the type of the DSC resource option is an array, then a list should be
       provided but a comma separated string also work. Use a list where
@@ -57,7 +57,7 @@ options:
     - If the type of the DSC resource option is a C(DateTime), you should use
       a string in the form of an ISO 8901 string to ensure the exact date is
       used.
-    - Since Ansible 2.8, Ansible will now validate the input fields against the
+    - Since Assible 2.8, Assible will now validate the input fields against the
       DSC resource definition automatically. Older versions will silently
       ignore invalid fields.
     type: str
@@ -98,14 +98,14 @@ EXAMPLES = r'''
     Key: HKEY_CURRENT_USER\ExampleKey
     ValueName: TestValue
     ValueData: TestData
-    PsDscRunAsCredential_username: '{{ansible_user}}'
-    PsDscRunAsCredential_password: '{{ansible_password}}'
+    PsDscRunAsCredential_username: '{{assible_user}}'
+    PsDscRunAsCredential_password: '{{assible_password}}'
   no_log: true
 
 - name: Create file with multiple attributes
   win_dsc:
     resource_name: File
-    DestinationPath: C:\ansible\dsc
+    DestinationPath: C:\assible\dsc
     Attributes: # can also be a comma separated string, e.g. 'Hidden, System'
     - Hidden
     - System
@@ -163,7 +163,7 @@ reboot_required:
 verbose_test:
     description: The verbose output as a list from executing the DSC test
       method.
-    returned: Ansible verbosity is -vvv or greater
+    returned: Assible verbosity is -vvv or greater
     type: list
     sample: [
       "Perform operation 'Invoke CimMethod' with the following parameters, ",
@@ -173,7 +173,7 @@ verbose_test:
 verbose_set:
     description: The verbose output as a list from executing the DSC Set
       method.
-    returned: Ansible verbosity is -vvv or greater and a change occurred
+    returned: Assible verbosity is -vvv or greater and a change occurred
     type: list
     sample: [
       "Perform operation 'Invoke CimMethod' with the following parameters, ",

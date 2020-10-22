@@ -5,11 +5,11 @@
     - name: check that smart gathering is enabled
       fail:
         msg: 'smart gathering must be enabled'
-      when: 'lookup("env", "ANSIBLE_GATHERING") != "smart"'
+      when: 'lookup("env", "ASSIBLE_GATHERING") != "smart"'
     - name: install test local facts
       copy:
         src: uuid.fact
-        dest: /etc/ansible/facts.d/
+        dest: /etc/assible/facts.d/
         mode: 0755
 
 - hosts: facthost1,facthost2
@@ -19,14 +19,14 @@
     - block:
         - name: 'Check the same host is used'
           assert:
-            that: 'hostvars.facthost1.ansible_fqdn == hostvars.facthost2.ansible_fqdn'
+            that: 'hostvars.facthost1.assible_fqdn == hostvars.facthost2.assible_fqdn'
             msg: 'This test requires 2 inventory hosts referring to the same host.'
         - name: "Check that run_once doesn't prevent fact gathering (#39453)"
           assert:
-            that: 'hostvars.facthost1.ansible_local.uuid != hostvars.facthost2.ansible_local.uuid'
-            msg: "{{ 'Same value for ansible_local.uuid on both hosts: ' ~ hostvars.facthost1.ansible_local.uuid }}"
+            that: 'hostvars.facthost1.assible_local.uuid != hostvars.facthost2.assible_local.uuid'
+            msg: "{{ 'Same value for assible_local.uuid on both hosts: ' ~ hostvars.facthost1.assible_local.uuid }}"
       always:
         - name: remove test local facts
           file:
-            path: /etc/ansible/facts.d/uuid.fact
+            path: /etc/assible/facts.d/uuid.fact
             state: absent

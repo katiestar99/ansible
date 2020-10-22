@@ -1,17 +1,17 @@
-- name: ensure we can override ansible_python_interpreter
+- name: ensure we can override assible_python_interpreter
   vars:
-    ansible_python_interpreter: overriddenpython
+    assible_python_interpreter: overriddenpython
   assert:
     that:
-    - ansible_python_interpreter == 'overriddenpython'
-    fail_msg: "'ansible_python_interpreter' appears to be set at a high precedence to {{ ansible_python_interpreter }},
+    - assible_python_interpreter == 'overriddenpython'
+    fail_msg: "'assible_python_interpreter' appears to be set at a high precedence to {{ assible_python_interpreter }},
               which breaks this test."
 
 - name: snag some facts to validate for later
   set_fact:
-    distro: '{{ ansible_distribution | default("unknown") | lower }}'
-    distro_version: '{{ ansible_distribution_version | default("unknown") }}'
-    os_family: '{{ ansible_os_family | default("unknown") }}'
+    distro: '{{ assible_distribution | default("unknown") | lower }}'
+    distro_version: '{{ assible_distribution_version | default("unknown") }}'
+    os_family: '{{ assible_os_family | default("unknown") }}'
 
 - name: test that python discovery is working and that fact persistence makes it only run once
   block:
@@ -20,36 +20,36 @@
 
   - name: trigger discovery with auto
     vars:
-      ansible_python_interpreter: auto
+      assible_python_interpreter: auto
     ping:
     register: auto_out
 
   - name: get the interpreter being used on the target to execute modules
     vars:
       # keep this set so we can verify we didn't repeat discovery
-      ansible_python_interpreter: auto
+      assible_python_interpreter: auto
     test_echo_module:
     register: echoout
 
   - when: distro == 'macosx'
     block:
       - name: Get the sys.executable for the macos discovered interpreter, as it may be different than the actual path
-        raw: '{{ auto_out.ansible_facts.discovered_interpreter_python }} -c "import sys; print(sys.executable)"'
+        raw: '{{ auto_out.assible_facts.discovered_interpreter_python }} -c "import sys; print(sys.executable)"'
         register: discovered_sys_executable
 
       - set_fact:
           normalized_discovered_interpreter: '{{ discovered_sys_executable.stdout_lines[0] }}'
 
   - set_fact:
-      normalized_discovered_interpreter: '{{ auto_out.ansible_facts.discovered_interpreter_python }}'
+      normalized_discovered_interpreter: '{{ auto_out.assible_facts.discovered_interpreter_python }}'
     when: distro != 'macosx'
 
   - assert:
       that:
-      - auto_out.ansible_facts.discovered_interpreter_python is defined
+      - auto_out.assible_facts.discovered_interpreter_python is defined
       - echoout.running_python_interpreter == normalized_discovered_interpreter
       # verify that discovery didn't run again (if it did, we'd have the fact in the result)
-      - echoout.ansible_facts is not defined or echoout.ansible_facts.discovered_interpreter_python is not defined
+      - echoout.assible_facts is not defined or echoout.assible_facts.discovered_interpreter_python is not defined
 
 
 - name: test that auto_legacy gives a dep warning when /usr/bin/python present but != auto result
@@ -59,7 +59,7 @@
 
   - name: trigger discovery with auto_legacy
     vars:
-      ansible_python_interpreter: auto_legacy
+      assible_python_interpreter: auto_legacy
     ping:
     register: legacy
 
@@ -68,8 +68,8 @@
       that:
       - legacy.deprecations | default([]) | length > 0
     # only check for a dep warning if legacy returned /usr/bin/python and auto didn't
-    when: legacy.ansible_facts.discovered_interpreter_python == '/usr/bin/python' and
-          auto_out.ansible_facts.discovered_interpreter_python != '/usr/bin/python'
+    when: legacy.assible_facts.discovered_interpreter_python == '/usr/bin/python' and
+          auto_out.assible_facts.discovered_interpreter_python != '/usr/bin/python'
 
 
 - name: test that auto_silent never warns and got the same answer as auto
@@ -79,14 +79,14 @@
 
   - name: initial task to trigger discovery
     vars:
-      ansible_python_interpreter: auto_silent
+      assible_python_interpreter: auto_silent
     ping:
     register: auto_silent_out
 
   - assert:
       that:
       - auto_silent_out.warnings is not defined
-      - auto_silent_out.ansible_facts.discovered_interpreter_python == auto_out.ansible_facts.discovered_interpreter_python
+      - auto_silent_out.assible_facts.discovered_interpreter_python == auto_out.assible_facts.discovered_interpreter_python
 
 
 - name: test that auto_legacy_silent never warns and got the same answer as auto_legacy
@@ -96,22 +96,22 @@
 
   - name: trigger discovery with auto_legacy_silent
     vars:
-      ansible_python_interpreter: auto_legacy_silent
+      assible_python_interpreter: auto_legacy_silent
     ping:
     register: legacy_silent
 
   - assert:
       that:
         - legacy_silent.warnings is not defined
-        - legacy_silent.ansible_facts.discovered_interpreter_python == legacy.ansible_facts.discovered_interpreter_python
+        - legacy_silent.assible_facts.discovered_interpreter_python == legacy.assible_facts.discovered_interpreter_python
 
-- name: ensure modules can't set discovered_interpreter_X or ansible_X_interpreter
+- name: ensure modules can't set discovered_interpreter_X or assible_X_interpreter
   block:
   - test_echo_module:
       facts:
-        ansible_discovered_interpreter_bogus: from module
+        assible_discovered_interpreter_bogus: from module
         discovered_interpreter_bogus: from_module
-        ansible_bogus_interpreter: from_module
+        assible_bogus_interpreter: from_module
         test_fact: from_module
     register: echoout
 
@@ -119,45 +119,45 @@
       that:
       - test_fact == 'from_module'
       - discovered_interpreter_bogus | default('nope') == 'nope'
-      - ansible_bogus_interpreter | default('nope') == 'nope'
+      - assible_bogus_interpreter | default('nope') == 'nope'
       # this one will exist in facts, but with its prefix removed
-      - ansible_facts['ansible_bogus_interpreter'] | default('nope') == 'nope'
-      - ansible_facts['discovered_interpreter_bogus'] | default('nope') == 'nope'
+      - assible_facts['assible_bogus_interpreter'] | default('nope') == 'nope'
+      - assible_facts['discovered_interpreter_bogus'] | default('nope') == 'nope'
 
   - name: debian assertions
     assert:
       that:
-      - auto_out.ansible_facts.discovered_interpreter_python == '/usr/bin/python3'
+      - auto_out.assible_facts.discovered_interpreter_python == '/usr/bin/python3'
     when: distro == 'debian' and distro_version is version('10', '>=')
 
   - name: fedora assertions
     assert:
       that:
-      - auto_out.ansible_facts.discovered_interpreter_python == '/usr/bin/python3'
+      - auto_out.assible_facts.discovered_interpreter_python == '/usr/bin/python3'
     when: distro == 'fedora' and distro_version is version('23', '>=')
 
   - name: rhel assertions
     assert:
       that:
       # rhel 6/7
-      - (auto_out.ansible_facts.discovered_interpreter_python == '/usr/bin/python' and distro_version is version('8','<')) or distro_version is version('8','>=')
+      - (auto_out.assible_facts.discovered_interpreter_python == '/usr/bin/python' and distro_version is version('8','<')) or distro_version is version('8','>=')
       # rhel 8+
-      - (auto_out.ansible_facts.discovered_interpreter_python == '/usr/libexec/platform-python' and distro_version is version('8','>=')) or distro_version is version('8','<')
+      - (auto_out.assible_facts.discovered_interpreter_python == '/usr/libexec/platform-python' and distro_version is version('8','>=')) or distro_version is version('8','<')
     when: distro == 'redhat'
 
   - name: ubuntu assertions
     assert:
       that:
       # ubuntu < 16
-      - (auto_out.ansible_facts.discovered_interpreter_python == '/usr/bin/python' and distro_version is version('16.04','<')) or distro_version is version('16.04','>=')
+      - (auto_out.assible_facts.discovered_interpreter_python == '/usr/bin/python' and distro_version is version('16.04','<')) or distro_version is version('16.04','>=')
       # ubuntu >= 16
-      - (auto_out.ansible_facts.discovered_interpreter_python == '/usr/bin/python3' and distro_version is version('16.04','>=')) or distro_version is version('16.04','<')
+      - (auto_out.assible_facts.discovered_interpreter_python == '/usr/bin/python3' and distro_version is version('16.04','>=')) or distro_version is version('16.04','<')
     when: distro == 'ubuntu'
 
   - name: mac assertions
     assert:
       that:
-      - auto_out.ansible_facts.discovered_interpreter_python == '/usr/bin/python'
+      - auto_out.assible_facts.discovered_interpreter_python == '/usr/bin/python'
     when: os_family == 'darwin'
 
   always:

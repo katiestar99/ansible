@@ -1,15 +1,15 @@
 - name: Clone a git repository
   git:
-    repo: https://github.com/ansible-collections/amazon.aws.git
+    repo: https://github.com/assible-collections/amazon.aws.git
     dest: '{{ galaxy_dir }}/development/amazon.aws/'
 
 - name: install
-  command: 'ansible-galaxy collection install git+file://{{galaxy_dir }}/development/amazon.aws/.git'
+  command: 'assible-galaxy collection install git+file://{{galaxy_dir }}/development/amazon.aws/.git'
   args:
     chdir: '{{ galaxy_dir }}/development'
 
 - name: list installed collections
-  command: 'ansible-galaxy collection list'
+  command: 'assible-galaxy collection list'
   register: installed_collections
 
 - assert:

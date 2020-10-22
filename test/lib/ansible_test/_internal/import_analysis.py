@@ -23,7 +23,7 @@ from .data import (
 )
 
 VIRTUAL_PACKAGES = set([
-    'ansible.module_utils.six',
+    'assible.module_utils.six',
 ])
 
 
@@ -133,9 +133,9 @@ def get_python_module_utils_name(path):  # type: (str) -> str
     base_path = data_context().content.module_utils_path
 
     if data_context().content.collection:
-        prefix = 'ansible_collections.' + data_context().content.collection.prefix + 'plugins.module_utils'
+        prefix = 'assible_collections.' + data_context().content.collection.prefix + 'plugins.module_utils'
     else:
-        prefix = 'ansible.module_utils'
+        prefix = 'assible.module_utils'
 
     if path.endswith('/__init__.py'):
         path = os.path.dirname(path)
@@ -196,11 +196,11 @@ def get_import_path(name, package=False):  # type: (str, bool) -> str
     else:
         filename = '%s.py' % name.replace('.', '/')
 
-    if name.startswith('ansible.module_utils.') or name == 'ansible.module_utils':
+    if name.startswith('assible.module_utils.') or name == 'assible.module_utils':
         path = os.path.join('lib', filename)
     elif data_context().content.collection and (
-            name.startswith('ansible_collections.%s.plugins.module_utils.' % data_context().content.collection.full_name) or
-            name == 'ansible_collections.%s.plugins.module_utils' % data_context().content.collection.full_name):
+            name.startswith('assible_collections.%s.plugins.module_utils.' % data_context().content.collection.full_name) or
+            name == 'assible_collections.%s.plugins.module_utils' % data_context().content.collection.full_name):
         path = '/'.join(filename.split('/')[3:])
     else:
         raise Exception('Unexpected import name: %s' % name)
@@ -253,27 +253,27 @@ class ModuleUtilFinder(ast.NodeVisitor):
         if path.endswith('/__init__.py'):
             path = os.path.split(path)[0]
 
-        if path.startswith('lib/ansible/module_utils/'):
+        if path.startswith('lib/assible/module_utils/'):
             package = os.path.split(path)[0].replace('/', '.')[4:]
 
-            if package != 'ansible.module_utils' and package not in VIRTUAL_PACKAGES:
+            if package != 'assible.module_utils' and package not in VIRTUAL_PACKAGES:
                 self.add_import(package, 0)
 
         self.module = None
 
-        if data_context().content.is_ansible:
-            # Various parts of the Ansible source tree execute within diffent modules.
+        if data_context().content.is_assible:
+            # Various parts of the Assible source tree execute within diffent modules.
             # To support import analysis, each file which uses relative imports must reside under a path defined here.
             # The mapping is a tuple consisting of a path pattern to match and a replacement path.
             # During analyis, any relative imports not covered here will result in warnings, which can be fixed by adding the appropriate entry.
             path_map = (
-                ('^hacking/build_library/build_ansible/', 'build_ansible/'),
-                ('^lib/ansible/', 'ansible/'),
-                ('^test/lib/ansible_test/_data/sanity/validate-modules/', 'validate_modules/'),
+                ('^hacking/build_library/build_assible/', 'build_assible/'),
+                ('^lib/assible/', 'assible/'),
+                ('^test/lib/assible_test/_data/sanity/validate-modules/', 'validate_modules/'),
                 ('^test/units/', 'test/units/'),
-                ('^test/lib/ansible_test/_internal/', 'ansible_test/_internal/'),
-                ('^test/integration/targets/.*/ansible_collections/(?P<ns>[^/]*)/(?P<col>[^/]*)/', r'ansible_collections/\g<ns>/\g<col>/'),
-                ('^test/integration/targets/.*/library/', 'ansible/modules/'),
+                ('^test/lib/assible_test/_internal/', 'assible_test/_internal/'),
+                ('^test/integration/targets/.*/assible_collections/(?P<ns>[^/]*)/(?P<col>[^/]*)/', r'assible_collections/\g<ns>/\g<col>/'),
+                ('^test/integration/targets/.*/library/', 'assible/modules/'),
             )
 
             for pattern, replacement in path_map:
@@ -282,7 +282,7 @@ class ModuleUtilFinder(ast.NodeVisitor):
                     self.module = path_to_module(revised_path)
                     break
         else:
-            # This assumes that all files within the collection are executed by Ansible as part of the collection.
+            # This assumes that all files within the collection are executed by Assible as part of the collection.
             # While that will usually be true, there are exceptions which will result in this resolution being incorrect.
             self.module = path_to_module(os.path.join(data_context().content.collection.directory, self.path))
 
@@ -294,8 +294,8 @@ class ModuleUtilFinder(ast.NodeVisitor):
         """
         self.generic_visit(node)
 
-        # import ansible.module_utils.MODULE[.MODULE]
-        # import ansible_collections.{ns}.{col}.plugins.module_utils.module_utils.MODULE[.MODULE]
+        # import assible.module_utils.MODULE[.MODULE]
+        # import assible_collections.{ns}.{col}.plugins.module_utils.module_utils.MODULE[.MODULE]
         self.add_imports([alias.name for alias in node.names], node.lineno)
 
     # noinspection PyPep8Naming
@@ -311,13 +311,13 @@ class ModuleUtilFinder(ast.NodeVisitor):
 
         module = relative_to_absolute(node.module, node.level, self.module, self.path, node.lineno)
 
-        if not module.startswith('ansible'):
+        if not module.startswith('assible'):
             return
 
-        # from ansible.module_utils import MODULE[, MODULE]
-        # from ansible.module_utils.MODULE[.MODULE] import MODULE[, MODULE]
-        # from ansible_collections.{ns}.{col}.plugins.module_utils import MODULE[, MODULE]
-        # from ansible_collections.{ns}.{col}.plugins.module_utils.MODULE[.MODULE] import MODULE[, MODULE]
+        # from assible.module_utils import MODULE[, MODULE]
+        # from assible.module_utils.MODULE[.MODULE] import MODULE[, MODULE]
+        # from assible_collections.{ns}.{col}.plugins.module_utils import MODULE[, MODULE]
+        # from assible_collections.{ns}.{col}.plugins.module_utils.MODULE[.MODULE] import MODULE[, MODULE]
         self.add_imports(['%s.%s' % (module, alias.name) for alias in node.names], node.lineno)
 
     def add_import(self, name, line_number):
@@ -353,10 +353,10 @@ class ModuleUtilFinder(ast.NodeVisitor):
     @staticmethod
     def is_module_util_name(name):  # type: (str) -> bool
         """Return True if the given name is a module_util name for the content under test. External module_utils are ignored."""
-        if data_context().content.is_ansible and name.startswith('ansible.module_utils.'):
+        if data_context().content.is_assible and name.startswith('assible.module_utils.'):
             return True
 
-        if data_context().content.collection and name.startswith('ansible_collections.%s.plugins.module_utils.' % data_context().content.collection.full_name):
+        if data_context().content.collection and name.startswith('assible_collections.%s.plugins.module_utils.' % data_context().content.collection.full_name):
             return True
 
         return False

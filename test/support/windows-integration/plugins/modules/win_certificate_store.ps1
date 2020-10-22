@@ -1,9 +1,9 @@
 #!powershell
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
+#AssibleRequires -CSharpUtil Assible.Basic
 
 $store_name_values = ([System.Security.Cryptography.X509Certificates.StoreName]).GetEnumValues() | ForEach-Object { $_.ToString() }
 $store_location_values = ([System.Security.Cryptography.X509Certificates.StoreLocation]).GetEnumValues() | ForEach-Object { $_.ToString() }
@@ -27,7 +27,7 @@ $spec = @{
     )
     supports_check_mode = $true
 }
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 
 Function Get-CertFile($module, $path, $password, $key_exportable, $key_storage) {
     # parses a certificate file and returns X509Certificate2Collection

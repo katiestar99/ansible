@@ -1,5 +1,5 @@
 # Copyright (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -21,7 +21,7 @@ DOCUMENTATION = '''
            - section: inventory_plugin_script
              key: cache
         env:
-           - name: ANSIBLE_INVENTORY_PLUGIN_SCRIPT_CACHE
+           - name: ASSIBLE_INVENTORY_PLUGIN_SCRIPT_CACHE
       always_show_stderr:
         description: Toggle display of stderr even when script was successful
         version_added: "2.5.1"
@@ -31,9 +31,9 @@ DOCUMENTATION = '''
            - section: inventory_plugin_script
              key: always_show_stderr
         env:
-           - name: ANSIBLE_INVENTORY_PLUGIN_SCRIPT_STDERR
+           - name: ASSIBLE_INVENTORY_PLUGIN_SCRIPT_STDERR
     description:
-        - The source provided must be an executable that returns Ansible inventory JSON
+        - The source provided must be an executable that returns Assible inventory JSON
         - The source must accept C(--list) and C(--host <hostname>) as arguments.
           C(--host) will only be used if no C(_meta) key is present.
           This is a performance optimization as the script would be called per host otherwise.
@@ -45,19 +45,19 @@ DOCUMENTATION = '''
 import os
 import subprocess
 
-from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.module_utils.basic import json_dict_bytes_to_unicode
-from ansible.module_utils.six import iteritems
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common._collections_compat import Mapping
-from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable
-from ansible.utils.display import Display
+from assible.errors import AssibleError, AssibleParserError
+from assible.module_utils.basic import json_dict_bytes_to_unicode
+from assible.module_utils.six import iteritems
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common._collections_compat import Mapping
+from assible.plugins.inventory import BaseInventoryPlugin, Cacheable
+from assible.utils.display import Display
 
 display = Display()
 
 
 class InventoryModule(BaseInventoryPlugin, Cacheable):
-    ''' Host inventory parser for ansible using external inventory scripts. '''
+    ''' Host inventory parser for assible using external inventory scripts. '''
 
     NAME = 'script'
 
@@ -97,7 +97,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
             display.deprecated(
                 msg="The 'cache' option is deprecated for the script inventory plugin. "
                 "External scripts implement their own caching and this option has never been used",
-                version="2.12", collection_name='ansible.builtin'
+                version="2.12", collection_name='assible.builtin'
             )
 
         # Support inventory scripts that are not prefixed with some
@@ -109,7 +109,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
             try:
                 sp = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             except OSError as e:
-                raise AnsibleParserError("problem running %s (%s)" % (' '.join(cmd), to_native(e)))
+                raise AssibleParserError("problem running %s (%s)" % (' '.join(cmd), to_native(e)))
             (stdout, stderr) = sp.communicate()
 
             path = to_native(path)
@@ -119,25 +119,25 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                 err += '\n'
 
             if sp.returncode != 0:
-                raise AnsibleError("Inventory script (%s) had an execution error: %s " % (path, err))
+                raise AssibleError("Inventory script (%s) had an execution error: %s " % (path, err))
 
             # make sure script output is unicode so that json loader will output unicode strings itself
             try:
                 data = to_text(stdout, errors="strict")
             except Exception as e:
-                raise AnsibleError("Inventory {0} contained characters that cannot be interpreted as UTF-8: {1}".format(path, to_native(e)))
+                raise AssibleError("Inventory {0} contained characters that cannot be interpreted as UTF-8: {1}".format(path, to_native(e)))
 
             try:
                 processed = self.loader.load(data, json_only=True)
             except Exception as e:
-                raise AnsibleError("failed to parse executable inventory script results from {0}: {1}\n{2}".format(path, to_native(e), err))
+                raise AssibleError("failed to parse executable inventory script results from {0}: {1}\n{2}".format(path, to_native(e), err))
 
             # if no other errors happened and you want to force displaying stderr, do so now
             if stderr and self.get_option('always_show_stderr'):
                 self.display.error(msg=to_text(err))
 
             if not isinstance(processed, Mapping):
-                raise AnsibleError("failed to parse executable inventory script results from {0}: needs to be a json dict\n{1}".format(path, err))
+                raise AssibleError("failed to parse executable inventory script results from {0}: needs to be a json dict\n{1}".format(path, err))
 
             group = None
             data_from_meta = None
@@ -161,12 +161,12 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
                     try:
                         got = data_from_meta.get(host, {})
                     except AttributeError as e:
-                        raise AnsibleError("Improperly formatted host information for %s: %s" % (host, to_native(e)), orig_exc=e)
+                        raise AssibleError("Improperly formatted host information for %s: %s" % (host, to_native(e)), orig_exc=e)
 
                 self._populate_host_vars([host], got)
 
         except Exception as e:
-            raise AnsibleParserError(to_native(e))
+            raise AssibleParserError(to_native(e))
 
     def _parse_group(self, group, data):
 
@@ -180,7 +180,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
 
         if 'hosts' in data:
             if not isinstance(data['hosts'], list):
-                raise AnsibleError("You defined a group '%s' with bad data for the host list:\n %s" % (group, data))
+                raise AssibleError("You defined a group '%s' with bad data for the host list:\n %s" % (group, data))
 
             for hostname in data['hosts']:
                 self._hosts.add(hostname)
@@ -188,7 +188,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
 
         if 'vars' in data:
             if not isinstance(data['vars'], dict):
-                raise AnsibleError("You defined a group '%s' with bad data for variables:\n %s" % (group, data))
+                raise AssibleError("You defined a group '%s' with bad data for variables:\n %s" % (group, data))
 
             for k, v in iteritems(data['vars']):
                 self.inventory.set_variable(group, k, v)
@@ -205,11 +205,11 @@ class InventoryModule(BaseInventoryPlugin, Cacheable):
         try:
             sp = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except OSError as e:
-            raise AnsibleError("problem running %s (%s)" % (' '.join(cmd), e))
+            raise AssibleError("problem running %s (%s)" % (' '.join(cmd), e))
         (out, err) = sp.communicate()
         if out.strip() == '':
             return {}
         try:
             return json_dict_bytes_to_unicode(self.loader.load(out, file_name=path))
         except ValueError:
-            raise AnsibleError("could not parse post variable response: %s, %s" % (cmd, out))
+            raise AssibleError("could not parse post variable response: %s, %s" % (cmd, out))

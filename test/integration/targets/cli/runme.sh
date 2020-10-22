@@ -2,6 +2,6 @@
 
 set -eux
 
-ANSIBLE_ROLES_PATH=../ ansible-playbook setup.yml
+ASSIBLE_ROLES_PATH=../ assible-playbook setup.yml
 
 python test-cli.py

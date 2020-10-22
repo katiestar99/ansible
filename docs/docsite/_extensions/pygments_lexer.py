@@ -43,8 +43,8 @@ from pygments import token
 import re
 
 
-class AnsibleOutputPrimaryLexer(RegexLexer):
-    name = 'Ansible-output-primary'
+class AssibleOutputPrimaryLexer(RegexLexer):
+    name = 'Assible-output-primary'
 
     # The following definitions are borrowed from Pygment's JSON lexer.
     # It has been originally authored by Norman Richards.
@@ -156,12 +156,12 @@ class AnsibleOutputPrimaryLexer(RegexLexer):
     }
 
 
-class AnsibleOutputLexer(DelegatingLexer):
-    name = 'Ansible-output'
-    aliases = ['ansible-output']
+class AssibleOutputLexer(DelegatingLexer):
+    name = 'Assible-output'
+    aliases = ['assible-output']
 
     def __init__(self, **options):
-        super(AnsibleOutputLexer, self).__init__(DiffLexer, AnsibleOutputPrimaryLexer, **options)
+        super(AssibleOutputLexer, self).__init__(DiffLexer, AssibleOutputPrimaryLexer, **options)
 
 
 # ####################################################################################################
@@ -179,7 +179,7 @@ def setup(app):
         See http://www.sphinx-doc.org/en/stable/extdev/index.html#dev-extensions.
     """
     for lexer in [
-        AnsibleOutputLexer(startinline=True)
+        AssibleOutputLexer(startinline=True)
     ]:
         app.add_lexer(lexer.name, lexer)
         for alias in lexer.aliases:

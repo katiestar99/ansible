@@ -1,19 +1,19 @@
 # (c) 2018, Matthias Fuchs <matthias.s.fuchs@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -22,9 +22,9 @@ import sys
 
 import pytest
 
-from ansible.errors import AnsibleError, AnsibleFilterError
-from ansible.plugins.filter.core import get_encrypted_password
-from ansible.utils import encrypt
+from assible.errors import AssibleError, AssibleFilterError
+from assible.plugins.filter.core import get_encrypted_password
+from assible.utils import encrypt
 
 
 class passlib_off(object):
@@ -46,7 +46,7 @@ def assert_hash(expected, secret, algorithm, **settings):
         assert encrypt.PasslibHash(algorithm).hash(secret, **settings) == expected
     else:
         assert encrypt.passlib_or_crypt(secret, algorithm, **settings) == expected
-        with pytest.raises(AnsibleError) as excinfo:
+        with pytest.raises(AssibleError) as excinfo:
             encrypt.PasslibHash(algorithm).hash(secret, **settings)
         assert excinfo.value.args[0] == "passlib must be installed to hash with '%s'" % algorithm
 
@@ -105,7 +105,7 @@ def test_password_hash_filter_no_passlib():
         assert not encrypt.PASSLIB_AVAILABLE
         assert get_encrypted_password("123", "md5", salt="12345678") == "$1$12345678$tRy4cXc3kmcfRZVj4iFXr/"
 
-        with pytest.raises(AnsibleFilterError):
+        with pytest.raises(AssibleFilterError):
             get_encrypted_password("123", "crypt16", salt="12")
 
 
@@ -113,7 +113,7 @@ def test_password_hash_filter_passlib():
     if not encrypt.PASSLIB_AVAILABLE:
         pytest.skip("passlib not available")
 
-    with pytest.raises(AnsibleFilterError):
+    with pytest.raises(AssibleFilterError):
         get_encrypted_password("123", "sha257", salt="12345678")
 
     # Uses 5000 rounds by default for sha256 matching crypt behaviour
@@ -141,7 +141,7 @@ def test_do_encrypt_no_passlib():
         assert not encrypt.PASSLIB_AVAILABLE
         assert encrypt.do_encrypt("123", "md5_crypt", salt="12345678") == "$1$12345678$tRy4cXc3kmcfRZVj4iFXr/"
 
-        with pytest.raises(AnsibleError):
+        with pytest.raises(AssibleError):
             encrypt.do_encrypt("123", "crypt16", salt="12")
 
 
@@ -149,7 +149,7 @@ def test_do_encrypt_passlib():
     if not encrypt.PASSLIB_AVAILABLE:
         pytest.skip("passlib not available")
 
-    with pytest.raises(AnsibleError):
+    with pytest.raises(AssibleError):
         encrypt.do_encrypt("123", "sha257_crypt", salt="12345678")
 
     # Uses 5000 rounds by default for sha256 matching crypt behaviour.
@@ -170,21 +170,21 @@ def test_random_salt():
 
 def test_invalid_crypt_salt():
     pytest.raises(
-        AnsibleError,
+        AssibleError,
         encrypt.CryptHash('bcrypt')._salt,
         '_',
         None
     )
     encrypt.CryptHash('bcrypt')._salt('1234567890123456789012', None)
     pytest.raises(
-        AnsibleError,
+        AssibleError,
         encrypt.CryptHash('bcrypt')._salt,
         'kljsdf',
         None
     )
     encrypt.CryptHash('sha256_crypt')._salt('123456', None)
     pytest.raises(
-        AnsibleError,
+        AssibleError,
         encrypt.CryptHash('sha256_crypt')._salt,
         '1234567890123456789012',
         None

@@ -1,30 +1,30 @@
 # (c) 2012-2015, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from units.compat import unittest, mock
-from ansible.errors import AnsibleError
-from ansible.plugins.cache import FactCache, CachePluginAdjudicator
-from ansible.plugins.cache.base import BaseCacheModule
-from ansible.plugins.cache.memory import CacheModule as MemoryCache
-from ansible.plugins.loader import cache_loader
+from assible.errors import AssibleError
+from assible.plugins.cache import FactCache, CachePluginAdjudicator
+from assible.plugins.cache.base import BaseCacheModule
+from assible.plugins.cache.memory import CacheModule as MemoryCache
+from assible.plugins.loader import cache_loader
 
 import pytest
 
@@ -99,7 +99,7 @@ class TestCachePluginAdjudicator(unittest.TestCase):
 class TestFactCache(unittest.TestCase):
 
     def setUp(self):
-        with mock.patch('ansible.constants.CACHE_PLUGIN', 'memory'):
+        with mock.patch('assible.constants.CACHE_PLUGIN', 'memory'):
             self.cache = FactCache()
 
     def test_copy(self):
@@ -110,10 +110,10 @@ class TestFactCache(unittest.TestCase):
         self.assertEqual(a_copy, dict(avocado='fruit', daisy='flower'))
 
     def test_plugin_load_failure(self):
-        # See https://github.com/ansible/ansible/issues/18751
+        # See https://github.com/assible/assible/issues/18751
         # Note no fact_connection config set, so this will fail
-        with mock.patch('ansible.constants.CACHE_PLUGIN', 'json'):
-            self.assertRaisesRegexp(AnsibleError,
+        with mock.patch('assible.constants.CACHE_PLUGIN', 'json'):
+            self.assertRaisesRegexp(AssibleError,
                                     "Unable to load the facts cache plugin.*json.*",
                                     FactCache)
 

@@ -15,7 +15,7 @@ This directory contains the following scripts:
 
 Incidental testing and code coverage occurs when a test covers one or more portions of code as an unintentional side-effect of testing another portion of code.
 
-For example, the ``yum`` integration test intentionally tests the ``yum`` Ansible module.
+For example, the ``yum`` integration test intentionally tests the ``yum`` Assible module.
 However, in doing so it also uses, and unintentionally tests the ``file`` module as well.
 
 As part of the process of migrating modules and plugins into collections, integration tests were identified that provided exclusive incidental code coverage.
@@ -41,17 +41,17 @@ Reducing incidental test coverage, and eventually removing incidental tests invo
 2. Download code coverage data from Shippable for local analysis. 
    Example:
    ```shell
-   # download results to ansible/ansible directory under cwd
+   # download results to assible/assible directory under cwd
    # substitute the correct run number for the Shippable coverage run you want to download
-   hacking/shippable/download.py https://app.shippable.com/github/ansible/ansible/runs/162160 --test-results --run-metadata -v
+   hacking/shippable/download.py https://app.shippable.com/github/assible/assible/runs/162160 --test-results --run-metadata -v
    ```
 3. Analyze code coverage data to see which portions of the code are covered by each test.
    Example:
    ```shell script
-   # make sure ansible-test is in $PATH
+   # make sure assible-test is in $PATH
    source hacking/env-setup
    # run the script using whichever directory results were downloaded into
-   hacking/shippable/incidental.py ansible/ansible/162160
+   hacking/shippable/incidental.py assible/assible/162160
    ```
 4. Create new intentional tests, or extend existing ones, to cover code that is currently covered by incidental tests.
    Reports are created by default in a ``test/results/.tmp/incidental/{hash}/reports/`` directory.
@@ -75,7 +75,7 @@ Repeat step 3 for as many plugins as desired.
 To report on multiple plugins at once, such as all ``filter`` plugins, the following command can be used:
 
 ```shell
-find lib/ansible/plugins/filter -name '*.py' -not -name __init__.py -exec hacking/shippable/incidental.py ansible/ansible/162160 --plugin-path '{}' ';'
+find lib/assible/plugins/filter -name '*.py' -not -name __init__.py -exec hacking/shippable/incidental.py assible/assible/162160 --plugin-path '{}' ';'
 ```
 
 Each report will show the incidental code coverage missing from the plugin's own tests.
@@ -92,10 +92,10 @@ Below is an example of a report:
 
 ```
 Target: incidental_win_psexec
-GitHub: https://github.com/ansible/ansible/blob/6994ef0b554a816f02e0771cb14341a421f7cead/test/integration/targets/incidental_win_psexec
+GitHub: https://github.com/assible/assible/blob/6994ef0b554a816f02e0771cb14341a421f7cead/test/integration/targets/incidental_win_psexec
 
-Source: lib/ansible/executor/task_executor.py (2 arcs, 3/1141 lines):
-GitHub: https://github.com/ansible/ansible/blob/6994ef0b554a816f02e0771cb14341a421f7cead/lib/ansible/executor/task_executor.py
+Source: lib/assible/executor/task_executor.py (2 arcs, 3/1141 lines):
+GitHub: https://github.com/assible/assible/blob/6994ef0b554a816f02e0771cb14341a421f7cead/lib/assible/executor/task_executor.py
 
  705                  if 'rc' in result and result['rc'] not in [0, "0"]:  ### (here) -> 706
  706                      result['failed'] = True  ### 705 -> (here)  ### (here) -> 711

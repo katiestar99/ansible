@@ -9,8 +9,8 @@ from units.compat.mock import MagicMock
 
 import pytest
 
-from ansible.module_utils.six import PY3
-from ansible.utils.display import Display, get_text_width, initialize_locale
+from assible.module_utils.six import PY3
+from assible.utils.display import Display, get_text_width, initialize_locale
 
 
 def test_get_text_width():

@@ -1,5 +1,5 @@
 plugins/modules/bad.py import
-plugins/modules/bad.py pylint:ansible-bad-module-import
-tests/integration/targets/hello/files/bad.py pylint:ansible-bad-function
-tests/integration/targets/hello/files/bad.py pylint:ansible-bad-import
-tests/integration/targets/hello/files/bad.py pylint:ansible-bad-import-from
+plugins/modules/bad.py pylint:assible-bad-module-import
+tests/integration/targets/hello/files/bad.py pylint:assible-bad-function
+tests/integration/targets/hello/files/bad.py pylint:assible-bad-import
+tests/integration/targets/hello/files/bad.py pylint:assible-bad-import-from

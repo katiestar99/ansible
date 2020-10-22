@@ -1,4 +1,4 @@
-# https://github.com/ansible/ansible/issues/49969
+# https://github.com/assible/assible/issues/49969
 - hosts: localhost
   gather_facts: false
   tasks:

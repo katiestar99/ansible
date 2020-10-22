@@ -1,7 +1,7 @@
-.. _vmware_ansible_intro:
+.. _vmware_assible_intro:
 
 **********************************
-Introduction to Ansible for VMware
+Introduction to Assible for VMware
 **********************************
 
 .. contents:: Topics
@@ -9,13 +9,13 @@ Introduction to Ansible for VMware
 Introduction
 ============
 
-Ansible provides various modules to manage VMware infrastructure, which includes datacenter, cluster,
+Assible provides various modules to manage VMware infrastructure, which includes datacenter, cluster,
 host system and virtual machine.
 
 Requirements
 ============
 
-Ansible VMware modules are written on top of `pyVmomi <https://github.com/vmware/pyvmomi>`_.
+Assible VMware modules are written on top of `pyVmomi <https://github.com/vmware/pyvmomi>`_.
 pyVmomi is the Python SDK for the VMware vSphere API that allows user to manage ESX, ESXi,
 and vCenter infrastructure. You can install pyVmomi using pip:
 
@@ -23,7 +23,7 @@ and vCenter infrastructure. You can install pyVmomi using pip:
 
     $ pip install pyvmomi
 
-Ansible VMware modules leveraging latest vSphere(6.0+) features are using `vSphere Automation Python SDK <https://github.com/vmware/vsphere-automation-sdk-python>`_. The vSphere Automation Python SDK also has client libraries, documentation, and sample code for VMware Cloud on AWS Console APIs, NSX VMware Cloud on AWS integration APIs, VMware Cloud on AWS site recovery APIs, NSX-T APIs.
+Assible VMware modules leveraging latest vSphere(6.0+) features are using `vSphere Automation Python SDK <https://github.com/vmware/vsphere-automation-sdk-python>`_. The vSphere Automation Python SDK also has client libraries, documentation, and sample code for VMware Cloud on AWS Console APIs, NSX VMware Cloud on AWS integration APIs, VMware Cloud on AWS site recovery APIs, NSX-T APIs.
 
 You can install vSphere Automation Python SDK using pip:
 

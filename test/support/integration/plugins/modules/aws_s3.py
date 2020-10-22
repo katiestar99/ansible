@@ -1,11 +1,11 @@
 #!/usr/bin/python
-# This file is part of Ansible
+# This file is part of Assible
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -76,9 +76,9 @@ options:
     type: dict
   mode:
     description:
-      - Switches the module behaviour between put (upload), get (download), geturl (return download url, Ansible 1.3+),
-        getstr (download object as string (1.3+)), list (list keys, Ansible 2.0+), create (bucket), delete (bucket),
-        and delobj (delete object, Ansible 2.0+).
+      - Switches the module behaviour between put (upload), get (download), geturl (return download url, Assible 1.3+),
+        getstr (download object as string (1.3+)), list (list keys, Assible 2.0+), create (bucket), delete (bucket),
+        and delobj (delete object, Assible 2.0+).
     required: true
     choices: ['get', 'put', 'delete', 'create', 'geturl', 'getstr', 'delobj', 'list']
     type: str
@@ -297,17 +297,17 @@ s3_keys:
 
 import mimetypes
 import os
-from ansible.module_utils.six.moves.urllib.parse import urlparse
+from assible.module_utils.six.moves.urllib.parse import urlparse
 from ssl import SSLError
-from ansible.module_utils.basic import to_text, to_native
-from ansible.module_utils.aws.core import AnsibleAWSModule
-from ansible.module_utils.aws.s3 import calculate_etag, HAS_MD5
-from ansible.module_utils.ec2 import get_aws_connection_info, boto3_conn
+from assible.module_utils.basic import to_text, to_native
+from assible.module_utils.aws.core import AssibleAWSModule
+from assible.module_utils.aws.s3 import calculate_etag, HAS_MD5
+from assible.module_utils.ec2 import get_aws_connection_info, boto3_conn
 
 try:
     import botocore
 except ImportError:
-    pass  # will be detected by imported AnsibleAWSModule
+    pass  # will be detected by imported AssibleAWSModule
 
 IGNORE_S3_DROP_IN_EXCEPTIONS = ['XNotImplemented', 'NotImplemented']
 
@@ -686,7 +686,7 @@ def main():
         ignore_nonexistent_bucket=dict(default=False, type='bool'),
         encryption_kms_key_id=dict()
     )
-    module = AnsibleAWSModule(
+    module = AssibleAWSModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=[['mode', 'put', ['src', 'object']],
@@ -740,7 +740,7 @@ def main():
     if module.params.get('object'):
         obj = module.params['object']
         # If there is a top level object, do nothing - if the object starts with /
-        # remove the leading character to maintain compatibility with Ansible versions < 2.4
+        # remove the leading character to maintain compatibility with Assible versions < 2.4
         if obj.startswith('/'):
             obj = obj[1:]
 
@@ -748,7 +748,7 @@ def main():
     if obj and mode == "delete":
         module.fail_json(msg='Parameter obj cannot be used with mode=delete')
 
-    # allow eucarc environment variables to be used if ansible vars aren't set
+    # allow eucarc environment variables to be used if assible vars aren't set
     if not s3_url and 'S3_URL' in os.environ:
         s3_url = os.environ['S3_URL']
 

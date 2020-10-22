@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,18 +21,18 @@ __metaclass__ = type
 
 import os
 
-from ansible import constants as C
-from ansible import context
-from ansible.executor.task_queue_manager import TaskQueueManager
-from ansible.module_utils._text import to_text
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.loader import become_loader, connection_loader, shell_loader
-from ansible.playbook import Playbook
-from ansible.template import Templar
-from ansible.utils.helpers import pct_to_int
-from ansible.utils.path import makedirs_safe
-from ansible.utils.ssh_functions import set_default_transport
-from ansible.utils.display import Display
+from assible import constants as C
+from assible import context
+from assible.executor.task_queue_manager import TaskQueueManager
+from assible.module_utils._text import to_text
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.loader import become_loader, connection_loader, shell_loader
+from assible.playbook import Playbook
+from assible.template import Templar
+from assible.utils.helpers import pct_to_int
+from assible.utils.path import makedirs_safe
+from assible.utils.ssh_functions import set_default_transport
+from assible.utils.display import Display
 
 display = Display()
 
@@ -41,7 +41,7 @@ class PlaybookExecutor:
 
     '''
     This is the primary class for executing playbooks, and thus the
-    basis for bin/ansible-playbook operation.
+    basis for bin/assible-playbook operation.
     '''
 
     def __init__(self, playbooks, inventory, variable_manager, loader, passwords):
@@ -64,9 +64,9 @@ class PlaybookExecutor:
                 forks=context.CLIARGS.get('forks'),
             )
 
-        # Note: We run this here to cache whether the default ansible ssh
+        # Note: We run this here to cache whether the default assible ssh
         # executable supports control persist.  Sometime in the future we may
-        # need to enhance this to check that ansible_ssh_executable specified
+        # need to enhance this to check that assible_ssh_executable specified
         # in inventory is also cached.  We can't do this caching at the point
         # where it is used (in task_executor) because that is post-fork and
         # therefore would be discarded after every task.

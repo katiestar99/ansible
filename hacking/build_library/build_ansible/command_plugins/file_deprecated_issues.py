@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2017, Matt Martz <matt@sivel.net>
-# (c) 2019, Ansible Project
+# (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -14,13 +14,13 @@ import time
 
 from collections import defaultdict
 
-from ansible.release import __version__ as ansible_version
+from assible.release import __version__ as assible_version
 
 # Pylint doesn't understand Python3 namespace modules.
 from ..commands import Command  # pylint: disable=relative-beyond-top-level
 from .. import errors  # pylint: disable=relative-beyond-top-level
 
-ANSIBLE_MAJOR_VERSION = '.'.join(ansible_version.split('.')[:2])
+ASSIBLE_MAJOR_VERSION = '.'.join(assible_version.split('.')[:2])
 
 
 def get_token(token_file):
@@ -49,7 +49,7 @@ def parse_deprecations(problems_file_handle):
 
         title = (
             '%s contains deprecated call to be removed in %s' %
-            (component, ANSIBLE_MAJOR_VERSION)
+            (component, ASSIBLE_MAJOR_VERSION)
         )
         deprecated[component].append(
             dict(title=title, path=path, line=line)
@@ -83,7 +83,7 @@ def create_issues(deprecated, body_tmpl, repo):
         line = '\n'.join(i['line'] for i in items)
         body = body_tmpl % dict(component=component, path=path,
                                 line=line,
-                                version=ANSIBLE_MAJOR_VERSION)
+                                version=ASSIBLE_MAJOR_VERSION)
 
         issue = repo.create_issue(title, body=body, labels=['deprecated'])
         print(issue)
@@ -115,7 +115,7 @@ class FileDeprecationTickets(Command):
                                  ' the GITHUB_TOKEN environment variable will be tried')
         parser.add_argument('problems', type=argparse.FileType('r'),
                             help='Path to file containing pylint output for the '
-                                 'ansible-deprecated-version check')
+                                 'assible-deprecated-version check')
 
     @staticmethod
     def main(args):
@@ -138,7 +138,7 @@ class FileDeprecationTickets(Command):
         project_name = args.project_name.strip().lower()
 
         gh_conn = GitHub(token=token)
-        repo = gh_conn.repository('abadger', 'ansible')
+        repo = gh_conn.repository('abadger', 'assible')
 
         if project_name:
             project_column = find_project_todo_column(repo, project_name)

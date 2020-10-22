@@ -4,18 +4,18 @@
 User Guide
 ##########
 
-Welcome to the Ansible User Guide! This guide covers how to work with Ansible, including using the command line, working with inventory, interacting with data, writing tasks, plays, and playbooks; executing playbooks, and reference materials. This page outlines the most common situations and questions that bring readers to this section. If you prefer a traditional table of contents, you can find one at the bottom of the page.
+Welcome to the Assible User Guide! This guide covers how to work with Assible, including using the command line, working with inventory, interacting with data, writing tasks, plays, and playbooks; executing playbooks, and reference materials. This page outlines the most common situations and questions that bring readers to this section. If you prefer a traditional table of contents, you can find one at the bottom of the page.
 
 Getting started
 ===============
 
-* I'd like an overview of how Ansible works. Where can I find:
+* I'd like an overview of how Assible works. Where can I find:
 
   * a :ref:`quick video overview <quickstart_guide>`
   * a :ref:`text introduction <intro_getting_started>`
 
-* I'm ready to learn about Ansible. What :ref:`basic_concepts` do I need to learn?
-* I want to use Ansible without writing a playbook. How do I use :ref:`ad-hoc commands <intro_adhoc>`?
+* I'm ready to learn about Assible. What :ref:`basic_concepts` do I need to learn?
+* I want to use Assible without writing a playbook. How do I use :ref:`ad-hoc commands <intro_adhoc>`?
 
 Writing tasks, plays, and playbooks
 ===================================
@@ -29,10 +29,10 @@ Writing tasks, plays, and playbooks
   * Running tasks only when certain conditions apply with :ref:`conditionals <playbooks_conditionals>` and evaluating conditions with :ref:`tests <playbooks_tests>`
   * Grouping a set of tasks together with :ref:`blocks <playbooks_blocks>`
   * Running tasks only when something has changed with :ref:`handlers <handlers>`
-  * Changing the way Ansible :ref:`handles failures <playbooks_error_handling>`
+  * Changing the way Assible :ref:`handles failures <playbooks_error_handling>`
   * Setting remote :ref:`environment values <playbooks_environment>`
 
-* I want to leverage the power of re-usable Ansible artifacts. How do I create re-usable :ref:`files <playbooks_reuse>` and :ref:`roles <playbooks_reuse_roles>`?
+* I want to leverage the power of re-usable Assible artifacts. How do I create re-usable :ref:`files <playbooks_reuse>` and :ref:`roles <playbooks_reuse_roles>`?
 * I need to incorporate one file or playbook inside another. What is the difference between :ref:`including and importing <playbooks_reuse_includes>`?
 * I want to run selected parts of my playbook. How do I add and use :ref:`tags <tags>`?
 
@@ -47,8 +47,8 @@ Interacting with data
 =====================
 
 * I want to use a single playbook against multiple systems with different attributes. How do I use :ref:`variables <playbooks_variables>` to handle the differences?
-* I want to retrieve data about my systems. How do I access :ref:`Ansible facts <vars_and_facts>`?
-* I need to access sensitive data like passwords with Ansible. How can I protect that data with :ref:`Ansible vault <vault>`?
+* I want to retrieve data about my systems. How do I access :ref:`Assible facts <vars_and_facts>`?
+* I need to access sensitive data like passwords with Assible. How can I protect that data with :ref:`Assible vault <vault>`?
 * I want to change the data I have, so I can use it in a task. How do I use :ref:`filters <playbooks_filters>` to transform my data?
 * I need to retrieve data from an external datastore. How do I use :ref:`lookups <playbooks_lookups>` to access databases and APIs?
 * I want to ask playbook users to supply data. How do I get user input with :ref:`prompts <playbooks_prompts>`?
@@ -61,7 +61,7 @@ Once your playbook is ready to run, you may need to use these topics:
 
 * Executing "dry run" playbooks with :ref:`check mode and diff <check_mode_dry>`
 * Running playbooks while troubleshooting with :ref:`start and step <playbooks_start_and_step>`
-* Correcting tasks during execution with the :ref:`Ansible debugger <playbook_debugger>`
+* Correcting tasks during execution with the :ref:`Assible debugger <playbook_debugger>`
 * Controlling how my playbook executes with :ref:`strategies and more <playbooks_strategies>`
 * Running tasks, plays, and playbooks :ref:`asynchronously <playbooks_async>`
 

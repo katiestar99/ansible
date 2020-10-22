@@ -1,7 +1,7 @@
 #!powershell
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#Requires -Module Ansible.ModuleUtils.WebRequest
+#AssibleRequires -CSharpUtil Assible.Basic
+#Requires -Module Assible.ModuleUtils.WebRequest
 
 $spec = @{
     options = @{
@@ -9,7 +9,7 @@ $spec = @{
     }
 }
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 
 $httpbin_host = $module.Params.httpbin_host
 
@@ -67,7 +67,7 @@ Function Convert-StreamToString {
 
 $tests = [Ordered]@{
     'GET request over http' = {
-        $r = Get-AnsibleWebRequest -Uri "http://$httpbin_host/get"
+        $r = Get-AssibleWebRequest -Uri "http://$httpbin_host/get"
 
         $r.Method | Assert-Equals -Expected 'GET'
         $r.Timeout | Assert-Equals -Expected 30000
@@ -75,7 +75,7 @@ $tests = [Ordered]@{
         $r.Credentials | Assert-Equals -Expected $null
         $r.ClientCertificates.Count | Assert-Equals -Expected 0
         $r.Proxy.Credentials | Assert-Equals -Expected $null
-        $r.UserAgent | Assert-Equals -Expected 'ansible-httpget'
+        $r.UserAgent | Assert-Equals -Expected 'assible-httpget'
 
         $actual = Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -84,7 +84,7 @@ $tests = [Ordered]@{
             Convert-StreamToString -Stream $Stream
         } | ConvertFrom-Json
 
-        $actual.headers.'User-Agent' | Assert-Equals -Expected 'ansible-httpget'
+        $actual.headers.'User-Agent' | Assert-Equals -Expected 'assible-httpget'
         $actual.headers.'Host' | Assert-Equals -Expected $httpbin_host
 
         $module.Result.msg | Assert-Equals -Expected 'OK'
@@ -94,7 +94,7 @@ $tests = [Ordered]@{
 
     'GET request over https' = {
         # url is an alias for the -Uri parameter.
-        $r = Get-AnsibleWebRequest -url "https://$httpbin_host/get"
+        $r = Get-AssibleWebRequest -url "https://$httpbin_host/get"
 
         $r.Method | Assert-Equals -Expected 'GET'
         $r.Timeout | Assert-Equals -Expected 30000
@@ -102,7 +102,7 @@ $tests = [Ordered]@{
         $r.Credentials | Assert-Equals -Expected $null
         $r.ClientCertificates.Count | Assert-Equals -Expected 0
         $r.Proxy.Credentials | Assert-Equals -Expected $null
-        $r.UserAgent | Assert-Equals -Expected 'ansible-httpget'
+        $r.UserAgent | Assert-Equals -Expected 'assible-httpget'
 
         $actual = Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -111,7 +111,7 @@ $tests = [Ordered]@{
             Convert-StreamToString -Stream $Stream
         } | ConvertFrom-Json
 
-        $actual.headers.'User-Agent' | Assert-Equals -Expected 'ansible-httpget'
+        $actual.headers.'User-Agent' | Assert-Equals -Expected 'assible-httpget'
         $actual.headers.'Host' | Assert-Equals -Expected $httpbin_host
     }
 
@@ -123,7 +123,7 @@ $tests = [Ordered]@{
             Method = 'POST'
             Uri = "https://$httpbin_host/post"
         }
-        $r = Get-AnsibleWebRequest @getParams
+        $r = Get-AssibleWebRequest @getParams
 
         $r.Method | Assert-Equals -Expected 'POST'
         $r.Timeout | Assert-Equals -Expected 30000
@@ -132,7 +132,7 @@ $tests = [Ordered]@{
         $r.ClientCertificates.Count | Assert-Equals -Expected 0
         $r.Proxy.Credentials | Assert-Equals -Expected $null
         $r.ContentType | Assert-Equals -Expected 'application/json'
-        $r.UserAgent | Assert-Equals -Expected 'ansible-httpget'
+        $r.UserAgent | Assert-Equals -Expected 'assible-httpget'
 
         $body = New-Object -TypeName System.IO.MemoryStream -ArgumentList @(,
             ([System.Text.Encoding]::UTF8.GetBytes('{"foo":"bar"}'))
@@ -144,13 +144,13 @@ $tests = [Ordered]@{
             Convert-StreamToString -Stream $Stream
         } | ConvertFrom-Json
 
-        $actual.headers.'User-Agent' | Assert-Equals -Expected 'ansible-httpget'
+        $actual.headers.'User-Agent' | Assert-Equals -Expected 'assible-httpget'
         $actual.headers.'Host' | Assert-Equals -Expected $httpbin_host
         $actual.data | Assert-Equals -Expected '{"foo":"bar"}'
     }
 
     'Safe redirection of GET' = {
-        $r = Get-AnsibleWebRequest -Uri "http://$httpbin_host/redirect/2"
+        $r = Get-AssibleWebRequest -Uri "http://$httpbin_host/redirect/2"
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -161,7 +161,7 @@ $tests = [Ordered]@{
     }
 
     'Safe redirection of HEAD' = {
-        $r = Get-AnsibleWebRequest -Uri "http://$httpbin_host/redirect/2" -Method HEAD
+        $r = Get-AssibleWebRequest -Uri "http://$httpbin_host/redirect/2" -Method HEAD
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -176,7 +176,7 @@ $tests = [Ordered]@{
             Method = 'PUT'
             Uri = "http://$httpbin_host/redirect-to?url=https://$httpbin_host/put"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -191,7 +191,7 @@ $tests = [Ordered]@{
             FollowRedirects = 'None'
             Uri = "http://$httpbin_host/redirect/2"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -207,7 +207,7 @@ $tests = [Ordered]@{
             method = 'HEAD'
             Uri = "http://$httpbin_host/redirect/2"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -223,7 +223,7 @@ $tests = [Ordered]@{
             Method = 'PUT'
             Uri = "http://$httpbin_host/redirect-to?url=https://$httpbin_host/put"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -238,7 +238,7 @@ $tests = [Ordered]@{
             FollowRedirects = 'All'
             Uri = "http://$httpbin_host/redirect/2"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -254,7 +254,7 @@ $tests = [Ordered]@{
             method = 'HEAD'
             Uri = "http://$httpbin_host/redirect/2"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -270,7 +270,7 @@ $tests = [Ordered]@{
             Method = 'PUT'
             Uri = "http://$httpbin_host/redirect-to?url=https://$httpbin_host/put"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -285,7 +285,7 @@ $tests = [Ordered]@{
             MaximumRedirection = 4
             Uri = "https://$httpbin_host/redirect/5"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -IgnoreBadResponse -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -300,7 +300,7 @@ $tests = [Ordered]@{
             MaximumRedirection = 1
             Uri = "https://$httpbin_host/redirect/2"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         $failed = $false
         try {
@@ -319,7 +319,7 @@ $tests = [Ordered]@{
             UrlUsername = 'username'
             UrlPassword = 'password'
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -IgnoreBadResponse -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -335,7 +335,7 @@ $tests = [Ordered]@{
             url_password = 'password'
             ForceBasicAuth = $true
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         Invoke-WithWebRequest -Module $module -Request $r -IgnoreBadResponse -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -354,7 +354,7 @@ $tests = [Ordered]@{
             }
             Url = "https://$httpbin_host/get"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         $actual = Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -373,7 +373,7 @@ $tests = [Ordered]@{
             Uri = "https://$httpbin_host/delay/5"
             Timeout = 1
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         $failed = $false
         try {
@@ -390,7 +390,7 @@ $tests = [Ordered]@{
         $filePath = Join-Path $module.Tmpdir -ChildPath 'test.txt'
         Set-Content -LiteralPath $filePath -Value 'test'
 
-        $r = Get-AnsibleWebRequest -Uri $filePath
+        $r = Get-AssibleWebRequest -Uri $filePath
 
         $actual = Invoke-WithWebRequest -Module $module -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -424,8 +424,8 @@ $tests = [Ordered]@{
             mutually_exclusive = @(,@('url', 'test'))
         }
 
-        $testModule = [Ansible.Basic.AnsibleModule]::Create(@(), $spec, @(Get-AnsibleWebRequestSpec))
-        $r = Get-AnsibleWebRequest -Url $testModule.Params.url -Module $testModule
+        $testModule = [Assible.Basic.AssibleModule]::Create(@(), $spec, @(Get-AssibleWebRequestSpec))
+        $r = Get-AssibleWebRequest -Url $testModule.Params.url -Module $testModule
 
         $actual = Invoke-WithWebRequest -Module $testModule -Request $r -Script {
             Param ([System.Net.WebResponse]$Response, [System.IO.Stream]$Stream)
@@ -440,7 +440,7 @@ $tests = [Ordered]@{
         $params = @{
             Uri = "https://$httpbin_host/get"
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         $null -ne $r.Proxy | Assert-Equals -Expected $true
     }
@@ -450,7 +450,7 @@ $tests = [Ordered]@{
             Uri = "https://$httpbin_host/get"
             UseProxy = $false
         }
-        $r = Get-AnsibleWebRequest @params
+        $r = Get-AssibleWebRequest @params
 
         $null -eq $r.Proxy | Assert-Equals -Expected $true
     }

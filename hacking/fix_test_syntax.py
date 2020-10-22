@@ -2,24 +2,24 @@
 # -*- coding: utf-8 -*-
 # (c) 2017, Matt Martz <matt@sivel.net>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Purpose:
 # The purpose of this script is to convert uses of tests as filters to proper jinja test syntax
-# as part of https://github.com/ansible/proposals/issues/83
+# as part of https://github.com/assible/proposals/issues/83
 
 # Notes:
 # This script is imperfect, but was close enough to "fix" all integration tests
@@ -38,7 +38,7 @@ import argparse
 import os
 import re
 
-from ansible.plugins.test import core, files, mathstuff
+from assible.plugins.test import core, files, mathstuff
 
 
 TESTS = list(core.TestModule().tests().keys()) + list(files.TestModule().tests().keys()) + list(mathstuff.TestModule().tests().keys())

@@ -1,7 +1,7 @@
 .. _vmware_http_api_usage:
 
 ***********************************
-Using VMware HTTP API using Ansible
+Using VMware HTTP API using Assible
 ***********************************
 
 .. contents:: Topics
@@ -9,16 +9,16 @@ Using VMware HTTP API using Ansible
 Introduction
 ============
 
-This guide will show you how to utilize Ansible to use VMware HTTP APIs to automate various tasks.
+This guide will show you how to utilize Assible to use VMware HTTP APIs to automate various tasks.
 
 Scenario Requirements
 =====================
 
 * Software
 
-    * Ansible 2.5 or later must be installed.
+    * Assible 2.5 or later must be installed.
 
-    * We recommend installing the latest version with pip: ``pip install Pyvmomi`` on the Ansible control node
+    * We recommend installing the latest version with pip: ``pip install Pyvmomi`` on the Assible control node
       (as the OS packages are usually out of date and incompatible) if you are planning to use any existing VMware modules.
 
 * Hardware
@@ -27,7 +27,7 @@ Scenario Requirements
 
 * Access / Credentials
 
-    * Ansible (or the target server) must have network access to either the vCenter server or the ESXi server
+    * Assible (or the target server) must have network access to either the vCenter server or the ESXi server
 
     * Username and Password for vCenter
 
@@ -43,8 +43,8 @@ Caveats
 Example Description
 ===================
 
-With the following Ansible playbook you can find the VMware ESXi host system(s) and can perform various tasks depending on the list of host systems.
-This is a generic example to show how Ansible can be utilized to consume VMware HTTP APIs.
+With the following Assible playbook you can find the VMware ESXi host system(s) and can perform various tasks depending on the list of host systems.
+This is a generic example to show how Assible can be utilized to consume VMware HTTP APIs.
 
 .. code-block:: yaml
 
@@ -55,7 +55,7 @@ This is a generic example to show how Ansible can be utilized to consume VMware 
       vars_files:
         - vcenter_vars.yml
       vars:
-        ansible_python_interpreter: "/usr/bin/env python3"
+        assible_python_interpreter: "/usr/bin/env python3"
       tasks:
         - name: Login into vCenter and get cookies
           uri:
@@ -89,7 +89,7 @@ This is a generic example to show how Ansible can be utilized to consume VMware 
           register: host_config_results
 
 
-Since Ansible utilizes the VMware HTTP API using the ``uri`` module to perform actions, in this use case it will be connecting directly to the VMware HTTP API from localhost.
+Since Assible utilizes the VMware HTTP API using the ``uri`` module to perform actions, in this use case it will be connecting directly to the VMware HTTP API from localhost.
 
 This means that playbooks will not be running from the vCenter or ESXi Server.
 
@@ -101,9 +101,9 @@ Before you begin, make sure you have:
 - Username and password for the vCenter server
 - Version of vCenter is at least 6.5
 
-For now, you will be entering these directly, but in a more advanced playbook this can be abstracted out and stored in a more secure fashion using :ref:`ansible-vault` or using `Ansible Tower credentials <https://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html>`_.
+For now, you will be entering these directly, but in a more advanced playbook this can be abstracted out and stored in a more secure fashion using :ref:`assible-vault` or using `Assible Tower credentials <https://docs.assible.com/assible-tower/latest/html/userguide/credentials.html>`_.
 
-If your vCenter server is not setup with proper CA certificates that can be verified from the Ansible server, then it is necessary to disable validation of these certificates by using the ``validate_certs`` parameter. To do this you need to set ``validate_certs=False`` in your playbook.
+If your vCenter server is not setup with proper CA certificates that can be verified from the Assible server, then it is necessary to disable validation of these certificates by using the ``validate_certs`` parameter. To do this you need to set ``validate_certs=False`` in your playbook.
 
 As you can see, we are using the ``uri`` module in first task to login into the vCenter server and storing result in the ``login`` variable using register. In the second task, using cookies from the first task we are gathering information about the ESXi host system.
 
@@ -155,7 +155,7 @@ If your playbook fails:
 
 .. seealso::
 
-    `VMware vSphere and Ansible From Zero to Useful by @arielsanchezmor <https://www.youtube.com/watch?v=0_qwOKlBlo8>`_
+    `VMware vSphere and Assible From Zero to Useful by @arielsanchezmor <https://www.youtube.com/watch?v=0_qwOKlBlo8>`_
         vBrownBag session video related to VMware HTTP APIs
-    `Sample Playbooks for using VMware HTTP APIs <https://github.com/Akasurde/ansible-vmware-http>`_
-        GitHub repo for examples of Ansible playbook to manage VMware using HTTP APIs
+    `Sample Playbooks for using VMware HTTP APIs <https://github.com/Akasurde/assible-vmware-http>`_
+        GitHub repo for examples of Assible playbook to manage VMware using HTTP APIs

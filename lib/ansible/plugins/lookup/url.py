@@ -1,5 +1,5 @@
-# (c) 2015, Brian Coca <bcoca@ansible.com>
-# (c) 2012-17 Ansible Project
+# (c) 2015, Brian Coca <bcoca@assible.com>
+# (c) 2012-17 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -45,9 +45,9 @@ options:
     version_added: "2.10"
     default: False
     vars:
-        - name: ansible_lookup_url_force
+        - name: assible_lookup_url_force
     env:
-        - name: ANSIBLE_LOOKUP_URL_FORCE
+        - name: ASSIBLE_LOOKUP_URL_FORCE
     ini:
         - section: url_lookup
           key: force
@@ -57,9 +57,9 @@ options:
     version_added: "2.10"
     default: 10
     vars:
-        - name: ansible_lookup_url_timeout
+        - name: assible_lookup_url_timeout
     env:
-        - name: ANSIBLE_LOOKUP_URL_TIMEOUT
+        - name: ASSIBLE_LOOKUP_URL_TIMEOUT
     ini:
         - section: url_lookup
           key: timeout
@@ -68,9 +68,9 @@ options:
     type: string
     version_added: "2.10"
     vars:
-        - name: ansible_lookup_url_agent
+        - name: assible_lookup_url_agent
     env:
-        - name: ANSIBLE_LOOKUP_URL_AGENT
+        - name: ASSIBLE_LOOKUP_URL_AGENT
     ini:
         - section: url_lookup
           key: agent
@@ -80,9 +80,9 @@ options:
     version_added: "2.10"
     default: False
     vars:
-        - name: ansible_lookup_url_agent
+        - name: assible_lookup_url_agent
     env:
-        - name: ANSIBLE_LOOKUP_URL_AGENT
+        - name: ASSIBLE_LOOKUP_URL_AGENT
     ini:
         - section: url_lookup
           key: agent
@@ -92,23 +92,23 @@ options:
     version_added: "2.10"
     default: 'urllib2'
     vars:
-        - name: ansible_lookup_url_follow_redirects
+        - name: assible_lookup_url_follow_redirects
     env:
-        - name: ANSIBLE_LOOKUP_URL_FOLLOW_REDIRECTS
+        - name: ASSIBLE_LOOKUP_URL_FOLLOW_REDIRECTS
     ini:
         - section: url_lookup
           key: follow_redirects
   use_gssapi:
     description:
     - Use GSSAPI handler of requests
-    - As of Ansible 2.11, GSSAPI credentials can be specified with I(username) and I(password).
+    - As of Assible 2.11, GSSAPI credentials can be specified with I(username) and I(password).
     type: boolean
     version_added: "2.10"
     default: False
     vars:
-        - name: ansible_lookup_url_use_gssapi
+        - name: assible_lookup_url_use_gssapi
     env:
-        - name: ANSIBLE_LOOKUP_URL_USE_GSSAPI
+        - name: ASSIBLE_LOOKUP_URL_USE_GSSAPI
     ini:
         - section: url_lookup
           key: use_gssapi
@@ -117,9 +117,9 @@ options:
     type: string
     version_added: "2.10"
     vars:
-        - name: ansible_lookup_url_unix_socket
+        - name: assible_lookup_url_unix_socket
     env:
-        - name: ANSIBLE_LOOKUP_URL_UNIX_SOCKET
+        - name: ASSIBLE_LOOKUP_URL_UNIX_SOCKET
     ini:
         - section: url_lookup
           key: unix_socket
@@ -128,9 +128,9 @@ options:
     type: string
     version_added: "2.10"
     vars:
-        - name: ansible_lookup_url_ca_path
+        - name: assible_lookup_url_ca_path
     env:
-        - name: ANSIBLE_LOOKUP_URL_CA_PATH
+        - name: ASSIBLE_LOOKUP_URL_CA_PATH
     ini:
         - section: url_lookup
           key: ca_path
@@ -139,9 +139,9 @@ options:
     type: list
     version_added: "2.10"
     vars:
-        - name: ansible_lookup_url_unredir_headers
+        - name: assible_lookup_url_unredir_headers
     env:
-        - name: ANSIBLE_LOOKUP_URL_UNREDIR_HEADERS
+        - name: ASSIBLE_LOOKUP_URL_UNREDIR_HEADERS
     ini:
         - section: url_lookup
           key: unredirected_headers
@@ -172,12 +172,12 @@ RETURN = """
     elements: str
 """
 
-from ansible.errors import AnsibleError
-from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.urls import open_url, ConnectionError, SSLValidationError
-from ansible.plugins.lookup import LookupBase
-from ansible.utils.display import Display
+from assible.errors import AssibleError
+from assible.module_utils.six.moves.urllib.error import HTTPError, URLError
+from assible.module_utils._text import to_text, to_native
+from assible.module_utils.urls import open_url, ConnectionError, SSLValidationError
+from assible.plugins.lookup import LookupBase
+from assible.utils.display import Display
 
 display = Display()
 
@@ -207,13 +207,13 @@ class LookupModule(LookupBase):
                                     ca_path=self.get_option('ca_path'),
                                     unredirected_headers=self.get_option('unredirected_headers'))
             except HTTPError as e:
-                raise AnsibleError("Received HTTP error for %s : %s" % (term, to_native(e)))
+                raise AssibleError("Received HTTP error for %s : %s" % (term, to_native(e)))
             except URLError as e:
-                raise AnsibleError("Failed lookup url for %s : %s" % (term, to_native(e)))
+                raise AssibleError("Failed lookup url for %s : %s" % (term, to_native(e)))
             except SSLValidationError as e:
-                raise AnsibleError("Error validating the server's certificate for %s: %s" % (term, to_native(e)))
+                raise AssibleError("Error validating the server's certificate for %s: %s" % (term, to_native(e)))
             except ConnectionError as e:
-                raise AnsibleError("Error connecting to %s: %s" % (term, to_native(e)))
+                raise AssibleError("Error connecting to %s: %s" % (term, to_native(e)))
 
             if self.get_option('split_lines'):
                 for line in response.read().splitlines():

@@ -2,7 +2,7 @@
 
 echo '{
     "changed": false,
-    "ansible_facts": {
+    "assible_facts": {
         "factstwo": "from facts_two module",
         "common_fact": "also from facts_two module",
 		"common_dict_fact": {

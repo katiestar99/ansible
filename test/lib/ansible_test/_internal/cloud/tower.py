@@ -23,7 +23,7 @@ from . import (
 )
 
 from ..core_ci import (
-    AnsibleCoreCI,
+    AssibleCoreCI,
 )
 
 
@@ -77,7 +77,7 @@ class TowerCloudProvider(CloudProvider):
         cli_version = tower_cli_version_map.get(self.version, fallback)
 
         if not cli_version:
-            raise ApplicationError('Mapping to ansible-tower-cli version required for Tower version: %s' % self.version)
+            raise ApplicationError('Mapping to assible-tower-cli version required for Tower version: %s' % self.version)
 
         self._set_cloud_config('tower_cli_version', cli_version)
 
@@ -96,7 +96,7 @@ class TowerCloudProvider(CloudProvider):
         self.check_tower_version()
 
     def _setup_dynamic(self):
-        """Request Tower credentials through the Ansible Core CI service."""
+        """Request Tower credentials through the Assible Core CI service."""
         display.info('Provisioning %s cloud environment.' % self.platform, verbosity=1)
 
         # temporary solution to allow version selection
@@ -141,7 +141,7 @@ class TowerCloudEnvironment(CloudEnvironment):
 
         display.info('Installing Tower CLI version: %s' % tower_cli_version)
 
-        cmd = self.args.pip_command + ['install', '--disable-pip-version-check', 'ansible-tower-cli==%s' % tower_cli_version]
+        cmd = self.args.pip_command + ['install', '--disable-pip-version-check', 'assible-tower-cli==%s' % tower_cli_version]
 
         run_command(self.args, cmd)
 
@@ -180,11 +180,11 @@ class TowerCloudEnvironment(CloudEnvironment):
 
         env_vars = config.environment
 
-        ansible_vars = dict((key.lower(), value) for key, value in env_vars.items())
+        assible_vars = dict((key.lower(), value) for key, value in env_vars.items())
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )
 
 
@@ -244,7 +244,7 @@ def get_tower_aci(args, version=None):
     """
     :type args: EnvironmentConfig
     :type version: str | None
-    :rtype: AnsibleCoreCI
+    :rtype: AssibleCoreCI
     """
     if version:
         persist = True
@@ -252,4 +252,4 @@ def get_tower_aci(args, version=None):
         version = ''
         persist = False
 
-    return AnsibleCoreCI(args, 'tower', version, persist=persist, stage=args.remote_stage, provider=args.remote_provider)
+    return AssibleCoreCI(args, 'tower', version, persist=persist, stage=args.remote_stage, provider=args.remote_provider)

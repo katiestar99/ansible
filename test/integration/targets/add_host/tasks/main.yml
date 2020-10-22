@@ -1,32 +1,32 @@
 # test code for the add_host action
-# (c) 2015, Matt Davis <mdavis@ansible.com>
+# (c) 2015, Matt Davis <mdavis@assible.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
-# See https://github.com/ansible/ansible/issues/36045
+# See https://github.com/assible/assible/issues/36045
 - set_fact:
     inventory_data:
-      ansible_ssh_common_args: "-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-      # ansible_ssh_host: "127.0.0.3"
-      ansible_host: "127.0.0.3"
-      ansible_ssh_pass: "foobar"
-      # ansible_ssh_port: "2222"
-      ansible_port: "2222"
-      ansible_ssh_private_key_file: "/tmp/inventory-cloudj9cGz5/identity"
-      ansible_ssh_user: "root"
+      assible_ssh_common_args: "-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+      # assible_ssh_host: "127.0.0.3"
+      assible_host: "127.0.0.3"
+      assible_ssh_pass: "foobar"
+      # assible_ssh_port: "2222"
+      assible_port: "2222"
+      assible_ssh_private_key_file: "/tmp/inventory-cloudj9cGz5/identity"
+      assible_ssh_user: "root"
       hostname: "newdynamichost2"
 
 - name: Show inventory_data for 36045
@@ -46,7 +46,7 @@
     - hostvars['newdynamichost2'] is defined
     - hostvars['newdynamichost2'].group_names is defined
 
-#  end of https://github.com/ansible/ansible/issues/36045 related tests
+#  end of https://github.com/assible/assible/issues/36045 related tests
 
 - name: add a host to the runtime inventory
   add_host:

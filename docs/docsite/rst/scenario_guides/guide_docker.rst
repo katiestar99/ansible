@@ -1,7 +1,7 @@
 Docker Guide
 ============
 
-Ansible offers the following modules for orchestrating Docker containers:
+Assible offers the following modules for orchestrating Docker containers:
 
     docker_compose
         Use your existing Docker compose files to orchestrate containers on a single Docker daemon or on
@@ -26,24 +26,24 @@ Ansible offers the following modules for orchestrating Docker containers:
         Dynamically builds an inventory of all the available containers from a set of one or more Docker hosts.
 
 
-Ansible 2.1.0 includes major updates to the Docker modules, marking the start of a project to create a complete and
+Assible 2.1.0 includes major updates to the Docker modules, marking the start of a project to create a complete and
 integrated set of tools for orchestrating containers. In addition to the above modules, we are also working on the
 following:
 
-Still using Dockerfile to build images? Check out `ansible-bender <https://github.com/ansible-community/ansible-bender>`_,
-and start building images from your Ansible playbooks.
+Still using Dockerfile to build images? Check out `assible-bender <https://github.com/assible-community/assible-bender>`_,
+and start building images from your Assible playbooks.
 
-Use `Ansible Operator <https://learn.openshift.com/ansibleop/ansible-operator-overview/>`_
+Use `Assible Operator <https://learn.openshift.com/assibleop/assible-operator-overview/>`_
 to launch your docker-compose file on `OpenShift <https://www.okd.io/>`_. Go from an app on your laptop to a fully
 scalable app in the cloud with Kubernetes in just a few moments.
 
-There's more planned. See the latest ideas and thinking at the `Ansible proposal repo <https://github.com/ansible/proposals/tree/master/docker>`_.
+There's more planned. See the latest ideas and thinking at the `Assible proposal repo <https://github.com/assible/proposals/tree/master/docker>`_.
 
 Requirements
 ------------
 
 Using the docker modules requires having the `Docker SDK for Python <https://docker-py.readthedocs.io/en/stable/>`_
-installed on the host running Ansible. You will need to have >= 1.7.0 installed. For Python 2.7 or
+installed on the host running Assible. You will need to have >= 1.7.0 installed. For Python 2.7 or
 Python 3, you can install it as follows:
 
 .. code-block:: bash
@@ -58,7 +58,7 @@ so you need to install it as follows:
     $ pip install 'docker-py>=1.7.0'
 
 Please note that only one of ``docker`` and ``docker-py`` must be installed. Installing both will result in
-a broken installation. If this happens, Ansible will detect it and inform you about it::
+a broken installation. If this happens, Assible will detect it and inform you about it::
 
     Cannot have both the docker-py and docker python modules installed together as they use the same
     namespace and cause a corrupt installation. Please uninstall both packages, and re-install only
@@ -130,7 +130,7 @@ Environment Variables
 .....................
 
 Control how the modules connect to the Docker API by setting the following variables in the environment of the host
-running Ansible:
+running Assible:
 
     DOCKER_HOST
         The URL or Unix socket path used to connect to the Docker API.
@@ -186,11 +186,11 @@ examples to get you started:
     DOCKER_HOST=tcp://localhost:4243 ./docker.py --pretty
 
     # Any container's ssh port exposed on 0.0.0.0 will be mapped to
-    # another IP address (where Ansible will attempt to connect via SSH)
+    # another IP address (where Assible will attempt to connect via SSH)
     DOCKER_DEFAULT_IP=192.0.2.5 ./docker.py --pretty
 
     # Run as input to a playbook:
-    ansible-playbook -i ./docker.py docker_inventory_test.yml
+    assible-playbook -i ./docker.py docker_inventory_test.yml
 
     # Simple playbook to invoke with the above example:
 
@@ -204,7 +204,7 @@ examples to get you started:
 Configuration
 .............
 You can control the behavior of the inventory script by defining environment variables, or
-creating a docker.yml file (sample provided in https://raw.githubusercontent.com/ansible-collections/community.general/main/scripts/inventory/docker.py). The order of precedence is the docker.yml
+creating a docker.yml file (sample provided in https://raw.githubusercontent.com/assible-collections/community.general/main/scripts/inventory/docker.py). The order of precedence is the docker.yml
 file and then environment variables.
 
 
@@ -253,7 +253,7 @@ script:
         The private port (container port) on which SSH is listening for connections. Defaults to 22.
 
     DOCKER_DEFAULT_IP:
-        The IP address to assign to ansible_host when the container's SSH port is mapped to interface '0.0.0.0'.
+        The IP address to assign to assible_host when the container's SSH port is mapped to interface '0.0.0.0'.
 
 
 Configuration File
@@ -319,7 +319,7 @@ For the default host and each host in the hosts list define the following attrib
      default: 60
 
   default_ip:
-     description: The IP address to assign to ansible_host when the container's SSH port is mapped to interface
+     description: The IP address to assign to assible_host when the container's SSH port is mapped to interface
      '0.0.0.0'.
      required: false
      default: 127.0.0.1

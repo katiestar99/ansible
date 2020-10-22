@@ -26,27 +26,27 @@ import sys
 
 from contextlib import contextmanager
 
-from ansible.executor.powershell.module_manifest import PSModuleDepFinder
-from ansible.module_utils.basic import FILE_COMMON_ARGUMENTS
-from ansible.module_utils.six import reraise
-from ansible.module_utils._text import to_bytes, to_text
+from assible.executor.powershell.module_manifest import PSModuleDepFinder
+from assible.module_utils.basic import FILE_COMMON_ARGUMENTS
+from assible.module_utils.six import reraise
+from assible.module_utils._text import to_bytes, to_text
 
 from .utils import CaptureStd, find_executable, get_module_name_from_filename
 
 
-class AnsibleModuleCallError(RuntimeError):
+class AssibleModuleCallError(RuntimeError):
     pass
 
 
-class AnsibleModuleImportError(ImportError):
+class AssibleModuleImportError(ImportError):
     pass
 
 
-class AnsibleModuleNotInitialized(Exception):
+class AssibleModuleNotInitialized(Exception):
     pass
 
 
-class _FakeAnsibleModuleInit:
+class _FakeAssibleModuleInit:
     def __init__(self):
         self.args = tuple()
         self.kwargs = {}
@@ -56,7 +56,7 @@ class _FakeAnsibleModuleInit:
         self.args = args
         self.kwargs = kwargs
         self.called = True
-        raise AnsibleModuleCallError('AnsibleModuleCallError')
+        raise AssibleModuleCallError('AssibleModuleCallError')
 
 
 def _fake_load_params():
@@ -68,24 +68,24 @@ def setup_env(filename):
     # Used to clean up imports later
     pre_sys_modules = list(sys.modules.keys())
 
-    fake = _FakeAnsibleModuleInit()
-    module = __import__('ansible.module_utils.basic').module_utils.basic
-    _original_init = module.AnsibleModule.__init__
+    fake = _FakeAssibleModuleInit()
+    module = __import__('assible.module_utils.basic').module_utils.basic
+    _original_init = module.AssibleModule.__init__
     _original_load_params = module._load_params
-    setattr(module.AnsibleModule, '__init__', fake)
+    setattr(module.AssibleModule, '__init__', fake)
     setattr(module, '_load_params', _fake_load_params)
 
     try:
         yield fake
     finally:
-        setattr(module.AnsibleModule, '__init__', _original_init)
+        setattr(module.AssibleModule, '__init__', _original_init)
         setattr(module, '_load_params', _original_load_params)
 
         # Clean up imports to prevent issues with mutable data being used in modules
         for k in list(sys.modules.keys()):
-            # It's faster if we limit to items in ansible.module_utils
+            # It's faster if we limit to items in assible.module_utils
             # But if this causes problems later, we should remove it
-            if k not in pre_sys_modules and k.startswith('ansible.module_utils.'):
+            if k not in pre_sys_modules and k.startswith('assible.module_utils.'):
                 del sys.modules[k]
 
 
@@ -104,12 +104,12 @@ def get_ps_argument_spec(filename, collection):
     ps_dep_finder = PSModuleDepFinder()
     ps_dep_finder.scan_module(b_module_data, fqn=fqc_name)
 
-    # For ps_argspec.ps1 to compile Ansible.Basic it also needs the AddType module_util.
-    ps_dep_finder._add_module((b"Ansible.ModuleUtils.AddType", ".psm1", None), wrapper=False)
+    # For ps_argspec.ps1 to compile Assible.Basic it also needs the AddType module_util.
+    ps_dep_finder._add_module((b"Assible.ModuleUtils.AddType", ".psm1", None), wrapper=False)
 
     util_manifest = json.dumps({
         'module_path': to_text(module_path, errors='surrogiate_or_strict'),
-        'ansible_basic': ps_dep_finder.cs_utils_module["Ansible.Basic"]['path'],
+        'assible_basic': ps_dep_finder.cs_utils_module["Assible.Basic"]['path'],
         'ps_utils': dict([(name, info['path']) for name, info in ps_dep_finder.ps_modules.items()]),
     })
 
@@ -119,7 +119,7 @@ def get_ps_argument_spec(filename, collection):
     stdout, stderr = proc.communicate()
 
     if proc.returncode != 0:
-        raise AnsibleModuleImportError("STDOUT:\n%s\nSTDERR:\n%s" % (stdout.decode('utf-8'), stderr.decode('utf-8')))
+        raise AssibleModuleImportError("STDOUT:\n%s\nSTDERR:\n%s" % (stdout.decode('utf-8'), stderr.decode('utf-8')))
 
     kwargs = json.loads(stdout)
 
@@ -136,22 +136,22 @@ def get_py_argument_spec(filename, collection):
         try:
             with CaptureStd():
                 runpy.run_module(name, run_name='__main__', alter_sys=True)
-        except AnsibleModuleCallError:
+        except AssibleModuleCallError:
             pass
         except BaseException as e:
             # we want to catch all exceptions here, including sys.exit
-            reraise(AnsibleModuleImportError, AnsibleModuleImportError('%s' % e), sys.exc_info()[2])
+            reraise(AssibleModuleImportError, AssibleModuleImportError('%s' % e), sys.exc_info()[2])
 
         if not fake.called:
-            raise AnsibleModuleNotInitialized()
+            raise AssibleModuleNotInitialized()
 
     try:
         try:
             # for ping kwargs == {'argument_spec':{'data':{'type':'str','default':'pong'}}, 'supports_check_mode':True}
             argument_spec = fake.kwargs['argument_spec']
             # If add_file_common_args is truish, add options from FILE_COMMON_ARGUMENTS when not present.
-            # This is the only modification to argument_spec done by AnsibleModule itself, and which is
-            # not caught by setup_env's AnsibleModule replacement
+            # This is the only modification to argument_spec done by AssibleModule itself, and which is
+            # not caught by setup_env's AssibleModule replacement
             if fake.kwargs.get('add_file_common_args'):
                 for k, v in FILE_COMMON_ARGUMENTS.items():
                     if k not in argument_spec:

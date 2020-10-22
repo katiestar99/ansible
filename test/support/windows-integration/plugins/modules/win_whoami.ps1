@@ -1,15 +1,15 @@
 #!powershell
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.CamelConversion
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.CamelConversion
 
 $ErrorActionPreference = "Stop"
 
 $params = Parse-Args $args -supports_check_mode $true
-$_remote_tmp = Get-AnsibleParam $params "_ansible_remote_tmp" -type "path" -default $env:TMP
+$_remote_tmp = Get-AssibleParam $params "_assible_remote_tmp" -type "path" -default $env:TMP
 
 $session_util = @'
 using System;
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 
-namespace Ansible
+namespace Assible
 {
     public class SessionInfo
     {
@@ -787,7 +787,7 @@ $env:TMP = $_remote_tmp
 Add-Type -TypeDefinition $session_util
 $env:TMP = $original_tmp
 
-$session_info = [Ansible.SessionUtil]::GetSessionInfo()
+$session_info = [Assible.SessionUtil]::GetSessionInfo()
 
 Function Convert-Value($value) {
     $new_value = $value
@@ -807,7 +807,7 @@ Function Convert-Value($value) {
             }
             $new_value[$entry.Name] = $entry_value
         }
-    } elseif ($value -is [Ansible.Sid]) {
+    } elseif ($value -is [Assible.Sid]) {
         $new_value = @{
             sid = $value.SidString
             account_name = $value.AccountName
@@ -825,7 +825,7 @@ $result = @{
     changed = $false
 }
 
-$properties = [type][Ansible.SessionInfo]
+$properties = [type][Assible.SessionInfo]
 foreach ($property in $properties.DeclaredProperties) {
     $property_name = $property.Name
     $property_value = $session_info.$property_name

@@ -1,5 +1,5 @@
 ---
-- debug: msg="START vyos/backup.yaml on connection={{ ansible_connection }}"
+- debug: msg="START vyos/backup.yaml on connection={{ assible_connection }}"
 
 - name: collect any backup files
   find:
@@ -110,4 +110,4 @@
     that:
       - "backup_file.files is defined"
 
-- debug: msg="END vyos/backup.yaml on connection={{ ansible_connection }}"
+- debug: msg="END vyos/backup.yaml on connection={{ assible_connection }}"

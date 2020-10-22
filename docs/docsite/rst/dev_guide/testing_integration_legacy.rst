@@ -8,7 +8,7 @@ Testing using the Legacy Integration system
 
 .. contents:: Topics
 
-This page details how to run the integration tests that haven't been ported to the new ``ansible-test`` framework.
+This page details how to run the integration tests that haven't been ported to the new ``assible-test`` framework.
 
 The following areas are still tested using the legacy ``make tests`` command:
 
@@ -23,7 +23,7 @@ The following areas are still tested using the legacy ``make tests`` command:
 * jenkins
 * rackspace
 
-Over time the above list will be reduced as tests are ported to the ``ansible-test`` framework.
+Over time the above list will be reduced as tests are ported to the ``assible-test`` framework.
 
 
 Running Cloud Tests
@@ -57,7 +57,7 @@ for syntax help.
 IAM policies for AWS
 ====================
 
-In order to run the tests in an AWS account ansible needs fairly wide ranging powers which
+In order to run the tests in an AWS account assible needs fairly wide ranging powers which
 can be provided to a dedicated user or temporary credentials using a specific policy
 configured in the AWS account.
 
@@ -76,7 +76,7 @@ Other Definitions required
 --------------------------
 
 Apart from installing the policy and giving it to the user identity running
-the tests, a lambda role `ansible_integration_tests` has to be created which
+the tests, a lambda role `assible_integration_tests` has to be created which
 has lambda basic execution privileges.
 
 
@@ -85,7 +85,7 @@ Running Tests
 
 The tests are invoked via a ``Makefile``.
 
-If you haven't already got Ansible available use the local checkout by doing::
+If you haven't already got Assible available use the local checkout by doing::
 
   source hacking/env-setup
 

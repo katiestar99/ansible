@@ -1,5 +1,5 @@
-# (C) 2013, James Cammarata <jcammarata@ansible.com>
-# Copyright: (c) 2019, Ansible Project
+# (C) 2013, James Cammarata <jcammarata@assible.com>
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -12,15 +12,15 @@ import tarfile
 import uuid
 import time
 
-from ansible.errors import AnsibleError
-from ansible.galaxy.user_agent import user_agent
-from ansible.module_utils.six import string_types
-from ansible.module_utils.six.moves.urllib.error import HTTPError
-from ansible.module_utils.six.moves.urllib.parse import quote as urlquote, urlencode, urlparse
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.urls import open_url, prepare_multipart
-from ansible.utils.display import Display
-from ansible.utils.hashing import secure_hash_s
+from assible.errors import AssibleError
+from assible.galaxy.user_agent import user_agent
+from assible.module_utils.six import string_types
+from assible.module_utils.six.moves.urllib.error import HTTPError
+from assible.module_utils.six.moves.urllib.parse import quote as urlquote, urlencode, urlparse
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.urls import open_url, prepare_multipart
+from assible.utils.display import Display
+from assible.utils.hashing import secure_hash_s
 
 try:
     from urllib.parse import urlparse
@@ -48,12 +48,12 @@ def g_connect(versions):
                 n_url = self.api_server
                 error_context_msg = 'Error when finding available api versions from %s (%s)' % (self.name, n_url)
 
-                if self.api_server == 'https://galaxy.ansible.com' or self.api_server == 'https://galaxy.ansible.com/':
-                    n_url = 'https://galaxy.ansible.com/api/'
+                if self.api_server == 'https://galaxy.assible.com' or self.api_server == 'https://galaxy.assible.com/':
+                    n_url = 'https://galaxy.assible.com/api/'
 
                 try:
                     data = self._call_galaxy(n_url, method='GET', error_context_msg=error_context_msg)
-                except (AnsibleError, GalaxyError, ValueError, KeyError) as err:
+                except (AssibleError, GalaxyError, ValueError, KeyError) as err:
                     # Either the URL doesnt exist, or other error. Or the URL exists, but isn't a galaxy API
                     # root (not JSON, no 'available_versions') so try appending '/api/'
                     if n_url.endswith('/api') or n_url.endswith('/api/'):
@@ -69,7 +69,7 @@ def g_connect(versions):
                         raise
 
                 if 'available_versions' not in data:
-                    raise AnsibleError("Tried to find galaxy API root at %s but no 'available_versions' are available "
+                    raise AssibleError("Tried to find galaxy API root at %s but no 'available_versions' are available "
                                        "on %s" % (n_url, self.api_server))
 
                 # Update api_server to point to the "real" API root, which in this case could have been the configured
@@ -90,7 +90,7 @@ def g_connect(versions):
             available_versions = set(self._available_api_versions.keys())
             common_versions = set(versions).intersection(available_versions)
             if not common_versions:
-                raise AnsibleError("Galaxy action %s requires API versions '%s' but only '%s' are available on %s %s"
+                raise AssibleError("Galaxy action %s requires API versions '%s' but only '%s' are available on %s %s"
                                    % (method.__name__, ", ".join(versions), ", ".join(available_versions),
                                       self.name, self.api_server))
 
@@ -103,7 +103,7 @@ def _urljoin(*args):
     return '/'.join(to_native(a, errors='surrogate_or_strict').strip('/') for a in args + ('',) if a)
 
 
-class GalaxyError(AnsibleError):
+class GalaxyError(AssibleError):
     """ Error for bad Galaxy server responses. """
 
     def __init__(self, http_error, message):
@@ -166,7 +166,7 @@ class CollectionVersionMetadata:
 
 
 class GalaxyAPI:
-    """ This class is meant to be used as a API client for an Ansible Galaxy server """
+    """ This class is meant to be used as a API client for an Assible Galaxy server """
 
     def __init__(self, galaxy, name, url, username=None, password=None, token=None, validate_certs=True,
                  available_api_versions=None):
@@ -198,13 +198,13 @@ class GalaxyAPI:
         except HTTPError as e:
             raise GalaxyError(e, error_context_msg)
         except Exception as e:
-            raise AnsibleError("Unknown error when attempting to call Galaxy at '%s': %s" % (url, to_native(e)))
+            raise AssibleError("Unknown error when attempting to call Galaxy at '%s': %s" % (url, to_native(e)))
 
         resp_data = to_text(resp.read(), errors='surrogate_or_strict')
         try:
             data = json.loads(resp_data)
         except ValueError:
-            raise AnsibleError("Failed to parse Galaxy response from '%s' as JSON:\n%s"
+            raise AssibleError("Failed to parse Galaxy response from '%s' as JSON:\n%s"
                                % (resp.url, to_native(resp_data)))
 
         return data
@@ -215,8 +215,8 @@ class GalaxyAPI:
             return
 
         if not self.token and required:
-            raise AnsibleError("No access token or username set. A token can be set with --api-key, with "
-                               "'ansible-galaxy login', or set in ansible.cfg.")
+            raise AssibleError("No access token or username set. A token can be set with --api-key, with "
+                               "'assible-galaxy login', or set in assible.cfg.")
 
         if self.token:
             headers.update(self.token.headers())
@@ -245,8 +245,8 @@ class GalaxyAPI:
         }
         if role_name:
             args['alternate_role_name'] = role_name
-        elif github_repo.startswith('ansible-role'):
-            args['alternate_role_name'] = github_repo[len('ansible-role') + 1:]
+        elif github_repo.startswith('assible-role'):
+            args['alternate_role_name'] = github_repo[len('assible-role') + 1:]
         data = self._call_galaxy(url, args=urlencode(args), method="POST")
         if data.get('results', None):
             return data['results']
@@ -263,7 +263,7 @@ class GalaxyAPI:
         elif github_user is not None and github_repo is not None:
             url = "%s?github_user=%s&github_repo=%s" % (url, github_user, github_repo)
         else:
-            raise AnsibleError("Expected task_id or github_user and github_repo")
+            raise AssibleError("Expected task_id or github_user and github_repo")
 
         data = self._call_galaxy(url)
         return data['results']
@@ -282,7 +282,7 @@ class GalaxyAPI:
             if notify:
                 display.display("- downloading role '%s', owned by %s" % (role_name, user_name))
         except Exception:
-            raise AnsibleError("Invalid role name (%s). Specify role as format: username.rolename" % role_name)
+            raise AssibleError("Invalid role name (%s). Specify role as format: username.rolename" % role_name)
 
         url = _urljoin(self.api_server, self.available_api_versions['v1'], "roles",
                        "?owner__username=%s&name=%s" % (user_name, role_name))
@@ -306,7 +306,7 @@ class GalaxyAPI:
             results = data['results']
             done = (data.get('next_link', None) is None)
 
-            # https://github.com/ansible/ansible/issues/64355
+            # https://github.com/assible/assible/issues/64355
             # api_server contains part of the API path but next_link includes the /api part so strip it out.
             url_info = urlparse(self.api_server)
             base_url = "%s://%s/" % (url_info.scheme, url_info.netloc)
@@ -343,7 +343,7 @@ class GalaxyAPI:
                 done = (data.get('next_link', None) is None)
             return results
         except Exception as error:
-            raise AnsibleError("Failed to download the %s list: %s" % (what, to_native(error)))
+            raise AssibleError("Failed to download the %s list: %s" % (what, to_native(error)))
 
     @g_connect(['v1'])
     def search_roles(self, search, **kwargs):
@@ -420,9 +420,9 @@ class GalaxyAPI:
 
         b_collection_path = to_bytes(collection_path, errors='surrogate_or_strict')
         if not os.path.exists(b_collection_path):
-            raise AnsibleError("The collection path specified '%s' does not exist." % to_native(collection_path))
+            raise AssibleError("The collection path specified '%s' does not exist." % to_native(collection_path))
         elif not tarfile.is_tarfile(b_collection_path):
-            raise AnsibleError("The collection path specified '%s' is not a tarball, use 'ansible-galaxy collection "
+            raise AssibleError("The collection path specified '%s' is not a tarball, use 'assible-galaxy collection "
                                "build' to create a proper release artifact." % to_native(collection_path))
 
         with open(b_collection_path, 'rb') as collection_tar:
@@ -502,7 +502,7 @@ class GalaxyAPI:
             # poor man's exponential backoff algo so we don't flood the Galaxy API, cap at 30 seconds.
             wait = min(30, wait * 1.5)
         if state == 'waiting':
-            raise AnsibleError("Timeout while waiting for the Galaxy import process to finish, check progress at '%s'"
+            raise AssibleError("Timeout while waiting for the Galaxy import process to finish, check progress at '%s'"
                                % to_native(full_url))
 
         for message in data.get('messages', []):
@@ -518,7 +518,7 @@ class GalaxyAPI:
             code = to_native(data['error'].get('code', 'UNKNOWN'))
             description = to_native(
                 data['error'].get('description', "Unknown error, see %s for more details" % full_url))
-            raise AnsibleError("Galaxy import process failed: %s (Code: %s)" % (description, code))
+            raise AssibleError("Galaxy import process failed: %s (Code: %s)" % (description, code))
 
     @g_connect(['v2', 'v3'])
     def get_collection_version_metadata(self, namespace, name, version):
@@ -568,7 +568,7 @@ class GalaxyAPI:
 
         if 'data' in data:
             # v3 automation-hub is the only known API that uses `data`
-            # since v3 pulp_ansible does not, we cannot rely on version
+            # since v3 pulp_assible does not, we cannot rely on version
             # to indicate which key to use
             results_key = 'data'
         else:

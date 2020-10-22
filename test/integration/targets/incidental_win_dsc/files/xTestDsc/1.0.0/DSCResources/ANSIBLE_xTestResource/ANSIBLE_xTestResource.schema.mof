@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-class ANSIBLE_xTestClass
+class ASSIBLE_xTestClass
 {
     [Key] String Key;
     [Write] String StringValue;
@@ -8,16 +8,16 @@ class ANSIBLE_xTestClass
 };
 
 [ClassVersion("1.0.0")]
-class ANSIBLE_xNestedClass
+class ASSIBLE_xNestedClass
 {
     [Key] String KeyValue;
-    [Write, EmbeddedInstance("ANSIBLE_xTestClass")] String CimValue;
+    [Write, EmbeddedInstance("ASSIBLE_xTestClass")] String CimValue;
     [Write, EmbeddedInstance("MSFT_KeyValuePair")] String HashValue[];
     [Write] SInt16 IntValue;
 };
 
 [ClassVersion("1.0.0"), FriendlyName("xTestResource")]
-class ANSIBLE_xTestResource : OMI_BaseResource
+class ASSIBLE_xTestResource : OMI_BaseResource
 {
     [Key] String Path;
     [Required, ValueMap{"Present", "Absent"}, Values{"Present", "Absent"}] String Ensure;
@@ -53,8 +53,8 @@ class ANSIBLE_xTestResource : OMI_BaseResource
     [Write] DateTime DateTimeArrayParam[];
     [Write, EmbeddedInstance("MSFT_Credential")] String PSCredentialParam;
     [Write, EmbeddedInstance("MSFT_KeyValuePair")] String HashtableParam[];
-    [Write, EmbeddedInstance("ANSIBLE_xTestClass")] String CimInstanceArrayParam[];
-    [Write, EmbeddedInstance("ANSIBLE_xNestedClass")] String NestedCimInstanceParam;
-    [Write, EmbeddedInstance("ANSIBLE_xNestedClass")] String NestedCimInstanceArrayParam[];
+    [Write, EmbeddedInstance("ASSIBLE_xTestClass")] String CimInstanceArrayParam[];
+    [Write, EmbeddedInstance("ASSIBLE_xNestedClass")] String NestedCimInstanceParam;
+    [Write, EmbeddedInstance("ASSIBLE_xNestedClass")] String NestedCimInstanceArrayParam[];
 };
 

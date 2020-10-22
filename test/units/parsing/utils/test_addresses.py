@@ -5,7 +5,7 @@ __metaclass__ = type
 
 import unittest
 
-from ansible.parsing.utils.addresses import parse_address
+from assible.parsing.utils.addresses import parse_address
 
 
 class TestParseAddress(unittest.TestCase):

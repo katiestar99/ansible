@@ -4,7 +4,7 @@ __metaclass__ = type
 import json
 import os
 import sys
-import ansible_runner
+import assible_runner
 
 
 PLAYBOOK = '''
@@ -27,7 +27,7 @@ pbfile = os.path.join(output_dir, 'test.yml')
 with open(pbfile, 'w') as f:
     f.write(PLAYBOOK)
 
-r = ansible_runner.run(private_data_dir=output_dir, playbook='test.yml')
+r = assible_runner.run(private_data_dir=output_dir, playbook='test.yml')
 
 data = {
     'rc': r.rc,

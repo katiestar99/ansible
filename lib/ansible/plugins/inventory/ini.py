@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -6,7 +6,7 @@ __metaclass__ = type
 DOCUMENTATION = '''
     name: ini
     version_added: "2.4"
-    short_description: Uses an Ansible INI file as inventory source.
+    short_description: Uses an Assible INI file as inventory source.
     description:
         - INI file based inventory, sections are groups or group related with special `:modifiers`.
         - Entries in sections C([group_1]) are hosts, members of the group.
@@ -33,7 +33,7 @@ EXAMPLES = '''# fmt: ini
 # Example 1
 [web]
 host1
-host2 ansible_port=222 # defined inline, interpreted as an integer
+host2 assible_port=222 # defined inline, interpreted as an integer
 
 [web:vars]
 http_port=8080 # all members of 'web' will inherit these
@@ -61,8 +61,8 @@ has_java = False # 'all' is 'top' parent
 host1 # this is 'ungrouped'
 
 # both hosts have same IP but diff ports, also 'ungrouped'
-host2 ansible_host=127.0.0.1 ansible_port=44
-host3 ansible_host=127.0.0.1 ansible_port=45
+host2 assible_host=127.0.0.1 assible_port=44
+host3 assible_host=127.0.0.1 assible_port=45
 
 [g1]
 host4
@@ -75,12 +75,12 @@ host4 # same host as above, but member of 2 groups, will inherit vars from both
 import ast
 import re
 
-from ansible.inventory.group import to_safe_group_name
-from ansible.plugins.inventory import BaseFileInventoryPlugin
+from assible.inventory.group import to_safe_group_name
+from assible.plugins.inventory import BaseFileInventoryPlugin
 
-from ansible.errors import AnsibleError, AnsibleParserError
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.utils.shlex import shlex_split
+from assible.errors import AssibleError, AssibleParserError
+from assible.module_utils._text import to_bytes, to_text
+from assible.utils.shlex import shlex_split
 
 
 class InventoryModule(BaseFileInventoryPlugin):
@@ -119,7 +119,7 @@ class InventoryModule(BaseFileInventoryPlugin):
                 # times on smaller strings
                 data = to_text(b_data, errors='surrogate_or_strict').splitlines()
             except UnicodeError:
-                # Handle non-utf8 in comment lines: https://github.com/ansible/ansible/issues/17593
+                # Handle non-utf8 in comment lines: https://github.com/assible/assible/issues/17593
                 data = []
                 for line in b_data.splitlines():
                     if line and line[0] in self.b_COMMENT_MARKERS:
@@ -133,10 +133,10 @@ class InventoryModule(BaseFileInventoryPlugin):
 
             self._parse(path, data)
         except Exception as e:
-            raise AnsibleParserError(e)
+            raise AssibleParserError(e)
 
     def _raise_error(self, message):
-        raise AnsibleError("%s:%d: " % (self._filename, self.lineno) + message)
+        raise AssibleError("%s:%d: " % (self._filename, self.lineno) + message)
 
     def _parse(self, path, lines):
         '''
@@ -242,9 +242,9 @@ class InventoryModule(BaseFileInventoryPlugin):
         for g in pending_declarations:
             decl = pending_declarations[g]
             if decl['state'] == 'vars':
-                raise AnsibleError("%s:%d: Section [%s:vars] not valid for undefined group: %s" % (path, decl['line'], decl['name'], decl['name']))
+                raise AssibleError("%s:%d: Section [%s:vars] not valid for undefined group: %s" % (path, decl['line'], decl['name'], decl['name']))
             elif decl['state'] == 'children':
-                raise AnsibleError("%s:%d: Section [%s:children] includes undefined group: %s" % (path, decl['line'], decl['parents'].pop(), decl['name']))
+                raise AssibleError("%s:%d: Section [%s:children] includes undefined group: %s" % (path, decl['line'], decl['parents'].pop(), decl['name']))
 
     def _add_pending_children(self, group, pending):
         for parent in pending[group]['parents']:
@@ -324,12 +324,12 @@ class InventoryModule(BaseFileInventoryPlugin):
         hostnames, port = super(InventoryModule, self)._expand_hostpattern(hostpattern)
 
         if hostpattern.strip().endswith(':') and port is None:
-            raise AnsibleParserError("Invalid host pattern '%s' supplied, ending in ':' is not allowed, this character is reserved to provide a port." %
+            raise AssibleParserError("Invalid host pattern '%s' supplied, ending in ':' is not allowed, this character is reserved to provide a port." %
                                      hostpattern)
         for pattern in hostnames:
             # some YAML parsing prevention checks
             if pattern.strip() == '---':
-                raise AnsibleParserError("Invalid host pattern '%s' supplied, '---' is normally a sign this is a YAML file." % hostpattern)
+                raise AssibleParserError("Invalid host pattern '%s' supplied, '---' is normally a sign this is a YAML file." % hostpattern)
 
         return (hostnames, port)
 

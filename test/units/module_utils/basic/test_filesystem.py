@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2016 Toshio Kuratomi <tkuratomi@ansible.com>
-# (c) 2017 Ansible Project
+# (c) 2016 Toshio Kuratomi <tkuratomi@assible.com>
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -10,17 +10,17 @@ __metaclass__ = type
 from units.mock.procenv import ModuleTestCase
 
 from units.compat.mock import patch, MagicMock
-from ansible.module_utils.six.moves import builtins
+from assible.module_utils.six.moves import builtins
 
 realimport = builtins.__import__
 
 
 class TestOtherFilesystem(ModuleTestCase):
-    def test_module_utils_basic_ansible_module_user_and_group(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_user_and_group(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -31,11 +31,11 @@ class TestOtherFilesystem(ModuleTestCase):
         with patch('os.lstat', return_value=mock_stat):
             self.assertEqual(am.user_and_group('/path/to/file'), (0, 0))
 
-    def test_module_utils_basic_ansible_module_find_mount_point(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_find_mount_point(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -57,11 +57,11 @@ class TestOtherFilesystem(ModuleTestCase):
         with patch('os.path.ismount', side_effect=_mock_ismount):
             self.assertEqual(am.find_mount_point('/subdir/mount/path/to/whatever'), '/subdir/mount')
 
-    def test_module_utils_basic_ansible_module_set_owner_if_different(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_set_owner_if_different(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 
@@ -96,11 +96,11 @@ class TestOtherFilesystem(ModuleTestCase):
         with patch('os.lchown', side_effect=OSError) as m:
             self.assertRaises(SystemExit, am.set_owner_if_different, '/path/to/file', 'root', False)
 
-    def test_module_utils_basic_ansible_module_set_group_if_different(self):
-        from ansible.module_utils import basic
-        basic._ANSIBLE_ARGS = None
+    def test_module_utils_basic_assible_module_set_group_if_different(self):
+        from assible.module_utils import basic
+        basic._ASSIBLE_ARGS = None
 
-        am = basic.AnsibleModule(
+        am = basic.AssibleModule(
             argument_spec=dict(),
         )
 

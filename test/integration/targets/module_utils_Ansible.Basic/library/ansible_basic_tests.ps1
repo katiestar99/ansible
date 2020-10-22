@@ -1,8 +1,8 @@
 #!powershell
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
+#AssibleRequires -CSharpUtil Assible.Basic
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, @{})
+$module = [Assible.Basic.AssibleModule]::Create($args, @{})
 
 Function Assert-Equals {
     param(
@@ -79,7 +79,7 @@ Function Assert-DictionaryEquals {
 
 Function Exit-Module {
     # Make sure Exit actually calls exit and not our overriden test behaviour
-    [Ansible.Basic.AnsibleModule]::Exit = { param([Int32]$rc) exit $rc }
+    [Assible.Basic.AssibleModule]::Exit = { param([Int32]$rc) exit $rc }
     Write-Output -InputObject (ConvertTo-Json -InputObject $module.Result -Compress -Depth 99)
     $module.ExitJson()
 }
@@ -87,13 +87,13 @@ Function Exit-Module {
 $tmpdir = $module.Tmpdir
 
 # Override the Exit and WriteLine behaviour to throw an exception instead of exiting the module
-[Ansible.Basic.AnsibleModule]::Exit = {
+[Assible.Basic.AssibleModule]::Exit = {
     param([Int32]$rc)
     $exp = New-Object -TypeName System.Exception -ArgumentList "exit: $rc"
     $exp | Add-Member -Type NoteProperty -Name Output -Value $_test_out
     throw $exp
 }
-[Ansible.Basic.AnsibleModule]::WriteLine = {
+[Assible.Basic.AssibleModule]::WriteLine = {
     param([String]$line)
     Set-Variable -Name _test_out -Scope Global -Value $line
 }
@@ -101,8 +101,8 @@ $tmpdir = $module.Tmpdir
 $tests = @{
     "Empty spec and no options - args file" = {
         $args_file = Join-Path -Path $tmpdir -ChildPath "args-$(Get-Random).json"
-        [System.IO.File]::WriteAllText($args_file, '{ "ANSIBLE_MODULE_ARGS": {} }')
-        $m = [Ansible.Basic.AnsibleModule]::Create(@($args_file), @{})
+        [System.IO.File]::WriteAllText($args_file, '{ "ASSIBLE_MODULE_ARGS": {} }')
+        $m = [Assible.Basic.AssibleModule]::Create(@($args_file), @{})
 
         $m.CheckMode | Assert-Equals -Expected $false
         $m.DebugMode | Assert-Equals -Expected $false
@@ -111,12 +111,12 @@ $tests = @{
         $m.ModuleName | Assert-Equals -Expected "undefined win module"
         $m.NoLog | Assert-Equals -Expected $false
         $m.Verbosity | Assert-Equals -Expected 0
-        $m.AnsibleVersion | Assert-Equals -Expected $null
+        $m.AssibleVersion | Assert-Equals -Expected $null
     }
 
     "Empty spec and no options - complex_args" = {
         Set-Variable -Name complex_args -Scope Global -Value @{}
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         $m.CheckMode | Assert-Equals -Expected $false
         $m.DebugMode | Assert-Equals -Expected $false
@@ -125,7 +125,7 @@ $tests = @{
         $m.ModuleName | Assert-Equals -Expected "undefined win module"
         $m.NoLog | Assert-Equals -Expected $false
         $m.Verbosity | Assert-Equals -Expected 0
-        $m.AnsibleVersion | Assert-Equals -Expected $null
+        $m.AssibleVersion | Assert-Equals -Expected $null
     }
 
     "Internal param changes - args file" = {
@@ -134,33 +134,33 @@ $tests = @{
         $args_file = Join-Path -Path $tmpdir -ChildPath "args-$(Get-Random).json"
         [System.IO.File]::WriteAllText($args_file, @"
 {
-    "ANSIBLE_MODULE_ARGS": {
-        "_ansible_check_mode": true,
-        "_ansible_debug": true,
-        "_ansible_diff": true,
-        "_ansible_keep_remote_files": true,
-        "_ansible_module_name": "ansible_basic_tests",
-        "_ansible_no_log": true,
-        "_ansible_remote_tmp": "%TEMP%",
-        "_ansible_selinux_special_fs": "ignored",
-        "_ansible_shell_executable": "ignored",
-        "_ansible_socket": "ignored",
-        "_ansible_syslog_facility": "ignored",
-        "_ansible_tmpdir": "$($m_tmpdir -replace "\\", "\\")",
-        "_ansible_verbosity": 3,
-        "_ansible_version": "2.8.0"
+    "ASSIBLE_MODULE_ARGS": {
+        "_assible_check_mode": true,
+        "_assible_debug": true,
+        "_assible_diff": true,
+        "_assible_keep_remote_files": true,
+        "_assible_module_name": "assible_basic_tests",
+        "_assible_no_log": true,
+        "_assible_remote_tmp": "%TEMP%",
+        "_assible_selinux_special_fs": "ignored",
+        "_assible_shell_executable": "ignored",
+        "_assible_socket": "ignored",
+        "_assible_syslog_facility": "ignored",
+        "_assible_tmpdir": "$($m_tmpdir -replace "\\", "\\")",
+        "_assible_verbosity": 3,
+        "_assible_version": "2.8.0"
     }
 }
 "@)
-        $m = [Ansible.Basic.AnsibleModule]::Create(@($args_file), @{supports_check_mode=$true})
+        $m = [Assible.Basic.AssibleModule]::Create(@($args_file), @{supports_check_mode=$true})
         $m.CheckMode | Assert-Equals -Expected $true
         $m.DebugMode | Assert-Equals -Expected $true
         $m.DiffMode | Assert-Equals -Expected $true
         $m.KeepRemoteFiles | Assert-Equals -Expected $true
-        $m.ModuleName | Assert-Equals -Expected "ansible_basic_tests"
+        $m.ModuleName | Assert-Equals -Expected "assible_basic_tests"
         $m.NoLog | Assert-Equals -Expected $true
         $m.Verbosity | Assert-Equals -Expected 3
-        $m.AnsibleVersion | Assert-Equals -Expected "2.8.0"
+        $m.AssibleVersion | Assert-Equals -Expected "2.8.0"
         $m.Tmpdir | Assert-Equals -Expected $m_tmpdir
     }
 
@@ -168,33 +168,33 @@ $tests = @{
         $m_tmpdir = Join-Path -Path $tmpdir -ChildPath "moduletmpdir-$(Get-Random)"
         New-Item -Path $m_tmpdir -ItemType Directory > $null
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_check_mode = $true
-            _ansible_debug = $true
-            _ansible_diff = $true
-            _ansible_keep_remote_files = $true
-            _ansible_module_name = "ansible_basic_tests"
-            _ansible_no_log = $true
-            _ansible_remote_tmp = "%TEMP%"
-            _ansible_selinux_special_fs = "ignored"
-            _ansible_shell_executable = "ignored"
-            _ansible_socket = "ignored"
-            _ansible_syslog_facility = "ignored"
-            _ansible_tmpdir = $m_tmpdir.ToString()
-            _ansible_verbosity = 3
-            _ansible_version = "2.8.0"
+            _assible_check_mode = $true
+            _assible_debug = $true
+            _assible_diff = $true
+            _assible_keep_remote_files = $true
+            _assible_module_name = "assible_basic_tests"
+            _assible_no_log = $true
+            _assible_remote_tmp = "%TEMP%"
+            _assible_selinux_special_fs = "ignored"
+            _assible_shell_executable = "ignored"
+            _assible_socket = "ignored"
+            _assible_syslog_facility = "ignored"
+            _assible_tmpdir = $m_tmpdir.ToString()
+            _assible_verbosity = 3
+            _assible_version = "2.8.0"
         }
         $spec = @{
             supports_check_mode = $true
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         $m.CheckMode | Assert-Equals -Expected $true
         $m.DebugMode | Assert-Equals -Expected $true
         $m.DiffMode | Assert-Equals -Expected $true
         $m.KeepRemoteFiles | Assert-Equals -Expected $true
-        $m.ModuleName | Assert-Equals -Expected "ansible_basic_tests"
+        $m.ModuleName | Assert-Equals -Expected "assible_basic_tests"
         $m.NoLog | Assert-Equals -Expected $true
         $m.Verbosity | Assert-Equals -Expected 3
-        $m.AnsibleVersion | Assert-Equals -Expected "2.8.0"
+        $m.AssibleVersion | Assert-Equals -Expected "2.8.0"
         $m.Tmpdir | Assert-Equals -Expected $m_tmpdir
     }
 
@@ -309,7 +309,7 @@ $tests = @{
             str_type = "str"
             delegate_type = "1234"
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $m.Params.option_default | Assert-Equals -Expected "1"
         $m.Params.option_default.GetType().ToString() | Assert-Equals -Expected "System.String"
@@ -361,7 +361,7 @@ $tests = @{
         $m.Params.int_type.GetType().ToString() | Assert-Equals -Expected "System.Int32"
         $m.Params.json_type | Assert-Equals -Expected '{"a":"a","b":1,"c":["a","b"]}'
         $m.Params.json_type.GetType().ToString() | Assert-Equals -Expected "System.String"
-        [Ansible.Basic.AnsibleModule]::FromJson($m.Params.json_type_dict) | Assert-DictionaryEquals -Expected ([Ansible.Basic.AnsibleModule]::FromJson('{"a":"a","b":1,"c":["a","b"]}'))
+        [Assible.Basic.AssibleModule]::FromJson($m.Params.json_type_dict) | Assert-DictionaryEquals -Expected ([Assible.Basic.AssibleModule]::FromJson('{"a":"a","b":1,"c":["a","b"]}'))
         $m.Params.json_type_dict.GetType().ToString() | Assert-Equals -Expected "System.String"
         $m.Params.list_type.GetType().ToString() | Assert-Equals -Expected "System.Collections.Generic.List``1[System.Object]"
         $m.Params.list_type.Count | Assert-Equals -Expected 4
@@ -431,7 +431,7 @@ $tests = @{
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -520,7 +520,7 @@ $tests = @{
                 4321
             )
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         $m.Params.list_delegate_type.GetType().Name | Assert-Equals -Expected 'List`1'
         $m.Params.list_delegate_type[0].GetType().FullName | Assert-Equals -Expected "System.UInt16"
         $m.Params.list_delegate_Type[1].GetType().FullName | Assert-Equals -Expected "System.UInt16"
@@ -531,7 +531,7 @@ $tests = @{
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -553,11 +553,11 @@ $tests = @{
             }
         }
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_module_name = "win_test"
+            _assible_module_name = "win_test"
             Option1 = "1"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         # Verifies the case of the params key is set to the module spec not actual input
         $m.Params.Keys | Assert-Equals -Expected @("option1")
         $m.Params.option1 | Assert-Equals -Expected 1
@@ -571,12 +571,12 @@ $tests = @{
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
         $expected_warnings = "Parameters for (win_test) was a case insensitive match: Option1. "
-        $expected_warnings += "Module options will become case sensitive in a future Ansible release. "
+        $expected_warnings += "Module options will become case sensitive in a future Assible release. "
         $expected_warnings += "Supported parameters include: option1"
 
         $expected = @{
@@ -602,7 +602,7 @@ $tests = @{
             }
         }
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_module_name = "test_no_log"
+            _assible_module_name = "test_no_log"
             username = "user - pass - name"
             password = "pass"
             password2 = 1234
@@ -630,7 +630,7 @@ $tests = @{
             }
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         $m.Result.data = $complex_args.dict
 
         # verify params internally aren't masked
@@ -645,7 +645,7 @@ $tests = @{
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -706,7 +706,7 @@ test_no_log - Invoked with:
   password2: VALUE_SPECIFIED_IN_NO_LOG_PARAMETER
   password: VALUE_SPECIFIED_IN_NO_LOG_PARAMETER
 '@
-        $actual_event = (Get-EventLog -LogName Application -Source Ansible -Newest 1).Message
+        $actual_event = (Get-EventLog -LogName Application -Source Assible -Newest 1).Message
         $actual_event | Assert-DictionaryEquals -Expected $expected_event
     }
 
@@ -718,11 +718,11 @@ test_no_log - Invoked with:
             }
         }
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_module_name = "test_no_log"
+            _assible_module_name = "test_no_log"
             password1 = ""
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         $m.Result.data = $complex_args.dict
 
         # verify params internally aren't masked
@@ -735,7 +735,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -757,7 +757,7 @@ test_no_log - Invoked with:
             options = @{
                 removed1 = @{removed_in_version = "2.1"}
                 removed2 = @{removed_in_version = "2.2"}
-                removed3 = @{removed_in_version = "2.3"; removed_from_collection = "ansible.builtin"}
+                removed3 = @{removed_in_version = "2.3"; removed_from_collection = "assible.builtin"}
             }
         }
         Set-Variable -Name complex_args -Scope Global -Value @{
@@ -765,7 +765,7 @@ test_no_log - Invoked with:
             removed3 = "value"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -773,7 +773,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -790,7 +790,7 @@ test_no_log - Invoked with:
                 @{
                     msg = "Param 'removed3' is deprecated. See the module docs for more information"
                     version = "2.3"
-                    collection_name = "ansible.builtin"
+                    collection_name = "assible.builtin"
                 },
                 @{
                     msg = "Param 'removed1' is deprecated. See the module docs for more information"
@@ -807,7 +807,7 @@ test_no_log - Invoked with:
             options = @{
                 removed1 = @{removed_at_date = [DateTime]"2020-03-10"}
                 removed2 = @{removed_at_date = [DateTime]"2020-03-11"}
-                removed3 = @{removed_at_date = [DateTime]"2020-06-07"; removed_from_collection = "ansible.builtin"}
+                removed3 = @{removed_at_date = [DateTime]"2020-06-07"; removed_from_collection = "assible.builtin"}
             }
         }
         Set-Variable -Name complex_args -Scope Global -Value @{
@@ -815,7 +815,7 @@ test_no_log - Invoked with:
             removed3 = "value"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -823,7 +823,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -840,7 +840,7 @@ test_no_log - Invoked with:
                 @{
                     msg = "Param 'removed3' is deprecated. See the module docs for more information"
                     date = "2020-06-07"
-                    collection_name = "ansible.builtin"
+                    collection_name = "assible.builtin"
                 },
                 @{
                     msg = "Param 'removed1' is deprecated. See the module docs for more information"
@@ -862,16 +862,16 @@ test_no_log - Invoked with:
                     options = @{
                         option1 = @{ type = "str"; aliases = "alias1"; deprecated_aliases = @(@{name = "alias1"; version = "2.10"}) }
                         option2 = @{ type = "str"; aliases = "alias2"; deprecated_aliases = @(@{name = "alias2"; version = "2.11"}) }
-                        option3 = @{ type = "str"; aliases = "alias3"; deprecated_aliases = @(@{name = "alias3"; version = "2.12"; collection_name = "ansible.builtin"}) }
+                        option3 = @{ type = "str"; aliases = "alias3"; deprecated_aliases = @(@{name = "alias3"; version = "2.12"; collection_name = "assible.builtin"}) }
                         option4 = @{ type = "str"; aliases = "alias4"; deprecated_aliases = @(@{name = "alias4"; date = [DateTime]"2020-03-11"}) }
                         option5 = @{ type = "str"; aliases = "alias5"; deprecated_aliases = @(@{name = "alias5"; date = [DateTime]"2020-03-09"}) }
-                        option6 = @{ type = "str"; aliases = "alias6"; deprecated_aliases = @(@{name = "alias6"; date = [DateTime]"2020-06-01"; collection_name = "ansible.builtin"}) }
+                        option6 = @{ type = "str"; aliases = "alias6"; deprecated_aliases = @(@{name = "alias6"; date = [DateTime]"2020-06-01"; collection_name = "assible.builtin"}) }
                     }
                 }
                 option4 = @{ type = "str"; aliases = "alias4"; deprecated_aliases = @(@{name = "alias4"; date = [DateTime]"2020-03-10"}) }
                 option5 = @{ type = "str"; aliases = "alias5"; deprecated_aliases = @(@{name = "alias5"; date = [DateTime]"2020-03-12"}) }
-                option6 = @{ type = "str"; aliases = "alias6"; deprecated_aliases = @(@{name = "alias6"; version = "2.12"; collection_name = "ansible.builtin"}) }
-                option7 = @{ type = "str"; aliases = "alias7"; deprecated_aliases = @(@{name = "alias7"; date = [DateTime]"2020-06-07"; collection_name = "ansible.builtin"}) }
+                option6 = @{ type = "str"; aliases = "alias6"; deprecated_aliases = @(@{name = "alias6"; version = "2.12"; collection_name = "assible.builtin"}) }
+                option7 = @{ type = "str"; aliases = "alias7"; deprecated_aliases = @(@{name = "alias7"; date = [DateTime]"2020-06-07"; collection_name = "assible.builtin"}) }
             }
         }
 
@@ -892,14 +892,14 @@ test_no_log - Invoked with:
             alias7 = "alias7"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         $failed = $false
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -935,7 +935,7 @@ test_no_log - Invoked with:
                 @{
                     msg = "Alias 'alias7' is deprecated. See the module docs for more information"
                     date = "2020-06-07"
-                    collection_name = "ansible.builtin"
+                    collection_name = "assible.builtin"
                 },
                 @{
                     msg = "Alias 'alias1' is deprecated. See the module docs for more information"
@@ -950,7 +950,7 @@ test_no_log - Invoked with:
                 @{
                     msg = "Alias 'alias6' is deprecated. See the module docs for more information"
                     version = "2.12"
-                    collection_name = "ansible.builtin"
+                    collection_name = "assible.builtin"
                 },
                 @{
                     msg = "Alias 'alias2' is deprecated. See the module docs for more information - found in option3"
@@ -965,12 +965,12 @@ test_no_log - Invoked with:
                 @{
                     msg = "Alias 'alias3' is deprecated. See the module docs for more information - found in option3"
                     version = "2.12"
-                    collection_name = "ansible.builtin"
+                    collection_name = "assible.builtin"
                 },
                 @{
                     msg = "Alias 'alias6' is deprecated. See the module docs for more information - found in option3"
                     date = "2020-06-01"
-                    collection_name = "ansible.builtin"
+                    collection_name = "assible.builtin"
                 }
             )
         }
@@ -993,7 +993,7 @@ test_no_log - Invoked with:
             option2 = "option2"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -1001,7 +1001,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1035,7 +1035,7 @@ test_no_log - Invoked with:
             option3 = "option3"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -1043,7 +1043,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1076,7 +1076,7 @@ test_no_log - Invoked with:
             option2 = $null
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -1084,7 +1084,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1118,11 +1118,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1156,11 +1156,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1179,32 +1179,32 @@ test_no_log - Invoked with:
 
     "Debug without debug set" = {
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_debug = $false
+            _assible_debug = $false
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         $m.Debug("debug message")
-        $actual_event = (Get-EventLog -LogName Application -Source Ansible -Newest 1).Message
+        $actual_event = (Get-EventLog -LogName Application -Source Assible -Newest 1).Message
         $actual_event | Assert-Equals -Expected "undefined win module - Invoked with:`r`n  "
     }
 
     "Debug with debug set" = {
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_debug = $true
+            _assible_debug = $true
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         $m.Debug("debug message")
-        $actual_event = (Get-EventLog -LogName Application -Source Ansible -Newest 1).Message
+        $actual_event = (Get-EventLog -LogName Application -Source Assible -Newest 1).Message
         $actual_event | Assert-Equals -Expected "undefined win module - [DEBUG] debug message"
     }
 
     "Deprecate and warn with version" = {
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         $m.Deprecate("message", "2.7")
-        $actual_deprecate_event_1 = Get-EventLog -LogName Application -Source Ansible -Newest 1
-        $m.Deprecate("message w collection", "2.8", "ansible.builtin")
-        $actual_deprecate_event_2 = Get-EventLog -LogName Application -Source Ansible -Newest 1
+        $actual_deprecate_event_1 = Get-EventLog -LogName Application -Source Assible -Newest 1
+        $m.Deprecate("message w collection", "2.8", "assible.builtin")
+        $actual_deprecate_event_2 = Get-EventLog -LogName Application -Source Assible -Newest 1
         $m.Warn("warning")
-        $actual_warn_event = Get-EventLog -LogName Application -Source Ansible -Newest 1
+        $actual_warn_event = Get-EventLog -LogName Application -Source Assible -Newest 1
 
         $actual_deprecate_event_1.Message | Assert-Equals -Expected "undefined win module - [DEPRECATION WARNING] message 2.7"
         $actual_deprecate_event_2.Message | Assert-Equals -Expected "undefined win module - [DEPRECATION WARNING] message w collection 2.8"
@@ -1217,7 +1217,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1229,20 +1229,20 @@ test_no_log - Invoked with:
             warnings = @("warning")
             deprecations = @(
                 @{msg = "message"; version = "2.7"; collection_name = $null},
-                @{msg = "message w collection"; version = "2.8"; collection_name = "ansible.builtin"}
+                @{msg = "message w collection"; version = "2.8"; collection_name = "assible.builtin"}
             )
         }
         $actual | Assert-DictionaryEquals -Expected $expected
     }
 
     "Deprecate and warn with date" = {
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         $m.Deprecate("message", [DateTime]"2020-01-01")
-        $actual_deprecate_event_1 = Get-EventLog -LogName Application -Source Ansible -Newest 1
-        $m.Deprecate("message w collection", [DateTime]"2020-01-02", "ansible.builtin")
-        $actual_deprecate_event_2 = Get-EventLog -LogName Application -Source Ansible -Newest 1
+        $actual_deprecate_event_1 = Get-EventLog -LogName Application -Source Assible -Newest 1
+        $m.Deprecate("message w collection", [DateTime]"2020-01-02", "assible.builtin")
+        $actual_deprecate_event_2 = Get-EventLog -LogName Application -Source Assible -Newest 1
         $m.Warn("warning")
-        $actual_warn_event = Get-EventLog -LogName Application -Source Ansible -Newest 1
+        $actual_warn_event = Get-EventLog -LogName Application -Source Assible -Newest 1
 
         $actual_deprecate_event_1.Message | Assert-Equals -Expected "undefined win module - [DEPRECATION WARNING] message 2020-01-01"
         $actual_deprecate_event_2.Message | Assert-Equals -Expected "undefined win module - [DEPRECATION WARNING] message w collection 2020-01-02"
@@ -1255,7 +1255,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1267,14 +1267,14 @@ test_no_log - Invoked with:
             warnings = @("warning")
             deprecations = @(
                 @{msg = "message"; date = "2020-01-01"; collection_name = $null},
-                @{msg = "message w collection"; date = "2020-01-02"; collection_name = "ansible.builtin"}
+                @{msg = "message w collection"; date = "2020-01-02"; collection_name = "assible.builtin"}
             )
         }
         $actual | Assert-DictionaryEquals -Expected $expected
     }
 
     "FailJson with message" = {
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         $failed = $false
         try {
@@ -1282,7 +1282,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $failed
 
@@ -1298,7 +1298,7 @@ test_no_log - Invoked with:
     }
 
     "FailJson with Exception" = {
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         try {
             [System.IO.Path]::GetFullPath($null)
@@ -1312,7 +1312,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $failed
 
@@ -1328,7 +1328,7 @@ test_no_log - Invoked with:
     }
 
     "FailJson with ErrorRecord" = {
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         try {
             Get-Item -LiteralPath $null
@@ -1342,7 +1342,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $failed
 
@@ -1359,9 +1359,9 @@ test_no_log - Invoked with:
 
     "FailJson with Exception and verbosity 3" = {
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_verbosity = 3
+            _assible_verbosity = 3
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         try {
             [System.IO.Path]::GetFullPath($null)
@@ -1375,7 +1375,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $failed
 
@@ -1388,9 +1388,9 @@ test_no_log - Invoked with:
 
     "FailJson with ErrorRecord and verbosity 3" = {
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_verbosity = 3
+            _assible_verbosity = 3
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         try {
             Get-Item -LiteralPath $null
@@ -1404,7 +1404,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $failed
 
@@ -1418,7 +1418,7 @@ test_no_log - Invoked with:
     }
 
     "Diff entry without diff set" = {
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         $m.Diff.before = @{a = "a"}
         $m.Diff.after = @{b = "b"}
 
@@ -1428,7 +1428,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $failed
 
@@ -1443,9 +1443,9 @@ test_no_log - Invoked with:
 
     "Diff entry with diff set" = {
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_diff = $true
+            _assible_diff = $true
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         $m.Diff.before = @{a = "a"}
         $m.Diff.after = @{b = "b"}
 
@@ -1455,7 +1455,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $failed
 
@@ -1507,7 +1507,7 @@ test_no_log - Invoked with:
 
         foreach ($map in $mapping.GetEnumerator()) {
             $expected = $map.Value
-            $actual = [Ansible.Basic.AnsibleModule]::ParseBool($map.Key)
+            $actual = [Assible.Basic.AssibleModule]::ParseBool($map.Key)
             $actual | Assert-Equals -Expected $expected
             $actual.GetType().FullName | Assert-Equals -Expected "System.Boolean"
         }
@@ -1522,7 +1522,7 @@ test_no_log - Invoked with:
         foreach ($fail_bool in $fail_bools) {
             $failed = $false
             try {
-                [Ansible.Basic.AnsibleModule]::ParseBool($fail_bool)
+                [Assible.Basic.AssibleModule]::ParseBool($fail_bool)
             } catch {
                 $failed = $true
                 $_.Exception.Message.Contains("The value '$fail_bool' is not a valid boolean") | Assert-Equals -Expected $true
@@ -1533,11 +1533,11 @@ test_no_log - Invoked with:
 
     "Unknown internal key" = {
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_invalid = "invalid"
+            _assible_invalid = "invalid"
         }
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+            $null = [Assible.Basic.AssibleModule]::Create(@(), @{})
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
@@ -1545,14 +1545,14 @@ test_no_log - Invoked with:
             $expected = @{
                 invocation = @{
                     module_args = @{
-                        _ansible_invalid = "invalid"
+                        _assible_invalid = "invalid"
                     }
                 }
                 changed = $false
                 failed = $true
-                msg = "Unsupported parameters for (undefined win module) module: _ansible_invalid. Supported parameters include: "
+                msg = "Unsupported parameters for (undefined win module) module: _assible_invalid. Supported parameters include: "
             }
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
             $actual | Assert-DictionaryEquals -Expected $expected
         }
         $failed | Assert-Equals -Expected $true
@@ -1574,9 +1574,9 @@ test_no_log - Invoked with:
         $remote_tmp = Join-Path -Path $tmpdir -ChildPath "moduletmpdir-$(Get-Random)"
         New-Item -Path $remote_tmp -ItemType Directory > $null
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_remote_tmp = $remote_tmp.ToString()
+            _assible_remote_tmp = $remote_tmp.ToString()
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $true
 
         $actual_tmpdir = $m.Tmpdir
@@ -1584,7 +1584,7 @@ test_no_log - Invoked with:
         $tmpdir_name = Split-Path -Path $actual_tmpdir -Leaf
 
         $parent_tmpdir | Assert-Equals -Expected $remote_tmp
-        $tmpdir_name.StartSwith("ansible-moduletmp-") | Assert-Equals -Expected $true
+        $tmpdir_name.StartSwith("assible-moduletmp-") | Assert-Equals -Expected $true
         (Test-Path -LiteralPath $actual_tmpdir -PathType Container) | Assert-Equals -Expected $true
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $true
         $children = [System.IO.Directory]::EnumerateDirectories($remote_tmp)
@@ -1595,7 +1595,7 @@ test_no_log - Invoked with:
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
-            $output = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $output = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         (Test-Path -LiteralPath $actual_tmpdir -PathType Container) | Assert-Equals -Expected $false
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $true
@@ -1617,9 +1617,9 @@ test_no_log - Invoked with:
 
         $remote_tmp = Join-Path -Path $tmpdir -ChildPath "moduletmpdir-$(Get-Random)"
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_remote_tmp = $remote_tmp.ToString()
+            _assible_remote_tmp = $remote_tmp.ToString()
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $false
 
         $actual_tmpdir = $m.Tmpdir
@@ -1627,7 +1627,7 @@ test_no_log - Invoked with:
         $tmpdir_name = Split-Path -Path $actual_tmpdir -Leaf
 
         $parent_tmpdir | Assert-Equals -Expected $remote_tmp
-        $tmpdir_name.StartSwith("ansible-moduletmp-") | Assert-Equals -Expected $true
+        $tmpdir_name.StartSwith("assible-moduletmp-") | Assert-Equals -Expected $true
         (Test-Path -LiteralPath $actual_tmpdir -PathType Container) | Assert-Equals -Expected $true
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $true
         $children = [System.IO.Directory]::EnumerateDirectories($remote_tmp)
@@ -1640,7 +1640,7 @@ test_no_log - Invoked with:
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
-            $output = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $output = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         (Test-Path -LiteralPath $actual_tmpdir -PathType Container) | Assert-Equals -Expected $false
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $true
@@ -1656,24 +1656,24 @@ test_no_log - Invoked with:
         $remote_tmp = Join-Path -Path $tmpdir -ChildPath "moduletmpdir-$(Get-Random)"
         New-Item -Path $remote_tmp -ItemType Directory > $null
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_remote_tmp = $remote_tmp.ToString()
-            _ansible_keep_remote_files = $true
+            _assible_remote_tmp = $remote_tmp.ToString()
+            _assible_keep_remote_files = $true
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         $actual_tmpdir = $m.Tmpdir
         $parent_tmpdir = Split-Path -Path $actual_tmpdir -Parent
         $tmpdir_name = Split-Path -Path $actual_tmpdir -Leaf
 
         $parent_tmpdir | Assert-Equals -Expected $remote_tmp
-        $tmpdir_name.StartSwith("ansible-moduletmp-") | Assert-Equals -Expected $true
+        $tmpdir_name.StartSwith("assible-moduletmp-") | Assert-Equals -Expected $true
         (Test-Path -LiteralPath $actual_tmpdir -PathType Container) | Assert-Equals -Expected $true
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $true
 
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
-            $output = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $output = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         (Test-Path -LiteralPath $actual_tmpdir -PathType Container) | Assert-Equals -Expected $true
         (Test-Path -LiteralPath $remote_tmp -PathType Container) | Assert-Equals -Expected $true
@@ -1687,11 +1687,11 @@ test_no_log - Invoked with:
         }
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1720,11 +1720,11 @@ test_no_log - Invoked with:
         }
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1745,11 +1745,11 @@ test_no_log - Invoked with:
         }
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1772,11 +1772,11 @@ test_no_log - Invoked with:
         }
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1800,11 +1800,11 @@ test_no_log - Invoked with:
         }
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1832,11 +1832,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1874,7 +1874,7 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.ArgumentException] {
             $failed = $true
             $expected_msg = "name is required in a deprecated_aliases entry - found in option_key"
@@ -1902,11 +1902,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1936,11 +1936,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1964,11 +1964,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -1996,11 +1996,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2023,17 +2023,17 @@ test_no_log - Invoked with:
             }
         }
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_check_mode = $true
+            _assible_check_mode = $true
             option_key = "abc"
         }
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2051,7 +2051,7 @@ test_no_log - Invoked with:
             options = @{
                 sub_options = @{
                     # This tests the situation where a sub key doesn't set supports_check_mode, the logic in
-                    # Ansible.Basic automatically sets that to $false and we want it to ignore it for a nested check
+                    # Assible.Basic automatically sets that to $false and we want it to ignore it for a nested check
                     type = "dict"
                     options = @{
                         sub_option = @{ type = "str"; default = "value" }
@@ -2061,10 +2061,10 @@ test_no_log - Invoked with:
             supports_check_mode = $true
         }
         Set-Variable -Name complex_args -Scope Global -Value @{
-            _ansible_check_mode = $true
+            _assible_check_mode = $true
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         $m.CheckMode | Assert-Equals -Expected $true
     }
 
@@ -2082,11 +2082,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2121,11 +2121,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2153,11 +2153,11 @@ test_no_log - Invoked with:
             option_key = "2"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
-            $output = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $output = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $output.Keys.Count | Assert-Equals -Expected 2
         $output.changed | Assert-Equals -Expected $false
@@ -2176,14 +2176,14 @@ test_no_log - Invoked with:
             option_key = "ABC"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
-            $output = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $output = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $expected_warning = "value of option_key was a case insensitive match of one of: abc, def. "
-        $expected_warning += "Checking of choices will be case sensitive in a future Ansible release. "
+        $expected_warning += "Checking of choices will be case sensitive in a future Assible release. "
         $expected_warning += "Case insensitive matches were: ABC"
 
         $output.invocation | Assert-DictionaryEquals -Expected @{module_args = @{option_key = "ABC"}}
@@ -2205,14 +2205,14 @@ test_no_log - Invoked with:
             option_key = "ABC"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
-            $output = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $output = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $expected_warning = "value of option_key was a case insensitive match of one of: abc, def. "
-        $expected_warning += "Checking of choices will be case sensitive in a future Ansible release. "
+        $expected_warning += "Checking of choices will be case sensitive in a future Assible release. "
         $expected_warning += "Case insensitive matches were: VALUE_SPECIFIED_IN_NO_LOG_PARAMETER"
 
         $output.invocation | Assert-DictionaryEquals -Expected @{module_args = @{option_key = "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER"}}
@@ -2235,14 +2235,14 @@ test_no_log - Invoked with:
             option_key = "AbC", "ghi", "jkl"
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
-            $output = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $output = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $expected_warning = "value of option_key was a case insensitive match of one or more of: abc, def, ghi, JKL. "
-        $expected_warning += "Checking of choices will be case sensitive in a future Ansible release. "
+        $expected_warning += "Checking of choices will be case sensitive in a future Assible release. "
         $expected_warning += "Case insensitive matches were: AbC, jkl"
 
         $output.invocation | Assert-DictionaryEquals -Expected @{module_args = $complex_args}
@@ -2265,11 +2265,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2297,11 +2297,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2329,11 +2329,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2361,11 +2361,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2391,11 +2391,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2422,14 +2422,14 @@ test_no_log - Invoked with:
             }
         }
 
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         $failed = $false
         try {
             $m.ExitJson()
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2460,11 +2460,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2491,11 +2491,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2532,11 +2532,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2564,11 +2564,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2592,11 +2592,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2621,7 +2621,7 @@ test_no_log - Invoked with:
         Set-Variable -Name complex_args -Scope Global -Value @{
             name = "abc"
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -2629,7 +2629,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2654,11 +2654,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2686,11 +2686,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            $null = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+            $null = [Assible.Basic.AssibleModule]::Create(@(), $spec)
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2716,7 +2716,7 @@ test_no_log - Invoked with:
             state = "absent"
             name = "abc"
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -2724,7 +2724,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2734,7 +2734,7 @@ test_no_log - Invoked with:
     }
 
     "PS Object in return result" = {
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), @{})
+        $m = [Assible.Basic.AssibleModule]::Create(@(), @{})
 
         # JavaScriptSerializer struggles with PS Object like PSCustomObject due to circular references, this test makes
         # sure we can handle these types of objects without bombing
@@ -2745,7 +2745,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2757,7 +2757,7 @@ test_no_log - Invoked with:
 
     "String json array to object" = {
         $input_json = '["abc", "def"]'
-        $actual = [Ansible.Basic.AnsibleModule]::FromJson($input_json)
+        $actual = [Assible.Basic.AssibleModule]::FromJson($input_json)
         $actual -is [Array] | Assert-Equals -Expected $true
         $actual.Length | Assert-Equals -Expected 2
         $actual[0] | Assert-Equals -Expected "abc"
@@ -2766,7 +2766,7 @@ test_no_log - Invoked with:
 
     "String json array of dictionaries to object" = {
         $input_json = '[{"abc":"def"}]'
-        $actual = [Ansible.Basic.AnsibleModule]::FromJson($input_json)
+        $actual = [Assible.Basic.AssibleModule]::FromJson($input_json)
         $actual -is [Array] | Assert-Equals -Expected $true
         $actual.Length | Assert-Equals -Expected 1
         $actual[0] | Assert-DictionaryEquals -Expected @{"abc" = "def"}
@@ -2788,7 +2788,7 @@ test_no_log - Invoked with:
             option1 = "option1"
             option2 = "option2"
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec, @($fragment1))
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec, @($fragment1))
 
         $failed = $false
         try {
@@ -2796,7 +2796,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2817,7 +2817,7 @@ test_no_log - Invoked with:
                 option2 = @{
                     aliases = @("alias2_spec")
                     deprecated_aliases = @(
-                        @{name = "alias2_spec"; version = "2.0"; collection_name = "ansible.builtin"}
+                        @{name = "alias2_spec"; version = "2.0"; collection_name = "assible.builtin"}
                     )
                 }
             }
@@ -2842,7 +2842,7 @@ test_no_log - Invoked with:
             alias1_spec = "option1"
             alias2 = "option2"
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec, @($fragment1))
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec, @($fragment1))
 
         $failed = $false
         try {
@@ -2850,7 +2850,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2906,11 +2906,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            [Ansible.Basic.AnsibleModule]::Create(@(), $spec, @($fragment1, $fragment2))
+            [Assible.Basic.AssibleModule]::Create(@(), $spec, @($fragment1, $fragment2))
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2940,7 +2940,7 @@ test_no_log - Invoked with:
         Set-Variable -Name complex_args -Scope Global -Value @{
             alias = "option1"
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec, @($fragment1))
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec, @($fragment1))
 
         $failed = $false
         try {
@@ -2948,7 +2948,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -2978,11 +2978,11 @@ test_no_log - Invoked with:
 
         $failed = $false
         try {
-            [Ansible.Basic.AnsibleModule]::Create(@(), $spec, @($fragment))
+            [Assible.Basic.AssibleModule]::Create(@(), $spec, @($fragment))
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 1"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -3033,7 +3033,7 @@ test_no_log - Invoked with:
             alias4 = "option4"
             alias5 = "option5"
         }
-        $m = [Ansible.Basic.AnsibleModule]::Create(@(), $spec)
+        $m = [Assible.Basic.AssibleModule]::Create(@(), $spec)
 
         $failed = $false
         try {
@@ -3041,7 +3041,7 @@ test_no_log - Invoked with:
         } catch [System.Management.Automation.RuntimeException] {
             $failed = $true
             $_.Exception.Message | Assert-Equals -Expected "exit: 0"
-            $actual = [Ansible.Basic.AnsibleModule]::FromJson($_.Exception.InnerException.Output)
+            $actual = [Assible.Basic.AssibleModule]::FromJson($_.Exception.InnerException.Output)
         }
         $failed | Assert-Equals -Expected $true
 
@@ -3087,7 +3087,7 @@ try {
     if ($_.Exception.Message.StartSwith("exit: ")) {
         # The exception was caused by an unexpected Exit call, log that on the output
         $module.Result.output = (ConvertFrom-Json -InputObject $_.Exception.InnerException.Output)
-        $module.Result.msg = "Uncaught AnsibleModule exit in tests, see output"
+        $module.Result.msg = "Uncaught AssibleModule exit in tests, see output"
     } else {
         # Unrelated exception
         $module.Result.exception = $_.Exception.ToString()

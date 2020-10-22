@@ -17,14 +17,14 @@ __metaclass__ = type
 
 import re
 from copy import deepcopy
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible.module_utils.six import iteritems
-from ansible_collections.ansible.netcommon.plugins.module_utils.compat import (
+from assible.module_utils.six import iteritems
+from assible_collections.assible.netcommon.plugins.module_utils.compat import (
     ipaddress,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.l3_interfaces.l3_interfaces import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.argspec.l3_interfaces.l3_interfaces import (
     L3_interfacesArgs,
 )
 
@@ -47,10 +47,10 @@ class L3_interfacesFacts(object):
 
         self.generated_spec = utils.generate_dict(facts_argument_spec)
 
-    def populate_facts(self, connection, ansible_facts, data=None):
+    def populate_facts(self, connection, assible_facts, data=None):
         """ Populate the facts for l3_interfaces
         :param connection: the device connection
-        :param ansible_facts: Facts dictionary
+        :param assible_facts: Facts dictionary
         :param data: previously collected conf
         :rtype: dictionary
         :returns: facts
@@ -74,7 +74,7 @@ class L3_interfacesFacts(object):
                 if obj:
                     objs.append(obj)
 
-        ansible_facts["ansible_network_resources"].pop("l3_interfaces", None)
+        assible_facts["assible_network_resources"].pop("l3_interfaces", None)
         facts = {}
         if objs:
             facts["l3_interfaces"] = []
@@ -84,8 +84,8 @@ class L3_interfacesFacts(object):
             for cfg in params["config"]:
                 facts["l3_interfaces"].append(utils.remove_empties(cfg))
 
-        ansible_facts["ansible_network_resources"].update(facts)
-        return ansible_facts
+        assible_facts["assible_network_resources"].update(facts)
+        return assible_facts
 
     def render_config(self, conf):
         """

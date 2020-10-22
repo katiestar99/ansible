@@ -3,9 +3,9 @@
   vars:
     search:
       files:
-        - '{{ ansible_distribution | lower }}.yml'
-        - '{{ ansible_os_family | lower }}.yml'
-        - '{{ ansible_system | lower }}.yml'
+        - '{{ assible_distribution | lower }}.yml'
+        - '{{ assible_os_family | lower }}.yml'
+        - '{{ assible_system | lower }}.yml'
         - default.yml
       paths:
         - vars
@@ -24,11 +24,11 @@
         name: '{{ faketime_pkg }}'
       register: faketime_package_installed
       until: faketime_package_installed is success
-      when: ansible_distribution != 'Alpine'
+      when: assible_distribution != 'Alpine'
 
     - name: install faketime packages - Alpine
       command: apk add -U {{ faketime_pkg }} --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-      when: ansible_distribution == 'Alpine'
+      when: assible_distribution == 'Alpine'
 
     - name: Find libfaketime path
       shell: '{{ list_pkg_files }} {{ faketime_pkg }} | grep -F libfaketime.so.1'
@@ -37,7 +37,7 @@
       register: libfaketime_path
       when: list_pkg_files is defined
 
-    - when: ansible_service_mgr == 'systemd'
+    - when: assible_service_mgr == 'systemd'
       block:
         - name: create directory for cron drop-in file
           file:
@@ -59,7 +59,7 @@
             group: root
             mode: 0644
 
-    - when: ansible_system == 'FreeBSD'
+    - when: assible_system == 'FreeBSD'
       name: Use faketime with cron service
       copy:
         content: |-
@@ -71,14 +71,14 @@
 
 - name: enable cron service
   service:
-    daemon-reload: "{{ (ansible_service_mgr == 'systemd') | ternary(true, omit) }}"
+    daemon-reload: "{{ (assible_service_mgr == 'systemd') | ternary(true, omit) }}"
     name: '{{ cron_service }}'
     state: restarted
-  when: ansible_distribution != 'Alpine'
+  when: assible_distribution != 'Alpine'
 
 - name: enable cron service - Alpine
   command: nohup crond
   environment:
     FAKETIME: "+0y x10"
     LD_PRELOAD: "/usr/lib/faketime/libfaketime.so.1"
-  when: ansible_distribution == 'Alpine'
+  when: assible_distribution == 'Alpine'

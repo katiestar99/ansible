@@ -1,5 +1,5 @@
-#Requires -Module Ansible.ModuleUtils.Recursive1
-#Requires -Module Ansible.ModuleUtils.Recursive3
+#Requires -Module Assible.ModuleUtils.Recursive1
+#Requires -Module Assible.ModuleUtils.Recursive3
 
 Function Get-Test2 {
     <#

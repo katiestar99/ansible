@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# (c) 2018, Ansible by Red Hat, inc
+# (c) 2018, Assible by Red Hat, inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": ["preview"],
     "supported_by": "network",
@@ -18,17 +18,17 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = """module: net_put
 author: Deepak Agrawal (@dagrawal)
-short_description: Copy a file from Ansible Controller to a network device
+short_description: Copy a file from Assible Controller to a network device
 description:
-- This module provides functionality to copy file from Ansible controller to network
+- This module provides functionality to copy file from Assible controller to network
   devices.
 extends_documentation_fragment:
-- ansible.netcommon.network_agnostic
+- assible.netcommon.network_agnostic
 options:
   src:
     description:
     - Specifies the source file. The path to the source file can either be the full
-      path on the Ansible control host or a relative path from the playbook or role
+      path on the Assible control host or a relative path from the playbook or role
       root directory.
     required: true
   protocol:
@@ -67,7 +67,7 @@ notes:
 """
 
 EXAMPLES = """
-- name: copy file from ansible controller to a network device
+- name: copy file from assible controller to a network device
   net_put:
     src: running_cfg_ios1.txt
 

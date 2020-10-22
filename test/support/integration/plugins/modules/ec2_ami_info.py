@@ -1,11 +1,11 @@
 #!/usr/bin/python
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -17,7 +17,7 @@ version_added: '2.5'
 short_description: Gather information about ec2 AMIs
 description:
   - Gather information about ec2 AMIs
-  - This module was called C(ec2_ami_facts) before Ansible 2.9. The usage did not change.
+  - This module was called C(ec2_ami_facts) before Assible 2.9. The usage did not change.
 author:
   - Prasad Katti (@prasadkatti)
 requirements: [ boto3 ]
@@ -205,10 +205,10 @@ images:
 try:
     from botocore.exceptions import ClientError, BotoCoreError
 except ImportError:
-    pass  # caught by AnsibleAWSModule
+    pass  # caught by AssibleAWSModule
 
-from ansible.module_utils.aws.core import AnsibleAWSModule
-from ansible.module_utils.ec2 import ansible_dict_to_boto3_filter_list, camel_dict_to_snake_dict, boto3_tag_list_to_ansible_dict
+from assible.module_utils.aws.core import AssibleAWSModule
+from assible.module_utils.ec2 import assible_dict_to_boto3_filter_list, camel_dict_to_snake_dict, boto3_tag_list_to_assible_dict
 
 
 def list_ec2_images(ec2_client, module):
@@ -237,7 +237,7 @@ def list_ec2_images(ec2_client, module):
                 filters['owner-alias'] = list()
             filters['owner-alias'].append(owner)
 
-    filters = ansible_dict_to_boto3_filter_list(filters)
+    filters = assible_dict_to_boto3_filter_list(filters)
 
     try:
         images = ec2_client.describe_images(ImageIds=image_ids, Filters=filters, Owners=owner_param, ExecutableUsers=executable_users)
@@ -246,7 +246,7 @@ def list_ec2_images(ec2_client, module):
         module.fail_json_aws(err, msg="error describing images")
     for image in images:
         try:
-            image['tags'] = boto3_tag_list_to_ansible_dict(image.get('tags', []))
+            image['tags'] = boto3_tag_list_to_assible_dict(image.get('tags', []))
             if module.params.get("describe_image_attributes"):
                 launch_permissions = ec2_client.describe_image_attribute(Attribute='launchPermission', ImageId=image['image_id'])['LaunchPermissions']
                 image['launch_permissions'] = [camel_dict_to_snake_dict(perm) for perm in launch_permissions]
@@ -268,10 +268,10 @@ def main():
         describe_image_attributes=dict(default=False, type='bool')
     )
 
-    module = AnsibleAWSModule(argument_spec=argument_spec, supports_check_mode=True)
+    module = AssibleAWSModule(argument_spec=argument_spec, supports_check_mode=True)
     if module._module._name == 'ec2_ami_facts':
         module._module.deprecate("The 'ec2_ami_facts' module has been renamed to 'ec2_ami_info'",
-                                 version='2.13', collection_name='ansible.builtin')
+                                 version='2.13', collection_name='assible.builtin')
 
     ec2_client = module.client('ec2')
 

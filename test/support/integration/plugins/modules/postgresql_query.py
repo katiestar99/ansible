@@ -8,7 +8,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
     'status': ['preview']
@@ -183,17 +183,17 @@ try:
 except ImportError:
     # it is needed for checking 'no result to fetch' in main(),
     # psycopg2 availability will be checked by connect_to_db() into
-    # ansible.module_utils.postgres
+    # assible.module_utils.postgres
     pass
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.postgres import (
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.postgres import (
     connect_to_db,
     get_conn_params,
     postgres_common_argument_spec,
 )
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import iteritems
+from assible.module_utils._text import to_native
+from assible.module_utils.six import iteritems
 
 
 # ===========================================
@@ -251,7 +251,7 @@ def main():
         encoding=dict(type='str'),
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         mutually_exclusive=(('positional_args', 'named_args'),),
         supports_check_mode=True,

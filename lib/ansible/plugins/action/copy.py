@@ -1,20 +1,20 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017 Toshio Kuratomi <tkuraotmi@ansible.com>
+# (c) 2017 Toshio Kuratomi <tkuraotmi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -27,13 +27,13 @@ import stat
 import tempfile
 import traceback
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleFileNotFound
-from ansible.module_utils.basic import FILE_COMMON_ARGUMENTS
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.plugins.action import ActionBase
-from ansible.utils.hashing import checksum
+from assible import constants as C
+from assible.errors import AssibleError, AssibleFileNotFound
+from assible.module_utils.basic import FILE_COMMON_ARGUMENTS
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.plugins.action import ActionBase
+from assible.utils.hashing import checksum
 
 
 # Supplement the FILE_COMMON_ARGUMENTS with arguments that are specific to file
@@ -237,16 +237,16 @@ class ActionModule(ActionBase):
         result = {}
         result['diff'] = []
 
-        # If the local file does not exist, get_real_file() raises AnsibleFileNotFound
+        # If the local file does not exist, get_real_file() raises AssibleFileNotFound
         try:
             source_full = self._loader.get_real_file(source_full, decrypt=decrypt)
-        except AnsibleFileNotFound as e:
+        except AssibleFileNotFound as e:
             result['failed'] = True
             result['msg'] = "could not find src=%s, %s" % (source_full, to_text(e))
             return result
 
         # Get the local mode and set if user wanted it preserved
-        # https://github.com/ansible/ansible-modules-core/issues/1124
+        # https://github.com/assible/assible-modules-core/issues/1124
         lmode = None
         if self._task.args.get('mode', None) == 'preserve':
             lmode = '0%03o' % stat.S_IMODE(os.stat(source_full).st_mode)
@@ -338,7 +338,7 @@ class ActionModule(ActionBase):
             if lmode:
                 new_module_args['mode'] = lmode
 
-            module_return = self._execute_module(module_name='ansible.legacy.copy', module_args=new_module_args, task_vars=task_vars)
+            module_return = self._execute_module(module_name='assible.legacy.copy', module_args=new_module_args, task_vars=task_vars)
 
         else:
             # no need to transfer the file, already correct hash, but still need to call
@@ -349,7 +349,7 @@ class ActionModule(ActionBase):
             if raw:
                 return None
 
-            # Fix for https://github.com/ansible/ansible-modules-core/issues/1568.
+            # Fix for https://github.com/assible/assible-modules-core/issues/1568.
             # If checksums match, and follow = True, find out if 'dest' is a link. If so,
             # change it to point to the source of the link.
             if follow:
@@ -377,7 +377,7 @@ class ActionModule(ActionBase):
                 new_module_args['mode'] = lmode
 
             # Execute the file module.
-            module_return = self._execute_module(module_name='ansible.legacy.file', module_args=new_module_args, task_vars=task_vars)
+            module_return = self._execute_module(module_name='assible.legacy.file', module_args=new_module_args, task_vars=task_vars)
 
         if not module_return.get('checksum'):
             module_return['checksum'] = local_checksum
@@ -453,7 +453,7 @@ class ActionModule(ActionBase):
         # if we have first_available_file in our vars
         # look up the files and use the first one we find as src
         elif remote_src:
-            result.update(self._execute_module(module_name='ansible.legacy.copy', task_vars=task_vars))
+            result.update(self._execute_module(module_name='assible.legacy.copy', task_vars=task_vars))
             return self._ensure_invocation(result)
         else:
             # find_needle returns a path that may not have a trailing slash on
@@ -464,7 +464,7 @@ class ActionModule(ActionBase):
             try:
                 # find in expected paths
                 source = self._find_needle('files', source)
-            except AnsibleError as e:
+            except AssibleError as e:
                 result['failed'] = True
                 result['msg'] = to_text(e)
                 result['exception'] = traceback.format_exc()
@@ -548,7 +548,7 @@ class ActionModule(ActionBase):
             new_module_args['recurse'] = False
             del new_module_args['src']
 
-            module_return = self._execute_module(module_name='ansible.legacy.file', module_args=new_module_args, task_vars=task_vars)
+            module_return = self._execute_module(module_name='assible.legacy.file', module_args=new_module_args, task_vars=task_vars)
 
             if module_return.get('failed'):
                 result.update(module_return)
@@ -574,7 +574,7 @@ class ActionModule(ActionBase):
             if new_module_args.get('mode', None) == 'preserve':
                 new_module_args.pop('mode')
 
-            module_return = self._execute_module(module_name='ansible.legacy.file', module_args=new_module_args, task_vars=task_vars)
+            module_return = self._execute_module(module_name='assible.legacy.file', module_args=new_module_args, task_vars=task_vars)
             module_executed = True
 
             if module_return.get('failed'):

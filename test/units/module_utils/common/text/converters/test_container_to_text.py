@@ -7,7 +7,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.common.text.converters import container_to_text
+from assible.module_utils.common.text.converters import container_to_text
 
 
 DEFAULT_ENCODING = 'utf-8'

@@ -4,14 +4,14 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
 DOCUMENTATION = '''
 module: pids
 version_added: 2.8
-description: "Retrieves a list of PIDs of given process name in Ansible controller/controlled machines.Returns an empty list if no process in that name exists."
+description: "Retrieves a list of PIDs of given process name in Assible controller/controlled machines.Returns an empty list if no process in that name exists."
 short_description: "Retrieves process IDs list if the process is running otherwise return empty list"
 author:
   - Saranya Sridharan (@saranyasridharan)
@@ -44,7 +44,7 @@ pids:
   sample: [100,200]
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 try:
     import psutil
     HAS_PSUTIL = True
@@ -72,7 +72,7 @@ def get_pid(name):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(required=True, type="str"),
         ),

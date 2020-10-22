@@ -1,10 +1,10 @@
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.plugins.action import ActionBase
+from assible.plugins.action import ActionBase
 
 
 class ActionModule(ActionBase):
@@ -15,7 +15,7 @@ class ActionModule(ActionBase):
         # Shell module is implemented via command with a special arg
         self._task.args['_uses_shell'] = True
 
-        command_action = self._shared_loader_obj.action_loader.get('ansible.legacy.command',
+        command_action = self._shared_loader_obj.action_loader.get('assible.legacy.command',
                                                                    task=self._task,
                                                                    connection=self._connection,
                                                                    play_context=self._play_context,

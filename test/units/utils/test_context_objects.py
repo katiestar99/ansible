@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, Toshio Kuratomi <tkuratomi@ansible.com>
+# Copyright: (c) 2018, Toshio Kuratomi <tkuratomi@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -9,8 +9,8 @@ import argparse
 
 import pytest
 
-from ansible.module_utils.common.collections import ImmutableDict
-from ansible.utils import context_objects as co
+from assible.module_utils.common.collections import ImmutableDict
+from assible.utils import context_objects as co
 
 
 MAKE_IMMUTABLE_DATA = ((u'くらとみ', u'くらとみ'),

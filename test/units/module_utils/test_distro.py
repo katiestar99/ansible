@@ -1,6 +1,6 @@
 
 # (c) 2018 Adrian Likins <alikins@redhat.com>
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 #  or
 # Apache License v2.0 (see http://www.apache.org/licenses/LICENSE-2.0)
@@ -15,8 +15,8 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.module_utils import distro
-from ansible.module_utils.six import string_types
+from assible.module_utils import distro
+from assible.module_utils.six import string_types
 
 
 # Generic test case with minimal assertions about specific returned values.

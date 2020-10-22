@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -9,7 +9,7 @@ DOCUMENTATION = """
     short_description: Substitute User DO
     description:
         - This become plugins allows your remote/login user to execute commands as another user via the sudo utility.
-    author: ansible (@core)
+    author: assible (@core)
     version_added: "2.8"
     options:
         become_user:
@@ -21,11 +21,11 @@ DOCUMENTATION = """
               - section: sudo_become_plugin
                 key: user
             vars:
-              - name: ansible_become_user
-              - name: ansible_sudo_user
+              - name: assible_become_user
+              - name: assible_sudo_user
             env:
-              - name: ANSIBLE_BECOME_USER
-              - name: ANSIBLE_SUDO_USER
+              - name: ASSIBLE_BECOME_USER
+              - name: ASSIBLE_SUDO_USER
         become_exe:
             description: Sudo executable
             default: sudo
@@ -35,11 +35,11 @@ DOCUMENTATION = """
               - section: sudo_become_plugin
                 key: executable
             vars:
-              - name: ansible_become_exe
-              - name: ansible_sudo_exe
+              - name: assible_become_exe
+              - name: assible_sudo_exe
             env:
-              - name: ANSIBLE_BECOME_EXE
-              - name: ANSIBLE_SUDO_EXE
+              - name: ASSIBLE_BECOME_EXE
+              - name: ASSIBLE_SUDO_EXE
         become_flags:
             description: Options to pass to sudo
             default: -H -S -n
@@ -49,28 +49,28 @@ DOCUMENTATION = """
               - section: sudo_become_plugin
                 key: flags
             vars:
-              - name: ansible_become_flags
-              - name: ansible_sudo_flags
+              - name: assible_become_flags
+              - name: assible_sudo_flags
             env:
-              - name: ANSIBLE_BECOME_FLAGS
-              - name: ANSIBLE_SUDO_FLAGS
+              - name: ASSIBLE_BECOME_FLAGS
+              - name: ASSIBLE_SUDO_FLAGS
         become_pass:
             description: Password to pass to sudo
             required: False
             vars:
-              - name: ansible_become_password
-              - name: ansible_become_pass
-              - name: ansible_sudo_pass
+              - name: assible_become_password
+              - name: assible_become_pass
+              - name: assible_sudo_pass
             env:
-              - name: ANSIBLE_BECOME_PASS
-              - name: ANSIBLE_SUDO_PASS
+              - name: ASSIBLE_BECOME_PASS
+              - name: ASSIBLE_SUDO_PASS
             ini:
               - section: sudo_become_plugin
                 key: password
 """
 
 
-from ansible.plugins.become import BecomeBase
+from assible.plugins.become import BecomeBase
 
 
 class BecomeModule(BecomeBase):
@@ -92,7 +92,7 @@ class BecomeModule(BecomeBase):
         flags = self.get_option('become_flags') or ''
         prompt = ''
         if self.get_option('become_pass'):
-            self.prompt = '[sudo via ansible, key=%s] password:' % self._id
+            self.prompt = '[sudo via assible, key=%s] password:' % self._id
             if flags:  # this could be simplified, but kept as is for now for backwards string matching
                 flags = flags.replace('-n', '')
             prompt = '-p "%s"' % (self.prompt)

@@ -4,7 +4,7 @@ __metaclass__ = type
 
 from units.compat import unittest
 
-from ansible import constants as C
+from assible import constants as C
 
 
 test_cases = (('not-valid', ['-'], 'not_valid'), ('not!valid@either', ['!', '@'], 'not_valid_either'), ('1_nor_This', ['1'], '__nor_This'))

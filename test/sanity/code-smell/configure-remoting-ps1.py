@@ -7,11 +7,11 @@ import os
 
 def main():
     # required by external automated processes and should not be moved, renamed or converted to a symbolic link
-    original = 'examples/scripts/ConfigureRemotingForAnsible.ps1'
-    # required to be packaged with ansible-test and must match the original file, but cannot be a symbolic link
-    # the packaged version is needed to run tests when ansible-test has been installed
+    original = 'examples/scripts/ConfigureRemotingForAssible.ps1'
+    # required to be packaged with assible-test and must match the original file, but cannot be a symbolic link
+    # the packaged version is needed to run tests when assible-test has been installed
     # keeping the packaged version identical to the original makes sure tests cover both files
-    packaged = 'test/lib/ansible_test/_data/setup/ConfigureRemotingForAnsible.ps1'
+    packaged = 'test/lib/assible_test/_data/setup/ConfigureRemotingForAssible.ps1'
 
     copy_valid = False
 

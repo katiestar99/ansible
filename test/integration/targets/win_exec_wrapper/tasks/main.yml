@@ -46,7 +46,7 @@
   vars:
     # Running with coverage means the module is run from a script and not as a psuedo script in a pipeline. This
     # results in a different error message being returned so we disable coverage collection for this task.
-    _ansible_coverage_remote_output: ''
+    _assible_coverage_remote_output: ''
 
 - name: assert test module with error msg
   assert:
@@ -87,7 +87,7 @@
   register: function_exception
   ignore_errors: yes
   vars:
-    _ansible_coverage_remote_output: ''
+    _assible_coverage_remote_output: ''
 
 - name: assert test module with function exception
   assert:
@@ -191,7 +191,7 @@
     - become_system.output == "S-1-5-18"
 
 - set_fact:
-    become_test_username: ansible_become_test
+    become_test_username: assible_become_test
     gen_pw: "{{ 'password123!' + lookup('password', '/dev/null chars=ascii_letters,digits length=8') }}"
 
 - name: create unprivileged user
@@ -215,10 +215,10 @@
 
   - name: get become user profile dir so we can clean it up later
     vars: &become_vars
-      ansible_become_user: "{{ become_test_username }}"
-      ansible_become_password: "{{ gen_pw }}"
-      ansible_become_method: runas
-      ansible_become: yes
+      assible_become_user: "{{ become_test_username }}"
+      assible_become_password: "{{ gen_pw }}"
+      assible_become_method: runas
+      assible_become: yes
     win_shell: $env:USERPROFILE
     register: profile_dir_out
 

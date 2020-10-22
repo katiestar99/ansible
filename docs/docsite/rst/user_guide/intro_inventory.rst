@@ -5,10 +5,10 @@
 How to build your inventory
 ***************************
 
-Ansible works against multiple managed nodes or "hosts" in your infrastructure at the same time, using a list or group of lists known as inventory. Once your inventory is defined, you use :ref:`patterns <intro_patterns>` to select the hosts or groups you want Ansible to run against.
+Assible works against multiple managed nodes or "hosts" in your infrastructure at the same time, using a list or group of lists known as inventory. Once your inventory is defined, you use :ref:`patterns <intro_patterns>` to select the hosts or groups you want Assible to run against.
 
-The default location for inventory is a file called ``/etc/ansible/hosts``. You can specify a different inventory file at the command line using the ``-i <path>`` option. You can also use multiple inventory files at the same time, and/or pull inventory from dynamic or cloud sources or different formats (YAML, ini, and so on), as described in :ref:`intro_dynamic_inventory`.
-Introduced in version 2.4, Ansible has :ref:`inventory_plugins` to make this flexible and customizable.
+The default location for inventory is a file called ``/etc/assible/hosts``. You can specify a different inventory file at the command line using the ``-i <path>`` option. You can also use multiple inventory files at the same time, and/or pull inventory from dynamic or cloud sources or different formats (YAML, ini, and so on), as described in :ref:`intro_dynamic_inventory`.
+Introduced in version 2.4, Assible has :ref:`inventory_plugins` to make this flexible and customizable.
 
 .. contents::
    :local:
@@ -19,7 +19,7 @@ Inventory basics: formats, hosts, and groups
 ============================================
 
 The inventory file can be in one of many formats, depending on the inventory plugins you have.
-The most common formats are INI and YAML. A basic INI ``/etc/ansible/hosts`` might look like this:
+The most common formats are INI and YAML. A basic INI ``/etc/assible/hosts`` might look like this:
 
 .. code-block:: text
 
@@ -200,7 +200,7 @@ For numeric patterns, leading zeros can be included or removed, as desired. Rang
 Adding variables to inventory
 =============================
 
-You can store variable values that relate to a specific host or group in inventory. To start with, you may add variables directly to the hosts and groups in your main inventory file. As you add more and more managed nodes to your Ansible inventory, however, you will likely want to store variables in separate host and group variable files. See :ref:`define_variables_in_inventory` for details.
+You can store variable values that relate to a specific host or group in inventory. To start with, you may add variables directly to the hosts and groups in your main inventory file. As you add more and more managed nodes to your Assible inventory, however, you will likely want to store variables in separate host and group variable files. See :ref:`define_variables_in_inventory` for details.
 
 .. _host_variables:
 
@@ -228,7 +228,7 @@ In YAML:
           http_port: 303
           maxRequestsPerChild: 909
 
-Unique values like non-standard SSH ports work well as host variables. You can add them to your Ansible inventory by adding the port number after the hostname with a colon:
+Unique values like non-standard SSH ports work well as host variables. You can add them to your Assible inventory by adding the port number after the hostname with a colon:
 
 .. code-block:: text
 
@@ -240,9 +240,9 @@ Connection variables also work well as host variables:
 
    [targets]
 
-   localhost              ansible_connection=local
-   other1.example.com     ansible_connection=ssh        ansible_user=myuser
-   other2.example.com     ansible_connection=ssh        ansible_user=myotheruser
+   localhost              assible_connection=local
+   other1.example.com     assible_connection=ssh        assible_user=myuser
+   other2.example.com     assible_connection=ssh        assible_user=myotheruser
 
 .. note:: If you list non-standard SSH ports in your SSH config file, the ``openssh`` connection will find and use them, but the ``paramiko`` connection will not.
 
@@ -257,7 +257,7 @@ In INI:
 
 .. code-block:: text
 
-    jumper ansible_port=5555 ansible_host=192.0.2.50
+    jumper assible_port=5555 assible_host=192.0.2.50
 
 In YAML:
 
@@ -266,10 +266,10 @@ In YAML:
     ...
       hosts:
         jumper:
-          ansible_port: 5555
-          ansible_host: 192.0.2.50
+          assible_port: 5555
+          assible_host: 192.0.2.50
 
-In the above example, running Ansible against the host alias "jumper" will connect to 192.0.2.50 on port 5555. See :ref:`behavioral inventory parameters <behavioral_parameters>` to further customize the connection to hosts.
+In the above example, running Assible against the host alias "jumper" will connect to 192.0.2.50 on port 5555. See :ref:`behavioral inventory parameters <behavioral_parameters>` to further customize the connection to hosts.
 
 .. note::
    Values passed in the INI format using the ``key=value`` syntax are interpreted differently depending on where they are declared:
@@ -313,7 +313,7 @@ In YAML:
         ntp_server: ntp.atlanta.example.com
         proxy: proxy.atlanta.example.com
 
-Group variables are a convenient way to apply variables to multiple hosts at once. Before executing, however, Ansible always flattens variables, including inventory variables, to the host level. If a host is a member of multiple groups, Ansible reads variable values from all of those groups. If you assign different values to the same variable in different groups, Ansible chooses which value to use based on internal :ref:`rules for merging <how_we_merge>`.
+Group variables are a convenient way to apply variables to multiple hosts at once. Before executing, however, Assible always flattens variables, including inventory variables, to the host level. If a host is a member of multiple groups, Assible reads variable values from all of those groups. If you assign different values to the same variable in different groups, Assible chooses which value to use based on internal :ref:`rules for merging <how_we_merge>`.
 
 .. _subgroups:
 
@@ -395,15 +395,15 @@ Organizing host and group variables
 Although you can store variables in the main inventory file, storing separate host and group variables files may help you organize your variable values more easily. Host and group variable files must use YAML syntax. Valid file extensions include '.yml', '.yaml', '.json', or no file extension.
 See :ref:`yaml_syntax` if you are new to YAML.
 
-Ansible loads host and group variable files by searching paths relative to the inventory file or the playbook file. If your inventory file at ``/etc/ansible/hosts`` contains a host named 'foosball' that belongs to two groups, 'raleigh' and 'webservers', that host will use variables in YAML files at the following locations:
+Assible loads host and group variable files by searching paths relative to the inventory file or the playbook file. If your inventory file at ``/etc/assible/hosts`` contains a host named 'foosball' that belongs to two groups, 'raleigh' and 'webservers', that host will use variables in YAML files at the following locations:
 
 .. code-block:: bash
 
-    /etc/ansible/group_vars/raleigh # can optionally end in '.yml', '.yaml', or '.json'
-    /etc/ansible/group_vars/webservers
-    /etc/ansible/host_vars/foosball
+    /etc/assible/group_vars/raleigh # can optionally end in '.yml', '.yaml', or '.json'
+    /etc/assible/group_vars/webservers
+    /etc/assible/host_vars/foosball
 
-For example, if you group hosts in your inventory by datacenter, and each datacenter uses its own NTP server and database server, you can create a file called ``/etc/ansible/group_vars/raleigh`` to store the variables for the ``raleigh`` group:
+For example, if you group hosts in your inventory by datacenter, and each datacenter uses its own NTP server and database server, you can create a file called ``/etc/assible/group_vars/raleigh`` to store the variables for the ``raleigh`` group:
 
 .. code-block:: yaml
 
@@ -411,18 +411,18 @@ For example, if you group hosts in your inventory by datacenter, and each datace
     ntp_server: acme.example.org
     database_server: storage.example.org
 
-You can also create *directories* named after your groups or hosts. Ansible will read all the files in these directories in lexicographical order. An example with the 'raleigh' group:
+You can also create *directories* named after your groups or hosts. Assible will read all the files in these directories in lexicographical order. An example with the 'raleigh' group:
 
 .. code-block:: bash
 
-    /etc/ansible/group_vars/raleigh/db_settings
-    /etc/ansible/group_vars/raleigh/cluster_settings
+    /etc/assible/group_vars/raleigh/db_settings
+    /etc/assible/group_vars/raleigh/cluster_settings
 
 All hosts in the 'raleigh' group will have the variables defined in these files
 available to them. This can be very useful to keep your variables organized when a single
-file gets too big, or when you want to use :ref:`Ansible Vault<playbooks_vault>` on some group variables.
+file gets too big, or when you want to use :ref:`Assible Vault<playbooks_vault>` on some group variables.
 
-You can also add ``group_vars/`` and ``host_vars/`` directories to your playbook directory. The ``ansible-playbook`` command looks for these directories in the current working directory by default. Other Ansible commands (for example, ``ansible``, ``ansible-console``, and so on) will only look for ``group_vars/`` and ``host_vars/`` in the inventory directory. If you want other commands to load group and host variables from a playbook directory, you must provide the ``--playbook-dir`` option on the command line.
+You can also add ``group_vars/`` and ``host_vars/`` directories to your playbook directory. The ``assible-playbook`` command looks for these directories in the current working directory by default. Other Assible commands (for example, ``assible``, ``assible-console``, and so on) will only look for ``group_vars/`` and ``host_vars/`` in the inventory directory. If you want other commands to load group and host variables from a playbook directory, you must provide the ``--playbook-dir`` option on the command line.
 If you load inventory files from both the playbook directory and the inventory directory, variables in the playbook directory will override variables set in the inventory directory.
 
 Keeping your inventory file and variables in a git repo (or other version control)
@@ -433,30 +433,30 @@ is an excellent way to track changes to your inventory and host variables.
 How variables are merged
 ========================
 
-By default variables are merged/flattened to the specific host before a play is run. This keeps Ansible focused on the Host and Task, so groups don't really survive outside of inventory and host matching. By default, Ansible overwrites variables including the ones defined for a group and/or host (see :ref:`DEFAULT_HASH_BEHAVIOUR<DEFAULT_HASH_BEHAVIOUR>`). The order/precedence is (from lowest to highest):
+By default variables are merged/flattened to the specific host before a play is run. This keeps Assible focused on the Host and Task, so groups don't really survive outside of inventory and host matching. By default, Assible overwrites variables including the ones defined for a group and/or host (see :ref:`DEFAULT_HASH_BEHAVIOUR<DEFAULT_HASH_BEHAVIOUR>`). The order/precedence is (from lowest to highest):
 
 - all group (because it is the 'parent' of all other groups)
 - parent group
 - child group
 - host
 
-By default Ansible merges groups at the same parent/child level in ASCII order, and the last group loaded overwrites the previous groups. For example, an a_group will be merged with b_group and b_group vars that match will overwrite the ones in a_group.
+By default Assible merges groups at the same parent/child level in ASCII order, and the last group loaded overwrites the previous groups. For example, an a_group will be merged with b_group and b_group vars that match will overwrite the ones in a_group.
 
-You can change this behavior by setting the group variable ``ansible_group_priority`` to change the merge order for groups of the same level (after the parent/child order is resolved). The larger the number, the later it will be merged, giving it higher priority. This variable defaults to ``1`` if not set. For example:
+You can change this behavior by setting the group variable ``assible_group_priority`` to change the merge order for groups of the same level (after the parent/child order is resolved). The larger the number, the later it will be merged, giving it higher priority. This variable defaults to ``1`` if not set. For example:
 
 .. code-block:: yaml
 
     a_group:
       vars:
         testvar: a
-        ansible_group_priority: 10
+        assible_group_priority: 10
     b_group:
       vars:
         testvar: b
 
 In this example, if both groups have the same priority, the result would normally have been ``testvar == b``, but since we are giving the ``a_group`` a higher priority the result will be ``testvar == a``.
 
-.. note:: ``ansible_group_priority`` can only be set in the inventory source and not in group_vars/, as the variable is used in the loading of group_vars.
+.. note:: ``assible_group_priority`` can only be set in the inventory source and not in group_vars/, as the variable is used in the loading of group_vars.
 
 .. _using_multiple_inventory_sources:
 
@@ -465,17 +465,17 @@ Using multiple inventory sources
 
 You can target multiple inventory sources (directories, dynamic inventory scripts
 or files supported by inventory plugins) at the same time by giving multiple inventory parameters from the command
-line or by configuring :envvar:`ANSIBLE_INVENTORY`. This can be useful when you want to target normally
+line or by configuring :envvar:`ASSIBLE_INVENTORY`. This can be useful when you want to target normally
 separate environments, like staging and production, at the same time for a specific action.
 
 Target two sources from the command line like this:
 
 .. code-block:: bash
 
-    ansible-playbook get_logs.yml -i staging -i production
+    assible-playbook get_logs.yml -i staging -i production
 
 Keep in mind that if there are variable conflicts in the inventories, they are resolved according
-to the rules described in :ref:`how_we_merge` and :ref:`ansible_variable_precedence`.
+to the rules described in :ref:`how_we_merge` and :ref:`assible_variable_precedence`.
 The merging order is controlled by the order of the inventory source parameters.
 If ``[all:vars]`` in staging inventory defines ``myvar = 1``, but production inventory defines ``myvar = 2``,
 the playbook will be run with ``myvar = 2``. The result would be reversed if the playbook was run with
@@ -501,7 +501,7 @@ You can target this inventory directory simply like this:
 
 .. code-block:: bash
 
-    ansible-playbook example.yml -i inventory
+    assible-playbook example.yml -i inventory
 
 It can be useful to control the merging order of the inventory sources if there's variable
 conflicts or group of groups dependencies to the other inventory sources. The inventories
@@ -527,110 +527,110 @@ For more details on inventory plugins and dynamic inventory scripts see :ref:`in
 Connecting to hosts: behavioral inventory parameters
 ====================================================
 
-As described above, setting the following variables control how Ansible interacts with remote hosts.
+As described above, setting the following variables control how Assible interacts with remote hosts.
 
 Host connection:
 
 .. include:: shared_snippets/SSH_password_prompt.txt
 
-ansible_connection
-    Connection type to the host. This can be the name of any of ansible's connection plugins. SSH protocol types are ``smart``, ``ssh`` or ``paramiko``.  The default is smart. Non-SSH based types are described in the next section.
+assible_connection
+    Connection type to the host. This can be the name of any of assible's connection plugins. SSH protocol types are ``smart``, ``ssh`` or ``paramiko``.  The default is smart. Non-SSH based types are described in the next section.
 
 General for all connections:
 
-ansible_host
+assible_host
     The name of the host to connect to, if different from the alias you wish to give to it.
-ansible_port
+assible_port
     The connection port number, if not the default (22 for ssh)
-ansible_user
+assible_user
     The user name to use when connecting to the host
-ansible_password
+assible_password
     The password to use to authenticate to the host (never store this variable in plain text; always use a vault. See :ref:`tip_for_variables_and_vaults`)
 
 
 Specific to the SSH connection:
 
-ansible_ssh_private_key_file
+assible_ssh_private_key_file
     Private key file used by ssh.  Useful if using multiple keys and you don't want to use SSH agent.
-ansible_ssh_common_args
+assible_ssh_common_args
     This setting is always appended to the default command line for :command:`sftp`, :command:`scp`,
     and :command:`ssh`. Useful to configure a ``ProxyCommand`` for a certain host (or
     group).
-ansible_sftp_extra_args
+assible_sftp_extra_args
     This setting is always appended to the default :command:`sftp` command line.
-ansible_scp_extra_args
+assible_scp_extra_args
     This setting is always appended to the default :command:`scp` command line.
-ansible_ssh_extra_args
+assible_ssh_extra_args
     This setting is always appended to the default :command:`ssh` command line.
-ansible_ssh_pipelining
-    Determines whether or not to use SSH pipelining. This can override the ``pipelining`` setting in :file:`ansible.cfg`.
-ansible_ssh_executable (added in version 2.2)
-    This setting overrides the default behavior to use the system :command:`ssh`. This can override the ``ssh_executable`` setting in :file:`ansible.cfg`.
+assible_ssh_pipelining
+    Determines whether or not to use SSH pipelining. This can override the ``pipelining`` setting in :file:`assible.cfg`.
+assible_ssh_executable (added in version 2.2)
+    This setting overrides the default behavior to use the system :command:`ssh`. This can override the ``ssh_executable`` setting in :file:`assible.cfg`.
 
 
-Privilege escalation (see :ref:`Ansible Privilege Escalation<become>` for further details):
+Privilege escalation (see :ref:`Assible Privilege Escalation<become>` for further details):
 
-ansible_become
-    Equivalent to ``ansible_sudo`` or ``ansible_su``, allows to force privilege escalation
-ansible_become_method
+assible_become
+    Equivalent to ``assible_sudo`` or ``assible_su``, allows to force privilege escalation
+assible_become_method
     Allows to set privilege escalation method
-ansible_become_user
-    Equivalent to ``ansible_sudo_user`` or ``ansible_su_user``, allows to set the user you become through privilege escalation
-ansible_become_password
-    Equivalent to ``ansible_sudo_password`` or ``ansible_su_password``, allows you to set the privilege escalation password (never store this variable in plain text; always use a vault. See :ref:`tip_for_variables_and_vaults`)
-ansible_become_exe
-    Equivalent to ``ansible_sudo_exe`` or ``ansible_su_exe``, allows you to set the executable for the escalation method selected
-ansible_become_flags
-    Equivalent to ``ansible_sudo_flags`` or ``ansible_su_flags``, allows you to set the flags passed to the selected escalation method. This can be also set globally in :file:`ansible.cfg` in the ``sudo_flags`` option
+assible_become_user
+    Equivalent to ``assible_sudo_user`` or ``assible_su_user``, allows to set the user you become through privilege escalation
+assible_become_password
+    Equivalent to ``assible_sudo_password`` or ``assible_su_password``, allows you to set the privilege escalation password (never store this variable in plain text; always use a vault. See :ref:`tip_for_variables_and_vaults`)
+assible_become_exe
+    Equivalent to ``assible_sudo_exe`` or ``assible_su_exe``, allows you to set the executable for the escalation method selected
+assible_become_flags
+    Equivalent to ``assible_sudo_flags`` or ``assible_su_flags``, allows you to set the flags passed to the selected escalation method. This can be also set globally in :file:`assible.cfg` in the ``sudo_flags`` option
 
 Remote host environment parameters:
 
-.. _ansible_shell_type:
+.. _assible_shell_type:
 
-ansible_shell_type
+assible_shell_type
     The shell type of the target system. You should not use this setting unless you have set the
-    :ref:`ansible_shell_executable<ansible_shell_executable>` to a non-Bourne (sh) compatible shell.  By default commands are
+    :ref:`assible_shell_executable<assible_shell_executable>` to a non-Bourne (sh) compatible shell.  By default commands are
     formatted using ``sh``-style syntax.  Setting this to ``csh`` or ``fish`` will cause commands
     executed on target systems to follow those shell's syntax instead.
 
-.. _ansible_python_interpreter:
+.. _assible_python_interpreter:
 
-ansible_python_interpreter
+assible_python_interpreter
     The target host python path. This is useful for systems with more
     than one Python or not located at :command:`/usr/bin/python` such as \*BSD, or where :command:`/usr/bin/python`
     is not a 2.X series Python.  We do not use the :command:`/usr/bin/env` mechanism as that requires the remote user's
     path to be set right and also assumes the :program:`python` executable is named python, where the executable might
     be named something like :program:`python2.6`.
 
-ansible_*_interpreter
-    Works for anything such as ruby or perl and works just like :ref:`ansible_python_interpreter<ansible_python_interpreter>`.
+assible_*_interpreter
+    Works for anything such as ruby or perl and works just like :ref:`assible_python_interpreter<assible_python_interpreter>`.
     This replaces shebang of modules which will run on that host.
 
 .. versionadded:: 2.1
 
-.. _ansible_shell_executable:
+.. _assible_shell_executable:
 
-ansible_shell_executable
-    This sets the shell the ansible controller will use on the target machine,
-    overrides ``executable`` in :file:`ansible.cfg` which defaults to
+assible_shell_executable
+    This sets the shell the assible controller will use on the target machine,
+    overrides ``executable`` in :file:`assible.cfg` which defaults to
     :command:`/bin/sh`.  You should really only change it if is not possible
     to use :command:`/bin/sh` (in other words, if :command:`/bin/sh` is not installed on the target
     machine or cannot be run from sudo.).
 
-Examples from an Ansible-INI host file:
+Examples from an Assible-INI host file:
 
 .. code-block:: text
 
-  some_host         ansible_port=2222     ansible_user=manager
-  aws_host          ansible_ssh_private_key_file=/home/example/.ssh/aws.pem
-  freebsd_host      ansible_python_interpreter=/usr/local/bin/python
-  ruby_module_host  ansible_ruby_interpreter=/usr/bin/ruby.1.9.3
+  some_host         assible_port=2222     assible_user=manager
+  aws_host          assible_ssh_private_key_file=/home/example/.ssh/aws.pem
+  freebsd_host      assible_python_interpreter=/usr/local/bin/python
+  ruby_module_host  assible_ruby_interpreter=/usr/bin/ruby.1.9.3
 
 Non-SSH connection types
 ------------------------
 
-As stated in the previous section, Ansible executes playbooks over SSH but it is not limited to this connection type.
-With the host specific parameter ``ansible_connection=<connector>``, the connection type can be changed.
+As stated in the previous section, Assible executes playbooks over SSH but it is not limited to this connection type.
+With the host specific parameter ``assible_connection=<connector>``, the connection type can be changed.
 The following non-SSH based connectors are available:
 
 **local**
@@ -641,13 +641,13 @@ This connector can be used to deploy the playbook to the control machine itself.
 
 This connector deploys the playbook directly into Docker containers using the local Docker client. The following parameters are processed by this connector:
 
-ansible_host
+assible_host
     The name of the Docker container to connect to.
-ansible_user
+assible_user
     The user name to operate within the container. The user must exist inside the container.
-ansible_become
+assible_become
     If set to ``true`` the ``become_user`` will be used to operate within the container.
-ansible_docker_extra_args
+assible_docker_extra_args
     Could be a string with any additional arguments understood by Docker, which are not command specific. This parameter is mainly used to configure a remote Docker daemon to use.
 
 Here is an example of how to instantly deploy to created containers:
@@ -661,22 +661,22 @@ Here is an example of how to instantly deploy to created containers:
        image: jenkins
 
    - name: Add the container to inventory
-     ansible.builtin.add_host:
+     assible.builtin.add_host:
        name: my_jenkins
-       ansible_connection: docker
-       ansible_docker_extra_args: "--tlsverify --tlscacert=/path/to/ca.pem --tlscert=/path/to/client-cert.pem --tlskey=/path/to/client-key.pem -H=tcp://myserver.net:4243"
-       ansible_user: jenkins
+       assible_connection: docker
+       assible_docker_extra_args: "--tlsverify --tlscacert=/path/to/ca.pem --tlscert=/path/to/client-cert.pem --tlskey=/path/to/client-key.pem -H=tcp://myserver.net:4243"
+       assible_user: jenkins
      changed_when: false
 
    - name: Create a directory for ssh keys
      delegate_to: my_jenkins
-     ansible.builtin.file:
+     assible.builtin.file:
        path: "/var/jenkins_home/.ssh/jupiter"
        state: directory
 
 For a full list with available plugins and examples, see :ref:`connection_plugin_list`.
 
-.. note:: If you're reading the docs from the beginning, this may be the first example you've seen of an Ansible playbook. This is not an inventory file.
+.. note:: If you're reading the docs from the beginning, this may be the first example you've seen of an Assible playbook. This is not an inventory file.
           Playbooks will be covered in great detail later in the docs.
 
 .. _inventory_setup_examples:
@@ -684,7 +684,7 @@ For a full list with available plugins and examples, see :ref:`connection_plugin
 Inventory setup examples
 ========================
 
-See also :ref:`sample_setup`, which shows inventory along with playbooks and other Ansible artifacts.
+See also :ref:`sample_setup`, which shows inventory along with playbooks and other Assible artifacts.
 
 .. _inventory_setup-per_environment:
 
@@ -730,7 +730,7 @@ To apply a playbook called :file:`site.yml`
 to all the app servers in the test environment, use the
 following command::
 
-  ansible-playbook -i inventory_test -l appservers site.yml
+  assible-playbook -i inventory_test -l appservers site.yml
 
 .. _inventory_setup-per_function:
 
@@ -747,7 +747,7 @@ affecting only database servers:
   - hosts: dbservers
     tasks:
     - name: Allow access from 10.0.0.1
-      ansible.builtin.iptables:
+      assible.builtin.iptables:
         chain: INPUT
         jump: ACCEPT
         source: 10.0.0.1
@@ -784,8 +784,8 @@ their location.
    :ref:`intro_adhoc`
        Examples of basic commands
    :ref:`working_with_playbooks`
-       Learning Ansible's configuration, deployment, and orchestration language.
-   `Mailing List <https://groups.google.com/group/ansible-project>`_
+       Learning Assible's configuration, deployment, and orchestration language.
+   `Mailing List <https://groups.google.com/group/assible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

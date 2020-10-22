@@ -1,2 +1,2 @@
 bugfixes:
-  - improve deprecation message when using bare variable (https://github.com/ansible/ansible/pull/70687)
+  - improve deprecation message when using bare variable (https://github.com/assible/assible/pull/70687)

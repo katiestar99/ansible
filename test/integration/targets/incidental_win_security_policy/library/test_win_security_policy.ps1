@@ -10,8 +10,8 @@
 $ErrorActionPreference = 'Stop'
 
 $params = Parse-Args $args -supports_check_mode $false
-$section = Get-AnsibleParam -obj $params -name "section" -type "str" -failifempty $true
-$key = Get-AnsibleParam -obj $params -name "key" -type "str" -failifempty $true
+$section = Get-AssibleParam -obj $params -name "section" -type "str" -failifempty $true
+$key = Get-AssibleParam -obj $params -name "key" -type "str" -failifempty $true
 
 $result = @{
     changed = $false

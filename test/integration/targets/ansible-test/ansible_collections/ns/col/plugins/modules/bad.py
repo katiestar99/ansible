@@ -9,7 +9,7 @@ module: bad
 short_description: Bad test module
 description: Bad test module.
 author:
-  - Ansible Core Team
+  - Assible Core Team
 '''
 
 EXAMPLES = '''
@@ -18,12 +18,12 @@ EXAMPLES = '''
 
 RETURN = ''''''
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible import constants  # intentionally trigger pylint ansible-bad-module-import error
+from assible.module_utils.basic import AssibleModule
+from assible import constants  # intentionally trigger pylint assible-bad-module-import error
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(),
     )
 

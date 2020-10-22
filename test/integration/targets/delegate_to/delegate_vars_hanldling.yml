@@ -4,7 +4,7 @@
   tasks:
     - add_host:
         name: delegatetome
-        ansible_host: 127.0.0.4
+        assible_host: 127.0.0.4
 
 - name: ensure we dont use orig host vars if delegated one does not define them
   hosts: testhost
@@ -13,7 +13,7 @@
   tasks:
     - name: force current host to use winrm
       set_fact:
-        ansible_connection: winrm
+        assible_connection: winrm
 
     - name: this should fail (missing winrm or unreachable)
       ping:
@@ -26,7 +26,7 @@
         that:
             - orig is failed or orig is unreachable
 
-    - name: this will only fail if we take orig host ansible_connection instead of defaults
+    - name: this will only fail if we take orig host assible_connection instead of defaults
       ping:
       delegate_to: delegatetome
 
@@ -37,10 +37,10 @@
   tasks:
     - name: set unusable ssh args
       set_fact:
-         ansible_host: 127.0.0.1
-         ansible_connection: ssh
-         ansible_ssh_common_args: 'MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-         ansible_connection_timeout: 5
+         assible_host: 127.0.0.1
+         assible_connection: ssh
+         assible_ssh_common_args: 'MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
+         assible_connection_timeout: 5
 
     - name: fail to ping with bad args
       ping:

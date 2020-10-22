@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -95,7 +95,7 @@ DOCUMENTATION = '''
           default: True
         use_contrib_script_compatible_sanitization:
           description:
-            - By default this plugin is using a general group name sanitization to create safe and usable group names for use in Ansible.
+            - By default this plugin is using a general group name sanitization to create safe and usable group names for use in Assible.
               This option allows you to override that, in efforts to allow migration from the old inventory script and
               matches the sanitization of groups when the script's ``replace_dash_in_groups`` option is set to ``False``.
               To replicate behavior of ``replace_dash_in_groups = True`` with constructed groups,
@@ -133,7 +133,7 @@ filters:
   instance.group-id: sg-xxxxxxxx
 # Ignores 403 errors rather than failing
 strict_permissions: False
-# Note: I(hostnames) sets the inventory_hostname. To modify ansible_host without modifying
+# Note: I(hostnames) sets the inventory_hostname. To modify assible_host without modifying
 # inventory_hostname use compose (see example below).
 hostnames:
   - tag:Name=Tag1,Name=Tag2  # Return specific hosts only
@@ -141,7 +141,7 @@ hostnames:
   - dns-name
   - private-ip-address
 
-# Example using constructed features to create groups and set ansible_host
+# Example using constructed features to create groups and set assible_host
 plugin: aws_ec2
 regions:
   - us-east-1
@@ -175,23 +175,23 @@ keyed_groups:
 compose:
   # Use the private IP address to connect to the host
   # (note: this does not modify inventory_hostname, which is set via I(hostnames))
-  ansible_host: private_ip_address
+  assible_host: private_ip_address
 '''
 
 import re
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common.dict_transformations import camel_dict_to_snake_dict
-from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
-from ansible.utils.display import Display
-from ansible.module_utils.six import string_types
+from assible.errors import AssibleError
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common.dict_transformations import camel_dict_to_snake_dict
+from assible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
+from assible.utils.display import Display
+from assible.module_utils.six import string_types
 
 try:
     import boto3
     import botocore
 except ImportError:
-    raise AnsibleError('The ec2 dynamic inventory plugin requires boto3 and botocore.')
+    raise AssibleError('The ec2 dynamic inventory plugin requires boto3 and botocore.')
 
 display = Display()
 
@@ -336,7 +336,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         '''
         allowed_filters = sorted(list(instance_data_filter_to_boto_attr.keys()) + list(instance_meta_filter_to_boto_attr.keys()))
         if filter_name not in allowed_filters:
-            raise AnsibleError("Invalid filter '%s' provided; filter must be one of %s." % (filter_name,
+            raise AssibleError("Invalid filter '%s' provided; filter must be one of %s." % (filter_name,
                                                                                             allowed_filters))
         if filter_name in instance_data_filter_to_boto_attr:
             boto_attr_list = instance_data_filter_to_boto_attr[filter_name]
@@ -369,9 +369,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 try:
                     connection = boto3.session.Session(profile_name=self.boto_profile).client('ec2', region)
                 except (botocore.exceptions.ProfileNotFound, botocore.exceptions.PartialCredentialsError) as e:
-                    raise AnsibleError("Insufficient credentials found: %s" % to_native(e))
+                    raise AssibleError("Insufficient credentials found: %s" % to_native(e))
             else:
-                raise AnsibleError("Insufficient credentials found: %s" % to_native(e))
+                raise AssibleError("Insufficient credentials found: %s" % to_native(e))
         return connection
 
     def _boto3_assume_role(self, credentials, region):
@@ -385,14 +385,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         try:
             sts_connection = boto3.session.Session(profile_name=self.boto_profile).client('sts', region, **credentials)
-            sts_session = sts_connection.assume_role(RoleArn=iam_role_arn, RoleSessionName='ansible_aws_ec2_dynamic_inventory')
+            sts_session = sts_connection.assume_role(RoleArn=iam_role_arn, RoleSessionName='assible_aws_ec2_dynamic_inventory')
             return dict(
                 aws_access_key_id=sts_session['Credentials']['AccessKeyId'],
                 aws_secret_access_key=sts_session['Credentials']['SecretAccessKey'],
                 aws_session_token=sts_session['Credentials']['SessionToken']
             )
         except botocore.exceptions.ClientError as e:
-            raise AnsibleError("Unable to assume IAM role: %s" % to_native(e))
+            raise AssibleError("Unable to assume IAM role: %s" % to_native(e))
 
     def _boto3_conn(self, regions):
         '''
@@ -421,7 +421,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         # I give up, now you MUST give me regions
         if not regions:
-            raise AnsibleError('Unable to get regions list from available methods, you must specify the "regions" option to continue.')
+            raise AssibleError('Unable to get regions list from available methods, you must specify the "regions" option to continue.')
 
         for region in regions:
             connection = self._get_connection(credentials, region)
@@ -436,9 +436,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                     try:
                         connection = boto3.session.Session(profile_name=self.boto_profile).client('ec2', region)
                     except (botocore.exceptions.ProfileNotFound, botocore.exceptions.PartialCredentialsError) as e:
-                        raise AnsibleError("Insufficient credentials found: %s" % to_native(e))
+                        raise AssibleError("Insufficient credentials found: %s" % to_native(e))
                 else:
-                    raise AnsibleError("Insufficient credentials found: %s" % to_native(e))
+                    raise AssibleError("Insufficient credentials found: %s" % to_native(e))
             yield connection, region
 
     def _get_instances_by_region(self, regions, filters, strict_permissions):
@@ -469,9 +469,9 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 if e.response['ResponseMetadata']['HTTPStatusCode'] == 403 and not strict_permissions:
                     instances = []
                 else:
-                    raise AnsibleError("Failed to describe instances: %s" % to_native(e))
+                    raise AssibleError("Failed to describe instances: %s" % to_native(e))
             except botocore.exceptions.BotoCoreError as e:
-                raise AnsibleError("Failed to describe instances: %s" % to_native(e))
+                raise AssibleError("Failed to describe instances: %s" % to_native(e))
 
             all_instances.extend(instances)
 
@@ -493,7 +493,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             if not self.get_option('strict_permissions'):
                 pass
             else:
-                raise AnsibleError("Failed to describe instance status: %s" % to_native(e))
+                raise AssibleError("Failed to describe instance status: %s" % to_native(e))
         if spot_instance:
             try:
                 kwargs = {'SpotInstanceRequestIds': [spot_instance]}
@@ -504,7 +504,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 if not self.get_option('strict_permissions'):
                     pass
                 else:
-                    raise AnsibleError("Failed to describe spot instance requests: %s" % to_native(e))
+                    raise AssibleError("Failed to describe spot instance requests: %s" % to_native(e))
         return host_vars
 
     def _get_tag_hostname(self, preference, instance):
@@ -513,7 +513,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             tag_hostnames = tag_hostnames.split(',')
         else:
             tag_hostnames = [tag_hostnames]
-        tags = boto3_tag_list_to_ansible_dict(instance.get('Tags', []))
+        tags = boto3_tag_list_to_assible_dict(instance.get('Tags', []))
         for v in tag_hostnames:
             if '=' in v:
                 tag_name, tag_value = v.split('=')
@@ -538,7 +538,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         for preference in hostnames:
             if 'tag' in preference:
                 if not preference.startswith('tag:'):
-                    raise AnsibleError("To name a host by tags name_value, use 'tag:name=value'.")
+                    raise AssibleError("To name a host by tags name_value, use 'tag:name=value'.")
                 hostname = self._get_tag_hostname(preference, instance)
             else:
                 hostname = self._get_boto_attr_chain(preference, instance)
@@ -575,7 +575,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             hostname = self._get_hostname(host, hostnames)
 
             host = camel_dict_to_snake_dict(host, ignore_list=['Tags'])
-            host['tags'] = boto3_tag_list_to_ansible_dict(host.get('tags', []))
+            host['tags'] = boto3_tag_list_to_assible_dict(host.get('tags', []))
 
             # Allow easier grouping by region
             host['placement']['region'] = host['placement']['availability_zone'][:-1]
@@ -622,12 +622,12 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 self.aws_security_token = credentials.token
 
         if not self.boto_profile and not (self.aws_access_key_id and self.aws_secret_access_key):
-            raise AnsibleError("Insufficient boto credentials found. Please provide them in your "
+            raise AssibleError("Insufficient boto credentials found. Please provide them in your "
                                "inventory configuration file or set them as environment variables.")
 
     def verify_file(self, path):
         '''
-            :param loader: an ansible.parsing.dataloader.DataLoader object
+            :param loader: an assible.parsing.dataloader.DataLoader object
             :param path: the path to the inventory config file
             :return the contents of the config file
         '''
@@ -650,7 +650,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
         # get user specifications
         regions = self.get_option('regions')
-        filters = ansible_dict_to_boto3_filter_list(self.get_option('filters'))
+        filters = assible_dict_to_boto3_filter_list(self.get_option('filters'))
         hostnames = self.get_option('hostnames')
         strict_permissions = self.get_option('strict_permissions')
 
@@ -688,14 +688,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         return regex.sub('_', name)
 
 
-def ansible_dict_to_boto3_filter_list(filters_dict):
+def assible_dict_to_boto3_filter_list(filters_dict):
 
-    """ Convert an Ansible dict of filters to list of dicts that boto3 can use
+    """ Convert an Assible dict of filters to list of dicts that boto3 can use
     Args:
         filters_dict (dict): Dict of AWS filters.
     Basic Usage:
         >>> filters = {'some-aws-id': 'i-01234567'}
-        >>> ansible_dict_to_boto3_filter_list(filters)
+        >>> assible_dict_to_boto3_filter_list(filters)
         {
             'some-aws-id': 'i-01234567'
         }
@@ -724,7 +724,7 @@ def ansible_dict_to_boto3_filter_list(filters_dict):
     return filters_list
 
 
-def boto3_tag_list_to_ansible_dict(tags_list, tag_name_key_name=None, tag_value_key_name=None):
+def boto3_tag_list_to_assible_dict(tags_list, tag_name_key_name=None, tag_value_key_name=None):
 
     """ Convert a boto3 list of resource tags to a flat dict of key:value pairs
     Args:
@@ -733,7 +733,7 @@ def boto3_tag_list_to_ansible_dict(tags_list, tag_name_key_name=None, tag_value_
         tag_value_key_name (str): Value to use as the key for all tag values (useful because boto3 doesn't always use "Value")
     Basic Usage:
         >>> tags_list = [{'Key': 'MyTagKey', 'Value': 'MyTagValue'}]
-        >>> boto3_tag_list_to_ansible_dict(tags_list)
+        >>> boto3_tag_list_to_assible_dict(tags_list)
         [
             {
                 'Key': 'MyTagKey',

@@ -1,4 +1,4 @@
-# (c) 2018 Ansible Project
+# (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -14,12 +14,12 @@ import re
 
 from distutils.version import LooseVersion
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.compat.importlib import import_module
-from ansible.plugins.loader import ps_module_utils_loader
-from ansible.utils.collection_loader import resource_from_fqcr
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.compat.importlib import import_module
+from assible.plugins.loader import ps_module_utils_loader
+from assible.utils.collection_loader import resource_from_fqcr
 
 
 class PSModuleDepFinder(object):
@@ -41,38 +41,38 @@ class PSModuleDepFinder(object):
 
         self._re_cs_module = [
             # Reference C# module_util in another C# util, this must always be the fully qualified name.
-            # 'using ansible_collections.{namespace}.{collection}.plugins.module_utils.{name}'
-            re.compile(to_bytes(r'(?i)^using\s((Ansible\..+)|'
-                                r'(ansible_collections\.\w+\.\w+\.plugins\.module_utils\.[\w\.]+));\s*$')),
+            # 'using assible_collections.{namespace}.{collection}.plugins.module_utils.{name}'
+            re.compile(to_bytes(r'(?i)^using\s((Assible\..+)|'
+                                r'(assible_collections\.\w+\.\w+\.plugins\.module_utils\.[\w\.]+));\s*$')),
         ]
 
         self._re_cs_in_ps_module = [
             # Reference C# module_util in a PowerShell module
-            # '#AnsibleRequires -CSharpUtil Ansible.{name}'
-            # '#AnsibleRequires -CSharpUtil ansible_collections.{namespace}.{collection}.plugins.module_utils.{name}'
-            # '#AnsibleRequires -CSharpUtil ..module_utils.{name}'
-            re.compile(to_bytes(r'(?i)^#\s*ansiblerequires\s+-csharputil\s+((Ansible\..+)|'
-                                r'(ansible_collections\.\w+\.\w+\.plugins\.module_utils\.[\w\.]+)|'
+            # '#AssibleRequires -CSharpUtil Assible.{name}'
+            # '#AssibleRequires -CSharpUtil assible_collections.{namespace}.{collection}.plugins.module_utils.{name}'
+            # '#AssibleRequires -CSharpUtil ..module_utils.{name}'
+            re.compile(to_bytes(r'(?i)^#\s*assiblerequires\s+-csharputil\s+((Assible\..+)|'
+                                r'(assible_collections\.\w+\.\w+\.plugins\.module_utils\.[\w\.]+)|'
                                 r'(\.[\w\.]+))')),
         ]
 
         self._re_ps_module = [
             # Original way of referencing a builtin module_util
-            # '#Requires -Module Ansible.ModuleUtils.{name}
-            re.compile(to_bytes(r'(?i)^#\s*requires\s+\-module(?:s?)\s*(Ansible\.ModuleUtils\..+)')),
+            # '#Requires -Module Assible.ModuleUtils.{name}
+            re.compile(to_bytes(r'(?i)^#\s*requires\s+\-module(?:s?)\s*(Assible\.ModuleUtils\..+)')),
             # New way of referencing a builtin and collection module_util
-            # '#AnsibleRequires -PowerShell Ansible.ModuleUtils.{name}'
-            # '#AnsibleRequires -PowerShell ansible_collections.{namespace}.{collection}.plugins.module_utils.{name}'
-            # '#AnsibleRequires -PowerShell ..module_utils.{name}'
-            re.compile(to_bytes(r'(?i)^#\s*ansiblerequires\s+-powershell\s+((Ansible\.ModuleUtils\..+)|'
-                                r'(ansible_collections\.\w+\.\w+\.plugins\.module_utils\.[\w\.]+)|'
+            # '#AssibleRequires -PowerShell Assible.ModuleUtils.{name}'
+            # '#AssibleRequires -PowerShell assible_collections.{namespace}.{collection}.plugins.module_utils.{name}'
+            # '#AssibleRequires -PowerShell ..module_utils.{name}'
+            re.compile(to_bytes(r'(?i)^#\s*assiblerequires\s+-powershell\s+((Assible\.ModuleUtils\..+)|'
+                                r'(assible_collections\.\w+\.\w+\.plugins\.module_utils\.[\w\.]+)|'
                                 r'(\.[\w\.]+))')),
         ]
 
-        self._re_wrapper = re.compile(to_bytes(r'(?i)^#\s*ansiblerequires\s+-wrapper\s+(\w*)'))
+        self._re_wrapper = re.compile(to_bytes(r'(?i)^#\s*assiblerequires\s+-wrapper\s+(\w*)'))
         self._re_ps_version = re.compile(to_bytes(r'(?i)^#requires\s+\-version\s+([0-9]+(\.[0-9]+){0,3})$'))
-        self._re_os_version = re.compile(to_bytes(r'(?i)^#ansiblerequires\s+\-osversion\s+([0-9]+(\.[0-9]+){0,3})$'))
-        self._re_become = re.compile(to_bytes(r'(?i)^#ansiblerequires\s+\-become$'))
+        self._re_os_version = re.compile(to_bytes(r'(?i)^#assiblerequires\s+\-osversion\s+([0-9]+(\.[0-9]+){0,3})$'))
+        self._re_become = re.compile(to_bytes(r'(?i)^#assiblerequires\s+\-become$'))
 
     def scan_module(self, module_data, fqn=None, wrapper=False, powershell=True):
         lines = module_data.split(b'\n')
@@ -84,15 +84,15 @@ class PSModuleDepFinder(object):
 
         if powershell:
             checks = [
-                # PS module contains '#Requires -Module Ansible.ModuleUtils.*'
-                # PS module contains '#AnsibleRequires -Powershell Ansible.*' (or collections module_utils ref)
+                # PS module contains '#Requires -Module Assible.ModuleUtils.*'
+                # PS module contains '#AssibleRequires -Powershell Assible.*' (or collections module_utils ref)
                 (self._re_ps_module, self.ps_modules, ".psm1"),
-                # PS module contains '#AnsibleRequires -CSharpUtil Ansible.*' (or collections module_utils ref)
+                # PS module contains '#AssibleRequires -CSharpUtil Assible.*' (or collections module_utils ref)
                 (self._re_cs_in_ps_module, cs_utils, ".cs"),
             ]
         else:
             checks = [
-                # CS module contains 'using Ansible.*;' or 'using ansible_collections.ns.coll.plugins.module_utils.*;'
+                # CS module contains 'using Assible.*;' or 'using assible_collections.ns.coll.plugins.module_utils.*;'
                 (self._re_cs_module, cs_utils, ".cs"),
             ]
 
@@ -136,15 +136,15 @@ class PSModuleDepFinder(object):
             self._add_module(m, wrapper=wrapper)
 
     def scan_exec_script(self, name):
-        # scans lib/ansible/executor/powershell for scripts used in the module
+        # scans lib/assible/executor/powershell for scripts used in the module
         # exec side. It also scans these scripts for any dependencies
         name = to_text(name)
         if name in self.exec_scripts.keys():
             return
 
-        data = pkgutil.get_data("ansible.executor.powershell", to_native(name + ".ps1"))
+        data = pkgutil.get_data("assible.executor.powershell", to_native(name + ".ps1"))
         if data is None:
-            raise AnsibleError("Could not find executor powershell script "
+            raise AssibleError("Could not find executor powershell script "
                                "for '%s'" % name)
 
         b_data = to_bytes(data)
@@ -163,12 +163,12 @@ class PSModuleDepFinder(object):
 
         util_fqn = None
 
-        if m.startswith("Ansible."):
+        if m.startswith("Assible."):
             # Builtin util, use plugin loader to get the data
             mu_path = ps_module_utils_loader.find_plugin(m, ext)
 
             if not mu_path:
-                raise AnsibleError('Could not find imported module support code '
+                raise AssibleError('Could not find imported module support code '
                                    'for \'%s\'' % m)
 
             module_util_data = to_bytes(_slurp(mu_path))
@@ -198,12 +198,12 @@ class PSModuleDepFinder(object):
                 resource_paths = list(module_util.__path__)
                 if len(resource_paths) != 1:
                     # This should never happen with a collection but we are just being defensive about it.
-                    raise AnsibleError("Internal error: Referenced module_util package '%s' contains 0 or multiple "
+                    raise AssibleError("Internal error: Referenced module_util package '%s' contains 0 or multiple "
                                        "import locations when we only expect 1." % n_package_name)
                 mu_path = os.path.join(resource_paths[0], n_resource_name)
             except OSError as err:
                 if err.errno == errno.ENOENT:
-                    raise AnsibleError('Could not find collection imported module support code for \'%s\''
+                    raise AssibleError('Could not find collection imported module support code for \'%s\''
                                        % to_native(m))
                 else:
                     raise
@@ -240,7 +240,7 @@ class PSModuleDepFinder(object):
 
 def _slurp(path):
     if not os.path.exists(path):
-        raise AnsibleError("imported module support code does not exist at %s"
+        raise AssibleError("imported module support code does not exist at %s"
                            % os.path.abspath(path))
     fd = open(path, 'rb')
     data = fd.read()
@@ -282,7 +282,7 @@ def _create_powershell_wrapper(b_module_data, module_path, module_args,
     # don't have type conflicts
     finder = PSModuleDepFinder()
     if substyle != 'script':
-        # don't scan the module for util dependencies and other Ansible related
+        # don't scan the module for util dependencies and other Assible related
         # flags if the substyle is 'script' which is set by action/script
         finder.scan_module(b_module_data, fqn=module_fqn, powershell=(substyle == "powershell"))
 
@@ -343,9 +343,9 @@ def _create_powershell_wrapper(b_module_data, module_path, module_args,
         coverage_path_filter = C.config.get_config_value('COVERAGE_REMOTE_PATH_FILTER', variables=task_vars)
         coverage_manifest['path_filter'] = coverage_path_filter
 
-    # make sure Ansible.ModuleUtils.AddType is added if any C# utils are used
+    # make sure Assible.ModuleUtils.AddType is added if any C# utils are used
     if len(finder.cs_utils_wrapper) > 0 or len(finder.cs_utils_module) > 0:
-        finder._add_module((b"Ansible.ModuleUtils.AddType", ".psm1", None),
+        finder._add_module((b"Assible.ModuleUtils.AddType", ".psm1", None),
                            wrapper=False)
 
     # exec_wrapper is only required to be part of the payload if using

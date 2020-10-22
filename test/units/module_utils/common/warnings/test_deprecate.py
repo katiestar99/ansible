@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2019 Ansible Project
+# (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -7,22 +7,22 @@ __metaclass__ = type
 
 import pytest
 
-import ansible.module_utils.common.warnings as warnings
+import assible.module_utils.common.warnings as warnings
 
-from ansible.module_utils.common.warnings import deprecate, get_deprecation_messages
-from ansible.module_utils.six import PY3
+from assible.module_utils.common.warnings import deprecate, get_deprecation_messages
+from assible.module_utils.six import PY3
 
 
 @pytest.fixture
 def deprecation_messages():
     return [
         {'msg': 'First deprecation', 'version': None, 'collection_name': None},
-        {'msg': 'Second deprecation', 'version': None, 'collection_name': 'ansible.builtin'},
+        {'msg': 'Second deprecation', 'version': None, 'collection_name': 'assible.builtin'},
         {'msg': 'Third deprecation', 'version': '2.14', 'collection_name': None},
         {'msg': 'Fourth deprecation', 'version': '2.9', 'collection_name': None},
-        {'msg': 'Fifth deprecation', 'version': '2.9', 'collection_name': 'ansible.builtin'},
+        {'msg': 'Fifth deprecation', 'version': '2.9', 'collection_name': 'assible.builtin'},
         {'msg': 'Sixth deprecation', 'date': '2199-12-31', 'collection_name': None},
-        {'msg': 'Seventh deprecation', 'date': '2199-12-31', 'collection_name': 'ansible.builtin'},
+        {'msg': 'Seventh deprecation', 'date': '2199-12-31', 'collection_name': 'assible.builtin'},
     ]
 
 
@@ -33,9 +33,9 @@ def test_deprecate_message_only():
 
 
 def test_deprecate_with_collection():
-    deprecate(msg='Deprecation message', collection_name='ansible.builtin')
+    deprecate(msg='Deprecation message', collection_name='assible.builtin')
     assert warnings._global_deprecations == [
-        {'msg': 'Deprecation message', 'version': None, 'collection_name': 'ansible.builtin'}]
+        {'msg': 'Deprecation message', 'version': None, 'collection_name': 'assible.builtin'}]
 
 
 def test_deprecate_with_version():
@@ -45,9 +45,9 @@ def test_deprecate_with_version():
 
 
 def test_deprecate_with_version_and_collection():
-    deprecate(msg='Deprecation message', version='2.14', collection_name='ansible.builtin')
+    deprecate(msg='Deprecation message', version='2.14', collection_name='assible.builtin')
     assert warnings._global_deprecations == [
-        {'msg': 'Deprecation message', 'version': '2.14', 'collection_name': 'ansible.builtin'}]
+        {'msg': 'Deprecation message', 'version': '2.14', 'collection_name': 'assible.builtin'}]
 
 
 def test_deprecate_with_date():
@@ -57,9 +57,9 @@ def test_deprecate_with_date():
 
 
 def test_deprecate_with_date_and_collection():
-    deprecate(msg='Deprecation message', date='2199-12-31', collection_name='ansible.builtin')
+    deprecate(msg='Deprecation message', date='2199-12-31', collection_name='assible.builtin')
     assert warnings._global_deprecations == [
-        {'msg': 'Deprecation message', 'date': '2199-12-31', 'collection_name': 'ansible.builtin'}]
+        {'msg': 'Deprecation message', 'date': '2199-12-31', 'collection_name': 'assible.builtin'}]
 
 
 def test_multiple_deprecations(deprecation_messages):

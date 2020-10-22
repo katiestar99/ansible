@@ -7,7 +7,7 @@ import os
 
 from .. import types as t
 
-from ..import ansible_util
+from ..import assible_util
 
 from ..sanity import (
     SanitySingleVersion,
@@ -46,8 +46,8 @@ class YamllintTest(SanitySingleVersion):
     """Sanity test using yamllint."""
     @property
     def error_code(self):  # type: () -> t.Optional[str]
-        """Error code for ansible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
-        return 'ansible-test'
+        """Error code for assible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
+        return 'assible-test'
 
     def filter_targets(self, targets):  # type: (t.List[TestTarget]) -> t.List[TestTarget]
         """Return the given list of test targets, filtered to include only those relevant for the test."""
@@ -71,7 +71,7 @@ class YamllintTest(SanitySingleVersion):
         :type python_version: str
         :rtype: TestResult
         """
-        pyyaml_presence = ansible_util.check_pyyaml(args, python_version, quiet=True)
+        pyyaml_presence = assible_util.check_pyyaml(args, python_version, quiet=True)
         if not pyyaml_presence['cloader']:
             display.warning("Skipping sanity test '%s' due to missing libyaml support in PyYAML."
                             % self.name)

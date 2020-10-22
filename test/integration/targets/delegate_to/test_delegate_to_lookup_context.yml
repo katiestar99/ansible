@@ -1,9 +1,9 @@
 - hosts: localhost
   gather_facts: false
   vars:
-    verbosity: "{{ '' if not ansible_verbosity else '-' ~ ('v' * ansible_verbosity) }}"
+    verbosity: "{{ '' if not assible_verbosity else '-' ~ ('v' * assible_verbosity) }}"
   tasks:
-    - command: ansible-playbook {{ verbosity }} delegate_to_lookup_context.yml
+    - command: assible-playbook {{ verbosity }} delegate_to_lookup_context.yml
       register: result
 
     - assert:

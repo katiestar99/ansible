@@ -2,25 +2,25 @@
 
 # (c) 2020 Red Hat, Inc.
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.utils.color import stringc
+from assible.utils.color import stringc
 import requests
 import sys
 
@@ -64,12 +64,12 @@ def pretty_coverage_runs(runs):
 
     for run in sorted(ended, key=lambda x: x['endedAt']):
         if run['statusCode'] == 30:
-            print('🙂 [%s] https://app.shippable.com/github/ansible/ansible/runs/%s (%s)' % (
+            print('🙂 [%s] https://app.shippable.com/github/assible/assible/runs/%s (%s)' % (
                 stringc('PASS', 'green'),
                 run['runNumber'],
                 run['endedAt']))
         else:
-            print('😢 [%s] https://app.shippable.com/github/ansible/ansible/runs/%s (%s)' % (
+            print('😢 [%s] https://app.shippable.com/github/assible/assible/runs/%s (%s)' % (
                 stringc('FAIL', 'red'),
                 run['runNumber'],
                 run['endedAt']))
@@ -77,7 +77,7 @@ def pretty_coverage_runs(runs):
     if in_progress:
         print('The following runs are ongoing:')
         for run in in_progress:
-            print('🤔 [%s] https://app.shippable.com/github/ansible/ansible/runs/%s' % (
+            print('🤔 [%s] https://app.shippable.com/github/assible/assible/runs/%s' % (
                 stringc('FATE', 'yellow'),
                 run['runNumber']))
 

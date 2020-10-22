@@ -2,9 +2,9 @@
 
 set -eu -o pipefail
 
-# tests must be executed outside of the ansible source tree
-# otherwise ansible-test will test the ansible source instead of the test collection
-# the temporary directory provided by ansible-test resides within the ansible source tree
+# tests must be executed outside of the assible source tree
+# otherwise assible-test will test the assible source instead of the test collection
+# the temporary directory provided by assible-test resides within the assible source tree
 tmp_dir=$(mktemp -d)
 
 trap 'rm -rf "${tmp_dir}"' EXIT

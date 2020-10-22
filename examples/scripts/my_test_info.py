@@ -54,7 +54,7 @@ my_useful_info:
     }
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def run_module():
@@ -75,11 +75,11 @@ def run_module():
         my_useful_info={},
     )
 
-    # the AnsibleModule object will be our abstraction working with Ansible
+    # the AssibleModule object will be our abstraction working with Assible
     # this includes instantiation, a couple of common attr would be the
     # args/params passed to the execution, as well as if the module
     # supports check mode
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=module_args,
         supports_check_mode=True
     )
@@ -99,7 +99,7 @@ def run_module():
         'answer': 42,
     }
     # in the event of a successful module execution, you will want to
-    # simple AnsibleModule.exit_json(), passing the key/value results
+    # simple AssibleModule.exit_json(), passing the key/value results
     module.exit_json(**result)
 
 

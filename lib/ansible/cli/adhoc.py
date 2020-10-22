@@ -1,21 +1,21 @@
 # Copyright: (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible import constants as C
-from ansible import context
-from ansible.cli import CLI
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible.errors import AnsibleError, AnsibleOptionsError
-from ansible.executor.task_queue_manager import TaskQueueManager
-from ansible.module_utils._text import to_text
-from ansible.parsing.splitter import parse_kv
-from ansible.playbook import Playbook
-from ansible.playbook.play import Play
-from ansible.utils.display import Display
+from assible import constants as C
+from assible import context
+from assible.cli import CLI
+from assible.cli.arguments import option_helpers as opt_help
+from assible.errors import AssibleError, AssibleOptionsError
+from assible.executor.task_queue_manager import TaskQueueManager
+from assible.module_utils._text import to_text
+from assible.parsing.splitter import parse_kv
+from assible.playbook import Playbook
+from assible.playbook.play import Play
+from assible.utils.display import Display
 
 display = Display()
 
@@ -26,7 +26,7 @@ class AdHocCLI(CLI):
     '''
 
     def init_parser(self):
-        ''' create an options parser for bin/ansible '''
+        ''' create an options parser for bin/assible '''
         super(AdHocCLI, self).init_parser(usage='%prog <host-pattern> [options]',
                                           desc="Define and run a single task 'playbook' against"
                                           " a set of hosts",
@@ -45,7 +45,7 @@ class AdHocCLI(CLI):
         opt_help.add_module_options(self.parser)
         opt_help.add_basedir_options(self.parser)
 
-        # options unique to ansible ad-hoc
+        # options unique to assible ad-hoc
         self.parser.add_argument('-a', '--args', dest='module_args',
                                  help="module arguments", default=C.DEFAULT_MODULE_ARGS)
         self.parser.add_argument('-m', '--module-name', dest='module_name',
@@ -54,7 +54,7 @@ class AdHocCLI(CLI):
         self.parser.add_argument('args', metavar='pattern', help='host pattern')
 
     def post_process_args(self, options):
-        '''Post process and validate options for bin/ansible '''
+        '''Post process and validate options for bin/assible '''
 
         options = super(AdHocCLI, self).post_process_args(options)
 
@@ -74,7 +74,7 @@ class AdHocCLI(CLI):
             mytask['poll'] = poll
 
         return dict(
-            name="Ansible Ad-Hoc",
+            name="Assible Ad-Hoc",
             hosts=pattern,
             gather_facts='no',
             tasks=[mytask])
@@ -98,7 +98,7 @@ class AdHocCLI(CLI):
 
         try:
             hosts = self.get_host_list(inventory, context.CLIARGS['subset'], pattern)
-        except AnsibleError:
+        except AssibleError:
             if context.CLIARGS['subset']:
                 raise
             else:
@@ -114,12 +114,12 @@ class AdHocCLI(CLI):
         if context.CLIARGS['module_name'] in C.MODULE_REQUIRE_ARGS and not context.CLIARGS['module_args']:
             err = "No argument passed to %s module" % context.CLIARGS['module_name']
             if pattern.endswith(".yml"):
-                err = err + ' (did you mean to run ansible-playbook?)'
-            raise AnsibleOptionsError(err)
+                err = err + ' (did you mean to run assible-playbook?)'
+            raise AssibleOptionsError(err)
 
         # Avoid modules that don't work with ad-hoc
         if context.CLIARGS['module_name'] in ('import_playbook',):
-            raise AnsibleOptionsError("'%s' is not a valid action for ad-hoc commands"
+            raise AssibleOptionsError("'%s' is not a valid action for ad-hoc commands"
                                       % context.CLIARGS['module_name'])
 
         play_ds = self._play_ds(pattern, context.CLIARGS['seconds'], context.CLIARGS['poll_interval'])
@@ -134,7 +134,7 @@ class AdHocCLI(CLI):
             cb = self.callback
         elif context.CLIARGS['one_line']:
             cb = 'oneline'
-        # Respect custom 'stdout_callback' only with enabled 'bin_ansible_callbacks'
+        # Respect custom 'stdout_callback' only with enabled 'bin_assible_callbacks'
         elif C.DEFAULT_LOAD_CALLBACK_PLUGINS and C.DEFAULT_STDOUT_CALLBACK != 'default':
             cb = C.DEFAULT_STDOUT_CALLBACK
         else:

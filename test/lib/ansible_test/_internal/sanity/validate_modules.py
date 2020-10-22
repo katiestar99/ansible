@@ -29,8 +29,8 @@ from ..util_common import (
     run_command,
 )
 
-from ..ansible_util import (
-    ansible_environment,
+from ..assible_util import (
+    assible_environment,
     get_collection_detail,
     CollectionDetailError,
 )
@@ -59,7 +59,7 @@ class ValidateModulesTest(SanitySingleVersion):
 
     @property
     def error_code(self):  # type: () -> t.Optional[str]
-        """Error code for ansible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
+        """Error code for assible-test matching the format used by the underlying test program, or None if the program does not use error codes."""
         return 'A100'
 
     def filter_targets(self, targets):  # type: (t.List[TestTarget]) -> t.List[TestTarget]
@@ -73,7 +73,7 @@ class ValidateModulesTest(SanitySingleVersion):
         :type python_version: str
         :rtype: TestResult
         """
-        env = ansible_environment(args, color=False)
+        env = assible_environment(args, color=False)
 
         settings = self.load_processor(args)
 

@@ -4,11 +4,11 @@ __metaclass__ = type
 
 import os
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    # This module verifies that AnsibleModule works when cwd exists but is unreadable.
+    # This module verifies that AssibleModule works when cwd exists but is unreadable.
     # This situation can occur when running tasks as an unprivileged user.
 
     try:
@@ -20,7 +20,7 @@ def main():
         cwd = '/'
         os.chdir(cwd)
 
-    module = AnsibleModule(argument_spec=dict())
+    module = AssibleModule(argument_spec=dict())
     module.exit_json(before=cwd, after=os.getcwd())
 
 

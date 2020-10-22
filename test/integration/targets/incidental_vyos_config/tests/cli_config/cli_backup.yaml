@@ -1,5 +1,5 @@
 ---
-- debug: msg="END cli_config/backup.yaml on connection={{ ansible_connection }}"
+- debug: msg="END cli_config/backup.yaml on connection={{ assible_connection }}"
 
 - name: delete configurable backup file path
   file:
@@ -23,7 +23,7 @@
   with_items: "{{backup_files.files|default([])}}"
 
 - name: take config backup
-  ansible.netcommon.cli_config:
+  assible.netcommon.cli_config:
     backup: true
   become: true
   register: result
@@ -44,7 +44,7 @@
       - "backup_files.files is defined"
 
 - name: take configuration backup in custom filename and directory path
-  ansible.netcommon.cli_config:
+  assible.netcommon.cli_config:
     backup: true
     backup_options:
       filename: backup.cfg
@@ -67,7 +67,7 @@
       - "backup_file.files is defined"
 
 - name: take configuration backup in custom filename
-  ansible.netcommon.cli_config:
+  assible.netcommon.cli_config:
     backup: true
     backup_options:
       filename: backup.cfg
@@ -89,7 +89,7 @@
       - "backup_file.files is defined"
 
 - name: take configuration backup in custom path and default filename
-  ansible.netcommon.cli_config:
+  assible.netcommon.cli_config:
     backup: true
     backup_options:
       dir_path: "{{ role_path }}/backup_test_dir/{{ inventory_hostname_short }}"
@@ -111,4 +111,4 @@
     that:
       - "backup_file.files is defined"
 
-- debug: msg="END cli_config/backup.yaml on connection={{ ansible_connection }}"
+- debug: msg="END cli_config/backup.yaml on connection={{ assible_connection }}"

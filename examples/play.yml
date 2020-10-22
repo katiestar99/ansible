@@ -1,17 +1,17 @@
-#!/usr/bin/env ansible-playbook
+#!/usr/bin/env assible-playbook
 # ^ Trick: the above line can be used to make your play an executable
 # you also must add 'x' permissions to the file
 #
 # this file is based on phred's 'pedantically commented playbook'
-# https://github.com/phred/ansible-examples/blob/master/pedantically_commented_playbook.yml
+# https://github.com/phred/assible-examples/blob/master/pedantically_commented_playbook.yml
 #
 ---
 # ^^^ YAML documents can begin with the document separator "---"
-# and end with the "...", neither is needed for Ansible # as it does not
+# and end with the "...", neither is needed for Assible # as it does not
 # support multiple YAML documents per file, but some linters incorrectly insist
 # you must have it ....
 #
-# The '#' is a comment character, so any line starting with it will be ignored by Ansible.
+# The '#' is a comment character, so any line starting with it will be ignored by Assible.
 
 # Blank lines are ignored, so can be used # to create spacing to your taste.
 
@@ -27,14 +27,14 @@
 #
 # The curious may read more about YAML at:
 # http://www.yaml.org/spec/1.1/current.html
-# there is a 1.2, but Ansible uses pyyaml which is mostly 1.1
+# there is a 1.2, but Assible uses pyyaml which is mostly 1.1
 
 # the following line configures 'vim' to handle 2 space indents.
 # vim:ff=unix ts=2 sw=2 ai expandtab
 
 ###
 # Notice the minus (-) on the line below, this is the start of a 'list' in YAML
-# In Ansible this is the 'list of plays' which starts this playbook.
+# In Assible this is the 'list of plays' which starts this playbook.
 # Plays map the inventory hosts to the tasks, the most minimal play you can have
 # just requires 'hosts'
 
@@ -75,7 +75,7 @@
   # If you set hosts as shown above, then you can specify which hosts to
   # apply the playbook to on each run as so:
   #
-  #   ansible-playbook playbook.yml --extra-vars="mygroups=staging"
+  #   assible-playbook playbook.yml --extra-vars="mygroups=staging"
   #
   # Use --extra-vars to set the variable to any combination of groups, hostnames,
   # or host patterns just like the examples in the previous section.
@@ -95,14 +95,14 @@
   # Required: no
   # Description:
   #   This controls if the play will trigger a 'fact gathering task' (aka 'gather_facts' or 'setup' action) to get information about the remote target.
-  #   These facts normally provide useful variables on which to base decisions and task inputs. For example `ansible_os_distribution` can tell us if
+  #   These facts normally provide useful variables on which to base decisions and task inputs. For example `assible_os_distribution` can tell us if
   #   the target is a RHEL, Ubuntu or FreeBSD machine (among others), number of CPUs, RAM, etc.
   # TODO: url to fact gathering
 
   remote_user: login_user
   ###########
   # Play keyword:  user
-  # Default: depends on connection plugin, for ssh it is 'current user executing Ansible'
+  # Default: depends on connection plugin, for ssh it is 'current user executing Assible'
   # Required: no
   # Description:
   #   Remote user to login on remote targets and 'normally' execute the tasks as
@@ -114,7 +114,7 @@
   # Required: no
   # Description:
   #   If True, always use privilege escalation to run tasks from this play, just like passing the
-  #   --become flag to ansible or ansible-playbook.
+  #   --become flag to assible or assible-playbook.
 
 
   become_user: root
@@ -133,7 +133,7 @@
   # Required: no
   # Description:
   #   When using privilege escalation this chooses the become plugin to use for privilege escalation.
-  #   use `ansible-doc -t become -l` to list all the options.
+  #   use `assible-doc -t become -l` to list all the options.
 
   connection: ssh
   ###########
@@ -141,11 +141,11 @@
   # Default: ssh
   # Required: no
   # Description:
-  #   This sets which connection plugin Ansible will use to try to communicate with the target host.
+  #   This sets which connection plugin Assible will use to try to communicate with the target host.
   #   notable options are paramiko (python implementation of ssh, mostly useful in corner cases in which the ssh cli
   #   does not work well with the target. Also 'local' which forces a 'local fork' to execute the task, but normally
   #   what you really want is `delegate_to: localhost` see examples below in 'Run things locally!' entry.
-  #   use `ansible-doc -t connection -l` to list all the options.
+  #   use `assible-doc -t connection -l` to list all the options.
 
   vars:
   ###########
@@ -176,7 +176,7 @@
     # In this playbook, this will always evaluate to False, because 'color'
     #  is set to 'brown' above.
     #
-    # When ansible interprets the following, it will first expand 'color' to
+    # When assible interprets the following, it will first expand 'color' to
     # 'brown' and then evaluate 'brown' == 'blue' as a Jinja expression.
     is_color_blue: "{{ color == 'blue' }}"
 
@@ -202,7 +202,7 @@
   #   the left margin in the variables file.
   #
     # Include a file from this absolute path
-    - /srv/ansible/vars/vars_file.yml
+    - /srv/assible/vars/vars_file.yml
 
     # Include a file from a path relative to this playbook
     - vars/vars_file.yml
@@ -211,8 +211,8 @@
     - vars/{{something}}.yml
 
     # It's also possible to pass an array of files, in which case
-    # Ansible will loop over the array and include the first file that
-    # exists.  If none exist, ansible-playbook will halt with an error.
+    # Assible will loop over the array and include the first file that
+    # exists.  If none exist, assible-playbook will halt with an error.
     #
     # An excellent way to handle platform-specific differences.
     - [ 'vars/{{platform}}.yml', vars/default.yml ]
@@ -231,11 +231,11 @@
   # Play keyword: vars_prompt
   # Required: no
   # Description:
-  #   A list of variables that Ansible will prompt for manual input each time this playbook
+  #   A list of variables that Assible will prompt for manual input each time this playbook
   #   runs.  Used for sensitive data and also things like release numbers that
   #   vary on each deployment.
   #
-  #   Ansible won't prompts for this value if already provided, like when
+  #   Assible won't prompts for this value if already provided, like when
   #   passed through --extra-vars, but not from inventory.
   #
   #   Also it won't prompt if it detects that it is a non interactive session.
@@ -256,7 +256,7 @@
       prompt: "Please enter a package version"
       default: '1.0'
 
-    # You can find more advanced features in https://docs.ansible.com/ansible/latest/user_guide/playbooks_prompts.html
+    # You can find more advanced features in https://docs.assible.com/assible/latest/user_guide/playbooks_prompts.html
 
   roles:
   ##########
@@ -273,21 +273,21 @@
 
     # A simple task
     # Each task must have an action. 'name' is optional but very useful to document what the task does
-    - name: Check that the target can execute Ansible tasks
+    - name: Check that the target can execute Assible tasks
       action: ping
 
     ##########
-    # Ansible modules do the work!, 'action' is not needed, you can use the 'action itself' as part of the task
+    # Assible modules do the work!, 'action' is not needed, you can use the 'action itself' as part of the task
     - file: path=/tmp/secret mode=0600 owner=root group=root
     #
     # Format 'action' like above:
     # <modulename>: <module parameters>
     #
     # Test your parameters using:
-    #   ansible -m <module> -a "<module parameters>"
+    #   assible -m <module> -a "<module parameters>"
     #
     # Documentation for the stock modules:
-    # http://ansible.github.com/modules.html
+    # http://assible.github.com/modules.html
 
     # normally most will want to use 'k: v' notation instead of 'k=v' used above (but useful for adhoc execution).
     # while both formats are mostly interchangable, `k: v` is more explicit, 'type friendly' and simpler to escape.
@@ -318,15 +318,15 @@
     ##########
     # Trigger handlers when things change!
     #
-    # Most Ansible actions can detect and report when something changed.
+    # Most Assible actions can detect and report when something changed.
     # Like if file permissions were not the same as requested,
     # a file's content is different or a package was installed (or removed)
     # When a change is reported, the task assumes the 'changed' status.
-    # Ansible can optionally notify one or more Handlers.
+    # Assible can optionally notify one or more Handlers.
     # Handlers are like normal tasks, the main difference is that they only
     # run when notified.
     # A common use is to restart a service after updating it's configuration file.
-    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html#handlers-running-operations-on-change
+    # https://docs.assible.com/assible/latest/user_guide/playbooks_intro.html#handlers-running-operations-on-change
 
     # TODO: explain handler per stage execution
 
@@ -350,7 +350,7 @@
     ##########
     # Include tasks from another file!
     #
-    # Ansible can insert a list of tasks from another file. The file
+    # Assible can insert a list of tasks from another file. The file
     # must represent a list of tasks, which is different than a play.
     #
     # Task list format:
@@ -387,7 +387,7 @@
     ##########
     # Run a task on each thing in a list!
     #
-    # Ansible provides a simple loop facility. If 'loop' is provided for
+    # Assible provides a simple loop facility. If 'loop' is provided for
     # a task, then the task will be run once for each item in the provided
     # list.  Each iteration will create the 'item' variable with a different value.
     - name: Create a file named via variable in /tmp
@@ -410,7 +410,7 @@
     # Conditionally execute tasks!
     #
     # Sometimes you only want to run an action when a under certain conditions.
-    # Ansible supports using conditional Jinja expression, executing the task only when 'True'.
+    # Assible supports using conditional Jinja expression, executing the task only when 'True'.
     #
     # If you're trying to run an task only when a value changes,
     # consider rewriting the task as a handler and using 'notify' (see below).
@@ -428,7 +428,7 @@
       command: /sbin/shutdown -t now
       when: "{{'government' in group_names}}"
 
-    # Ansible has some built in variables, you can check them here (TODO url)
+    # Assible has some built in variables, you can check them here (TODO url)
     # inventory_hostname is the name of the current host the task is executing for (derived from the hosts: keyword)
     # group_names has the list of groups the current host (inventory_hostname) is part of
     # groups is a mapping of the inventory groups with the list of hosts that belong to them

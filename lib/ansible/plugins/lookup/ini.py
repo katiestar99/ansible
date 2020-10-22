@@ -1,5 +1,5 @@
 # (c) 2015, Yannig Perre <yannig.perre(at)gmail.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -23,7 +23,7 @@ DOCUMENTATION = """
         choices: ['ini', 'properties']
       file:
         description: Name of the file to load.
-        default: ansible.ini
+        default: assible.ini
       section:
         default: global
         description: Section where to lookup the key.
@@ -63,11 +63,11 @@ import os
 import re
 from io import StringIO
 
-from ansible.errors import AnsibleError, AnsibleAssertionError
-from ansible.module_utils.six.moves import configparser
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.module_utils.common._collections_compat import MutableSequence
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleError, AssibleAssertionError
+from assible.module_utils.six.moves import configparser
+from assible.module_utils._text import to_bytes, to_text
+from assible.module_utils.common._collections_compat import MutableSequence
+from assible.plugins.lookup import LookupBase
 
 
 def _parse_params(term):
@@ -116,7 +116,7 @@ class LookupModule(LookupBase):
             key = params[0]
 
             paramvals = {
-                'file': 'ansible.ini',
+                'file': 'assible.ini',
                 're': False,
                 'default': None,
                 'section': "global",
@@ -129,11 +129,11 @@ class LookupModule(LookupBase):
                 for param in params[1:]:
                     name, value = param.split('=')
                     if name not in paramvals:
-                        raise AnsibleAssertionError('%s not in paramvals' %
+                        raise AssibleAssertionError('%s not in paramvals' %
                                                     name)
                     paramvals[name] = value
             except (ValueError, AssertionError) as e:
-                raise AnsibleError(e)
+                raise AssibleError(e)
 
             # Retrieve file path
             path = self.find_file_in_search_path(variables, 'files',

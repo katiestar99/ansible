@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,16 +21,16 @@ __metaclass__ = type
 
 import os
 
-from ansible.errors import AnsibleParserError, AnsibleAssertionError
-from ansible.module_utils.six import iteritems, string_types
-from ansible.parsing.splitter import split_args, parse_kv
-from ansible.parsing.yaml.objects import AnsibleBaseYAMLObject, AnsibleMapping
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.base import Base
-from ansible.playbook.conditional import Conditional
-from ansible.playbook.taggable import Taggable
-from ansible.template import Templar
-from ansible.utils.display import Display
+from assible.errors import AssibleParserError, AssibleAssertionError
+from assible.module_utils.six import iteritems, string_types
+from assible.parsing.splitter import split_args, parse_kv
+from assible.parsing.yaml.objects import AssibleBaseYAMLObject, AssibleMapping
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.base import Base
+from assible.playbook.conditional import Conditional
+from assible.playbook.taggable import Taggable
+from assible.template import Templar
+from assible.utils.display import Display
 
 display = Display()
 
@@ -51,8 +51,8 @@ class PlaybookInclude(Base, Conditional, Taggable):
         '''
 
         # import here to avoid a dependency loop
-        from ansible.playbook import Playbook
-        from ansible.playbook.play import Play
+        from assible.playbook import Playbook
+        from assible.playbook.play import Play
 
         # first, we use the original parent method to correctly load the object
         # via the load_data/preprocess_data system we normally use for other
@@ -108,13 +108,13 @@ class PlaybookInclude(Base, Conditional, Taggable):
         '''
 
         if not isinstance(ds, dict):
-            raise AnsibleAssertionError('ds (%s) should be a dict but was a %s' % (ds, type(ds)))
+            raise AssibleAssertionError('ds (%s) should be a dict but was a %s' % (ds, type(ds)))
 
         # the new, cleaned datastructure, which will have legacy
         # items reduced to a standard structure
-        new_ds = AnsibleMapping()
-        if isinstance(ds, AnsibleBaseYAMLObject):
-            new_ds.ansible_pos = ds.ansible_pos
+        new_ds = AssibleMapping()
+        if isinstance(ds, AssibleBaseYAMLObject):
+            new_ds.assible_pos = ds.assible_pos
 
         for (k, v) in iteritems(ds):
             if k in ('include', 'import_playbook'):
@@ -124,9 +124,9 @@ class PlaybookInclude(Base, Conditional, Taggable):
                 # formatted and do not conflict with k=v parameters
                 if k == 'vars':
                     if 'vars' in new_ds:
-                        raise AnsibleParserError("import_playbook parameters cannot be mixed with 'vars' entries for import statements", obj=ds)
+                        raise AssibleParserError("import_playbook parameters cannot be mixed with 'vars' entries for import statements", obj=ds)
                     elif not isinstance(v, dict):
-                        raise AnsibleParserError("vars for import_playbook statements must be specified as a dictionary", obj=ds)
+                        raise AssibleParserError("vars for import_playbook statements must be specified as a dictionary", obj=ds)
                 new_ds[k] = v
 
         return super(PlaybookInclude, self).preprocess_data(new_ds)
@@ -137,15 +137,15 @@ class PlaybookInclude(Base, Conditional, Taggable):
         '''
 
         if v is None:
-            raise AnsibleParserError("playbook import parameter is missing", obj=ds)
+            raise AssibleParserError("playbook import parameter is missing", obj=ds)
         elif not isinstance(v, string_types):
-            raise AnsibleParserError("playbook import parameter must be a string indicating a file path, got %s instead" % type(v), obj=ds)
+            raise AssibleParserError("playbook import parameter must be a string indicating a file path, got %s instead" % type(v), obj=ds)
 
         # The import_playbook line must include at least one item, which is the filename
         # to import. Anything after that should be regarded as a parameter to the import
         items = split_args(v)
         if len(items) == 0:
-            raise AnsibleParserError("import_playbook statements must specify the file name to import", obj=ds)
+            raise AssibleParserError("import_playbook statements must specify the file name to import", obj=ds)
         else:
             new_ds['import_playbook'] = items[0].strip()
             if len(items) > 1:
@@ -156,5 +156,5 @@ class PlaybookInclude(Base, Conditional, Taggable):
                 if 'tags' in params:
                     new_ds['tags'] = params.pop('tags')
                 if 'vars' in new_ds:
-                    raise AnsibleParserError("import_playbook parameters cannot be mixed with 'vars' entries for import statements", obj=ds)
+                    raise AssibleParserError("import_playbook parameters cannot be mixed with 'vars' entries for import statements", obj=ds)
                 new_ds['vars'] = params

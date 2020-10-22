@@ -1,6 +1,6 @@
 # (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 # (c) 2013, Steven Dossett <sdossett@panath.com>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -34,9 +34,9 @@ RETURN = """
     type: list
 """
 
-from ansible.errors import AnsibleError
-from ansible.inventory.manager import InventoryManager
-from ansible.plugins.lookup import LookupBase
+from assible.errors import AssibleError
+from assible.inventory.manager import InventoryManager
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):
@@ -49,5 +49,5 @@ class LookupModule(LookupBase):
 
         try:
             return [h.name for h in manager.get_hosts(pattern=terms)]
-        except AnsibleError:
+        except AssibleError:
             return []

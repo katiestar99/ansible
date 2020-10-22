@@ -1,9 +1,9 @@
-# (c) 2018 Ansible Project
+# (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 <#
 .SYNOPSIS
-Invokes an Ansible module in a new Runspace. This cmdlet will output the
+Invokes an Assible module in a new Runspace. This cmdlet will output the
 module's output and write any errors to the error stream of the current
 host.
 
@@ -43,7 +43,7 @@ param(
     [System.Management.Automation.LineBreakpoint[]]$Breakpoints = @()
 )
 
-Write-AnsibleLog "INFO - creating new PowerShell pipeline for $ModuleName" "module_wrapper"
+Write-AssibleLog "INFO - creating new PowerShell pipeline for $ModuleName" "module_wrapper"
 $ps = [PowerShell]::Create()
 
 # do not set ErrorActionPreference for script
@@ -55,23 +55,23 @@ if ($ModuleName -ne "script") {
 # Start-Job) don't blow up. This is only required for WinRM, a PSRP
 # runspace doesn't have a host console and this will bomb out
 if ($host.Name -eq "ConsoleHost") {
-    Write-AnsibleLog "INFO - setting console input encoding to UTF8 for $ModuleName" "module_wrapper"
+    Write-AssibleLog "INFO - setting console input encoding to UTF8 for $ModuleName" "module_wrapper"
     $ps.AddScript('[Console]::InputEncoding = New-Object Text.UTF8Encoding $false').AddStatement() > $null
 }
 
 # set the variables
 foreach ($variable in $Variables) {
-    Write-AnsibleLog "INFO - setting variable '$($variable.Name)' for $ModuleName" "module_wrapper"
+    Write-AssibleLog "INFO - setting variable '$($variable.Name)' for $ModuleName" "module_wrapper"
     $ps.AddCommand("Set-Variable").AddParameters($variable).AddStatement() > $null
 }
 
 # set the environment vars
 if ($Environment) {
     # Escaping quotes can be problematic, instead just pass the string to the runspace and set it directly.
-    Write-AnsibleLog "INFO - setting environment vars for $ModuleName" "module_wrapper"
-    $ps.Runspace.SessionStateProxy.SetVariable("_AnsibleEnvironment", $Environment)
+    Write-AssibleLog "INFO - setting environment vars for $ModuleName" "module_wrapper"
+    $ps.Runspace.SessionStateProxy.SetVariable("_AssibleEnvironment", $Environment)
     $ps.AddScript(@'
-foreach ($env_kv in $_AnsibleEnvironment.GetEnumerator()) {
+foreach ($env_kv in $_AssibleEnvironment.GetEnumerator()) {
     [System.Environment]::SetEnvironmentVariable($env_kv.Key, $env_kv.Value)
 }
 '@).AddStatement() > $null
@@ -80,7 +80,7 @@ foreach ($env_kv in $_AnsibleEnvironment.GetEnumerator()) {
 # import the PS modules
 if ($Modules) {
     foreach ($module in $Modules.GetEnumerator()) {
-        Write-AnsibleLog "INFO - create module util '$($module.Key)' for $ModuleName" "module_wrapper"
+        Write-AssibleLog "INFO - create module util '$($module.Key)' for $ModuleName" "module_wrapper"
         $module_name = $module.Key
         $module_code = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($module.Value))
         $ps.AddCommand("New-Module").AddParameters(@{Name=$module_name; ScriptBlock=[ScriptBlock]::Create($module_code)}) > $null
@@ -99,7 +99,7 @@ foreach ($script in $Scripts) {
 }
 
 if ($Breakpoints.Count -gt 0) {
-    Write-AnsibleLog "INFO - adding breakpoint to runspace that will run the modules" "module_wrapper"
+    Write-AssibleLog "INFO - adding breakpoint to runspace that will run the modules" "module_wrapper"
     if ($PSVersionTable.PSVersion.Major -eq 3) {
         # The SetBreakpoints method was only added in PowerShell v4+. We need to rely on a private method to
         # achieve the same functionality in this older PowerShell version. This should be removed once we drop
@@ -115,7 +115,7 @@ if ($Breakpoints.Count -gt 0) {
     }
 }
 
-Write-AnsibleLog "INFO - start module exec with Invoke() - $ModuleName" "module_wrapper"
+Write-AssibleLog "INFO - start module exec with Invoke() - $ModuleName" "module_wrapper"
 
 # temporarily override the stdout stream and create our own in a StringBuilder
 # we use this to ensure there's always an Out pipe and that we capture the
@@ -128,7 +128,7 @@ try {
     $module_output = $ps.Invoke()
 } catch {
     # uncaught exception while executing module, present a prettier error for
-    # Ansible to parse
+    # Assible to parse
     $error_params = @{
         Message = "Unhandled exception while executing module"
         ErrorRecord = $_
@@ -144,7 +144,7 @@ try {
         }
     }
 
-    Write-AnsibleError @error_params
+    Write-AssibleError @error_params
     $host.SetShouldExit(1)
     return
 } finally {
@@ -172,19 +172,19 @@ if ($ps.InvocationStateInfo.State -eq "Failed" -and $ModuleName -ne "script") {
         $error_params.Message += ": $($reason.ToString())"
     }
 
-    Write-AnsibleError @error_params
+    Write-AssibleError @error_params
     $host.SetShouldExit(1)
     return
 }
 
-Write-AnsibleLog "INFO - module exec ended $ModuleName" "module_wrapper"
+Write-AssibleLog "INFO - module exec ended $ModuleName" "module_wrapper"
 $stdout = $sb.ToString()
 if ($stdout) {
     Write-Output -InputObject $stdout
 }
 if ($module_output.Count -gt 0) {
     # do not output if empty collection
-    Write-AnsibleLog "INFO - using the output stream for module output - $ModuleName" "module_wrapper"
+    Write-AssibleLog "INFO - using the output stream for module output - $ModuleName" "module_wrapper"
     Write-Output -InputObject ($module_output -join "`r`n")
 }
 
@@ -194,7 +194,7 @@ if ($module_output.Count -gt 0) {
 # to that same value
 $rc = $ps.Runspace.SessionStateProxy.GetVariable("LASTEXITCODE")
 if ($null -ne $rc) {
-    Write-AnsibleLog "INFO - got an rc of $rc from $ModuleName exec" "module_wrapper"
+    Write-AssibleLog "INFO - got an rc of $rc from $ModuleName exec" "module_wrapper"
     $host.SetShouldExit($rc)
 }
 
@@ -203,7 +203,7 @@ if ($null -ne $rc) {
 # $ErrorActionPreference != "Stop", that's ok because this is sent to the stderr output
 # for a user to manually debug if something went horribly wrong
 if ($ps.HadErrors -or ($PSVersionTable.PSVersion.Major -lt 4 -and $ps.Streams.Error.Count -gt 0)) {
-    Write-AnsibleLog "WARN - module had errors, outputting error info $ModuleName" "module_wrapper"
+    Write-AssibleLog "WARN - module had errors, outputting error info $ModuleName" "module_wrapper"
     # if the rc wasn't explicitly set, we return an exit code of 1
     if ($null -eq $rc) {
         $host.SetShouldExit(1)
@@ -211,11 +211,11 @@ if ($ps.HadErrors -or ($PSVersionTable.PSVersion.Major -lt 4 -and $ps.Streams.Er
 
     # output each error to the error stream of the current pipeline
     foreach ($err in $ps.Streams.Error) {
-        $error_msg = Format-AnsibleException -ErrorRecord $err
+        $error_msg = Format-AssibleException -ErrorRecord $err
 
         # need to use the current hosts's UI class as we may not have
         # a console to write the stderr to, e.g. psrp
-        Write-AnsibleLog "WARN - error msg for for $($ModuleName):`r`n$error_msg" "module_wrapper"
+        Write-AssibleLog "WARN - error msg for for $($ModuleName):`r`n$error_msg" "module_wrapper"
         $host.UI.WriteErrorLine($error_msg)
     }
 }

@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -28,8 +28,8 @@
 import re
 import hashlib
 
-from ansible.module_utils.six.moves import zip
-from ansible.module_utils._text import to_bytes, to_native
+from assible.module_utils.six.moves import zip
+from assible.module_utils._text import to_bytes, to_native
 
 DEFAULT_COMMENT_TOKENS = ["#", "!", "/*", "*/", "echo"]
 

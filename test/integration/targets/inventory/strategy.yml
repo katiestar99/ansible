@@ -8,5 +8,5 @@
 
     - name: group hosts by distribution, with dash to trigger substitution
       group_by:
-        key: "{{ ansible_distribution }}-{{ ansible_distribution_version }}"
+        key: "{{ assible_distribution }}-{{ assible_distribution_version }}"
       changed_when: false

@@ -1,19 +1,19 @@
 # (c) 2016 Red Hat Inc.
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-DOCUMENTATION = """author: Ansible Networking Team
+DOCUMENTATION = """author: Assible Networking Team
 connection: netconf
 short_description: Provides a persistent connection using the netconf protocol
 description:
 - This connection plugin provides a connection to remote devices over the SSH NETCONF
   subsystem.  This connection plugin is typically used by network devices for sending
   and receiving RPC calls over NETCONF.
-- Note this connection plugin requires ncclient to be installed on the local Ansible
+- Note this connection plugin requires ncclient to be installed on the local Assible
   controller.
 requirements:
 - ncclient
@@ -24,7 +24,7 @@ options:
       to.
     default: inventory_hostname
     vars:
-    - name: ansible_host
+    - name: assible_host
   port:
     type: int
     description:
@@ -35,17 +35,17 @@ options:
     - section: defaults
       key: remote_port
     env:
-    - name: ANSIBLE_REMOTE_PORT
+    - name: ASSIBLE_REMOTE_PORT
     vars:
-    - name: ansible_port
+    - name: assible_port
   network_os:
     description:
     - Configures the device platform network operating system.  This value is used
       to load a device specific netconf plugin.  If this option is not configured
-      (or set to C(auto)), then Ansible will attempt to guess the correct network_os
+      (or set to C(auto)), then Assible will attempt to guess the correct network_os
       to use. If it can not guess a network_os correctly it will use C(default).
     vars:
-    - name: ansible_network_os
+    - name: assible_network_os
   remote_user:
     description:
     - The username used to authenticate to the remote device when the SSH connection
@@ -56,18 +56,18 @@ options:
     - section: defaults
       key: remote_user
     env:
-    - name: ANSIBLE_REMOTE_USER
+    - name: ASSIBLE_REMOTE_USER
     vars:
-    - name: ansible_user
+    - name: assible_user
   password:
     description:
     - Configures the user password used to authenticate to the remote device when
       first establishing the SSH connection.
     vars:
-    - name: ansible_password
-    - name: ansible_ssh_pass
-    - name: ansible_ssh_password
-    - name: ansible_netconf_password
+    - name: assible_password
+    - name: assible_ssh_pass
+    - name: assible_ssh_password
+    - name: assible_netconf_password
   private_key_file:
     description:
     - The private SSH key or certificate file used to authenticate to the remote device
@@ -76,37 +76,37 @@ options:
     - section: defaults
       key: private_key_file
     env:
-    - name: ANSIBLE_PRIVATE_KEY_FILE
+    - name: ASSIBLE_PRIVATE_KEY_FILE
     vars:
-    - name: ansible_private_key_file
+    - name: assible_private_key_file
   look_for_keys:
     default: true
     description:
     - Enables looking for ssh keys in the usual locations for ssh keys (e.g. :file:`~/.ssh/id_*`).
     env:
-    - name: ANSIBLE_PARAMIKO_LOOK_FOR_KEYS
+    - name: ASSIBLE_PARAMIKO_LOOK_FOR_KEYS
     ini:
     - section: paramiko_connection
       key: look_for_keys
     type: boolean
   host_key_checking:
     description: Set this to "False" if you want to avoid host key checking by the
-      underlying tools Ansible uses to connect to the host
+      underlying tools Assible uses to connect to the host
     type: boolean
     default: true
     env:
-    - name: ANSIBLE_HOST_KEY_CHECKING
-    - name: ANSIBLE_SSH_HOST_KEY_CHECKING
-    - name: ANSIBLE_NETCONF_HOST_KEY_CHECKING
+    - name: ASSIBLE_HOST_KEY_CHECKING
+    - name: ASSIBLE_SSH_HOST_KEY_CHECKING
+    - name: ASSIBLE_NETCONF_HOST_KEY_CHECKING
     ini:
     - section: defaults
       key: host_key_checking
     - section: paramiko_connection
       key: host_key_checking
     vars:
-    - name: ansible_host_key_checking
-    - name: ansible_ssh_host_key_checking
-    - name: ansible_netconf_host_key_checking
+    - name: assible_host_key_checking
+    - name: assible_ssh_host_key_checking
+    - name: assible_netconf_host_key_checking
   persistent_connect_timeout:
     type: int
     description:
@@ -118,9 +118,9 @@ options:
     - section: persistent_connection
       key: connect_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_CONNECT_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_CONNECT_TIMEOUT
     vars:
-    - name: ansible_connect_timeout
+    - name: assible_connect_timeout
   persistent_command_timeout:
     type: int
     description:
@@ -132,9 +132,9 @@ options:
     - section: persistent_connection
       key: command_timeout
     env:
-    - name: ANSIBLE_PERSISTENT_COMMAND_TIMEOUT
+    - name: ASSIBLE_PERSISTENT_COMMAND_TIMEOUT
     vars:
-    - name: ansible_command_timeout
+    - name: assible_command_timeout
   netconf_ssh_config:
     description:
     - This variable is used to enable bastion/jump host with netconf connection. If
@@ -146,15 +146,15 @@ options:
       key: ssh_config
       version_added: '2.7'
     env:
-    - name: ANSIBLE_NETCONF_SSH_CONFIG
+    - name: ASSIBLE_NETCONF_SSH_CONFIG
     vars:
-    - name: ansible_netconf_ssh_config
+    - name: assible_netconf_ssh_config
       version_added: '2.7'
   persistent_log_messages:
     type: boolean
     description:
     - This flag will enable logging the command executed and response received from
-      target device in the ansible log file. For this option to work 'log_path' ansible
+      target device in the assible log file. For this option to work 'log_path' assible
       configuration option is required to be set to a file path with write access.
     - Be sure to fully understand the security implications of enabling this option
       as it could create a security vulnerability by logging sensitive information
@@ -164,24 +164,24 @@ options:
     - section: persistent_connection
       key: log_messages
     env:
-    - name: ANSIBLE_PERSISTENT_LOG_MESSAGES
+    - name: ASSIBLE_PERSISTENT_LOG_MESSAGES
     vars:
-    - name: ansible_persistent_log_messages
+    - name: assible_persistent_log_messages
 """
 
 import os
 import logging
 import json
 
-from ansible.errors import AnsibleConnectionFailure, AnsibleError
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils.parsing.convert_bool import (
+from assible.errors import AssibleConnectionFailure, AssibleError
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.basic import missing_required_lib
+from assible.module_utils.parsing.convert_bool import (
     BOOLEANS_TRUE,
     BOOLEANS_FALSE,
 )
-from ansible.plugins.loader import netconf_loader
-from ansible.plugins.connection import NetworkConnectionBase, ensure_connect
+from assible.plugins.loader import netconf_loader
+from assible.plugins.connection import NetworkConnectionBase, ensure_connect
 
 try:
     from ncclient import manager
@@ -204,7 +204,7 @@ logging.getLogger("ncclient").setLevel(logging.INFO)
 class Connection(NetworkConnectionBase):
     """NetConf connections"""
 
-    transport = "ansible.netcommon.netconf"
+    transport = "assible.netcommon.netconf"
     has_pipelining = False
 
     def __init__(self, play_context, new_stdin, *args, **kwargs):
@@ -282,7 +282,7 @@ class Connection(NetworkConnectionBase):
 
     def _connect(self):
         if not HAS_NCCLIENT:
-            raise AnsibleError(
+            raise AssibleError(
                 "%s: %s"
                 % (
                     missing_required_lib("ncclient"),
@@ -373,9 +373,9 @@ class Connection(NetworkConnectionBase):
                 "persistent_command_timeout"
             )
         except SSHUnknownHostError as exc:
-            raise AnsibleConnectionFailure(to_native(exc))
+            raise AssibleConnectionFailure(to_native(exc))
         except ImportError:
-            raise AnsibleError(
+            raise AssibleError(
                 "connection=netconf is not supported on {0}".format(
                     self._network_os
                 )

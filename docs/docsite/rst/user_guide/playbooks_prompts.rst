@@ -25,13 +25,13 @@ Here is a most basic example::
       tasks:
 
         - name: Print a message
-          ansible.builtin.debug:
+          assible.builtin.debug:
             msg: 'Logging in as {{ username }}'
 
 The user input is hidden by default but it can be made visible by setting ``private: no``.
 
 .. note::
-    Prompts for individual ``vars_prompt`` variables will be skipped for any variable that is already defined through the command line ``--extra-vars`` option, or when running from a non-interactive session (such as cron or Ansible Tower). See :ref:`passing_variables_on_the_command_line`.
+    Prompts for individual ``vars_prompt`` variables will be skipped for any variable that is already defined through the command line ``--extra-vars`` option, or when running from a non-interactive session (such as cron or Assible Tower). See :ref:`passing_variables_on_the_command_line`.
 
 If you have a variable that changes infrequently, you can provide a default value that can be overridden::
 
@@ -76,12 +76,12 @@ If you have `Passlib <https://passlib.readthedocs.io/en/stable/>`_ installed, yo
 - *bsd_nthash* - FreeBSD's MCF-compatible nthash encoding
 
 The only parameters accepted are 'salt' or 'salt_size'. You can use your own salt by defining
-'salt', or have one generated automatically using 'salt_size'. By default Ansible generates a salt
+'salt', or have one generated automatically using 'salt_size'. By default Assible generates a salt
 of size 8.
 
 .. versionadded:: 2.7
 
-If you do not have Passlib installed, Ansible uses the `crypt <https://docs.python.org/2/library/crypt.html>`_ library as a fallback. Ansible supports at most four crypt schemes, depending on your platform at most the following crypt schemes are supported:
+If you do not have Passlib installed, Assible uses the `crypt <https://docs.python.org/2/library/crypt.html>`_ library as a fallback. Assible supports at most four crypt schemes, depending on your platform at most the following crypt schemes are supported:
 
 - *bcrypt* - BCrypt
 - *md5_crypt* - MD5 Crypt
@@ -110,7 +110,7 @@ Some special characters, such as ``{`` and ``%`` can create templating errors. I
        Conditional statements in playbooks
    :ref:`playbooks_variables`
        All about variables
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

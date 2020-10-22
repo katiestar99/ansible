@@ -1,7 +1,7 @@
 integration-aliases
 ===================
 
-Integration tests are executed by ``ansible-test`` and reside in directories under ``test/integration/targets/``.
+Integration tests are executed by ``assible-test`` and reside in directories under ``test/integration/targets/``.
 Each test MUST have an ``aliases`` file to control test execution.
 
 Aliases are explained in the following sections. Each alias must be on a separate line in an ``aliases`` file.
@@ -48,7 +48,7 @@ Dependencies
 
 Some test dependencies are automatically discovered:
 
-- Ansible role dependencies defined in ``meta/main.yml`` files.
+- Assible role dependencies defined in ``meta/main.yml`` files.
 - Setup targets defined with ``setup/*`` aliases.
 - Symbolic links from one target to a file in another target.
 
@@ -86,7 +86,7 @@ For more fine grained skipping, use conditionals in integration test playbooks, 
 
 .. code-block:: yaml
 
-   when: ansible_distribution in ('Ubuntu')
+   when: assible_distribution in ('Ubuntu')
 
 
 Miscellaneous
@@ -107,10 +107,10 @@ This avoids unnecessary test failures for other pull requests, as well as tests 
 
 There are two ways to run unstable tests manually:
 
-- Use the ``--allow-unstable`` option for ``ansible-test``
-- Prefix the test name with ``unstable/`` when passing it to ``ansible-test``.
+- Use the ``--allow-unstable`` option for ``assible-test``
+- Prefix the test name with ``unstable/`` when passing it to ``assible-test``.
 
-Tests will be marked as unstable by a member of the Ansible Core Team.
+Tests will be marked as unstable by a member of the Assible Core Team.
 GitHub issues_ will be created to track each unstable test.
 
 Disabled
@@ -122,10 +122,10 @@ Disabled tests are automatically skipped.
 
 There are two ways to run disabled tests manually:
 
-- Use the ``--allow-disabled`` option for ``ansible-test``
-- Prefix the test name with ``disabled/`` when passing it to ``ansible-test``.
+- Use the ``--allow-disabled`` option for ``assible-test``
+- Prefix the test name with ``disabled/`` when passing it to ``assible-test``.
 
-Tests will be marked as disabled by a member of the Ansible Core Team.
+Tests will be marked as disabled by a member of the Assible Core Team.
 GitHub issues_ will be created to track each disabled test.
 
 Unsupported
@@ -138,8 +138,8 @@ However, if that is not possible then marking a test as unsupported will prevent
 
 There are two ways to run unsupported tests manually:
 
-* Use the ``--allow-unsupported`` option for ``ansible-test``
-* Prefix the test name with ``unsupported/`` when passing it to ``ansible-test``.
+* Use the ``--allow-unsupported`` option for ``assible-test``
+* Prefix the test name with ``unsupported/`` when passing it to ``assible-test``.
 
 Tests will be marked as unsupported by the contributor of the test.
 
@@ -171,12 +171,12 @@ Issues
 Tests that are marked as unstable_ or disabled_ will have an issue created to track the status of the test.
 Each issue will be assigned to one of the following projects:
 
-- `AWS <https://github.com/ansible/ansible/projects/21>`_
-- `Azure <https://github.com/ansible/ansible/projects/22>`_
-- `Windows <https://github.com/ansible/ansible/projects/23>`_
-- `General <https://github.com/ansible/ansible/projects/25>`_
+- `AWS <https://github.com/assible/assible/projects/21>`_
+- `Azure <https://github.com/assible/assible/projects/22>`_
+- `Windows <https://github.com/assible/assible/projects/23>`_
+- `General <https://github.com/assible/assible/projects/25>`_
 
 Questions
 ---------
 
-For questions about integration tests reach out to @mattclay or @gundalow on GitHub or ``#ansible-devel`` on IRC.
+For questions about integration tests reach out to @mattclay or @gundalow on GitHub or ``#assible-devel`` on IRC.

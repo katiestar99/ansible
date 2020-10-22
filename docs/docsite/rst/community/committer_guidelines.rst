@@ -4,7 +4,7 @@
 Committers Guidelines
 *********************
 
-These are the guidelines for people with commit privileges on the Ansible GitHub repository. Committers are essentially acting as members of the Ansible Core team, although not necessarily as employees of Ansible and Red Hat. Please read the guidelines before you commit.
+These are the guidelines for people with commit privileges on the Assible GitHub repository. Committers are essentially acting as members of the Assible Core team, although not necessarily as employees of Assible and Red Hat. Please read the guidelines before you commit.
 
 These guidelines apply to everyone. At the same time, this ISN'T a process document. So just use good judgment. You've been given commit access because we trust your judgment.
 
@@ -15,7 +15,7 @@ If you abuse the trust and break components and builds, and so on, the trust lev
 Features, high-level design, and roadmap
 ========================================
 
-As a core team member, you are an integral part of the team that develops the :ref:`roadmap <roadmaps>`. Please be engaged, and push for the features and fixes that you want to see. Also keep in mind that Red Hat, as a company, will commit to certain features, fixes, APIs, and so on, for various releases. Red Hat, the company, and the Ansible team must get these changes completed and released as scheduled. Obligations to users, the community, and customers must come first. Because of these commitments, a feature you want to develop yourself may not get into a release if it affects a lot of other parts within Ansible.
+As a core team member, you are an integral part of the team that develops the :ref:`roadmap <roadmaps>`. Please be engaged, and push for the features and fixes that you want to see. Also keep in mind that Red Hat, as a company, will commit to certain features, fixes, APIs, and so on, for various releases. Red Hat, the company, and the Assible team must get these changes completed and released as scheduled. Obligations to users, the community, and customers must come first. Because of these commitments, a feature you want to develop yourself may not get into a release if it affects a lot of other parts within Assible.
 
 Any other new features and changes to high level design should go through the proposal process (TBD), to ensure the community and core team have had a chance to review the idea and approve it. The core team has sole responsibility for merging new features based on proposals.
 
@@ -26,7 +26,7 @@ As a committer, you may already know this, but our workflow forms a lot of our t
 
 * Fork the repository upon which you want to do some work to your own personal repository
 * Work on the specific branch upon which you need to commit
-* Create a Pull Request back to the Ansible repository and tag the people you would like to review; assign someone as the primary "owner" of your request
+* Create a Pull Request back to the Assible repository and tag the people you would like to review; assign someone as the primary "owner" of your request
 * Adjust code as necessary based on the Comments provided
 * Ask someone on the Core Team to do a final review and merge
 
@@ -42,7 +42,7 @@ Roles on Core
 
 General rules
 =============
-Individuals with direct commit access to ansible/ansible are entrusted with powers that allow them to do a broad variety of things--probably more than we can write down. Rather than rules, treat these as general *guidelines*, individuals with this power are expected to use their best judgement.
+Individuals with direct commit access to assible/assible are entrusted with powers that allow them to do a broad variety of things--probably more than we can write down. Rather than rules, treat these as general *guidelines*, individuals with this power are expected to use their best judgement.
 
 * Don't
 
@@ -61,17 +61,17 @@ Individuals with direct commit access to ansible/ansible are entrusted with powe
   - Consider backwards compatibility (goes back to "don't break existing playbooks").
   - Write tests. PRs with tests are looked at with more priority than PRs without tests that should have them included. While not all changes require tests, be sure to add them for bug fixes or functionality changes.
   - Discuss with other committers, specially when you are unsure of something.
-  - Document! If your PR is a new feature or a change to behavior, make sure you've updated all associated documentation or have notified the right people to do so. It also helps to add the version of ``ansible-base`` against which this documentation is compatible (to avoid confusion between stable and devel docs, for backwards compatibility, and so on).
+  - Document! If your PR is a new feature or a change to behavior, make sure you've updated all associated documentation or have notified the right people to do so. It also helps to add the version of ``assible-base`` against which this documentation is compatible (to avoid confusion between stable and devel docs, for backwards compatibility, and so on).
   - Consider scope, sometimes a fix can be generalized
   - Keep it simple, then things are maintainable, debuggable and intelligible.
 
-Committers are expected to continue to follow the same community and contribution guidelines followed by the rest of the Ansible community.
+Committers are expected to continue to follow the same community and contribution guidelines followed by the rest of the Assible community.
 
 
 People
 ======
 
-Individuals who've been asked to become a part of this group have generally been contributing in significant ways to the Ansible community for some time. Should they agree, they are requested to add their names and GitHub IDs to this file, in the section below, through a pull request. Doing so indicates that these individuals agree to act in the ways that their fellow committers trust that they will act.
+Individuals who've been asked to become a part of this group have generally been contributing in significant ways to the Assible community for some time. Should they agree, they are requested to add their names and GitHub IDs to this file, in the section below, through a pull request. Doing so indicates that these individuals agree to act in the ways that their fellow committers trust that they will act.
 
 +---------------------+----------------------+--------------------+----------------------+
 | Name                | GitHub ID            | IRC Nick           | Other                |

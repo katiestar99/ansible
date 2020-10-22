@@ -1,12 +1,12 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.CommandUtil
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.CommandUtil
 
 $ErrorActionPreference = 'Stop'
 
 $params = Parse-Args $args
-$exe = Get-AnsibleParam -obj $params -name "exe" -type "path" -failifempty $true
+$exe = Get-AssibleParam -obj $params -name "exe" -type "path" -failifempty $true
 
 $result = @{
     changed = $false
@@ -30,7 +30,7 @@ Assert-Equals -actual $actual.stderr -expected ""
 Assert-Equals -actual $actual.executable -expected $exe
 
 $test_name = "exe in special char dir"
-$tmp_dir = Join-Path -Path $env:TEMP -ChildPath "ansible .ÅÑŚÌβŁÈ [$!@^&test(;)]"
+$tmp_dir = Join-Path -Path $env:TEMP -ChildPath "assible .ÅÑŚÌβŁÈ [$!@^&test(;)]"
 try {
     New-Item -Path $tmp_dir -ItemType Directory > $null
     $exe_special = Join-Path $tmp_dir -ChildPath "PrintArgv.exe"
@@ -128,8 +128,8 @@ begin {
 }
 "@
 $encoded_wrapper = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($wrapper))
-$actual = Run-Command -command "powershell.exe -ExecutionPolicy ByPass -EncodedCommand $encoded_wrapper" -stdin "Ansible"
-Assert-Equals -actual $actual.stdout -expected "Ansible`n"
+$actual = Run-Command -command "powershell.exe -ExecutionPolicy ByPass -EncodedCommand $encoded_wrapper" -stdin "Assible"
+Assert-Equals -actual $actual.stdout -expected "Assible`n"
 
 $result.data = "success"
 Exit-Json -obj $result

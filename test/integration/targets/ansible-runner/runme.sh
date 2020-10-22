@@ -2,4 +2,4 @@
 
 set -eux
 
-ANSIBLE_ROLES_PATH=../ ansible-playbook test.yml -i inventory "$@"
+ASSIBLE_ROLES_PATH=../ assible-playbook test.yml -i inventory "$@"

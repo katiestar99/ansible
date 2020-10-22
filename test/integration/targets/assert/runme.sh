@@ -18,7 +18,7 @@ run_test() {
 
    # The shenanigans with redirection and 'tee' are to capture STDOUT and
    # STDERR separately while still displaying both to the console
-   { ansible-playbook -i 'localhost,' -c local "${testname}.yml" \
+   { assible-playbook -i 'localhost,' -c local "${testname}.yml" \
       > >(set +x; tee "${OUTFILE}.${testname}.stdout"); } \
       2> >(set +x; tee "${OUTFILE}.${testname}.stderr" >&2) 0</dev/null
 
@@ -61,11 +61,11 @@ if [[ ${1:-} == "--init" ]]; then
 fi
 
 # Force the 'default' callback plugin
-export ANSIBLE_STDOUT_CALLBACK=default
+export ASSIBLE_STDOUT_CALLBACK=default
 # Disable color in output for consistency
-export ANSIBLE_FORCE_COLOR=0
-export ANSIBLE_NOCOLOR=1
+export ASSIBLE_FORCE_COLOR=0
+export ASSIBLE_NOCOLOR=1
 # Disable retry files
-export ANSIBLE_RETRY_FILES_ENABLED=0
+export ASSIBLE_RETRY_FILES_ENABLED=0
 
 run_test quiet

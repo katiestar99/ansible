@@ -1,5 +1,5 @@
 - block:
-    # This block can be removed once we have a mechanism in ansible-test to separate
+    # This block can be removed once we have a mechanism in assible-test to separate
     # the control node from the managed node.
     - block:
         - name: Write temp file for sanity checking this is not the controller
@@ -8,7 +8,7 @@
             dest: /tmp/Anything-Nutlike-Nuzzle-Plow-Overdue
           delegate_to: localhost
           connection: local
-          when: inventory_hostname == ansible_play_hosts[0]
+          when: inventory_hostname == assible_play_hosts[0]
 
         - name: See if the temp file exists on the managed node
           stat:
@@ -19,7 +19,7 @@
           assert:
             msg: >
               This test must be run manually by modifying the inventory file to point
-              "{{ inventory_hostname }}" at a remote host rather than "{{ ansible_host }}".
+              "{{ inventory_hostname }}" at a remote host rather than "{{ assible_host }}".
               Skipping reboot test.
             that:
               - not controller_temp_file.stat.exists
@@ -76,7 +76,7 @@
       register: reboot_fail_test
       failed_when: "reboot_fail_test.msg != 'Timed out waiting for post-reboot test command (timeout=' ~ timeout ~ ')'"
       vars:
-        timeout: "{{ timeout_value[ansible_facts['distribution'] | lower] | default(60) }}"
+        timeout: "{{ timeout_value[assible_facts['distribution'] | lower] | default(60) }}"
 
     - name: Test molly-guard
       block:
@@ -95,7 +95,7 @@
 
         - import_tasks: check_reboot.yml
 
-      when: ansible_facts.distribution in ['Debian', 'Ubuntu']
+      when: assible_facts.distribution in ['Debian', 'Ubuntu']
       tags:
         - molly-guard
 
@@ -106,6 +106,6 @@
         state: absent
       delegate_to: localhost
       connection: local
-      when: inventory_hostname == ansible_play_hosts[0]
+      when: inventory_hostname == assible_play_hosts[0]
 
-  when: ansible_virtualization_type | default('') != 'docker'
+  when: assible_virtualization_type | default('') != 'docker'

@@ -1,11 +1,11 @@
 #!powershell
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#Requires -Module Ansible.ModuleUtils.FileUtil
-#Requires -Module Ansible.ModuleUtils.LinkUtil
+#AssibleRequires -CSharpUtil Assible.Basic
+#Requires -Module Assible.ModuleUtils.FileUtil
+#Requires -Module Assible.ModuleUtils.LinkUtil
 
 function ConvertTo-Timestamp($start_date, $end_date) {
     if ($start_date -and $end_date) {
@@ -36,7 +36,7 @@ function Get-FileChecksum($path, $algorithm) {
 function Get-FileInfo {
     param([String]$Path, [Switch]$Follow)
 
-    $info = Get-AnsibleItem -Path $Path -ErrorAction SilentlyContinue
+    $info = Get-AssibleItem -Path $Path -ErrorAction SilentlyContinue
     $link_info = $null
     if ($null -ne $info) {
         try {
@@ -64,7 +64,7 @@ $spec = @{
     supports_check_mode = $true
 }
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
+$module = [Assible.Basic.AssibleModule]::Create($args, $spec)
 
 $path = $module.Params.path
 $get_checksum = $module.Params.get_checksum

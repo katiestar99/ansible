@@ -366,7 +366,7 @@ notes:
   - The repo file will be automatically deleted if it contains no repository.
   - When removing a repository, beware that the metadata cache may still remain
     on disk until you run C(yum clean all). Use a notification handler for this.
-  - "The C(params) parameter was removed in Ansible 2.5 due to circumventing Ansible's parameter
+  - "The C(params) parameter was removed in Assible 2.5 due to circumventing Assible's parameter
     handling"
 '''
 
@@ -429,9 +429,9 @@ state:
 
 import os
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.six.moves import configparser
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.six.moves import configparser
+from assible.module_utils._text import to_native
 
 
 class YumRepo(object):
@@ -646,16 +646,16 @@ def main():
 
     argument_spec['async'] = dict(type='bool', default=True)
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         add_file_common_args=True,
         supports_check_mode=True,
     )
 
     # Params was removed
-    # https://meetbot.fedoraproject.org/ansible-meeting/2017-09-28/ansible_dev_meeting.2017-09-28-15.00.log.html
+    # https://meetbot.fedoraproject.org/assible-meeting/2017-09-28/assible_dev_meeting.2017-09-28-15.00.log.html
     if module.params['params']:
-        module.fail_json(msg="The params option to yum_repository was removed in Ansible 2.5 since it circumvents Ansible's option handling")
+        module.fail_json(msg="The params option to yum_repository was removed in Assible 2.5 since it circumvents Assible's option handling")
 
     name = module.params['name']
     state = module.params['state']

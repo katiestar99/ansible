@@ -1,12 +1,12 @@
 - assert:
     that:
         - 'i_one|type_debug == "int"'
-        - 's_one|type_debug == "AnsibleUnicode"'
+        - 's_one|type_debug == "AssibleUnicode"'
         - 'dict_one|type_debug == "dict"'
         - 'dict_one is mapping'
         - 'list_one|type_debug == "list"'
         - 'b_true|type_debug == "bool"'
-        - 's_true|type_debug == "AnsibleUnicode"'
+        - 's_true|type_debug == "AssibleUnicode"'
 
 - set_fact:
     a_list: "{{[i_one, s_two]}}"
@@ -17,4 +17,4 @@
         - 'a_list[0] == 1'
         - 'a_list[0]|type_debug == "int"'
         - 'a_list[1] == "2"'
-        - 'a_list[1]|type_debug == "AnsibleUnicode"'
+        - 'a_list[1]|type_debug == "AssibleUnicode"'

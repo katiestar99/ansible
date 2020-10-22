@@ -3,7 +3,7 @@
 
 # Copyright: (c) 2012, Daniel Hokka Zakrisson <daniel@hozac.com>
 # Copyright: (c) 2014, Ahti Kitsik <ak@ahtik.com>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -18,15 +18,15 @@ description:
   - This module ensures a particular line is in a file, or replace an
     existing line using a back-referenced regular expression.
   - This is primarily useful when you want to change a single line in a file only.
-  - See the M(ansible.builtin.replace) module if you want to change multiple, similar lines
-    or check M(ansible.builtin.blockinfile) if you want to insert/update/remove a block of lines in a file.
-    For other cases, see the M(ansible.builtin.copy) or M(ansible.builtin.template) modules.
+  - See the M(assible.builtin.replace) module if you want to change multiple, similar lines
+    or check M(assible.builtin.blockinfile) if you want to insert/update/remove a block of lines in a file.
+    For other cases, see the M(assible.builtin.copy) or M(assible.builtin.template) modules.
 version_added: "0.7"
 options:
   path:
     description:
       - The file to modify.
-      - Before Ansible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
+      - Before Assible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
     type: path
     required: true
     aliases: [ dest, destfile, name ]
@@ -118,19 +118,19 @@ options:
     version_added: "2.5"
   others:
     description:
-      - All arguments accepted by the M(ansible.builtin.file) module also work here.
+      - All arguments accepted by the M(assible.builtin.file) module also work here.
     type: str
 extends_documentation_fragment:
     - files
     - validate
 notes:
-  - As of Ansible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
+  - As of Assible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
 seealso:
-- module: ansible.builtin.blockinfile
-- module: ansible.builtin.copy
-- module: ansible.builtin.file
-- module: ansible.builtin.replace
-- module: ansible.builtin.template
+- module: assible.builtin.blockinfile
+- module: assible.builtin.copy
+- module: assible.builtin.file
+- module: assible.builtin.replace
+- module: assible.builtin.template
 - module: community.windows.win_lineinfile
 author:
     - Daniel Hokka Zakrissoni (@dhozac)
@@ -211,8 +211,8 @@ import re
 import tempfile
 
 # import module snippets
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_bytes, to_native, to_text
 
 
 def write_changes(module, b_lines, dest):
@@ -513,7 +513,7 @@ def absent(module, dest, regexp, line, backup):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             path=dict(type='path', required=True, aliases=['dest', 'destfile', 'name']),
             state=dict(type='str', default='present', choices=['absent', 'present']),

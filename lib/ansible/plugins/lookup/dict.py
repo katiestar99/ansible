@@ -1,5 +1,5 @@
 # (c) 2014, Kent R. Spillner <kspillner@acm.org>
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -53,9 +53,9 @@ RETURN = """
     type: list
 """
 
-from ansible.errors import AnsibleError
-from ansible.plugins.lookup import LookupBase
-from ansible.module_utils.common._collections_compat import Mapping
+from assible.errors import AssibleError
+from assible.plugins.lookup import LookupBase
+from assible.module_utils.common._collections_compat import Mapping
 
 
 class LookupModule(LookupBase):
@@ -70,7 +70,7 @@ class LookupModule(LookupBase):
         for term in terms:
             # Expect any type of Mapping, notably hostvars
             if not isinstance(term, Mapping):
-                raise AnsibleError("with_dict expects a dict")
+                raise AssibleError("with_dict expects a dict")
 
             results.extend(self._flatten_hash_to_list(term))
         return results

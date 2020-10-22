@@ -5,10 +5,10 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 import datetime
 
-module = AnsibleModule(argument_spec=dict(
+module = AssibleModule(argument_spec=dict(
     datetime=dict(type=str, required=True),
     date=dict(type=str, required=True),
 ))

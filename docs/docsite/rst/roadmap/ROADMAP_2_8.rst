@@ -1,5 +1,5 @@
 ===========
-Ansible 2.8
+Assible 2.8
 ===========
 
 .. contents::
@@ -11,7 +11,7 @@ Release Schedule
 Expected
 ========
 
-PRs must be raised well in advance of the dates below to have a chance of being included in this Ansible release.
+PRs must be raised well in advance of the dates below to have a chance of being included in this Assible release.
 
 - 2019-04-04 Alpha 1 **Core freeze**
   No new features to ``support:core`` code.
@@ -35,4 +35,4 @@ Toshio Kuratomi (IRC: abadger1999; GitHub: @abadger)
 Planned work
 ============
 
-See the `Ansible 2.8 Project Board <https://github.com/ansible/ansible/projects/30>`_
+See the `Assible 2.8 Project Board <https://github.com/assible/assible/projects/30>`_

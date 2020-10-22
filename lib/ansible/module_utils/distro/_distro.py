@@ -14,7 +14,7 @@
 #
 # A local copy of the license can be found in licenses/Apache-License.txt
 #
-# Modifications to this code have been made by Ansible Project
+# Modifications to this code have been made by Assible Project
 
 """
 The ``distro`` package (``distro`` stands for Linux Distribution) provides

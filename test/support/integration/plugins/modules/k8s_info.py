@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -28,7 +28,7 @@ description:
   - Access to the full range of K8s APIs.
   - Authenticate using either a config file, certificates, password or token.
   - Supports check mode.
-  - This module was called C(k8s_facts) before Ansible 2.9. The usage did not change.
+  - This module was called C(k8s_facts) before Assible 2.9. The usage did not change.
 
 options:
   api_version:
@@ -131,19 +131,19 @@ resources:
 '''
 
 
-from ansible.module_utils.k8s.common import KubernetesAnsibleModule, AUTH_ARG_SPEC
+from assible.module_utils.k8s.common import KubernetesAssibleModule, AUTH_ARG_SPEC
 import copy
 
 
-class KubernetesInfoModule(KubernetesAnsibleModule):
+class KubernetesInfoModule(KubernetesAssibleModule):
 
     def __init__(self, *args, **kwargs):
-        KubernetesAnsibleModule.__init__(self, *args,
+        KubernetesAssibleModule.__init__(self, *args,
                                          supports_check_mode=True,
                                          **kwargs)
         if self._name == 'k8s_facts':
             self.deprecate("The 'k8s_facts' module has been renamed to 'k8s_info'",
-                           version='2.13', collection_name='ansible.builtin')
+                           version='2.13', collection_name='assible.builtin')
 
     def execute_module(self):
         self.client = self.get_api_client()

@@ -1,4 +1,4 @@
-# Copyright (c) 2018, Ansible Project
+# Copyright (c) 2018, Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 # Make coding more python3-ish
@@ -8,11 +8,11 @@ __metaclass__ = type
 import json
 import sys
 
-from ansible.module_utils._text import to_native
+from assible.module_utils._text import to_native
 
 
 def removed_module(removed_in, msg='This module has been removed. The module documentation for'
-                                   ' Ansible-%(version)s may contain hints for porting'):
+                                   ' Assible-%(version)s may contain hints for porting'):
     """
     This function is deprecated and should not be used. Instead the module should just be
     actually removed. This function is scheduled for removal for the 2.12 release.
@@ -21,11 +21,11 @@ def removed_module(removed_in, msg='This module has been removed. The module doc
 
     :arg removed_in: The version that the module was removed in
     :kwarg msg: Message to use in the module's failure message. The default says that the module
-        has been removed and what version of the Ansible documentation to search for porting help.
+        has been removed and what version of the Assible documentation to search for porting help.
 
     Remove the actual code and instead have boilerplate like this::
 
-        from ansible.module_utils.common.removed import removed_module
+        from assible.module_utils.common.removed import removed_module
 
         if __name__ == '__main__':
             removed_module("2.4")

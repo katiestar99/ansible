@@ -1,6 +1,6 @@
 # test code for repositories with separate git dir updating
-# see https://github.com/ansible/ansible/pull/38016
-# see https://github.com/ansible/ansible/issues/30034
+# see https://github.com/assible/assible/pull/38016
+# see https://github.com/assible/assible/issues/30034
 
 - name: SEPARATE-GIT-DIR | clear checkout_dir
   file:

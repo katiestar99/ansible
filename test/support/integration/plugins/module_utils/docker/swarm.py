@@ -12,20 +12,20 @@ from time import sleep
 try:
     from docker.errors import APIError, NotFound
 except ImportError:
-    # missing Docker SDK for Python handled in ansible.module_utils.docker.common
+    # missing Docker SDK for Python handled in assible.module_utils.docker.common
     pass
 
-from ansible.module_utils._text import to_native
-from ansible.module_utils.docker.common import (
-    AnsibleDockerClient,
+from assible.module_utils._text import to_native
+from assible.module_utils.docker.common import (
+    AssibleDockerClient,
     LooseVersion,
 )
 
 
-class AnsibleDockerSwarmClient(AnsibleDockerClient):
+class AssibleDockerSwarmClient(AssibleDockerClient):
 
     def __init__(self, **kwargs):
-        super(AnsibleDockerSwarmClient, self).__init__(**kwargs)
+        super(AssibleDockerSwarmClient, self).__init__(**kwargs)
 
     def get_swarm_node_id(self):
         """
@@ -99,7 +99,7 @@ class AnsibleDockerSwarmClient(AnsibleDockerClient):
 
     def fail_task_if_not_swarm_manager(self):
         """
-        If host is not a swarm manager then Ansible task on this host should end with 'failed' state
+        If host is not a swarm manager then Assible task on this host should end with 'failed' state
         """
         if not self.check_if_swarm_manager():
             self.fail("Error running docker swarm module: must run on swarm manager node")
@@ -250,7 +250,7 @@ class AnsibleDockerSwarmClient(AnsibleDockerClient):
     def get_unlock_key(self):
         if self.docker_py_version < LooseVersion('2.7.0'):
             return None
-        return super(AnsibleDockerSwarmClient, self).get_unlock_key()
+        return super(AssibleDockerSwarmClient, self).get_unlock_key()
 
     def get_service_inspect(self, service_id, skip_missing=False):
         """

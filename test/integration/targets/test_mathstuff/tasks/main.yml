@@ -1,7 +1,7 @@
 - name: Get Jinja2 version
   set_fact:
     jinja2_version: >-
-                    {{ lookup('pipe', '{{ ansible_playbook_python }} -c "import jinja2; print(jinja2.__version__)"') }}
+                    {{ lookup('pipe', '{{ assible_playbook_python }} -c "import jinja2; print(jinja2.__version__)"') }}
 
 - name: Assert subset tests work
   assert:

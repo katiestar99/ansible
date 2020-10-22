@@ -7,7 +7,7 @@
 # this is a windows documentation stub.  actual code lives in the .ps1
 # file of the same name
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -36,9 +36,9 @@ author:
 
 EXAMPLES = r'''
 # Test connectivity to a windows host
-# ansible winserver -m win_ping
+# assible winserver -m win_ping
 
-- name: Example from an Ansible Playbook
+- name: Example from an Assible Playbook
   win_ping:
 
 - name: Induce an exception to see what happens

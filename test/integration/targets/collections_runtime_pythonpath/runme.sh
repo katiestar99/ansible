@@ -13,8 +13,8 @@ source virtualenv.sh
     === Test that the module \
     gets picked up if discoverable \
     via PYTHONPATH env var ===
-PYTHONPATH="${PWD}/ansible-collection-python-dist-boo:$PYTHONPATH" \
-ansible \
+PYTHONPATH="${PWD}/assible-collection-python-dist-boo:$PYTHONPATH" \
+assible \
     -m python.dist.boo \
     -a 'name=Bob' \
     -c local localhost \
@@ -27,18 +27,18 @@ ansible \
     into site-packages ===
 python -m pip.__main__ install pep517
 ( # Build a binary Python dist (a wheel) using PEP517:
-  cp -r ansible-collection-python-dist-boo "${OUTPUT_DIR}/"
-  cd "${OUTPUT_DIR}/ansible-collection-python-dist-boo"
+  cp -r assible-collection-python-dist-boo "${OUTPUT_DIR}/"
+  cd "${OUTPUT_DIR}/assible-collection-python-dist-boo"
   python -m pep517.build --binary --out-dir dist .
 )
 # Install a pre-built dist with pip:
 python -m pip.__main__ install \
   --no-index \
-  -f "${OUTPUT_DIR}/ansible-collection-python-dist-boo/dist/" \
-  --only-binary=ansible-collections.python.dist \
-  ansible-collections.python.dist
-python -m pip.__main__ show ansible-collections.python.dist
-ansible \
+  -f "${OUTPUT_DIR}/assible-collection-python-dist-boo/dist/" \
+  --only-binary=assible-collections.python.dist \
+  assible-collections.python.dist
+python -m pip.__main__ show assible-collections.python.dist
+assible \
     -m python.dist.boo \
     -a 'name=Frodo' \
     -c local localhost \
@@ -46,14 +46,14 @@ ansible \
 
 
 >&2 echo \
-    === Test that ansible_collections \
+    === Test that assible_collections \
     root takes precedence over \
     PYTHONPATH/site-packages ===
 # This is done by injecting a module with the same FQCN
 # into another collection root.
-ANSIBLE_COLLECTIONS_PATH="${PWD}/ansible-collection-python-dist-foo" \
-PYTHONPATH="${PWD}/ansible-collection-python-dist-boo:$PYTHONPATH" \
-ansible \
+ASSIBLE_COLLECTIONS_PATH="${PWD}/assible-collection-python-dist-foo" \
+PYTHONPATH="${PWD}/assible-collection-python-dist-boo:$PYTHONPATH" \
+assible \
     -m python.dist.boo \
     -a 'name=Степан' \
     -c local localhost \

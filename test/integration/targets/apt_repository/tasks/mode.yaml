@@ -5,7 +5,7 @@
 # lots (all?) configured repos.
 
 - set_fact:
-    test_repo_spec: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
+    test_repo_spec: "deb http://apt.postgresql.org/pub/repos/apt/ {{ assible_distribution_release }}-pgdg main"
     test_repo_path: /etc/apt/sources.list.d/apt_postgresql_org_pub_repos_apt.list
 
 - import_tasks: mode_cleanup.yaml
@@ -124,7 +124,7 @@
 # of 644 was previously resulting in a default file mode of 0420.
 # 'mode: 600' is likely not what a user meant but there isnt enough info
 # to determine that. Note that a string arg of '600' will be intrepeted as 0600.
-# See https://github.com/ansible/ansible/issues/16370
+# See https://github.com/assible/assible/issues/16370
 - name: Assert mode_given_yaml_literal_600 is correct
   assert:
     that: "mode_given_yaml_literal_600.stat.mode == '1130'"

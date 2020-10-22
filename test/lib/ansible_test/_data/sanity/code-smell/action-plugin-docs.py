@@ -14,12 +14,12 @@ def main():
     module_names = set()
 
     module_prefixes = {
-        'lib/ansible/modules/': True,
+        'lib/assible/modules/': True,
         'plugins/modules/': False,
     }
 
     action_prefixes = {
-        'lib/ansible/plugins/action/': True,
+        'lib/assible/plugins/action/': True,
         'plugins/action/': False,
     }
 

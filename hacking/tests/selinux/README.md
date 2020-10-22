@@ -1,4 +1,4 @@
-# ansible-podman selinux module
+# assible-podman selinux module
 
 On Fedora-derived systems (and possibly others), selinux can prevent podman
 from running the way we need it to for our tests to work.
@@ -16,7 +16,7 @@ To use it, just run:
 ...which will build the module. Then run:
 
 ```
-sudo semodule -i ansible-podman.pp
+sudo semodule -i assible-podman.pp
 ```
 
 to insert and enable the module.

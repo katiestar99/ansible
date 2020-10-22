@@ -1,19 +1,19 @@
 # (c) 2016, Daniel Miranda <danielkza2@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -22,10 +22,10 @@ __metaclass__ = type
 from units.compat import unittest
 from units.compat.mock import patch
 
-from ansible.playbook import Play
-from ansible.playbook.role_include import IncludeRole
-from ansible.playbook.task import Task
-from ansible.vars.manager import VariableManager
+from assible.playbook import Play
+from assible.playbook.role_include import IncludeRole
+from assible.playbook.task import Task
+from assible.vars.manager import VariableManager
 
 from units.mock.loader import DictDataLoader
 from units.mock.path import mock_unfrackpath_noop
@@ -36,49 +36,49 @@ class TestIncludeRole(unittest.TestCase):
     def setUp(self):
 
         self.loader = DictDataLoader({
-            '/etc/ansible/roles/l1/tasks/main.yml': """
+            '/etc/assible/roles/l1/tasks/main.yml': """
                 - shell: echo 'hello world from l1'
                 - include_role: name=l2
             """,
-            '/etc/ansible/roles/l1/tasks/alt.yml': """
+            '/etc/assible/roles/l1/tasks/alt.yml': """
                 - shell: echo 'hello world from l1 alt'
                 - include_role: name=l2 tasks_from=alt defaults_from=alt
             """,
-            '/etc/ansible/roles/l1/defaults/main.yml': """
+            '/etc/assible/roles/l1/defaults/main.yml': """
                 test_variable: l1-main
                 l1_variable: l1-main
             """,
-            '/etc/ansible/roles/l1/defaults/alt.yml': """
+            '/etc/assible/roles/l1/defaults/alt.yml': """
                 test_variable: l1-alt
                 l1_variable: l1-alt
             """,
-            '/etc/ansible/roles/l2/tasks/main.yml': """
+            '/etc/assible/roles/l2/tasks/main.yml': """
                 - shell: echo 'hello world from l2'
                 - include_role: name=l3
             """,
-            '/etc/ansible/roles/l2/tasks/alt.yml': """
+            '/etc/assible/roles/l2/tasks/alt.yml': """
                 - shell: echo 'hello world from l2 alt'
                 - include_role: name=l3 tasks_from=alt defaults_from=alt
             """,
-            '/etc/ansible/roles/l2/defaults/main.yml': """
+            '/etc/assible/roles/l2/defaults/main.yml': """
                 test_variable: l2-main
                 l2_variable: l2-main
             """,
-            '/etc/ansible/roles/l2/defaults/alt.yml': """
+            '/etc/assible/roles/l2/defaults/alt.yml': """
                 test_variable: l2-alt
                 l2_variable: l2-alt
             """,
-            '/etc/ansible/roles/l3/tasks/main.yml': """
+            '/etc/assible/roles/l3/tasks/main.yml': """
                 - shell: echo 'hello world from l3'
             """,
-            '/etc/ansible/roles/l3/tasks/alt.yml': """
+            '/etc/assible/roles/l3/tasks/alt.yml': """
                 - shell: echo 'hello world from l3 alt'
             """,
-            '/etc/ansible/roles/l3/defaults/main.yml': """
+            '/etc/assible/roles/l3/defaults/main.yml': """
                 test_variable: l3-main
                 l3_variable: l3-main
             """,
-            '/etc/ansible/roles/l3/defaults/alt.yml': """
+            '/etc/assible/roles/l3/defaults/alt.yml': """
                 test_variable: l3-alt
                 l3_variable: l3-alt
             """
@@ -111,7 +111,7 @@ class TestIncludeRole(unittest.TestCase):
             yield (role.get_name(),
                    self.var_manager.get_vars(play=play, task=task))
 
-    @patch('ansible.playbook.role.definition.unfrackpath',
+    @patch('assible.playbook.role.definition.unfrackpath',
            mock_unfrackpath_noop)
     def test_simple(self):
 
@@ -134,7 +134,7 @@ class TestIncludeRole(unittest.TestCase):
             self.assertEqual(task_vars.get('test_variable'), 'l3-main')
         self.assertTrue(tested)
 
-    @patch('ansible.playbook.role.definition.unfrackpath',
+    @patch('assible.playbook.role.definition.unfrackpath',
            mock_unfrackpath_noop)
     def test_simple_alt_files(self):
 
@@ -155,7 +155,7 @@ class TestIncludeRole(unittest.TestCase):
             self.assertEqual(task_vars.get('test_variable'), 'l3-alt')
         self.assertTrue(tested)
 
-    @patch('ansible.playbook.role.definition.unfrackpath',
+    @patch('assible.playbook.role.definition.unfrackpath',
            mock_unfrackpath_noop)
     def test_nested(self):
 
@@ -201,7 +201,7 @@ class TestIncludeRole(unittest.TestCase):
                 self.fail()
         self.assertFalse(expected_roles)
 
-    @patch('ansible.playbook.role.definition.unfrackpath',
+    @patch('assible.playbook.role.definition.unfrackpath',
            mock_unfrackpath_noop)
     def test_nested_alt_files(self):
 

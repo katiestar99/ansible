@@ -1,7 +1,7 @@
 Vultr Guide
 ===========
 
-Ansible offers a set of modules to interact with `Vultr <https://www.vultr.com>`_ cloud platform.
+Assible offers a set of modules to interact with `Vultr <https://www.vultr.com>`_ cloud platform.
 
 This set of module forms a framework that allows one to easily manage and orchestrate one's infrastructure on Vultr cloud platform.
 
@@ -44,7 +44,7 @@ If ``VULTR_API_ACCOUNT`` environment variable or ``api_account`` module paramete
 Authentication
 --------------
 
-Before using the Ansible modules to interact with Vultr, ones need an API key.
+Before using the Assible modules to interact with Vultr, ones need an API key.
 If one doesn't own one yet, log in to `Vultr <https://www.vultr.com>`_ go to Account, then API, enable API then the API key should show up.
 
 Ensure you allow the usage of the API key from the proper IP addresses.
@@ -55,7 +55,7 @@ To check that everything is working properly run the following command:
 
 .. code-block:: console
 
-  #> VULTR_API_KEY=XXX ansible -m vultr_account_info localhost
+  #> VULTR_API_KEY=XXX assible -m vultr_account_info localhost
   localhost | SUCCESS => {
     "changed": false,
     "vultr_account_info": {
@@ -93,16 +93,16 @@ Since `Vultr <https://www.vultr.com>`_ offers a public API, the execution of the
           region: New Jersey
 
 
-From that point on, only your creativity is the limit. Make sure to read the documentation of the `available modules <https://docs.ansible.com/ansible/latest/modules/list_of_cloud_modules.html#vultr>`_.
+From that point on, only your creativity is the limit. Make sure to read the documentation of the `available modules <https://docs.assible.com/assible/latest/modules/list_of_cloud_modules.html#vultr>`_.
 
 
 Dynamic Inventory
 -----------------
 
-Ansible provides a dynamic inventory plugin for `Vultr <https://www.vultr.com>`_.
+Assible provides a dynamic inventory plugin for `Vultr <https://www.vultr.com>`_.
 The configuration process is exactly the same as the one for the modules.
 
-To be able to use it you need to enable it first by specifying the following in the ``ansible.cfg`` file:
+To be able to use it you need to enable it first by specifying the following in the ``assible.cfg`` file:
 
 .. code-block:: ini
 
@@ -120,7 +120,7 @@ To list the available hosts one can simply run:
 
 .. code-block:: console
 
-  #> ansible-inventory -i vultr.yml --list
+  #> assible-inventory -i vultr.yml --list
 
 
 For example, this allows you to take action on nodes grouped by location or OS name:
@@ -138,7 +138,7 @@ For example, this allows you to take action on nodes grouped by location or OS n
 Integration tests
 -----------------
 
-Ansible includes integration tests for all Vultr modules.
+Assible includes integration tests for all Vultr modules.
 
 These tests are meant to run against the public Vultr API and that is why they require a valid key to access the API.
 
@@ -146,7 +146,7 @@ Prepare the test setup:
 
 .. code-block:: shell
 
-  $ cd ansible # location the ansible source is
+  $ cd assible # location the assible source is
   $ source ./hacking/env-setup
 
 Set the Vultr API key:
@@ -161,11 +161,11 @@ Run all Vultr tests:
 
 .. code-block:: shell
 
-  $ ansible-test integration cloud/vultr/ -v --diff --allow-unsupported
+  $ assible-test integration cloud/vultr/ -v --diff --allow-unsupported
 
 
 To run a specific test, for example vultr_account_info:
 
 .. code-block:: shell
 
-  $ ansible-test integration cloud/vultr/vultr_account_info -v --diff --allow-unsupported
+  $ assible-test integration cloud/vultr/vultr_account_info -v --diff --allow-unsupported

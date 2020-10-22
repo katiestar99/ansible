@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2016, Brian Coca <bcoca@ansible.com>
+# Copyright: (c) 2016, Brian Coca <bcoca@assible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -11,7 +11,7 @@ __metaclass__ = type
 DOCUMENTATION = '''
 module: systemd
 author:
-    - Ansible Core Team
+    - Assible Core Team
 version_added: "2.2"
 short_description:  Manage services
 description:
@@ -61,7 +61,7 @@ options:
             - run systemctl within a given service manager scope, either as the default system scope (system),
               the current user's scope (user), or the scope of all users (global).
             - "For systemd to work with 'user', the executing user must have its own instance of dbus started (systemd requirement).
-              The user dbus process is normally started during normal login, but not during the run of Ansible tasks.
+              The user dbus process is normally started during normal login, but not during the run of Assible tasks.
               Otherwise you will probably get a 'Failed to connect to bus: no such file or directory' error."
         type: str
         choices: [ system, user, global ]
@@ -70,7 +70,7 @@ options:
     no_block:
         description:
             - Do not synchronously wait for the requested operation to finish.
-              Enqueued job will continue without Ansible blocking on its completion.
+              Enqueued job will continue without Assible blocking on its completion.
         type: bool
         default: no
         version_added: "2.3"
@@ -258,10 +258,10 @@ status:
 
 import os
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.facts.system.chroot import is_chroot
-from ansible.module_utils.service import sysv_exists, sysv_is_enabled, fail_if_missing
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.facts.system.chroot import is_chroot
+from assible.module_utils.service import sysv_exists, sysv_is_enabled, fail_if_missing
+from assible.module_utils._text import to_native
 
 
 def is_running_service(service_status):
@@ -283,7 +283,7 @@ def parse_systemctl_show(lines):
     # until it saw a line that ended with }. However, it is possible to have a single-line value
     # that starts with { but does not end with } (this could happen in the value for Description=,
     # for example), and the previous version of this code would then consume all remaining lines as
-    # part of that value. Cryptically, this would lead to Ansible reporting that the service file
+    # part of that value. Cryptically, this would lead to Assible reporting that the service file
     # couldn't be found.
     #
     # To avoid this issue, the following code only accepts multi-line values for keys whose names
@@ -316,7 +316,7 @@ def parse_systemctl_show(lines):
 
 def main():
     # initialize
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(type='str', aliases=['service', 'unit']),
             state=dict(type='str', choices=['reloaded', 'restarted', 'started', 'stopped']),

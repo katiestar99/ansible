@@ -7,10 +7,10 @@
 The facts base class
 this contains methods common to all facts subsets
 """
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.network import (
     get_resource_connection,
 )
-from ansible.module_utils.six import iteritems
+from assible.module_utils.six import iteritems
 
 
 class FactsBase(object):
@@ -29,9 +29,9 @@ class FactsBase(object):
         if module.params.get("state") not in ["rendered", "parsed"]:
             self._connection = get_resource_connection(module)
 
-        self.ansible_facts = {"ansible_network_resources": {}}
-        self.ansible_facts["ansible_net_gather_network_resources"] = list()
-        self.ansible_facts["ansible_net_gather_subset"] = list()
+        self.assible_facts = {"assible_network_resources": {}}
+        self.assible_facts["assible_net_gather_network_resources"] = list()
+        self.assible_facts["assible_net_gather_subset"] = list()
 
         if not self._gather_subset:
             self._gather_subset = ["!config"]
@@ -111,7 +111,7 @@ class FactsBase(object):
             resource_facts=True,
         )
         if restorun_subsets:
-            self.ansible_facts["ansible_net_gather_network_resources"] = list(
+            self.assible_facts["assible_net_gather_network_resources"] = list(
                 restorun_subsets
             )
             instances = list()
@@ -128,7 +128,7 @@ class FactsBase(object):
                     )
 
             for inst in instances:
-                inst.populate_facts(self._connection, self.ansible_facts, data)
+                inst.populate_facts(self._connection, self.assible_facts, data)
 
     def get_network_legacy_facts(
         self, fact_legacy_obj_map, legacy_facts_type=None
@@ -144,7 +144,7 @@ class FactsBase(object):
             # default subset should always returned be with legacy facts subsets
             if "default" not in runable_subsets:
                 runable_subsets.add("default")
-            self.ansible_facts["ansible_net_gather_subset"] = list(
+            self.assible_facts["assible_net_gather_subset"] = list(
                 runable_subsets
             )
 
@@ -158,5 +158,5 @@ class FactsBase(object):
                 self._warnings.extend(inst.warnings)
 
             for key, value in iteritems(facts):
-                key = "ansible_net_%s" % key
-                self.ansible_facts[key] = value
+                key = "assible_net_%s" % key
+                self.assible_facts[key] = value

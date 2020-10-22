@@ -1,8 +1,8 @@
 ***************************
-Developing ``ansible-base``
+Developing ``assible-base``
 ***************************
 
-Although ``ansible-base`` (the code hosted in the `ansible/ansible repository <https://github.com/ansible/ansible>`_ on GitHub) includes a few plugins that can be swapped out via playbook directives or configuration, much of the code there is not modular.  The documents here give insight into how the parts of ``ansible-base`` work together.
+Although ``assible-base`` (the code hosted in the `assible/assible repository <https://github.com/assible/assible>`_ on GitHub) includes a few plugins that can be swapped out via playbook directives or configuration, much of the code there is not modular.  The documents here give insight into how the parts of ``assible-base`` work together.
 
 .. toctree::
    :maxdepth: 1
@@ -15,7 +15,7 @@ Although ``ansible-base`` (the code hosted in the `ansible/ansible repository <h
        Learn about the Python API for task execution
    :ref:`developing_plugins`
        Learn about developing plugins
-   `Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `Mailing List <https://groups.google.com/group/assible-devel>`_
        The development mailing list
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible-devel IRC chat channel
+       #assible-devel IRC chat channel

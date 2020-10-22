@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2020, Ansible Project
+# Copyright: (c) 2020, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
     'supported_by': 'community'
@@ -63,7 +63,7 @@ author:
 EXAMPLES = '''
 - name: Build test collections
   setup_collections:
-    path: ~/ansible/collections/ansible_collections
+    path: ~/assible/collections/assible_collections
     collections:
     - namespace: namespace1
       name: name1
@@ -81,8 +81,8 @@ import os
 import tempfile
 import yaml
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_bytes
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_bytes
 
 
 def run_module():
@@ -103,7 +103,7 @@ def run_module():
         ),
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=module_args,
         supports_check_mode=False
     )
@@ -150,7 +150,7 @@ def run_module():
 
             release_filename = '%s-%s-%s.tar.gz' % (collection['namespace'], collection['name'], collection['version'])
             collection_path = os.path.join(collection_dir, release_filename)
-            rc, stdout, stderr = module.run_command(['ansible-galaxy', 'collection', 'build'], cwd=collection_dir)
+            rc, stdout, stderr = module.run_command(['assible-galaxy', 'collection', 'build'], cwd=collection_dir)
             result['results'].append({
                 'build': {
                     'rc': rc,
@@ -160,7 +160,7 @@ def run_module():
             })
 
         # To save on time, skip the import wait until the last collection is being uploaded.
-        publish_args = ['ansible-galaxy', 'collection', 'publish', collection_path, '--server',
+        publish_args = ['assible-galaxy', 'collection', 'publish', collection_path, '--server',
                         module.params['server']]
         if module.params['token']:
             publish_args.extend(['--token', module.params['token']])

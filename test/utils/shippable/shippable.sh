@@ -9,11 +9,11 @@ script="${args[0]}"
 
 test="$1"
 
-docker images ansible/ansible
-docker images quay.io/ansible/*
+docker images assible/assible
+docker images quay.io/assible/*
 docker ps
 
-for container in $(docker ps --format '{{.Image}} {{.ID}}' | grep -v -e '^drydock/' -e '^quay.io/ansible/shippable-build-container:' | sed 's/^.* //'); do
+for container in $(docker ps --format '{{.Image}} {{.ID}}' | grep -v -e '^drydock/' -e '^quay.io/assible/shippable-build-container:' | sed 's/^.* //'); do
     docker rm -f "${container}" || true  # ignore errors
 done
 
@@ -69,7 +69,7 @@ else
 fi
 
 # remove empty core/extras module directories from PRs created prior to the repo-merge
-find lib/ansible/modules -type d -empty -print -delete
+find lib/assible/modules -type d -empty -print -delete
 
 function cleanup
 {
@@ -94,17 +94,17 @@ function cleanup
         if [ "${process_coverage}" ]; then
             # use python 3.7 for coverage to avoid running out of memory during coverage xml processing
             # only use it for coverage to avoid the additional overhead of setting up a virtual environment for a potential no-op job
-            virtualenv --python /usr/bin/python3.7 ~/ansible-venv
+            virtualenv --python /usr/bin/python3.7 ~/assible-venv
             set +ux
-            . ~/ansible-venv/bin/activate
+            . ~/assible-venv/bin/activate
             set -ux
 
             # shellcheck disable=SC2086
-            ansible-test coverage xml --color -v --requirements --group-by command --group-by version ${stub:+"$stub"}
+            assible-test coverage xml --color -v --requirements --group-by command --group-by version ${stub:+"$stub"}
             cp -a test/results/reports/coverage=*.xml shippable/codecoverage/
 
             # analyze and capture code coverage aggregated by integration test target
-            ansible-test coverage analyze targets generate -v shippable/testresults/coverage-analyze-targets.json
+            assible-test coverage analyze targets generate -v shippable/testresults/coverage-analyze-targets.json
 
             # upload coverage report to codecov.io only when using complete on-demand coverage
             if [ "${COVERAGE}" == "--coverage" ] && [ "${CHANGED}" == "" ]; then
@@ -154,7 +154,7 @@ else
     timeout=50
 fi
 
-ansible-test env --dump --show --timeout "${timeout}" --color -v
+assible-test env --dump --show --timeout "${timeout}" --color -v
 
 "test/utils/shippable/check_matrix.py"
 "test/utils/shippable/${script}.sh" "${test}"

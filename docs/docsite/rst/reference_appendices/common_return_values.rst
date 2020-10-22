@@ -5,12 +5,12 @@ Return Values
 
 .. contents:: Topics
 
-Ansible modules normally return a data structure that can be registered into a variable, or seen directly when output by
-the `ansible` program. Each module can optionally document its own unique return values (visible through ansible-doc and on the :ref:`main docsite<ansible_documentation>`).
+Assible modules normally return a data structure that can be registered into a variable, or seen directly when output by
+the `assible` program. Each module can optionally document its own unique return values (visible through assible-doc and on the :ref:`main docsite<assible_documentation>`).
 
 This document covers return values common to all modules.
 
-.. note:: Some of these keys might be set by Ansible itself once it processes the module's return information.
+.. note:: Some of these keys might be set by Assible itself once it processes the module's return information.
 
 
 Common
@@ -87,7 +87,7 @@ Information on how the module was invoked.
                     "serole": null,
                     "setype": null,
                     "seuser": null,
-                    "src": "/Users/foo/.ansible/tmp/ansible-tmp-1596115458.110205-105717464505158/source",
+                    "src": "/Users/foo/.assible/tmp/assible-tmp-1596115458.110205-105717464505158/source",
                     "unsafe_writes": null,
                     "validate": null
                 }
@@ -116,7 +116,7 @@ If this key exists, it indicates that a loop was present for the task and that i
 
         "results": [
             {
-                "ansible_loop_var": "item",
+                "assible_loop_var": "item",
                 "backup": "foo.txt.83170.2020-07-30@07:03:05~",
                 "changed": true,
                 "diff": [
@@ -143,7 +143,7 @@ If this key exists, it indicates that a loop was present for the task and that i
                 "msg": "line added"
             },
             {
-                "ansible_loop_var": "item", 
+                "assible_loop_var": "item", 
                 "backup": "foo.txt.83187.2020-07-30@07:03:05~",
                 "changed": true,
                 "diff": [
@@ -207,7 +207,7 @@ Some modules execute command line utilities or are geared for executing commands
 
 stdout_lines
 ````````````
-When `stdout` is returned, Ansible always provides a list of strings, each containing one item per line from the original output.
+When `stdout` is returned, Assible always provides a list of strings, each containing one item per line from the original output.
 
     .. code-block:: console
 
@@ -221,9 +221,9 @@ When `stdout` is returned, Ansible always provides a list of strings, each conta
 Internal use
 ^^^^^^^^^^^^
 
-These keys can be added by modules but will be removed from registered variables; they are 'consumed' by Ansible itself.
+These keys can be added by modules but will be removed from registered variables; they are 'consumed' by Assible itself.
 
-ansible_facts
+assible_facts
 `````````````
 This key should contain a dictionary which will be appended to the facts assigned to the host. These will be directly accessible and don't require using a registered variable.
 
@@ -243,9 +243,9 @@ This key contains a list of dictionaries that will be presented to the user. Key
 
    :ref:`list_of_collections`
        Browse existing collections, modules, and plugins
-   `GitHub modules directory <https://github.com/ansible/ansible/tree/devel/lib/ansible/modules>`_
+   `GitHub modules directory <https://github.com/assible/assible/tree/devel/lib/assible/modules>`_
        Browse source of core and extras modules
-   `Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `Mailing List <https://groups.google.com/group/assible-devel>`_
        Development mailing list
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

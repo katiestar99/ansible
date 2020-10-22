@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -25,12 +25,12 @@ import sys as _sys
 import sys
 import yaml
 
-from ansible.module_utils.common._collections_compat import Sequence
-from ansible.module_utils.six import text_type
-from ansible.module_utils._text import to_bytes, to_text, to_native
+from assible.module_utils.common._collections_compat import Sequence
+from assible.module_utils.six import text_type
+from assible.module_utils._text import to_bytes, to_text, to_native
 
 
-class AnsibleBaseYAMLObject(object):
+class AssibleBaseYAMLObject(object):
     '''
     the base class used to sub-class python built-in objects
     so that we can add attributes to them during yaml parsing
@@ -40,22 +40,22 @@ class AnsibleBaseYAMLObject(object):
     _line_number = 0
     _column_number = 0
 
-    def _get_ansible_position(self):
+    def _get_assible_position(self):
         return (self._data_source, self._line_number, self._column_number)
 
-    def _set_ansible_position(self, obj):
+    def _set_assible_position(self, obj):
         try:
             (src, line, col) = obj
         except (TypeError, ValueError):
             raise AssertionError(
-                'ansible_pos can only be set with a tuple/list '
+                'assible_pos can only be set with a tuple/list '
                 'of three values: source, line number, column number'
             )
         self._data_source = src
         self._line_number = line
         self._column_number = col
 
-    ansible_pos = property(_get_ansible_position, _set_ansible_position)
+    assible_pos = property(_get_assible_position, _set_assible_position)
 
 
 # try to always use orderddict with yaml, after py3.6 the dict type already does this
@@ -68,22 +68,22 @@ if sys.version_info[:2] < (3, 7):
         pass
 
 
-class AnsibleMapping(AnsibleBaseYAMLObject, odict):
+class AssibleMapping(AssibleBaseYAMLObject, odict):
     ''' sub class for dictionaries '''
     pass
 
 
-class AnsibleUnicode(AnsibleBaseYAMLObject, text_type):
+class AssibleUnicode(AssibleBaseYAMLObject, text_type):
     ''' sub class for unicode objects '''
     pass
 
 
-class AnsibleSequence(AnsibleBaseYAMLObject, list):
+class AssibleSequence(AssibleBaseYAMLObject, list):
     ''' sub class for lists '''
     pass
 
 
-class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
+class AssibleVaultEncryptedUnicode(Sequence, AssibleBaseYAMLObject):
     '''Unicode like object that is not evaluated (decrypted) until it needs to be'''
     __UNSAFE__ = True
     __ENCRYPTED__ = True
@@ -92,7 +92,7 @@ class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
     @classmethod
     def from_plaintext(cls, seq, vault, secret):
         if not vault:
-            raise vault.AnsibleVaultError('Error creating AnsibleVaultEncryptedUnicode, invalid vault (%s) provided' % vault)
+            raise vault.AssibleVaultError('Error creating AssibleVaultEncryptedUnicode, invalid vault (%s) provided' % vault)
 
         ciphertext = vault.encrypt(seq, secret)
         avu = cls(ciphertext)
@@ -100,14 +100,14 @@ class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
         return avu
 
     def __init__(self, ciphertext):
-        '''A AnsibleUnicode with a Vault attribute that can decrypt it.
+        '''A AssibleUnicode with a Vault attribute that can decrypt it.
 
         ciphertext is a byte string (str on PY2, bytestring on PY3).
 
         The .data attribute is a property that returns the decrypted plaintext
         of the ciphertext as a PY2 unicode or PY3 string object.
         '''
-        super(AnsibleVaultEncryptedUnicode, self).__init__()
+        super(AssibleVaultEncryptedUnicode, self).__init__()
 
         # after construction, calling code has to set the .vault attribute to a vaultlib object
         self.vault = None
@@ -173,27 +173,27 @@ class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
     #    return (self.data[:],)
 
     def __lt__(self, string):
-        if isinstance(string, AnsibleVaultEncryptedUnicode):
+        if isinstance(string, AssibleVaultEncryptedUnicode):
             return self.data < string.data
         return self.data < string
 
     def __le__(self, string):
-        if isinstance(string, AnsibleVaultEncryptedUnicode):
+        if isinstance(string, AssibleVaultEncryptedUnicode):
             return self.data <= string.data
         return self.data <= string
 
     def __gt__(self, string):
-        if isinstance(string, AnsibleVaultEncryptedUnicode):
+        if isinstance(string, AssibleVaultEncryptedUnicode):
             return self.data > string.data
         return self.data > string
 
     def __ge__(self, string):
-        if isinstance(string, AnsibleVaultEncryptedUnicode):
+        if isinstance(string, AssibleVaultEncryptedUnicode):
             return self.data >= string.data
         return self.data >= string
 
     def __contains__(self, char):
-        if isinstance(char, AnsibleVaultEncryptedUnicode):
+        if isinstance(char, AssibleVaultEncryptedUnicode):
             char = char.data
         return char in self.data
 
@@ -209,7 +209,7 @@ class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
         return self.data[start:end]
 
     def __add__(self, other):
-        if isinstance(other, AnsibleVaultEncryptedUnicode):
+        if isinstance(other, AssibleVaultEncryptedUnicode):
             return self.data + other.data
         elif isinstance(other, text_type):
             return self.data + other
@@ -242,7 +242,7 @@ class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
         return self.data.center(width, *args)
 
     def count(self, sub, start=0, end=_sys.maxsize):
-        if isinstance(sub, AnsibleVaultEncryptedUnicode):
+        if isinstance(sub, AssibleVaultEncryptedUnicode):
             sub = sub.data
         return self.data.count(sub, start, end)
 
@@ -253,7 +253,7 @@ class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
         return self.data.expandtabs(tabsize)
 
     def find(self, sub, start=0, end=_sys.maxsize):
-        if isinstance(sub, AnsibleVaultEncryptedUnicode):
+        if isinstance(sub, AssibleVaultEncryptedUnicode):
             sub = sub.data
         return self.data.find(sub, start, end)
 
@@ -325,14 +325,14 @@ class AnsibleVaultEncryptedUnicode(Sequence, AnsibleBaseYAMLObject):
         return self.data.partition(sep)
 
     def replace(self, old, new, maxsplit=-1):
-        if isinstance(old, AnsibleVaultEncryptedUnicode):
+        if isinstance(old, AssibleVaultEncryptedUnicode):
             old = old.data
-        if isinstance(new, AnsibleVaultEncryptedUnicode):
+        if isinstance(new, AssibleVaultEncryptedUnicode):
             new = new.data
         return self.data.replace(old, new, maxsplit)
 
     def rfind(self, sub, start=0, end=_sys.maxsize):
-        if isinstance(sub, AnsibleVaultEncryptedUnicode):
+        if isinstance(sub, AssibleVaultEncryptedUnicode):
             sub = sub.data
         return self.data.rfind(sub, start, end)
 

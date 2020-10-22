@@ -18,12 +18,12 @@ options:
     description:
     - The permissions the resulting file or directory should have.
     - For those used to I(/usr/bin/chmod) remember that modes are actually octal numbers.
-      You must either add a leading zero so that Ansible's YAML parser knows it is an octal number
-      (like C(0644) or C(01777)) or quote it (like C('644') or C('1777')) so Ansible receives
+      You must either add a leading zero so that Assible's YAML parser knows it is an octal number
+      (like C(0644) or C(01777)) or quote it (like C('644') or C('1777')) so Assible receives
       a string and can do its own conversion from string into number.
-    - Giving Ansible a number without following one of these rules will end up with a decimal
+    - Giving Assible a number without following one of these rules will end up with a decimal
       number which will have unexpected results.
-    - As of Ansible 1.8, the mode may be specified as a symbolic mode (for example, C(u+rwx) or
+    - As of Assible 1.8, the mode may be specified as a symbolic mode (for example, C(u+rwx) or
       C(u=rw,g=r,o=r)).
     type: raw
   owner:
@@ -62,8 +62,8 @@ options:
     - By default this module uses atomic operations to prevent data corruption or inconsistent reads from the target files,
       but sometimes systems are configured or just broken in ways that prevent this. One example is docker mounted files,
       which cannot be updated atomically from inside the container and can only be written in an unsafe manner.
-    - This option allows Ansible to fall back to unsafe methods of updating files when atomic operations fail
-      (however, it doesn't force Ansible to perform unsafe writes).
+    - This option allows Assible to fall back to unsafe methods of updating files when atomic operations fail
+      (however, it doesn't force Assible to perform unsafe writes).
     - IMPORTANT! Unsafe writes are subject to race conditions and can lead to data corruption.
     type: bool
     default: no

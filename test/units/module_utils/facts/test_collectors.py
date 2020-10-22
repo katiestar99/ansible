@@ -1,18 +1,18 @@
-# unit tests for ansible fact collectors
+# unit tests for assible fact collectors
 # -*- coding: utf-8 -*-
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # Make coding more python3-ish
@@ -23,26 +23,26 @@ from units.compat.mock import Mock, patch
 
 from . base import BaseFactsTest
 
-from ansible.module_utils.facts import collector
+from assible.module_utils.facts import collector
 
-from ansible.module_utils.facts.system.apparmor import ApparmorFactCollector
-from ansible.module_utils.facts.system.caps import SystemCapabilitiesFactCollector
-from ansible.module_utils.facts.system.cmdline import CmdLineFactCollector
-from ansible.module_utils.facts.system.distribution import DistributionFactCollector
-from ansible.module_utils.facts.system.dns import DnsFactCollector
-from ansible.module_utils.facts.system.env import EnvFactCollector
-from ansible.module_utils.facts.system.fips import FipsFactCollector
-from ansible.module_utils.facts.system.pkg_mgr import PkgMgrFactCollector, OpenBSDPkgMgrFactCollector
-from ansible.module_utils.facts.system.platform import PlatformFactCollector
-from ansible.module_utils.facts.system.python import PythonFactCollector
-from ansible.module_utils.facts.system.selinux import SelinuxFactCollector
-from ansible.module_utils.facts.system.service_mgr import ServiceMgrFactCollector
-from ansible.module_utils.facts.system.ssh_pub_keys import SshPubKeyFactCollector
-from ansible.module_utils.facts.system.user import UserFactCollector
+from assible.module_utils.facts.system.apparmor import ApparmorFactCollector
+from assible.module_utils.facts.system.caps import SystemCapabilitiesFactCollector
+from assible.module_utils.facts.system.cmdline import CmdLineFactCollector
+from assible.module_utils.facts.system.distribution import DistributionFactCollector
+from assible.module_utils.facts.system.dns import DnsFactCollector
+from assible.module_utils.facts.system.env import EnvFactCollector
+from assible.module_utils.facts.system.fips import FipsFactCollector
+from assible.module_utils.facts.system.pkg_mgr import PkgMgrFactCollector, OpenBSDPkgMgrFactCollector
+from assible.module_utils.facts.system.platform import PlatformFactCollector
+from assible.module_utils.facts.system.python import PythonFactCollector
+from assible.module_utils.facts.system.selinux import SelinuxFactCollector
+from assible.module_utils.facts.system.service_mgr import ServiceMgrFactCollector
+from assible.module_utils.facts.system.ssh_pub_keys import SshPubKeyFactCollector
+from assible.module_utils.facts.system.user import UserFactCollector
 
-from ansible.module_utils.facts.virtual.base import VirtualCollector
-from ansible.module_utils.facts.network.base import NetworkCollector
-from ansible.module_utils.facts.hardware.base import HardwareCollector
+from assible.module_utils.facts.virtual.base import VirtualCollector
+from assible.module_utils.facts.network.base import NetworkCollector
+from assible.module_utils.facts.hardware.base import HardwareCollector
 
 
 class CollectorException(Exception):
@@ -87,7 +87,7 @@ class TestApparmorFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'apparmor']
     valid_subsets = ['apparmor']
-    fact_namespace = 'ansible_apparmor'
+    fact_namespace = 'assible_apparmor'
     collector_class = ApparmorFactCollector
 
     def test_collect(self):
@@ -99,7 +99,7 @@ class TestCapsFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'caps']
     valid_subsets = ['caps']
-    fact_namespace = 'ansible_system_capabilities'
+    fact_namespace = 'assible_system_capabilities'
     collector_class = SystemCapabilitiesFactCollector
 
     def _mock_module(self):
@@ -116,7 +116,7 @@ class TestCmdLineFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'cmdline']
     valid_subsets = ['cmdline']
-    fact_namespace = 'ansible_cmdline'
+    fact_namespace = 'assible_cmdline'
     collector_class = CmdLineFactCollector
 
     def test_parse_proc_cmdline_uefi(self):
@@ -167,7 +167,7 @@ class TestDistributionFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'distribution']
     valid_subsets = ['distribution']
-    fact_namespace = 'ansible_distribution'
+    fact_namespace = 'assible_distribution'
     collector_class = DistributionFactCollector
 
 
@@ -176,7 +176,7 @@ class TestDnsFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'dns']
     valid_subsets = ['dns']
-    fact_namespace = 'ansible_dns'
+    fact_namespace = 'assible_dns'
     collector_class = DnsFactCollector
 
 
@@ -185,7 +185,7 @@ class TestEnvFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'env']
     valid_subsets = ['env']
-    fact_namespace = 'ansible_env'
+    fact_namespace = 'assible_env'
     collector_class = EnvFactCollector
 
     def test_collect(self):
@@ -197,7 +197,7 @@ class TestFipsFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'fips']
     valid_subsets = ['fips']
-    fact_namespace = 'ansible_fips'
+    fact_namespace = 'assible_fips'
     collector_class = FipsFactCollector
 
 
@@ -205,16 +205,16 @@ class TestHardwareCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'hardware']
     valid_subsets = ['hardware']
-    fact_namespace = 'ansible_hardware'
+    fact_namespace = 'assible_hardware'
     collector_class = HardwareCollector
-    collected_facts = {'ansible_architecture': 'x86_64'}
+    collected_facts = {'assible_architecture': 'x86_64'}
 
 
 class TestNetworkCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'network']
     valid_subsets = ['network']
-    fact_namespace = 'ansible_network'
+    fact_namespace = 'assible_network'
     collector_class = NetworkCollector
 
 
@@ -222,12 +222,12 @@ class TestPkgMgrFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'pkg_mgr']
     valid_subsets = ['pkg_mgr']
-    fact_namespace = 'ansible_pkgmgr'
+    fact_namespace = 'assible_pkgmgr'
     collector_class = PkgMgrFactCollector
     collected_facts = {
-        "ansible_distribution": "Fedora",
-        "ansible_distribution_major_version": "28",
-        "ansible_os_family": "RedHat"
+        "assible_distribution": "Fedora",
+        "assible_distribution_major_version": "28",
+        "assible_os_family": "RedHat"
     }
 
     def test_collect(self):
@@ -249,16 +249,16 @@ class TestPkgMgrFactsAptFedora(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'pkg_mgr']
     valid_subsets = ['pkg_mgr']
-    fact_namespace = 'ansible_pkgmgr'
+    fact_namespace = 'assible_pkgmgr'
     collector_class = PkgMgrFactCollector
     collected_facts = {
-        "ansible_distribution": "Fedora",
-        "ansible_distribution_major_version": "28",
-        "ansible_os_family": "RedHat",
-        "ansible_pkg_mgr": "apt"
+        "assible_distribution": "Fedora",
+        "assible_distribution_major_version": "28",
+        "assible_os_family": "RedHat",
+        "assible_pkg_mgr": "apt"
     }
 
-    @patch('ansible.module_utils.facts.system.pkg_mgr.os.path.exists', side_effect=_sanitize_os_path_apt_get)
+    @patch('assible.module_utils.facts.system.pkg_mgr.os.path.exists', side_effect=_sanitize_os_path_apt_get)
     def test_collect(self, mock_os_path_exists):
         module = self._mock_module()
         fact_collector = self.collector_class()
@@ -271,7 +271,7 @@ class TestOpenBSDPkgMgrFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'pkg_mgr']
     valid_subsets = ['pkg_mgr']
-    fact_namespace = 'ansible_pkgmgr'
+    fact_namespace = 'assible_pkgmgr'
     collector_class = OpenBSDPkgMgrFactCollector
 
     def test_collect(self):
@@ -287,7 +287,7 @@ class TestPlatformFactCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'platform']
     valid_subsets = ['platform']
-    fact_namespace = 'ansible_platform'
+    fact_namespace = 'assible_platform'
     collector_class = PlatformFactCollector
 
 
@@ -295,7 +295,7 @@ class TestPythonFactCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'python']
     valid_subsets = ['python']
-    fact_namespace = 'ansible_python'
+    fact_namespace = 'assible_python'
     collector_class = PythonFactCollector
 
 
@@ -303,11 +303,11 @@ class TestSelinuxFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'selinux']
     valid_subsets = ['selinux']
-    fact_namespace = 'ansible_selinux'
+    fact_namespace = 'assible_selinux'
     collector_class = SelinuxFactCollector
 
     def test_no_selinux(self):
-        with patch('ansible.module_utils.facts.system.selinux.HAVE_SELINUX', False):
+        with patch('assible.module_utils.facts.system.selinux.HAVE_SELINUX', False):
             module = self._mock_module()
             fact_collector = self.collector_class()
             facts_dict = fact_collector.collect(module=module)
@@ -320,12 +320,12 @@ class TestServiceMgrFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'service_mgr']
     valid_subsets = ['service_mgr']
-    fact_namespace = 'ansible_service_mgr'
+    fact_namespace = 'assible_service_mgr'
     collector_class = ServiceMgrFactCollector
 
     # TODO: dedupe some of this test code
 
-    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
+    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
     def test_no_proc1(self, mock_gfc):
         # no /proc/1/comm, ps returns non-0
         # should fallback to 'service'
@@ -336,7 +336,7 @@ class TestServiceMgrFacts(BaseFactsTest):
         self.assertIsInstance(facts_dict, dict)
         self.assertEqual(facts_dict['service_mgr'], 'service')
 
-    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
+    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
     def test_no_proc1_ps_random_init(self, mock_gfc):
         # no /proc/1/comm, ps returns '/sbin/sys11' which we dont know
         # should end up return 'sys11'
@@ -347,7 +347,7 @@ class TestServiceMgrFacts(BaseFactsTest):
         self.assertIsInstance(facts_dict, dict)
         self.assertEqual(facts_dict['service_mgr'], 'sys11')
 
-    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
+    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
     def test_clowncar(self, mock_gfc):
         # no /proc/1/comm, ps fails, distro and system are clowncar
         # should end up return 'sys11'
@@ -363,7 +363,7 @@ class TestServiceMgrFacts(BaseFactsTest):
 
     # TODO: reenable these tests when we can mock more easily
 
-#    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
+#    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
 #    def test_sunos_fallback(self, mock_gfc):
 #        # no /proc/1/comm, ps fails, 'system' is SunOS
 #        # should end up return 'smf'?
@@ -379,7 +379,7 @@ class TestServiceMgrFacts(BaseFactsTest):
 #        self.assertIsInstance(facts_dict, dict)
 #        self.assertEqual(facts_dict['service_mgr'], 'smf')
 
-#    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
+#    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
 #    def test_aix_fallback(self, mock_gfc):
 #        # no /proc/1/comm, ps fails, 'system' is SunOS
 #        # should end up return 'smf'?
@@ -392,7 +392,7 @@ class TestServiceMgrFacts(BaseFactsTest):
 #        self.assertIsInstance(facts_dict, dict)
 #        self.assertEqual(facts_dict['service_mgr'], 'src')
 
-#    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
+#    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value=None)
 #    def test_linux_fallback(self, mock_gfc):
 #        # no /proc/1/comm, ps fails, 'system' is SunOS
 #        # should end up return 'smf'?
@@ -410,7 +410,7 @@ class TestSshPubKeyFactCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'ssh_pub_keys']
     valid_subsets = ['ssh_pub_keys']
-    fact_namespace = 'ansible_ssh_pub_leys'
+    fact_namespace = 'assible_ssh_pub_leys'
     collector_class = SshPubKeyFactCollector
 
 
@@ -418,7 +418,7 @@ class TestUserFactCollector(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'user']
     valid_subsets = ['user']
-    fact_namespace = 'ansible_user'
+    fact_namespace = 'assible_user'
     collector_class = UserFactCollector
 
 
@@ -426,5 +426,5 @@ class TestVirtualFacts(BaseFactsTest):
     __test__ = True
     gather_subset = ['!all', 'virtual']
     valid_subsets = ['virtual']
-    fact_namespace = 'ansible_virtual'
+    fact_namespace = 'assible_virtual'
     collector_class = VirtualCollector

@@ -1,7 +1,7 @@
 ---
 
 - name: Network Getting Started First Playbook Extended
-  connection: ansible.netcommon.network_cli
+  connection: assible.netcommon.network_cli
   gather_facts: false
   hosts: all
   tasks:
@@ -12,7 +12,7 @@
 
     - name: Display the config
       debug:
-        msg: "The hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
+        msg: "The hostname is {{ assible_net_hostname }} and the OS is {{ assible_net_version }}"
 
     - name: Update the hostname
       vyos.vyos.vyos_config:
@@ -26,4 +26,4 @@
 
     - name: Display the changed config
       debug:
-        msg: "The new hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
+        msg: "The new hostname is {{ assible_net_hostname }} and the OS is {{ assible_net_version }}"

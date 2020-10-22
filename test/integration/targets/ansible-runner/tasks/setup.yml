@@ -2,18 +2,18 @@
   pip:
     name: docutils
 
-- name: Install ansible-runner
+- name: Install assible-runner
   pip:
-    name: ansible-runner
+    name: assible-runner
     version: 1.2.0
     extra_args:
       -c {{ role_path }}/files/constraints.txt
 
-- name: Find location of ansible-runner installation
-  command: "'{{ ansible_python_interpreter }}' -c 'import os, ansible_runner; print(os.path.dirname(ansible_runner.__file__))'"
-  register: ansible_runner_path
+- name: Find location of assible-runner installation
+  command: "'{{ assible_python_interpreter }}' -c 'import os, assible_runner; print(os.path.dirname(assible_runner.__file__))'"
+  register: assible_runner_path
 
-# work around for https://github.com/ansible/ansible-runner/issues/132
-- name: Set callback path to work around ansible-runner bug
+# work around for https://github.com/assible/assible-runner/issues/132
+- name: Set callback path to work around assible-runner bug
   set_fact:
-    callback_path: ":{{ ansible_runner_path.stdout }}/callbacks"
+    callback_path: ":{{ assible_runner_path.stdout }}/callbacks"

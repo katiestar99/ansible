@@ -9,9 +9,9 @@
   register: batch_user_add
 
 - block:
-  - name: test Ansible.Become.cs
-    ansible_become_tests:
-    register: ansible_become_tests
+  - name: test Assible.Become.cs
+    assible_become_tests:
+    register: assible_become_tests
 
   always:
   - name: remove SeBatchLogonRight from users if added in test
@@ -22,7 +22,7 @@
       action: remove
     when: batch_user_add is changed
 
-- name: assert test Ansible.Become.cs
+- name: assert test Assible.Become.cs
   assert:
     that:
-    - ansible_become_tests.data == "success"
+    - assible_become_tests.data == "success"

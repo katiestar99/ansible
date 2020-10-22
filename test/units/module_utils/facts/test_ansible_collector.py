@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 #
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # Make coding more python3-ish
@@ -23,32 +23,32 @@ __metaclass__ = type
 from units.compat import unittest
 from units.compat.mock import Mock, patch
 
-from ansible.module_utils.facts import collector
-from ansible.module_utils.facts import ansible_collector
-from ansible.module_utils.facts import namespace
+from assible.module_utils.facts import collector
+from assible.module_utils.facts import assible_collector
+from assible.module_utils.facts import namespace
 
-from ansible.module_utils.facts.other.facter import FacterFactCollector
-from ansible.module_utils.facts.other.ohai import OhaiFactCollector
+from assible.module_utils.facts.other.facter import FacterFactCollector
+from assible.module_utils.facts.other.ohai import OhaiFactCollector
 
-from ansible.module_utils.facts.system.apparmor import ApparmorFactCollector
-from ansible.module_utils.facts.system.caps import SystemCapabilitiesFactCollector
-from ansible.module_utils.facts.system.date_time import DateTimeFactCollector
-from ansible.module_utils.facts.system.env import EnvFactCollector
-from ansible.module_utils.facts.system.distribution import DistributionFactCollector
-from ansible.module_utils.facts.system.dns import DnsFactCollector
-from ansible.module_utils.facts.system.fips import FipsFactCollector
-from ansible.module_utils.facts.system.local import LocalFactCollector
-from ansible.module_utils.facts.system.lsb import LSBFactCollector
-from ansible.module_utils.facts.system.pkg_mgr import PkgMgrFactCollector, OpenBSDPkgMgrFactCollector
-from ansible.module_utils.facts.system.platform import PlatformFactCollector
-from ansible.module_utils.facts.system.python import PythonFactCollector
-from ansible.module_utils.facts.system.selinux import SelinuxFactCollector
-from ansible.module_utils.facts.system.service_mgr import ServiceMgrFactCollector
-from ansible.module_utils.facts.system.user import UserFactCollector
+from assible.module_utils.facts.system.apparmor import ApparmorFactCollector
+from assible.module_utils.facts.system.caps import SystemCapabilitiesFactCollector
+from assible.module_utils.facts.system.date_time import DateTimeFactCollector
+from assible.module_utils.facts.system.env import EnvFactCollector
+from assible.module_utils.facts.system.distribution import DistributionFactCollector
+from assible.module_utils.facts.system.dns import DnsFactCollector
+from assible.module_utils.facts.system.fips import FipsFactCollector
+from assible.module_utils.facts.system.local import LocalFactCollector
+from assible.module_utils.facts.system.lsb import LSBFactCollector
+from assible.module_utils.facts.system.pkg_mgr import PkgMgrFactCollector, OpenBSDPkgMgrFactCollector
+from assible.module_utils.facts.system.platform import PlatformFactCollector
+from assible.module_utils.facts.system.python import PythonFactCollector
+from assible.module_utils.facts.system.selinux import SelinuxFactCollector
+from assible.module_utils.facts.system.service_mgr import ServiceMgrFactCollector
+from assible.module_utils.facts.system.user import UserFactCollector
 
-# from ansible.module_utils.facts.hardware.base import HardwareCollector
-from ansible.module_utils.facts.network.base import NetworkCollector
-from ansible.module_utils.facts.virtual.base import VirtualCollector
+# from assible.module_utils.facts.hardware.base import HardwareCollector
+from assible.module_utils.facts.network.base import NetworkCollector
+from assible.module_utils.facts.virtual.base import VirtualCollector
 
 ALL_COLLECTOR_CLASSES = \
     [PlatformFactCollector,
@@ -110,14 +110,14 @@ def _collectors(module,
 
     # Add a collector that knows what gather_subset we used so it it can provide a fact
     collector_meta_data_collector = \
-        ansible_collector.CollectorMetaDataCollector(gather_subset=gather_subset,
+        assible_collector.CollectorMetaDataCollector(gather_subset=gather_subset,
                                                      module_setup=True)
     collectors.append(collector_meta_data_collector)
 
     return collectors
 
 
-ns = namespace.PrefixFactNamespace('ansible_facts', 'ansible_')
+ns = namespace.PrefixFactNamespace('assible_facts', 'assible_')
 
 
 # FIXME: this is brute force, but hopefully enough to get some refactoring to make facts testable
@@ -140,7 +140,7 @@ class TestInPlace(unittest.TestCase):
                                       all_collector_classes=all_collector_classes)
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=collectors,
+            assible_collector.AssibleFactCollector(collectors=collectors,
                                                    namespace=ns)
 
         res = fact_collector.collect(module=mock_module)
@@ -155,7 +155,7 @@ class TestInPlace(unittest.TestCase):
         collectors = self._collectors(mock_module)
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=collectors,
+            assible_collector.AssibleFactCollector(collectors=collectors,
                                                    namespace=ns)
 
         res = fact_collector.collect(module=mock_module)
@@ -172,7 +172,7 @@ class TestInPlace(unittest.TestCase):
                                       all_collector_classes=all_collector_classes)
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=collectors,
+            assible_collector.AssibleFactCollector(collectors=collectors,
                                                    namespace=ns)
 
         res = fact_collector.collect()
@@ -195,7 +195,7 @@ class TestCollectedFacts(unittest.TestCase):
     min_fact_count = 30
     max_fact_count = 1000
 
-    # TODO: add ansible_cmdline, ansible_*_pubkey* back when TempFactCollector goes away
+    # TODO: add assible_cmdline, assible_*_pubkey* back when TempFactCollector goes away
     expected_facts = ['date_time',
                       'user_id', 'distribution',
                       'gather_subset', 'module_setup',
@@ -208,13 +208,13 @@ class TestCollectedFacts(unittest.TestCase):
         return mock_module(gather_subset=self.gather_subset)
 
     @patch('platform.system', return_value='Linux')
-    @patch('ansible.module_utils.facts.system.service_mgr.get_file_content', return_value='systemd')
+    @patch('assible.module_utils.facts.system.service_mgr.get_file_content', return_value='systemd')
     def setUp(self, mock_gfc, mock_ps):
         mock_module = self._mock_module()
         collectors = self._collectors(mock_module)
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=collectors,
+            assible_collector.AssibleFactCollector(collectors=collectors,
                                                    namespace=ns)
         self.facts = fact_collector.collect(module=mock_module,
                                             collected_facts=self.collected_facts)
@@ -242,16 +242,16 @@ class TestCollectedFacts(unittest.TestCase):
         # and that is not huge number of keys
         self.assertLess(len(facts), self.max_fact_count)
 
-    # everything starts with ansible_ namespace
-    def _assert_ansible_namespace(self, facts):
+    # everything starts with assible_ namespace
+    def _assert_assible_namespace(self, facts):
 
         # FIXME: kluge for non-namespace fact
         facts.pop('module_setup', None)
         facts.pop('gather_subset', None)
 
         for fact_key in facts:
-            self.assertTrue(fact_key.startswith('ansible_'),
-                            'The fact name "%s" does not startwith "ansible_"' % fact_key)
+            self.assertTrue(fact_key.startswith('assible_'),
+                            'The fact name "%s" does not startwith "assible_"' % fact_key)
 
     def _assert_expected_facts(self, facts):
 
@@ -358,7 +358,7 @@ class TestCollectorDepsWithFilter(unittest.TestCase):
 
     def test_with_filter_no_match(self):
         _mock_module = mock_module(gather_subset=['all', '!facter', '!ohai'],
-                                   filter='ansible_this_doesnt_exist')
+                                   filter='assible_this_doesnt_exist')
 
         facts_dict = self._collect(_mock_module)
 
@@ -372,7 +372,7 @@ class TestCollectorDepsWithFilter(unittest.TestCase):
         _collectors.append(ConCatFactCollector())
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=_collectors,
+            assible_collector.AssibleFactCollector(collectors=_collectors,
                                                    namespace=ns,
                                                    filter_spec=_mock_module.params['filter'])
 
@@ -390,7 +390,7 @@ class TestCollectorDepsWithFilter(unittest.TestCase):
         _collectors.append(ConCatFactCollector())
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=_collectors,
+            assible_collector.AssibleFactCollector(collectors=_collectors,
                                                    namespace=ns,
                                                    filter_spec=_mock_module.params['filter'])
 
@@ -405,7 +405,7 @@ class TestCollectorDepsWithFilter(unittest.TestCase):
         _collectors = self._collectors(_mock_module)
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=_collectors,
+            assible_collector.AssibleFactCollector(collectors=_collectors,
                                                    namespace=ns,
                                                    filter_spec=_mock_module.params['filter'])
         facts_dict = fact_collector.collect(module=_mock_module,
@@ -476,9 +476,9 @@ class TestPkgMgrFacts(TestCollectedFacts):
                       'module_setup',
                       'pkg_mgr']
     collected_facts = {
-        "ansible_distribution": "Fedora",
-        "ansible_distribution_major_version": "28",
-        "ansible_os_family": "RedHat"
+        "assible_distribution": "Fedora",
+        "assible_distribution_major_version": "28",
+        "assible_os_family": "RedHat"
     }
 
 
@@ -496,7 +496,7 @@ class TestOpenBSDPkgMgrFacts(TestPkgMgrFacts):
         collectors = self._collectors(mock_module)
 
         fact_collector = \
-            ansible_collector.AnsibleFactCollector(collectors=collectors,
+            assible_collector.AssibleFactCollector(collectors=collectors,
                                                    namespace=ns)
         self.facts = fact_collector.collect(module=mock_module)
 

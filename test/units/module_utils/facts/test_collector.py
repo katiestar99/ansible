@@ -1,19 +1,19 @@
-# This file is part of Ansible
+# This file is part of Assible
 # -*- coding: utf-8 -*-
 #
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 # Make coding more python3-ish
@@ -26,9 +26,9 @@ import pprint
 # for testing
 from units.compat import unittest
 
-from ansible.module_utils.facts import collector
+from assible.module_utils.facts import collector
 
-from ansible.module_utils.facts import default_collectors
+from assible.module_utils.facts import default_collectors
 
 
 class TestFindCollectorsForPlatform(unittest.TestCase):
@@ -266,7 +266,7 @@ class TestGetCollectorNames(unittest.TestCase):
         minimal_gather_subset = frozenset(['my_fact'])
 
         self.assertRaisesRegexp(TypeError,
-                                r'Bad subset .* given to Ansible.*allowed\:.*all,.*my_fact.*',
+                                r'Bad subset .* given to Assible.*allowed\:.*all,.*my_fact.*',
                                 collector.get_collector_names,
                                 valid_subsets=valid_subsets,
                                 minimal_gather_subset=minimal_gather_subset,
@@ -557,7 +557,7 @@ class TestCollectorClassesFromGatherSubset(unittest.TestCase):
         # something claims 'unknown_collector' is a valid gather_subset, but there is
         # no FactCollector mapped to 'unknown_collector'
         self.assertRaisesRegexp(TypeError,
-                                r'Bad subset.*unknown_collector.*given to Ansible.*allowed\:.*all,.*env.*',
+                                r'Bad subset.*unknown_collector.*given to Assible.*allowed\:.*all,.*env.*',
                                 self._classes,
                                 all_collector_classes=default_collectors.collectors,
                                 gather_subset=['env', 'unknown_collector'])

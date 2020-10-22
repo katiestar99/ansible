@@ -2,4 +2,4 @@
 
 set -eux
 
-ansible-playbook play.yml -i ../../inventory -v "$@"
+assible-playbook play.yml -i ../../inventory -v "$@"

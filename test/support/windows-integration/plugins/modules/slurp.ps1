@@ -2,10 +2,10 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 $params = Parse-Args $args -supports_check_mode $true;
-$src = Get-AnsibleParam -obj $params -name "src" -type "path" -aliases "path" -failifempty $true;
+$src = Get-AssibleParam -obj $params -name "src" -type "path" -aliases "path" -failifempty $true;
 
 $result = @{
     changed = $false;

@@ -151,7 +151,7 @@ branches:
 
 build:
   pre_ci_boot:
-    image_name: quay.io/ansible/shippable-build-container
+    image_name: quay.io/assible/shippable-build-container
     image_tag: 6.10.4.0
     pull: true
     options: --privileged=true --net=bridge
@@ -169,7 +169,7 @@ integrations:
     - integrationName: irc
       type: irc
       recipients:
-      - "chat.freenode.net#ansible-notices"
+      - "chat.freenode.net#assible-notices"
       on_success: change
       on_failure: always
       on_start: never

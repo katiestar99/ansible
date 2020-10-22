@@ -17,7 +17,7 @@ The 'normal' action plugin is used for modules that do not already have an actio
 Enabling action plugins
 -----------------------
 
-You can enable a custom action plugin by either dropping it into the ``action_plugins`` directory adjacent to your play, inside a role, or by putting it in one of the action plugin directory sources configured in :ref:`ansible.cfg <ansible_configuration_settings>`.
+You can enable a custom action plugin by either dropping it into the ``action_plugins`` directory adjacent to your play, inside a role, or by putting it in one of the action plugin directory sources configured in :ref:`assible.cfg <assible_configuration_settings>`.
 
 .. _using_action:
 
@@ -31,26 +31,26 @@ Plugin list
 
 You cannot list action plugins directly, they show up as their counterpart modules:
 
-Use ``ansible-doc -l`` to see the list of available modules.
-Use ``ansible-doc <name>`` to see specific documentation and examples, this should note if the module has a corresponding action plugin.
+Use ``assible-doc -l`` to see the list of available modules.
+Use ``assible-doc <name>`` to see specific documentation and examples, this should note if the module has a corresponding action plugin.
 
 .. seealso::
 
    :ref:`cache_plugins`
-       Ansible Cache plugins
+       Assible Cache plugins
    :ref:`callback_plugins`
-       Ansible callback plugins
+       Assible callback plugins
    :ref:`connection_plugins`
-       Ansible connection plugins
+       Assible connection plugins
    :ref:`inventory_plugins`
-       Ansible inventory plugins
+       Assible inventory plugins
    :ref:`shell_plugins`
-       Ansible Shell plugins
+       Assible Shell plugins
    :ref:`strategy_plugins`
-       Ansible Strategy plugins
+       Assible Strategy plugins
    :ref:`vars_plugins`
-       Ansible Vars plugins
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+       Assible Vars plugins
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

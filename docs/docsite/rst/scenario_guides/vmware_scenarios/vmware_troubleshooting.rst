@@ -1,14 +1,14 @@
 .. _vmware_troubleshooting:
 
 **********************************
-Troubleshooting Ansible for VMware
+Troubleshooting Assible for VMware
 **********************************
 
 .. contents:: Topics
 
 This section lists things that can go wrong and possible ways to fix them.
 
-Debugging Ansible for VMware
+Debugging Assible for VMware
 ============================
 
 When debugging or creating a new issue, you will need information about your VMware infrastructure. You can get this information using
@@ -22,7 +22,7 @@ When debugging or creating a new issue, you will need information about your VMw
     $ export GOVC_URL=https://ESXI_OR_VCENTER_HOSTNAME:443
     $ govc find /
 
-Known issues with Ansible for VMware
+Known issues with Assible for VMware
 ====================================
 
 
@@ -33,7 +33,7 @@ Setting the network with ``vmware_guest`` in Ubuntu 18.04 is known to be broken,
 This issue is tracked via:
 
 * https://github.com/vmware/open-vm-tools/issues/240
-* https://github.com/ansible/ansible/issues/41133
+* https://github.com/assible/assible/issues/41133
 
 Potential Workarounds
 ^^^^^^^^^^^^^^^^^^^^^
@@ -43,7 +43,7 @@ There are several workarounds for this issue.
 1) Modify the Ubuntu 18.04 images and installing ``ifupdown`` in them via ``sudo apt install ifupdown``.
    If so you need to remove ``netplan`` via ``sudo apt remove netplan.io`` and you need stop ``systemd-networkd`` via ``sudo systemctl disable systemctl-networkd``.
 
-2) Generate the ``systemd-networkd`` files with a task in your VMware Ansible role:
+2) Generate the ``systemd-networkd`` files with a task in your VMware Assible role:
 
 .. code-block:: yaml
 

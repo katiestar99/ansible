@@ -41,7 +41,7 @@
         allow_unauthenticated: yes
 
 
-# https://github.com/ansible/ansible/issues/30638
+# https://github.com/assible/assible/issues/30638
 - block:
   - name: Fail to install foo=1.0.1 since foo is not installed and only_upgrade is set
     apt:
@@ -87,7 +87,7 @@
         allow_unauthenticated: yes
 
 
-# https://github.com/ansible/ansible/issues/35900
+# https://github.com/assible/assible/issues/35900
 - block:
   - name: Disable ubuntu repos so system packages are not upgraded and do not change testing env
     command: mv /etc/apt/sources.list /etc/apt/sources.list.backup
@@ -124,7 +124,7 @@
       command: mv /etc/apt/sources.list.backup /etc/apt/sources.list
 
 
-# https://github.com/ansible/ansible/issues/26298
+# https://github.com/assible/assible/issues/26298
 - block:
   - name: Disable ubuntu repos so system packages are not upgraded and do not change testing env
     command: mv /etc/apt/sources.list /etc/apt/sources.list.backup

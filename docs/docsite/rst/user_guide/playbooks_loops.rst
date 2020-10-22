@@ -4,13 +4,13 @@
 Loops
 *****
 
-Ansible offers the ``loop``, ``with_<lookup>``, and ``until`` keywords to execute a task multiple times. Examples of commonly-used loops include changing ownership on several files and/or directories with the :ref:`file module <file_module>`, creating multiple users with the :ref:`user module <user_module>`, and
+Assible offers the ``loop``, ``with_<lookup>``, and ``until`` keywords to execute a task multiple times. Examples of commonly-used loops include changing ownership on several files and/or directories with the :ref:`file module <file_module>`, creating multiple users with the :ref:`user module <user_module>`, and
 repeating a polling step until a certain result is reached.
 
 .. note::
-   * We added ``loop`` in Ansible 2.5. It is not yet a full replacement for ``with_<lookup>``, but we recommend it for most use cases.
+   * We added ``loop`` in Assible 2.5. It is not yet a full replacement for ``with_<lookup>``, but we recommend it for most use cases.
    * We have not deprecated the use of ``with_<lookup>`` - that syntax will still be valid for the foreseeable future.
-   * We are looking to improve ``loop`` syntax - watch this page and the `changelog <https://github.com/ansible/ansible/tree/devel/changelogs>`_ for updates.
+   * We are looking to improve ``loop`` syntax - watch this page and the `changelog <https://github.com/assible/assible/tree/devel/changelogs>`_ for updates.
 
 .. contents::
    :local:
@@ -56,7 +56,7 @@ Iterating over a simple list
 Repeated tasks can be written as standard loops over a simple list of strings. You can define the list directly in the task::
 
     - name: Add several users
-      ansible.builtin.user:
+      assible.builtin.user:
         name: "{{ item }}"
         state: present
         groups: "wheel"
@@ -71,13 +71,13 @@ You can define the list in a variables file, or in the 'vars' section of your pl
 Either of these examples would be the equivalent of::
 
     - name: Add user testuser1
-      ansible.builtin.user:
+      assible.builtin.user:
         name: "testuser1"
         state: present
         groups: "wheel"
 
     - name: Add user testuser2
-      ansible.builtin.user:
+      assible.builtin.user:
         name: "testuser2"
         state: present
         groups: "wheel"
@@ -85,12 +85,12 @@ Either of these examples would be the equivalent of::
 You can pass a list directly to a parameter for some plugins. Most of the packaging modules, like :ref:`yum <yum_module>` and :ref:`apt <apt_module>`, have this capability. When available, passing the list to a parameter is better than looping over the task. For example::
 
    - name: Optimal yum
-     ansible.builtin.yum:
+     assible.builtin.yum:
        name: "{{  list_of_packages  }}"
        state: present
 
    - name: Non-optimal yum, slower and may cause issues with interdependencies
-     ansible.builtin.yum:
+     assible.builtin.yum:
        name: "{{  item  }}"
        state: present
      loop: "{{  list_of_packages  }}"
@@ -103,7 +103,7 @@ Iterating over a list of hashes
 If you have a list of hashes, you can reference subkeys in a loop. For example::
 
     - name: Add several users
-      ansible.builtin.user:
+      assible.builtin.user:
         name: "{{ item.name }}"
         state: present
         groups: "{{ item.groups }}"
@@ -122,7 +122,7 @@ To loop over a dict, use the  :ref:`dict2items <dict_filter>`:
 .. code-block:: yaml
 
     - name: Using dict2items
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item.key }} - {{ item.value }}"
       loop: "{{ tag_data | dict2items }}"
       vars:
@@ -138,7 +138,7 @@ Registering variables with a loop
 You can register the output of a loop as a variable. For example::
 
    - name: Register loop output as a variable
-     ansible.builtin.shell: "echo {{ item }}"
+     assible.builtin.shell: "echo {{ item }}"
      loop:
        - "one"
        - "two"
@@ -186,7 +186,7 @@ When you use ``register`` with a loop, the data structure placed in the variable
 Subsequent loops over the registered variable to inspect the results may look like::
 
     - name: Fail if return code is not 0
-      ansible.builtin.fail:
+      assible.builtin.fail:
         msg: "The command ({{ item.cmd }}) did not have a 0 return code"
       when: item.rc != 0
       loop: "{{ echo.results }}"
@@ -194,7 +194,7 @@ Subsequent loops over the registered variable to inspect the results may look li
 During iteration, the result of the current item will be placed in the variable::
 
     - name: Place the result of the current item in the variable
-      ansible.builtin.shell: echo "{{ item }}"
+      assible.builtin.shell: echo "{{ item }}"
       loop:
         - one
         - two
@@ -230,7 +230,7 @@ Retrying a task until a condition is met
 You can use the ``until`` keyword to retry a task until a certain condition is met.  Here's an example::
 
     - name: Retry a task until a certain condition is met
-      ansible.builtin.shell: /usr/bin/foo
+      assible.builtin.shell: /usr/bin/foo
       register: result
       until: result.stdout.find("all systems go") != -1
       retries: 5
@@ -247,27 +247,27 @@ When you run a task with ``until`` and register the result as a variable, the re
 Looping over inventory
 ----------------------
 
-To loop over your inventory, or just a subset of it, you can use a regular ``loop`` with the ``ansible_play_batch`` or ``groups`` variables::
+To loop over your inventory, or just a subset of it, you can use a regular ``loop`` with the ``assible_play_batch`` or ``groups`` variables::
 
     - name: Show all the hosts in the inventory
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       loop: "{{ groups['all'] }}"
 
     - name: Show all the hosts in the current play
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
-      loop: "{{ ansible_play_batch }}"
+      loop: "{{ assible_play_batch }}"
 
 There is also a specific lookup plugin ``inventory_hostnames`` that can be used like this::
 
     - name: Show all the hosts in the inventory
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       loop: "{{ query('inventory_hostnames', 'all') }}"
 
     - name: Show all the hosts matching the pattern, ie all but the group www
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "{{ item }}"
       loop: "{{ query('inventory_hostnames', 'all:!www') }}"
 
@@ -278,7 +278,7 @@ More information on the patterns can be found in :ref:`intro_patterns`.
 Ensuring list input for ``loop``: using ``query`` rather than ``lookup``
 ========================================================================
 
-The ``loop`` keyword requires a list as input, but the ``lookup`` keyword returns a string of comma-separated values by default. Ansible 2.5 introduced a new Jinja2 function named :ref:`query <query>` that always returns a list, offering a simpler interface and more predictable output from lookup plugins when using the ``loop`` keyword.
+The ``loop`` keyword requires a list as input, but the ``lookup`` keyword returns a string of comma-separated values by default. Assible 2.5 introduced a new Jinja2 function named :ref:`query <query>` that always returns a list, offering a simpler interface and more predictable output from lookup plugins when using the ``loop`` keyword.
 
 You can force ``lookup`` to return a list to ``loop`` by using ``wantlist=True``, or you can use ``query`` instead.
 
@@ -346,7 +346,7 @@ Tracking progress through a loop with ``index_var``
 To keep track of where you are in a loop, use the ``index_var`` directive with ``loop_control``. This directive specifies a variable name to contain the current loop index::
 
   - name: Count our fruit
-    ansible.builtin.debug:
+    assible.builtin.debug:
       msg: "{{ item }} with index {{ my_idx }}"
     loop:
       - apple
@@ -361,7 +361,7 @@ Defining inner and outer variable names with ``loop_var``
 ---------------------------------------------------------
 .. versionadded:: 2.1
 
-You can nest two looping tasks using ``include_tasks``. However, by default Ansible sets the loop variable ``item`` for each loop. This means the inner, nested loop will overwrite the value of ``item`` from the outer loop.
+You can nest two looping tasks using ``include_tasks``. However, by default Assible sets the loop variable ``item`` for each loop. This means the inner, nested loop will overwrite the value of ``item`` from the outer loop.
 You can specify the name of the variable for each loop using ``loop_var`` with ``loop_control``::
 
     # main.yml
@@ -375,34 +375,34 @@ You can specify the name of the variable for each loop using ``loop_var`` with `
 
     # inner.yml
     - name: Print outer and inner items
-      ansible.builtin.debug:
+      assible.builtin.debug:
         msg: "outer item={{ outer_item }} inner item={{ item }}"
       loop:
         - a
         - b
         - c
 
-.. note:: If Ansible detects that the current loop is using a variable which has already been defined, it will raise an error to fail the task.
+.. note:: If Assible detects that the current loop is using a variable which has already been defined, it will raise an error to fail the task.
 
 Extended loop variables
 -----------------------
 .. versionadded:: 2.8
 
-As of Ansible 2.8 you can get extended loop information using the ``extended`` option to loop control. This option will expose the following information.
+As of Assible 2.8 you can get extended loop information using the ``extended`` option to loop control. This option will expose the following information.
 
 ==========================  ===========
 Variable                    Description
 --------------------------  -----------
-``ansible_loop.allitems``   The list of all items in the loop
-``ansible_loop.index``      The current iteration of the loop. (1 indexed)
-``ansible_loop.index0``     The current iteration of the loop. (0 indexed)
-``ansible_loop.revindex``   The number of iterations from the end of the loop (1 indexed)
-``ansible_loop.revindex0``  The number of iterations from the end of the loop (0 indexed)
-``ansible_loop.first``      ``True`` if first iteration
-``ansible_loop.last``       ``True`` if last iteration
-``ansible_loop.length``     The number of items in the loop
-``ansible_loop.previtem``   The item from the previous iteration of the loop. Undefined during the first iteration.
-``ansible_loop.nextitem``   The item from the following iteration of the loop. Undefined during the last iteration.
+``assible_loop.allitems``   The list of all items in the loop
+``assible_loop.index``      The current iteration of the loop. (1 indexed)
+``assible_loop.index0``     The current iteration of the loop. (0 indexed)
+``assible_loop.revindex``   The number of iterations from the end of the loop (1 indexed)
+``assible_loop.revindex0``  The number of iterations from the end of the loop (0 indexed)
+``assible_loop.first``      ``True`` if first iteration
+``assible_loop.last``       ``True`` if last iteration
+``assible_loop.length``     The number of items in the loop
+``assible_loop.previtem``   The item from the previous iteration of the loop. Undefined during the first iteration.
+``assible_loop.nextitem``   The item from the following iteration of the loop. Undefined during the last iteration.
 ==========================  ===========
 
 ::
@@ -414,11 +414,11 @@ Accessing the name of your loop_var
 -----------------------------------
 .. versionadded:: 2.8
 
-As of Ansible 2.8 you can get the name of the value provided to ``loop_control.loop_var`` using the ``ansible_loop_var`` variable
+As of Assible 2.8 you can get the name of the value provided to ``loop_control.loop_var`` using the ``assible_loop_var`` variable
 
 For role authors, writing roles that allow loops, instead of dictating the required ``loop_var`` value, you can gather the value via::
 
-    "{{ lookup('vars', ansible_loop_var) }}"
+    "{{ lookup('vars', assible_loop_var) }}"
 
 .. _migrating_to_loop:
 
@@ -439,7 +439,7 @@ Migrating from with_X to loop
        Conditional statements in playbooks
    :ref:`playbooks_variables`
        All about variables
-   `User Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `User Mailing List <https://groups.google.com/group/assible-devel>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

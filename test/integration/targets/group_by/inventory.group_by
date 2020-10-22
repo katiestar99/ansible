@@ -1,9 +1,9 @@
 # ungrouped
-camel genus=camelus ansible_connection=local
+camel genus=camelus assible_connection=local
 
 [lamini]
 alpaca genus=vicugna
 llama genus=lama
 
 [lamini:vars]
-ansible_connection=local
+assible_connection=local

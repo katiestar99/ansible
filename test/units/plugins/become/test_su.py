@@ -1,5 +1,5 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2020 Ansible Project
+# (c) 2020 Assible Project
 #
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -9,9 +9,9 @@ __metaclass__ = type
 
 import re
 
-from ansible import context
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.loader import become_loader
+from assible import context
+from assible.playbook.play_context import PlayContext
+from assible.plugins.loader import become_loader
 
 
 def test_su(mocker, parser, reset_cli_args):

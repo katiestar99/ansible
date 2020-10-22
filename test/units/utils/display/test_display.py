@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Ansible Project
+# Copyright (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible.utils.display import Display
+from assible.utils.display import Display
 
 
 def test_display_basic_message(capsys, mocker):
     # Disable logging
-    mocker.patch('ansible.utils.display.logger', return_value=None)
+    mocker.patch('assible.utils.display.logger', return_value=None)
 
     d = Display()
     d.display(u'Some displayed message')

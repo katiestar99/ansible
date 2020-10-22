@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# (c) 2016 Toshio Kuratomi <tkuratomi@ansible.com>
-# Copyright (c) 2017 Ansible Project
+# (c) 2016 Toshio Kuratomi <tkuratomi@assible.com>
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -10,10 +10,10 @@ import itertools
 
 import pytest
 
-from ansible.module_utils.six import PY3
+from assible.module_utils.six import PY3
 
-from ansible.module_utils.common.text.converters import to_text, to_bytes, to_native
-from ansible.utils.unsafe_proxy import AnsibleUnsafeBytes, AnsibleUnsafeText
+from assible.module_utils.common.text.converters import to_text, to_bytes, to_native
+from assible.utils.unsafe_proxy import AssibleUnsafeBytes, AssibleUnsafeText
 
 
 # Format: byte representation, text representation, encoding of byte representation
@@ -52,10 +52,10 @@ def test_to_native(in_string, encoding, expected):
 
 
 def test_to_text_unsafe():
-    assert isinstance(to_text(AnsibleUnsafeBytes(b'foo')), AnsibleUnsafeText)
-    assert to_text(AnsibleUnsafeBytes(b'foo')) == AnsibleUnsafeText(u'foo')
+    assert isinstance(to_text(AssibleUnsafeBytes(b'foo')), AssibleUnsafeText)
+    assert to_text(AssibleUnsafeBytes(b'foo')) == AssibleUnsafeText(u'foo')
 
 
 def test_to_bytes_unsafe():
-    assert isinstance(to_bytes(AnsibleUnsafeText(u'foo')), AnsibleUnsafeBytes)
-    assert to_bytes(AnsibleUnsafeText(u'foo')) == AnsibleUnsafeBytes(b'foo')
+    assert isinstance(to_bytes(AssibleUnsafeText(u'foo')), AssibleUnsafeBytes)
+    assert to_bytes(AssibleUnsafeText(u'foo')) == AssibleUnsafeBytes(b'foo')

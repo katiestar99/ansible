@@ -1,6 +1,6 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
@@ -78,7 +78,7 @@ def split_args(args):
     example output: ['a=b', 'c="foo bar"']
 
     Basically this is a variation shlex that has some more intelligence for
-    how Ansible needs to use it.
+    how Assible needs to use it.
     '''
 
     # the list of params parsed out of the arg string

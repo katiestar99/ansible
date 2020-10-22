@@ -142,7 +142,7 @@ Function Expand-Environment($value)
     }
 }
 
-Function Get-AnsibleParam($obj, $name, $default = $null, $resultobj = @{}, $failifempty = $false, $emptyattributefailmessage, $ValidateSet, $ValidateSetErrorMessage, $type = $null, $aliases = @())
+Function Get-AssibleParam($obj, $name, $default = $null, $resultobj = @{}, $failifempty = $false, $emptyattributefailmessage, $ValidateSet, $ValidateSetErrorMessage, $type = $null, $aliases = @())
 {
 <#
     .SYNOPSIS
@@ -150,10 +150,10 @@ Function Get-AnsibleParam($obj, $name, $default = $null, $resultobj = @{}, $fail
     This is a convenience to make getting Members from an object easier and
     slightly more pythonic
     .EXAMPLE
-    $attr = Get-AnsibleParam $response "code" -default "1"
+    $attr = Get-AssibleParam $response "code" -default "1"
     .EXAMPLE
-    Get-AnsibleParam -obj $params -name "State" -default "Present" -ValidateSet "Present","Absent" -resultobj $resultobj -failifempty $true
-    Get-AnsibleParam also supports Parameter validation to save you from coding that manually
+    Get-AssibleParam -obj $params -name "State" -default "Present" -ValidateSet "Present","Absent" -resultobj $resultobj -failifempty $true
+    Get-AssibleParam also supports Parameter validation to save you from coding that manually
     Note that if you use the failifempty option, you do need to specify resultobject as well.
 #>
     # Check if the provided Member $name or aliases exist in $obj and return it or the default.
@@ -183,7 +183,7 @@ Function Get-AnsibleParam($obj, $name, $default = $null, $resultobj = @{}, $fail
             } else {
                 if ($null -eq $ValidateSetErrorMessage) {
                     #Auto-generated error should be sufficient in most use cases
-                    $ValidateSetErrorMessage = "Get-AnsibleParam: Argument $name needs to be one of $($ValidateSet -join ",") but was $($obj.$name)."
+                    $ValidateSetErrorMessage = "Get-AssibleParam: Argument $name needs to be one of $($ValidateSet -join ",") but was $($obj.$name)."
                 }
                 Fail-Json -obj $resultobj -message $ValidateSetErrorMessage
             }
@@ -195,7 +195,7 @@ Function Get-AnsibleParam($obj, $name, $default = $null, $resultobj = @{}, $fail
             $value = $default
         } else {
             if (-not $emptyattributefailmessage) {
-                $emptyattributefailmessage = "Get-AnsibleParam: Missing required argument: $name"
+                $emptyattributefailmessage = "Get-AssibleParam: Missing required argument: $name"
             }
             Fail-Json -obj $resultobj -message $emptyattributefailmessage
         }
@@ -221,7 +221,7 @@ Function Get-AnsibleParam($obj, $name, $default = $null, $resultobj = @{}, $fail
                 }
             }
             if ($path_invalid) {
-                Fail-Json -obj $resultobj -message "Get-AnsibleParam: Parameter '$name' has an invalid path '$value' specified."
+                Fail-Json -obj $resultobj -message "Get-AssibleParam: Parameter '$name' has an invalid path '$value' specified."
             }
         }
     } elseif ($type -eq "str") {
@@ -245,7 +245,7 @@ Function Get-AnsibleParam($obj, $name, $default = $null, $resultobj = @{}, $fail
         } elseif ($value -is [int]) {
             $value = @($value)
         } else {
-            Fail-Json -obj $resultobj -message "Get-AnsibleParam: Parameter '$name' is not a YAML list."
+            Fail-Json -obj $resultobj -message "Get-AssibleParam: Parameter '$name' is not a YAML list."
         }
         # , is not a typo, forces it to return as a list when it is empty or only has 1 entry
         return ,$value
@@ -254,10 +254,10 @@ Function Get-AnsibleParam($obj, $name, $default = $null, $resultobj = @{}, $fail
     return $value
 }
 
-#Alias Get-attr-->Get-AnsibleParam for backwards compat. Only add when needed to ease debugging of scripts
+#Alias Get-attr-->Get-AssibleParam for backwards compat. Only add when needed to ease debugging of scripts
 If (-not(Get-Alias -Name "Get-attr" -ErrorAction SilentlyContinue))
 {
-    New-Alias -Name Get-attr -Value Get-AnsibleParam
+    New-Alias -Name Get-attr -Value Get-AssibleParam
 }
 
 Function ConvertTo-Bool
@@ -265,7 +265,7 @@ Function ConvertTo-Bool
 <#
     .SYNOPSIS
     Helper filter/pipeline function to convert a value to boolean following current
-    Ansible practices
+    Assible practices
     .EXAMPLE
     $is_true = "true" | ConvertTo-Bool
 #>
@@ -288,7 +288,7 @@ Function Parse-Args($arguments, $supports_check_mode = $false)
 {
 <#
     .SYNOPSIS
-    Helper function to parse Ansible JSON arguments from a "file" passed as
+    Helper function to parse Assible JSON arguments from a "file" passed as
     the single argument to the module.
     .EXAMPLE
     $params = Parse-Args $args
@@ -301,7 +301,7 @@ Function Parse-Args($arguments, $supports_check_mode = $false)
     Else {
         $params = $complex_args
     }
-    $check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
+    $check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -type "bool" -default $false
     If ($check_mode -and -not $supports_check_mode)
     {
         Exit-Json @{

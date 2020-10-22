@@ -53,7 +53,7 @@ def get_powershell_module_utils_name(path):  # type: (str) -> str
     base_path = data_context().content.module_utils_powershell_path
 
     if data_context().content.collection:
-        prefix = 'ansible_collections.' + data_context().content.collection.prefix + 'plugins.module_utils.'
+        prefix = 'assible_collections.' + data_context().content.collection.prefix + 'plugins.module_utils.'
     else:
         prefix = ''
 
@@ -81,15 +81,15 @@ def extract_powershell_module_utils_imports(path, module_utils):
 
     code = read_text_file(path)
 
-    if data_context().content.is_ansible and '# POWERSHELL_COMMON' in code:
-        imports.add('Ansible.ModuleUtils.Legacy')
+    if data_context().content.is_assible and '# POWERSHELL_COMMON' in code:
+        imports.add('Assible.ModuleUtils.Legacy')
 
     lines = code.splitlines()
     line_number = 0
 
     for line in lines:
         line_number += 1
-        match = re.search(r'(?i)^#\s*(?:requires\s+-module(?:s?)|ansiblerequires\s+-powershell)\s*((?:Ansible|ansible_collections|\.)\..+)', line)
+        match = re.search(r'(?i)^#\s*(?:requires\s+-module(?:s?)|assiblerequires\s+-powershell)\s*((?:Assible|assible_collections|\.)\..+)', line)
 
         if not match:
             continue
@@ -98,8 +98,8 @@ def extract_powershell_module_utils_imports(path, module_utils):
 
         if import_name in module_utils:
             imports.add(import_name)
-        elif data_context().content.is_ansible or \
-                import_name.startswith('ansible_collections.%s' % data_context().content.prefix):
+        elif data_context().content.is_assible or \
+                import_name.startswith('assible_collections.%s' % data_context().content.prefix):
             display.warning('%s:%d Invalid module_utils import: %s' % (path, line_number, import_name))
 
     return imports

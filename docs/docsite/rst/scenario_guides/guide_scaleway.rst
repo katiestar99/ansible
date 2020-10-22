@@ -9,7 +9,7 @@ Scaleway Guide
 Introduction
 ============
 
-`Scaleway <https://scaleway.com>`_ is a cloud provider supported by Ansible, version 2.6 or higher via a dynamic inventory plugin and modules.
+`Scaleway <https://scaleway.com>`_ is a cloud provider supported by Assible, version 2.6 or higher via a dynamic inventory plugin and modules.
 Those modules are:
 
 - :ref:`scaleway_sshkey_module`: adds a public SSH key from a file or value to the Packet infrastructure. Every subsequently-created device will have this public key installed in .ssh/authorized_keys.
@@ -17,8 +17,8 @@ Those modules are:
 - :ref:`scaleway_volume_module`: manages volumes on Scaleway.
 
 .. note::
-   This guide assumes you are familiar with Ansible and how it works.
-   If you're not, have a look at :ref:`ansible_documentation` before getting started.
+   This guide assumes you are familiar with Assible and how it works.
+   If you're not, have a look at :ref:`assible_documentation` before getting started.
 
 .. _scaleway_requirements:
 
@@ -169,7 +169,7 @@ Take a look at this short playbook to see a working example using ``scaleway_com
 Dynamic Inventory Script
 ========================
 
-Ansible ships with :ref:`scaleway_inventory`.
+Assible ships with :ref:`scaleway_inventory`.
 You can now get a complete inventory of your Scaleway resources through this plugin and filter it on
 different parameters (``regions`` and ``tags`` are currently supported).
 
@@ -191,7 +191,7 @@ Once you have configured this file, you can get the information using the follow
 
 .. code-block:: bash
 
-    $ ansible-inventory --list -i scaleway_inventory.yml
+    $ assible-inventory --list -i scaleway_inventory.yml
 
 The output will be:
 
@@ -201,7 +201,7 @@ The output will be:
         "_meta": {
             "hostvars": {
                 "dd8e3ae9-0c7c-459e-bc7b-aba8bfa1bb8d": {
-                    "ansible_verbosity": 6,
+                    "assible_verbosity": 6,
                     "arch": "x86_64",
                     "commercial_type": "START1-S",
                     "hostname": "foobar",
@@ -247,9 +247,9 @@ Scaleway S3 object storage
 ==========================
 
 `Object Storage <https://www.scaleway.com/object-storage>`_ allows you to store any kind of objects (documents, images, videos, and so on).
-As the Scaleway API is S3 compatible, Ansible supports it natively through the modules: :ref:`s3_bucket_module`, :ref:`aws_s3_module`.
+As the Scaleway API is S3 compatible, Assible supports it natively through the modules: :ref:`s3_bucket_module`, :ref:`aws_s3_module`.
 
-You can find many examples in the `scaleway_s3 integration tests <https://github.com/ansible/ansible-legacy-tests/tree/devel/test/legacy/roles/scaleway_s3>`_.
+You can find many examples in the `scaleway_s3 integration tests <https://github.com/assible/assible-legacy-tests/tree/devel/test/legacy/roles/scaleway_s3>`_.
 
 .. code-block:: yaml+jinja
 

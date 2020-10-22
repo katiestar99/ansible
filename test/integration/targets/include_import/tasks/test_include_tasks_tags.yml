@@ -7,7 +7,7 @@
       include_tasks: tasks1.yml
 
     # This should be included but tasks inside should not run because they do not have
-    # the canary1 tag and tasks2 is not in the list of tags for the ansible-playbook command
+    # the canary1 tag and tasks2 is not in the list of tags for the assible-playbook command
     - name: Include tasks2.yml
       include_tasks: tasks2.yml
       tags:

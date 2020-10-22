@@ -2,7 +2,7 @@ Wait tests
 ----------
 
 wait tests require at least one node, and don't work on the normal k8s
-openshift-origin container as provided by ansible-test --docker -v k8s
+openshift-origin container as provided by assible-test --docker -v k8s
 
 minikube, Kubernetes from Docker or any other Kubernetes service will
 suffice.

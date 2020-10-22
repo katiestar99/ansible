@@ -4,15 +4,15 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible import constants as C
-from ansible.release import __version__ as ansible_version
-from ansible.errors import AnsibleError, AnsibleAssertionError
-from ansible.module_utils.six import string_types
-from ansible.module_utils._text import to_native
-from ansible.module_utils.common._collections_compat import MutableMapping, MutableSet, MutableSequence
-from ansible.parsing.plugin_docs import read_docstring
-from ansible.parsing.yaml.loader import AnsibleLoader
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.release import __version__ as assible_version
+from assible.errors import AssibleError, AssibleAssertionError
+from assible.module_utils.six import string_types
+from assible.module_utils._text import to_native
+from assible.module_utils.common._collections_compat import MutableMapping, MutableSet, MutableSequence
+from assible.parsing.plugin_docs import read_docstring
+from assible.parsing.yaml.loader import AssibleLoader
+from assible.utils.display import Display
 
 display = Display()
 
@@ -157,11 +157,11 @@ def add_fragments(doc, filename, fragment_loader, is_module=False):
             else:
                 fragment_yaml = '{}'  # TODO: this is still an error later since we require 'options' below...
 
-        fragment = AnsibleLoader(fragment_yaml, file_name=filename).get_single_data()
+        fragment = AssibleLoader(fragment_yaml, file_name=filename).get_single_data()
 
-        real_collection_name = 'ansible.builtin'
+        real_collection_name = 'assible.builtin'
         real_fragment_name = getattr(fragment_class, '_load_name')
-        if real_fragment_name.startswith('ansible_collections.'):
+        if real_fragment_name.startswith('assible_collections.'):
             real_collection_name = '.'.join(real_fragment_name.split('.')[1:3])
         add_collection_to_versions_and_dates(fragment, real_collection_name, is_module=is_module)
 
@@ -187,7 +187,7 @@ def add_fragments(doc, filename, fragment_loader, is_module=False):
             try:
                 merge_fragment(doc['options'], fragment.pop('options'))
             except Exception as e:
-                raise AnsibleError("%s options (%s) of unknown type: %s" % (to_native(e), fragment_name, filename))
+                raise AssibleError("%s options (%s) of unknown type: %s" % (to_native(e), fragment_name, filename))
         else:
             doc['options'] = fragment.pop('options')
 
@@ -195,10 +195,10 @@ def add_fragments(doc, filename, fragment_loader, is_module=False):
         try:
             merge_fragment(doc, fragment)
         except Exception as e:
-            raise AnsibleError("%s (%s) of unknown type: %s" % (to_native(e), fragment_name, filename))
+            raise AssibleError("%s (%s) of unknown type: %s" % (to_native(e), fragment_name, filename))
 
     if unknown_fragments:
-        raise AnsibleError('unknown doc_fragment(s) in file {0}: {1}'.format(filename, to_native(', '.join(unknown_fragments))))
+        raise AssibleError('unknown doc_fragment(s) in file {0}: {1}'.format(filename, to_native(', '.join(unknown_fragments))))
 
 
 def get_docstring(filename, fragment_loader, verbose=False, ignore_errors=False, collection_name=None, is_module=False):
@@ -226,12 +226,12 @@ def get_docstring(filename, fragment_loader, verbose=False, ignore_errors=False,
 
 def get_versioned_doclink(path):
     """
-    returns a versioned documentation link for the current Ansible major.minor version; used to generate
+    returns a versioned documentation link for the current Assible major.minor version; used to generate
     in-product warning/error links to the configured DOCSITE_ROOT_URL
-    (eg, https://docs.ansible.com/ansible/2.8/somepath/doc.html)
+    (eg, https://docs.assible.com/assible/2.8/somepath/doc.html)
 
     :param path: relative path to a document under docs/docsite/rst;
-    :return: absolute URL to the specified doc for the current version of Ansible
+    :return: absolute URL to the specified doc for the current version of Assible
     """
     path = to_native(path)
     try:
@@ -240,9 +240,9 @@ def get_versioned_doclink(path):
             base_url += '/'
         if path.startswith('/'):
             path = path[1:]
-        split_ver = ansible_version.split('.')
+        split_ver = assible_version.split('.')
         if len(split_ver) < 3:
-            raise RuntimeError('invalid version ({0})'.format(ansible_version))
+            raise RuntimeError('invalid version ({0})'.format(assible_version))
 
         doc_version = '{0}.{1}'.format(split_ver[0], split_ver[1])
 

@@ -1,5 +1,5 @@
 ===========
-Ansible 2.9
+Assible 2.9
 ===========
 
 .. contents::
@@ -11,7 +11,7 @@ Release Schedule
 Expected
 ========
 
-PRs must be raised well in advance of the dates below to have a chance of being included in this Ansible release.
+PRs must be raised well in advance of the dates below to have a chance of being included in this Assible release.
 
 .. note:: There is no Alpha phase in 2.9.
 
@@ -36,4 +36,4 @@ Temporarily, Matt Davis (@nitzmahone) or Matt Clay (@mattclay) on IRC or github.
 Planned work
 ============
 
-See the `Ansible 2.9 Project Board <https://github.com/ansible/ansible/projects/34>`_
+See the `Assible 2.9 Project Board <https://github.com/assible/assible/projects/34>`_

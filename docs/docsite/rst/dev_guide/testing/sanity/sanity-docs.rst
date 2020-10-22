@@ -1,4 +1,4 @@
 sanity-docs
 ===========
 
-Documentation for each ``ansible-test sanity`` test is required.
+Documentation for each ``assible-test sanity`` test is required.

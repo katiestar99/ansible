@@ -1,10 +1,10 @@
 .. _vmware_scenarios:
 
 ****************************
-Ansible for VMware Scenarios
+Assible for VMware Scenarios
 ****************************
 
-These scenarios teach you how to accomplish common VMware tasks using Ansible. To get started, please select the task you want to accomplish.
+These scenarios teach you how to accomplish common VMware tasks using Assible. To get started, please select the task you want to accomplish.
 
 .. toctree::
    :maxdepth: 1

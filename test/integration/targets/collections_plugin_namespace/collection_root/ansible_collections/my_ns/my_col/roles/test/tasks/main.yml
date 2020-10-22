@@ -6,7 +6,7 @@
 
 - assert:
     that:
-      - filter_name == 'ansible_collections.my_ns.my_col.plugins.filter.test_filter'
-      - lookup_name == 'ansible_collections.my_ns.my_col.plugins.lookup.lookup_name'
-      - lookup_no_future_boilerplate == 'ansible_collections.my_ns.my_col.plugins.lookup.lookup_no_future_boilerplate'
+      - filter_name == 'assible_collections.my_ns.my_col.plugins.filter.test_filter'
+      - lookup_name == 'assible_collections.my_ns.my_col.plugins.lookup.lookup_name'
+      - lookup_no_future_boilerplate == 'assible_collections.my_ns.my_col.plugins.lookup.lookup_no_future_boilerplate'
       - test_name_ok

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -14,7 +14,7 @@ version_added: "1.3"
 short_description: Retrieve file or file system status
 description:
      - Retrieves facts for a file similar to the Linux/Unix 'stat' command.
-     - For Windows targets, use the M(ansible.windows.win_stat) module instead.
+     - For Windows targets, use the M(assible.windows.win_stat) module instead.
 options:
   path:
     description:
@@ -49,7 +49,7 @@ options:
       - Use file magic and return data about the nature of the file. this uses
         the 'file' utility found on most Linux/Unix systems.
       - This will add both `mime_type` and 'charset' fields to the return, if possible.
-      - In Ansible 2.3 this option changed from 'mime' to 'get_mime' and the default changed to 'Yes'.
+      - In Assible 2.3 this option changed from 'mime' to 'get_mime' and the default changed to 'Yes'.
     type: bool
     default: yes
     aliases: [ mime, mime_type, mime-type ]
@@ -62,8 +62,8 @@ options:
     aliases: [ attr, attributes ]
     version_added: "2.3"
 seealso:
-- module: ansible.builtin.file
-- module: ansible.windows.win_stat
+- module: assible.builtin.file
+- module: assible.windows.win_stat
 author: Bruce Pennypacker (@bpennypacker)
 '''
 
@@ -294,7 +294,7 @@ stat:
             sample: ../foobar/21102015-1445431274-908472971
             version_added: 2.4
         md5:
-            description: md5 hash of the path; this will be removed in Ansible 2.9 in
+            description: md5 hash of the path; this will be removed in Assible 2.9 in
                 favor of the checksum return value
             returned: success, path exists and user can read stats and path
                 supports hashing and md5 is supported
@@ -363,14 +363,14 @@ import pwd
 import stat
 
 # import module snippets
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_bytes
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_bytes
 
 
 def format_output(module, path, st):
     mode = st.st_mode
 
-    # back to ansible
+    # back to assible
     output = dict(
         exists=True,
         path=path,
@@ -430,7 +430,7 @@ def format_output(module, path, st):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             path=dict(type='path', required=True, aliases=['dest', 'name']),
             follow=dict(type='bool', default=False),

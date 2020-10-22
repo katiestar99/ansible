@@ -1,20 +1,20 @@
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.module_utils.six import string_types
-from ansible.playbook.attribute import FieldAttribute
-from ansible.utils.collection_loader import AnsibleCollectionConfig
-from ansible.template import is_template, Environment
-from ansible.utils.display import Display
+from assible.module_utils.six import string_types
+from assible.playbook.attribute import FieldAttribute
+from assible.utils.collection_loader import AssibleCollectionConfig
+from assible.template import is_template, Environment
+from assible.utils.display import Display
 
 display = Display()
 
 
 def _ensure_default_collection(collection_list=None):
-    default_collection = AnsibleCollectionConfig.default_collection
+    default_collection = AssibleCollectionConfig.default_collection
 
     # Will be None when used as the default
     if collection_list is None:
@@ -25,8 +25,8 @@ def _ensure_default_collection(collection_list=None):
         collection_list.insert(0, default_collection)
 
     # if there's something in the list, ensure that builtin or legacy is always there too
-    if collection_list and 'ansible.builtin' not in collection_list and 'ansible.legacy' not in collection_list:
-        collection_list.append('ansible.legacy')
+    if collection_list and 'assible.builtin' not in collection_list and 'assible.legacy' not in collection_list:
+        collection_list.append('assible.legacy')
 
     return collection_list
 

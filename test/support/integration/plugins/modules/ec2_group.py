@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# This file is part of Ansible
+# This file is part of Assible
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -405,20 +405,20 @@ import itertools
 from copy import deepcopy
 from time import sleep
 from collections import namedtuple
-from ansible.module_utils.aws.core import AnsibleAWSModule, is_boto3_error_code
-from ansible.module_utils.aws.iam import get_aws_account_id
-from ansible.module_utils.aws.waiters import get_waiter
-from ansible.module_utils.ec2 import AWSRetry, camel_dict_to_snake_dict, compare_aws_tags
-from ansible.module_utils.ec2 import ansible_dict_to_boto3_filter_list, boto3_tag_list_to_ansible_dict, ansible_dict_to_boto3_tag_list
-from ansible.module_utils.common.network import to_ipv6_subnet, to_subnet
-from ansible.module_utils.compat.ipaddress import ip_network, IPv6Network
-from ansible.module_utils._text import to_text
-from ansible.module_utils.six import string_types
+from assible.module_utils.aws.core import AssibleAWSModule, is_boto3_error_code
+from assible.module_utils.aws.iam import get_aws_account_id
+from assible.module_utils.aws.waiters import get_waiter
+from assible.module_utils.ec2 import AWSRetry, camel_dict_to_snake_dict, compare_aws_tags
+from assible.module_utils.ec2 import assible_dict_to_boto3_filter_list, boto3_tag_list_to_assible_dict, assible_dict_to_boto3_tag_list
+from assible.module_utils.common.network import to_ipv6_subnet, to_subnet
+from assible.module_utils.compat.ipaddress import ip_network, IPv6Network
+from assible.module_utils._text import to_text
+from assible.module_utils.six import string_types
 
 try:
     from botocore.exceptions import BotoCoreError, ClientError
 except ImportError:
-    pass  # caught by AnsibleAWSModule
+    pass  # caught by AssibleAWSModule
 
 
 Rule = namedtuple('Rule', ['port_range', 'protocol', 'target', 'target_type', 'description'])
@@ -643,7 +643,7 @@ def get_target_from_rule(module, client, rule, name, group, groups, vpc_id):
             if not rule.get('group_desc', '').strip():
                 # retry describing the group once
                 try:
-                    auto_group = get_security_groups_with_backoff(client, Filters=ansible_dict_to_boto3_filter_list(filters)).get('SecurityGroups', [])[0]
+                    auto_group = get_security_groups_with_backoff(client, Filters=assible_dict_to_boto3_filter_list(filters)).get('SecurityGroups', [])[0]
                 except (is_boto3_error_code('InvalidGroup.NotFound'), IndexError):
                     module.fail_json(msg="group %s will be automatically created by rule %s but "
                                          "no description was provided" % (group_name, rule))
@@ -665,7 +665,7 @@ def get_target_from_rule(module, client, rule, name, group, groups, vpc_id):
                     # Try searching on a filter for the name, and allow a retry window for AWS to update
                     # the model on their end.
                     try:
-                        auto_group = get_security_groups_with_backoff(client, Filters=ansible_dict_to_boto3_filter_list(filters)).get('SecurityGroups', [])[0]
+                        auto_group = get_security_groups_with_backoff(client, Filters=assible_dict_to_boto3_filter_list(filters)).get('SecurityGroups', [])[0]
                     except IndexError as e:
                         module.fail_json(msg="Could not create or use existing group '{0}' in rule. Make sure the group exists".format(group_name))
                     except ClientError as e:
@@ -871,7 +871,7 @@ def update_tags(client, module, group_id, current_tags, tags, purge_tags):
         # Add/update tags
         if tags_need_modify:
             try:
-                client.create_tags(Resources=[group_id], Tags=ansible_dict_to_boto3_tag_list(tags_need_modify))
+                client.create_tags(Resources=[group_id], Tags=assible_dict_to_boto3_tag_list(tags_need_modify))
             except (BotoCoreError, ClientError) as e:
                 module.fail_json(e, msg="Unable to add tags {0}".format(tags_need_modify))
 
@@ -1148,7 +1148,7 @@ def main():
         tags=dict(required=False, type='dict', aliases=['resource_tags']),
         purge_tags=dict(default=True, required=False, type='bool')
     )
-    module = AnsibleAWSModule(
+    module = AssibleAWSModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_one_of=[['name', 'group_id']],
@@ -1190,7 +1190,7 @@ def main():
         if group:
             # found a match, delete it
             before = camel_dict_to_snake_dict(group, ignore_list=['Tags'])
-            before['tags'] = boto3_tag_list_to_ansible_dict(before.get('tags', []))
+            before['tags'] = boto3_tag_list_to_assible_dict(before.get('tags', []))
             try:
                 if not module.check_mode:
                     client.delete_security_group(GroupId=group['GroupId'])
@@ -1208,7 +1208,7 @@ def main():
         if group:
             # existing group
             before = camel_dict_to_snake_dict(group, ignore_list=['Tags'])
-            before['tags'] = boto3_tag_list_to_ansible_dict(before.get('tags', []))
+            before['tags'] = boto3_tag_list_to_assible_dict(before.get('tags', []))
             if group['Description'] != description:
                 module.warn("Group description does not match existing group. Descriptions cannot be changed without deleting "
                             "and re-creating the security group. Try using state=absent to delete, then rerunning this task.")
@@ -1218,7 +1218,7 @@ def main():
             changed = True
 
         if tags is not None and group is not None:
-            current_tags = boto3_tag_list_to_ansible_dict(group.get('Tags', []))
+            current_tags = boto3_tag_list_to_assible_dict(group.get('Tags', []))
             changed |= update_tags(client, module, group['GroupId'], current_tags, tags, purge_tags)
 
     if group:
@@ -1325,7 +1325,7 @@ def main():
         else:
             security_group = get_security_groups_with_backoff(client, GroupIds=[group['GroupId']])['SecurityGroups'][0]
         security_group = camel_dict_to_snake_dict(security_group, ignore_list=['Tags'])
-        security_group['tags'] = boto3_tag_list_to_ansible_dict(security_group.get('tags', []))
+        security_group['tags'] = boto3_tag_list_to_assible_dict(security_group.get('tags', []))
 
     else:
         security_group = {'group_id': None}

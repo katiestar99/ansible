@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -25,13 +25,13 @@ def test_warn(am, capfd):
 @pytest.mark.parametrize('stdin', [{}], indirect=['stdin'])
 def test_deprecate(am, capfd):
     am.deprecate('deprecation1')
-    am.deprecate('deprecation2', '2.3')  # pylint: disable=ansible-deprecated-no-collection-name
-    am.deprecate('deprecation3', version='2.4')  # pylint: disable=ansible-deprecated-no-collection-name
-    am.deprecate('deprecation4', date='2020-03-10')  # pylint: disable=ansible-deprecated-no-collection-name
-    am.deprecate('deprecation5', collection_name='ansible.builtin')
-    am.deprecate('deprecation6', '2.3', collection_name='ansible.builtin')
-    am.deprecate('deprecation7', version='2.4', collection_name='ansible.builtin')
-    am.deprecate('deprecation8', date='2020-03-10', collection_name='ansible.builtin')
+    am.deprecate('deprecation2', '2.3')  # pylint: disable=assible-deprecated-no-collection-name
+    am.deprecate('deprecation3', version='2.4')  # pylint: disable=assible-deprecated-no-collection-name
+    am.deprecate('deprecation4', date='2020-03-10')  # pylint: disable=assible-deprecated-no-collection-name
+    am.deprecate('deprecation5', collection_name='assible.builtin')
+    am.deprecate('deprecation6', '2.3', collection_name='assible.builtin')
+    am.deprecate('deprecation7', version='2.4', collection_name='assible.builtin')
+    am.deprecate('deprecation8', date='2020-03-10', collection_name='assible.builtin')
 
     with pytest.raises(SystemExit):
         am.exit_json(deprecations=['deprecation9', ('deprecation10', '2.4')])
@@ -44,10 +44,10 @@ def test_deprecate(am, capfd):
         {u'msg': u'deprecation2', u'version': '2.3', u'collection_name': None},
         {u'msg': u'deprecation3', u'version': '2.4', u'collection_name': None},
         {u'msg': u'deprecation4', u'date': '2020-03-10', u'collection_name': None},
-        {u'msg': u'deprecation5', u'version': None, u'collection_name': 'ansible.builtin'},
-        {u'msg': u'deprecation6', u'version': '2.3', u'collection_name': 'ansible.builtin'},
-        {u'msg': u'deprecation7', u'version': '2.4', u'collection_name': 'ansible.builtin'},
-        {u'msg': u'deprecation8', u'date': '2020-03-10', u'collection_name': 'ansible.builtin'},
+        {u'msg': u'deprecation5', u'version': None, u'collection_name': 'assible.builtin'},
+        {u'msg': u'deprecation6', u'version': '2.3', u'collection_name': 'assible.builtin'},
+        {u'msg': u'deprecation7', u'version': '2.4', u'collection_name': 'assible.builtin'},
+        {u'msg': u'deprecation8', u'date': '2020-03-10', u'collection_name': 'assible.builtin'},
         {u'msg': u'deprecation9', u'version': None, u'collection_name': None},
         {u'msg': u'deprecation10', u'version': '2.4', u'collection_name': None},
     ]

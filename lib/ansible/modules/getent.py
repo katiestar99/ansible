@@ -91,12 +91,12 @@ EXAMPLES = '''
 '''
 import traceback
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_native
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             database=dict(type='str', required=True),
             key=dict(type='str'),
@@ -142,7 +142,7 @@ def main():
             record = line.split(split)
             results[dbtree][record[0]] = record[1:]
 
-        module.exit_json(ansible_facts=results)
+        module.exit_json(assible_facts=results)
 
     elif rc == 1:
         msg = "Missing arguments, or database unknown."
@@ -150,7 +150,7 @@ def main():
         msg = "One or more supplied key could not be found in the database."
         if not fail_key:
             results[dbtree][key] = None
-            module.exit_json(ansible_facts=results, msg=msg)
+            module.exit_json(assible_facts=results, msg=msg)
     elif rc == 3:
         msg = "Enumeration not supported on this database."
 

@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -29,7 +29,7 @@ LONG_TEMPLATE = """
 {% set plural = False if versions | length == 1 else True %}
 {% set latest_ver = (versions | sort(attribute='ver_obj'))[-1] %}
 
-To: ansible-releases@redhat.com, ansible-devel@googlegroups.com, ansible-project@googlegroups.com, ansible-announce@googlegroups.com
+To: assible-releases@redhat.com, assible-devel@googlegroups.com, assible-project@googlegroups.com, assible-announce@googlegroups.com
 Subject: New release{% if plural %}s{% endif %}: {{ version_str }}
 
 {% filter wordwrap %}
@@ -42,7 +42,7 @@ How to get it
 -------------
 
 {% for version in versions %}
-$ pip install ansible{% if is_ansible_base(version) %}-base{% endif %}=={{ version }} --user
+$ pip install assible{% if is_assible_base(version) %}-base{% endif %}=={{ version }} --user
 {% if not loop.last %}
 or
 {% endif %}
@@ -52,10 +52,10 @@ The tar.gz of the release{% if plural %}s{% endif %} can be found here:
 
 {% for version in versions %}
 * {{ pretty_version(version) }}
-{% if is_ansible_base(version) %}
-  https://pypi.python.org/packages/source/a/ansible-base/ansible-base-{{ version }}.tar.gz
+{% if is_assible_base(version) %}
+  https://pypi.python.org/packages/source/a/assible-base/assible-base-{{ version }}.tar.gz
 {% else %}
-  https://pypi.python.org/packages/source/a/ansible/ansible-{{ version }}.tar.gz
+  https://pypi.python.org/packages/source/a/assible/assible-{{ version }}.tar.gz
 {% endif %}
   SHA256: {{ hashes[version] }}
 {% endfor %}
@@ -71,7 +71,7 @@ What's new in {{ version_str }}
 
 {% for version in versions %}
 * {{ version }}
-  https://github.com/ansible/ansible/blob/stable-{{ version.split('.')[:2] | join('.') }}/changelogs/CHANGELOG-v{{ version.split('.')[:2] | join('.') }}.rst
+  https://github.com/assible/assible/blob/stable-{{ version.split('.')[:2] | join('.') }}/changelogs/CHANGELOG-v{{ version.split('.')[:2] | join('.') }}.rst
 {% endfor %}
 
 
@@ -89,7 +89,7 @@ Porting Help
 
 {% filter wordwrap %}
 We've published a porting guide at
-https://docs.ansible.com/ansible/devel/porting_guides/porting_guide_{{ latest_ver.split('.')[:2] | join('.') }}.html to help migrate your content to {{ latest_ver.split('.')[:2] | join('.') }}.
+https://docs.assible.com/assible/devel/porting_guides/porting_guide_{{ latest_ver.split('.')[:2] | join('.') }}.html to help migrate your content to {{ latest_ver.split('.')[:2] | join('.') }}.
 {% endfilter %}
 
 
@@ -99,7 +99,7 @@ If you discover any errors or if any of your working playbooks break when you up
 {% endfilter %}
 
 
-  https://github.com/ansible/ansible/issues/new/choose
+  https://github.com/assible/assible/issues/new/choose
 
 {% filter wordwrap %}
 In your issue, be sure to mention the version that works and the one that doesn't.
@@ -117,7 +117,7 @@ Thanks!
 SHORT_TEMPLATE = """
 {% set plural = False if versions | length == 1 else True %}
 {% set version = (versions|sort(attribute='ver_obj'))[-1] %}
-@ansible
+@assible
 {{ version_str }}
 {% if plural %}
   have
@@ -130,8 +130,8 @@ them
 {% else %}
 it
 {% endif %}
-on PyPI: pip install ansible{% if is_ansible_base(version) %}-base{% endif %}=={{ version }},
-the Ansible PPA on Launchpad, or GitHub. Happy automating!
+on PyPI: pip install assible{% if is_assible_base(version) %}-base{% endif %}=={{ version }},
+the Assible PPA on Launchpad, or GitHub. Happy automating!
 """  # noqa for E501 (line length).
 # jinja2 is horrid about getting rid of extra newlines so we have to have a single per paragraph for
 # proper wrapping to occur
@@ -148,7 +148,7 @@ JINJA_ENV = Environment(
 
 
 async def calculate_hash_from_tarball(session, version):
-    tar_url = f'https://pypi.python.org/packages/source/a/ansible-base/ansible-base-{version}.tar.gz'
+    tar_url = f'https://pypi.python.org/packages/source/a/assible-base/assible-base-{version}.tar.gz'
     tar_task = asyncio.create_task(session.get(tar_url))
     tar_response = await tar_task
 
@@ -163,8 +163,8 @@ async def calculate_hash_from_tarball(session, version):
 
 
 async def parse_hash_from_file(session, version):
-    filename = f'ansible-base-{version}.tar.gz'
-    hash_url = f'https://releases.ansible.com/ansible-base/{filename}.sha'
+    filename = f'assible-base-{version}.tar.gz'
+    hash_url = f'https://releases.assible.com/assible-base/{filename}.sha'
     hash_task = asyncio.create_task(session.get(hash_url))
     hash_response = await hash_task
 
@@ -181,7 +181,7 @@ async def get_hash(session, version):
     precreated_hash = await parse_hash_from_file(session, version)
 
     if calculated_hash != precreated_hash:
-        raise ValueError(f'Hash in file ansible-base-{version}.tar.gz.sha {precreated_hash} does not'
+        raise ValueError(f'Hash in file assible-base-{version}.tar.gz.sha {precreated_hash} does not'
                          f' match hash of tarball from pypi {calculated_hash}')
 
     return calculated_hash
@@ -225,9 +225,9 @@ def next_release_date(weeks=3):
     return next_release
 
 
-def is_ansible_base(version):
+def is_assible_base(version):
     '''
-    Determines if a version is an ansible-base version or not, by checking
+    Determines if a version is an assible-base version or not, by checking
     if it is >= 2.10.0. Stops comparing when it gets to the first non-numeric
     component to allow for .dev and .beta suffixes.
     '''
@@ -247,13 +247,13 @@ def is_ansible_base(version):
 # Currently only use with a single element list, but left general for later
 # in case we need to refer to the releases collectively.
 def release_variants(versions):
-    if all(is_ansible_base(v) for v in versions):
-        return 'ansible-base'
+    if all(is_assible_base(v) for v in versions):
+        return 'assible-base'
 
-    if all(not is_ansible_base(v) for v in versions):
-        return 'Ansible'
+    if all(not is_assible_base(v) for v in versions):
+        return 'Assible'
 
-    return 'Ansible and ansible-base'
+    return 'Assible and assible-base'
 
 
 def pretty_version(version):
@@ -275,7 +275,7 @@ def create_long_message(versions, name):
     template = JINJA_ENV.get_template('long')
     message = template.render(versions=versions, version_str=version_str,
                               name=name, hashes=hashes, next_release=next_release,
-                              is_ansible_base=is_ansible_base,
+                              is_assible_base=is_assible_base,
                               pretty_version=pretty_version)
     return message
 
@@ -287,7 +287,7 @@ def create_short_message(versions):
 
     template = JINJA_ENV.get_template('short')
     message = template.render(versions=versions, version_str=version_str,
-                              is_ansible_base=is_ansible_base,
+                              is_assible_base=is_assible_base,
                               pretty_version=pretty_version)
     message = ' '.join(message.split()) + '\n'
     return message

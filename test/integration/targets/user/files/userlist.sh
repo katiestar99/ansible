@@ -4,12 +4,12 @@
 #  shell: |
 #      cat /etc/group | cut -d: -f1
 #  register: group_names
-#  when: 'ansible_distribution != "MacOSX"'
+#  when: 'assible_distribution != "MacOSX"'
 
 #- name: make a list of groups [mac]
 #  shell: dscl localhost -list /Local/Default/Groups
 #  register: group_names
-#  when: 'ansible_distribution == "MacOSX"'
+#  when: 'assible_distribution == "MacOSX"'
 
 DISTRO="$*"
 

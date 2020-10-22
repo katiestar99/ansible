@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) Ansible Project
+# Copyright: (c) Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -10,10 +10,10 @@ import os
 import platform
 import re
 
-from ansible.module_utils.common.sys_info import get_distribution, get_distribution_version, \
+from assible.module_utils.common.sys_info import get_distribution, get_distribution_version, \
     get_distribution_codename
-from ansible.module_utils.facts.utils import get_file_content
-from ansible.module_utils.facts.collector import BaseFactCollector
+from assible.module_utils.facts.utils import get_file_content
+from assible.module_utils.facts.collector import BaseFactCollector
 
 
 def get_uname(module, flags=('-v')):

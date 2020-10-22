@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# (c) 2017, Ansible Project
+# (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # most of it copied from AWX's scan_packages module
@@ -51,18 +51,18 @@ EXAMPLES = '''
 
 - name: Print the package facts
   debug:
-    var: ansible_facts.packages
+    var: assible_facts.packages
 
 - name: Check whether a package called foobar is installed
   debug:
-    msg: "{{ ansible_facts.packages['foobar'] | length }} versions of foobar are installed!"
-  when: "'foobar' in ansible_facts.packages"
+    msg: "{{ assible_facts.packages['foobar'] | length }} versions of foobar are installed!"
+  when: "'foobar' in assible_facts.packages"
 
 '''
 
 RETURN = '''
-ansible_facts:
-  description: facts to add to ansible_facts
+assible_facts:
+  description: facts to add to assible_facts
   returned: always
   type: complex
   contains:
@@ -208,10 +208,10 @@ ansible_facts:
 
 import re
 
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.common.process import get_bin_path
-from ansible.module_utils.facts.packages import LibMgr, CLIMgr, get_all_pkg_managers
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.basic import AssibleModule, missing_required_lib
+from assible.module_utils.common.process import get_bin_path
+from assible.module_utils.facts.packages import LibMgr, CLIMgr, get_all_pkg_managers
 
 
 class RPM(LibMgr):
@@ -410,11 +410,11 @@ def main():
 
     # start work
     global module
-    module = AnsibleModule(argument_spec=dict(manager={'type': 'list', 'elements': 'str', 'default': ['auto']},
+    module = AssibleModule(argument_spec=dict(manager={'type': 'list', 'elements': 'str', 'default': ['auto']},
                                               strategy={'choices': ['first', 'all'], 'default': 'first'}),
                            supports_check_mode=True)
     packages = {}
-    results = {'ansible_facts': {}}
+    results = {'assible_facts': {}}
     managers = [x.lower() for x in module.params['manager']]
     strategy = module.params['strategy']
 
@@ -464,9 +464,9 @@ def main():
                'or the required Python library is not installed. Check warnings for details.' % managers)
         module.fail_json(msg=msg)
 
-    # Set the facts, this will override the facts in ansible_facts that might exist from previous runs
+    # Set the facts, this will override the facts in assible_facts that might exist from previous runs
     # when using operating system level or distribution package managers
-    results['ansible_facts']['packages'] = packages
+    results['assible_facts']['packages'] = packages
 
     module.exit_json(**results)
 

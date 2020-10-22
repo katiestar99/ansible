@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -9,11 +9,11 @@ __metaclass__ = type
 from units.compat import unittest
 from units.compat.mock import patch, MagicMock
 
-from ansible.executor.play_iterator import PlayIterator
-from ansible.playbook import Playbook
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.strategy.linear import StrategyModule
-from ansible.executor.task_queue_manager import TaskQueueManager
+from assible.executor.play_iterator import PlayIterator
+from assible.playbook import Playbook
+from assible.playbook.play_context import PlayContext
+from assible.plugins.strategy.linear import StrategyModule
+from assible.executor.task_queue_manager import TaskQueueManager
 
 from units.mock.loader import DictDataLoader
 from units.mock.path import mock_unfrackpath_noop
@@ -21,7 +21,7 @@ from units.mock.path import mock_unfrackpath_noop
 
 class TestStrategyLinear(unittest.TestCase):
 
-    @patch('ansible.playbook.role.definition.unfrackpath', mock_unfrackpath_noop)
+    @patch('assible.playbook.role.definition.unfrackpath', mock_unfrackpath_noop)
     def test_noop(self):
         fake_loader = DictDataLoader({
             "test_play.yml": """

@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -12,7 +12,7 @@ import tempfile
 import pytest
 
 from units.compat.mock import patch, MagicMock
-from ansible.modules import async_wrapper
+from assible.modules import async_wrapper
 
 from pprint import pprint
 

@@ -1,5 +1,5 @@
 # Copyright: (c) 2015, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -10,14 +10,14 @@ import shutil
 import stat
 import tempfile
 
-from ansible import constants as C
-from ansible.config.manager import ensure_type
-from ansible.errors import AnsibleError, AnsibleFileNotFound, AnsibleAction, AnsibleActionFail
-from ansible.module_utils._text import to_bytes, to_text, to_native
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.module_utils.six import string_types
-from ansible.plugins.action import ActionBase
-from ansible.template import generate_ansible_template_vars, AnsibleEnvironment
+from assible import constants as C
+from assible.config.manager import ensure_type
+from assible.errors import AssibleError, AssibleFileNotFound, AssibleAction, AssibleActionFail
+from assible.module_utils._text import to_bytes, to_text, to_native
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils.six import string_types
+from assible.plugins.action import ActionBase
+from assible.template import generate_assible_template_vars, AssibleEnvironment
 
 
 class ActionModule(ActionBase):
@@ -41,7 +41,7 @@ class ActionModule(ActionBase):
             if s_type in self._task.args:
                 value = ensure_type(self._task.args[s_type], 'string')
                 if value is not None and not isinstance(value, string_types):
-                    raise AnsibleActionFail("%s is expected to be a string, but got %s instead" % (s_type, type(value)))
+                    raise AssibleActionFail("%s is expected to be a string, but got %s instead" % (s_type, type(value)))
                 self._task.args[s_type] = value
 
         # booleans
@@ -50,7 +50,7 @@ class ActionModule(ActionBase):
             trim_blocks = boolean(self._task.args.get('trim_blocks', True), strict=False)
             lstrip_blocks = boolean(self._task.args.get('lstrip_blocks', False), strict=False)
         except TypeError as e:
-            raise AnsibleActionFail(to_native(e))
+            raise AssibleActionFail(to_native(e))
 
         # assign to local vars for ease of use
         source = self._task.args.get('src', None)
@@ -68,12 +68,12 @@ class ActionModule(ActionBase):
             try:
                 import jinja2.defaults
             except ImportError:
-                raise AnsibleError('Unable to import Jinja2 defaults for determining Jinja2 features.')
+                raise AssibleError('Unable to import Jinja2 defaults for determining Jinja2 features.')
 
             try:
                 jinja2.defaults.LSTRIP_BLOCKS
             except AttributeError:
-                raise AnsibleError("Option `lstrip_blocks' is only available in Jinja2 versions >=2.7")
+                raise AssibleError("Option `lstrip_blocks' is only available in Jinja2 versions >=2.7")
 
         wrong_sequences = ["\\n", "\\r", "\\r\\n"]
         allowed_sequences = ["\n", "\r", "\r\n"]
@@ -85,16 +85,16 @@ class ActionModule(ActionBase):
         try:
             # logical validation
             if state is not None:
-                raise AnsibleActionFail("'state' cannot be specified on a template")
+                raise AssibleActionFail("'state' cannot be specified on a template")
             elif source is None or dest is None:
-                raise AnsibleActionFail("src and dest are required")
+                raise AssibleActionFail("src and dest are required")
             elif newline_sequence not in allowed_sequences:
-                raise AnsibleActionFail("newline_sequence needs to be one of: \n, \r or \r\n")
+                raise AssibleActionFail("newline_sequence needs to be one of: \n, \r or \r\n")
             else:
                 try:
                     source = self._find_needle('templates', source)
-                except AnsibleError as e:
-                    raise AnsibleActionFail(to_text(e))
+                except AssibleError as e:
+                    raise AssibleActionFail(to_text(e))
 
             mode = self._task.args.get('mode', None)
             if mode == 'preserve':
@@ -103,8 +103,8 @@ class ActionModule(ActionBase):
             # Get vault decrypted tmp file
             try:
                 tmp_source = self._loader.get_real_file(source)
-            except AnsibleFileNotFound as e:
-                raise AnsibleActionFail("could not find src=%s, %s" % (source, to_text(e)))
+            except AssibleFileNotFound as e:
+                raise AssibleActionFail("could not find src=%s, %s" % (source, to_text(e)))
             b_tmp_source = to_bytes(tmp_source, errors='surrogate_or_strict')
 
             # template the source data locally & get ready to transfer
@@ -113,10 +113,10 @@ class ActionModule(ActionBase):
                     try:
                         template_data = to_text(f.read(), errors='surrogate_or_strict')
                     except UnicodeError:
-                        raise AnsibleActionFail("Template source files must be utf-8 encoded")
+                        raise AssibleActionFail("Template source files must be utf-8 encoded")
 
                 # set jinja2 internal search path for includes
-                searchpath = task_vars.get('ansible_search_path', [])
+                searchpath = task_vars.get('assible_search_path', [])
                 searchpath.extend([self._loader._basedir, os.path.dirname(source)])
 
                 # We want to search into the 'templates' subdir of each search path in
@@ -127,13 +127,13 @@ class ActionModule(ActionBase):
                     newsearchpath.append(p)
                 searchpath = newsearchpath
 
-                # add ansible 'template' vars
+                # add assible 'template' vars
                 temp_vars = task_vars.copy()
-                temp_vars.update(generate_ansible_template_vars(source, dest))
+                temp_vars.update(generate_assible_template_vars(source, dest))
 
-                # force templar to use AnsibleEnvironment to prevent issues with native types
-                # https://github.com/ansible/ansible/issues/46169
-                templar = self._templar.copy_with_new_env(environment_class=AnsibleEnvironment,
+                # force templar to use AssibleEnvironment to prevent issues with native types
+                # https://github.com/assible/assible/issues/46169
+                templar = self._templar.copy_with_new_env(environment_class=AssibleEnvironment,
                                                           searchpath=searchpath,
                                                           newline_sequence=newline_sequence,
                                                           block_start_string=block_start_string,
@@ -144,10 +144,10 @@ class ActionModule(ActionBase):
                                                           lstrip_blocks=lstrip_blocks,
                                                           available_variables=temp_vars)
                 resultant = templar.do_template(template_data, preserve_trailing_newlines=True, escape_backslashes=False)
-            except AnsibleAction:
+            except AssibleAction:
                 raise
             except Exception as e:
-                raise AnsibleActionFail("%s: %s" % (type(e).__name__, to_text(e)))
+                raise AssibleActionFail("%s: %s" % (type(e).__name__, to_text(e)))
             finally:
                 self._loader.cleanup_tmp_file(b_tmp_source)
 
@@ -175,8 +175,8 @@ class ActionModule(ActionBase):
                         follow=follow,
                     ),
                 )
-                # call with ansible.legacy prefix to eliminate collisions with collections while still allowing local override
-                copy_action = self._shared_loader_obj.action_loader.get('ansible.legacy.copy',
+                # call with assible.legacy prefix to eliminate collisions with collections while still allowing local override
+                copy_action = self._shared_loader_obj.action_loader.get('assible.legacy.copy',
                                                                         task=new_task,
                                                                         connection=self._connection,
                                                                         play_context=self._play_context,
@@ -187,7 +187,7 @@ class ActionModule(ActionBase):
             finally:
                 shutil.rmtree(to_bytes(local_tempdir, errors='surrogate_or_strict'))
 
-        except AnsibleAction as e:
+        except AssibleAction as e:
             result.update(e.result)
         finally:
             self._remove_tmp_path(self._connection._shell.tmpdir)

@@ -4,7 +4,7 @@ __metaclass__ = type
 
 from units.compat import unittest
 
-from ansible.modules.yum import YumModule
+from assible.modules.yum import YumModule
 
 
 yum_plugin_load_error = """
@@ -16,7 +16,7 @@ Plugin "search-disabled-repos" can't be imported
 Plugin "subscription-manager" can't be imported
 """
 
-# from https://github.com/ansible/ansible/issues/20608#issuecomment-276106505
+# from https://github.com/assible/assible/issues/20608#issuecomment-276106505
 wrapped_output_1 = """
 Загружены модули: fastestmirror
 Loading mirror speeds from cached hostfile
@@ -27,7 +27,7 @@ Loading mirror speeds from cached hostfile
 vms-agent.x86_64                            0.0-9                            dev
 """
 
-# from https://github.com/ansible/ansible/issues/20608#issuecomment-276971275
+# from https://github.com/assible/assible/issues/20608#issuecomment-276971275
 wrapped_output_2 = """
 Загружены модули: fastestmirror
 Loading mirror speeds from cached hostfile
@@ -41,7 +41,7 @@ empty-empty-empty-empty-empty-empty-empty-empty-empty-empty-empty-empty-empty-em
 libtiff.x86_64                      4.0.3-27.el7_3                       updates
 """
 
-# From https://github.com/ansible/ansible/issues/20608#issuecomment-276698431
+# From https://github.com/assible/assible/issues/20608#issuecomment-276698431
 wrapped_output_3 = """
 Loaded plugins: fastestmirror, langpacks
 Loading mirror speeds from cached hostfile
@@ -63,7 +63,7 @@ python-rados.x86_64                       1:11.2.0-0.el7                    ceph
 python-rbd.x86_64                         1:11.2.0-0.el7                    ceph
 """
 
-# from https://github.com/ansible/ansible-modules-core/issues/4318#issuecomment-251416661
+# from https://github.com/assible/assible-modules-core/issues/4318#issuecomment-251416661
 wrapped_output_4 = """
 ipxe-roms-qemu.noarch                 20160127-1.git6366fa7a.el7
                                                             rhelosp-9.0-director-puddle

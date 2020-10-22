@@ -3,7 +3,7 @@
 Windows Remote Management
 =========================
 Unlike Linux/Unix hosts, which use SSH by default, Windows hosts are
-configured with WinRM. This topic covers how to configure and use WinRM with Ansible.
+configured with WinRM. This topic covers how to configure and use WinRM with Assible.
 
 .. contents:: Topics
    :local:
@@ -14,23 +14,23 @@ WinRM is a management protocol used by Windows to remotely communicate with
 another server. It is a SOAP-based protocol that communicates over HTTP/HTTPS, and is
 included in all recent Windows operating systems. Since Windows
 Server 2012, WinRM has been enabled by default, but in most cases extra
-configuration is required to use WinRM with Ansible.
+configuration is required to use WinRM with Assible.
 
-Ansible uses the `pywinrm <https://github.com/diyan/pywinrm>`_ package to
+Assible uses the `pywinrm <https://github.com/diyan/pywinrm>`_ package to
 communicate with Windows servers over WinRM. It is not installed by default
-with the Ansible package, but can be installed by running the following:
+with the Assible package, but can be installed by running the following:
 
 .. code-block:: shell
 
    pip install "pywinrm>=0.3.0"
 
 .. Note:: on distributions with multiple python versions, use pip2 or pip2.x,
-    where x matches the python minor version Ansible is running under.
+    where x matches the python minor version Assible is running under.
 
 .. Warning::
-     Using the ``winrm`` or ``psrp`` connection plugins in Ansible on MacOS in
+     Using the ``winrm`` or ``psrp`` connection plugins in Assible on MacOS in
      the latest releases typically fail. This is a known problem that occurs
-     deep within the Python stack and cannot be changed by Ansible. The only
+     deep within the Python stack and cannot be changed by Assible. The only
      workaround today is to set the environment variable ``no_proxy=*`` and
      avoid using Kerberos auth.
 
@@ -39,7 +39,7 @@ Authentication Options
 ``````````````````````
 When connecting to a Windows host, there are several different options that can be used
 when authenticating with an account. The authentication type may be set on inventory
-hosts or groups with the ``ansible_winrm_transport`` variable.
+hosts or groups with the ``assible_winrm_transport`` variable.
 
 The following matrix is a high level overview of the options:
 
@@ -68,10 +68,10 @@ The following example shows host vars configured for basic authentication:
 
 .. code-block:: yaml+jinja
 
-    ansible_user: LocalUsername
-    ansible_password: Password
-    ansible_connection: winrm
-    ansible_winrm_transport: basic
+    assible_user: LocalUsername
+    assible_password: Password
+    assible_connection: winrm
+    assible_winrm_transport: basic
 
 Basic authentication is not enabled by default on a Windows host but can be
 enabled by running the following in PowerShell::
@@ -87,10 +87,10 @@ The following example shows host vars configured for certificate authentication:
 
 .. code-block:: yaml+jinja
 
-    ansible_connection: winrm
-    ansible_winrm_cert_pem: /path/to/certificate/public/key.pem
-    ansible_winrm_cert_key_pem: /path/to/certificate/private/key.pem
-    ansible_winrm_transport: certificate
+    assible_connection: winrm
+    assible_winrm_cert_pem: /path/to/certificate/public/key.pem
+    assible_winrm_cert_key_pem: /path/to/certificate/private/key.pem
+    assible_winrm_transport: certificate
 
 Certificate authentication is not enabled by default on a Windows host but can
 be enabled by running the following in PowerShell::
@@ -98,7 +98,7 @@ be enabled by running the following in PowerShell::
     Set-Item -Path WSMan:\localhost\Service\Auth\Certificate -Value $true
 
 .. Note:: Encrypted private keys cannot be used as the urllib3 library that
-    is used by Ansible for WinRM does not support this functionality.
+    is used by Assible for WinRM does not support this functionality.
 
 Generate a Certificate
 ++++++++++++++++++++++
@@ -116,7 +116,7 @@ see the `Active Directory Certificate Services documentation <https://docs.micro
 .. Note:: Using the PowerShell cmdlet ``New-SelfSignedCertificate`` to generate
     a certificate for authentication only works when being generated from a
     Windows 10 or Windows Server 2012 R2 host or later. OpenSSL is still required to
-    extract the private key from the PFX certificate to a PEM file for Ansible
+    extract the private key from the PFX certificate to a PEM file for Assible
     to use.
 
 To generate a certificate with ``OpenSSL``:
@@ -233,8 +233,8 @@ Once the certificate has been imported, map it to the local user account::
         -Force
 
 
-Once this is complete, the hostvar ``ansible_winrm_cert_pem`` should be set to
-the path of the public key and the ``ansible_winrm_cert_key_pem`` variable should be set to
+Once this is complete, the hostvar ``assible_winrm_cert_pem`` should be set to
+the path of the public key and the ``assible_winrm_cert_key_pem`` variable should be set to
 the path of the private key.
 
 NTLM
@@ -259,10 +259,10 @@ This example shows host variables configured to use NTLM authentication:
 
 .. code-block:: yaml+jinja
 
-    ansible_user: LocalUsername
-    ansible_password: Password
-    ansible_connection: winrm
-    ansible_winrm_transport: ntlm
+    assible_user: LocalUsername
+    assible_password: Password
+    assible_connection: winrm
+    assible_winrm_transport: ntlm
 
 Kerberos
 --------
@@ -271,30 +271,30 @@ domain environment. Kerberos supports features like credential delegation and
 message encryption over HTTP and is one of the more secure options that
 is available through WinRM.
 
-Kerberos requires some additional setup work on the Ansible host before it can be
+Kerberos requires some additional setup work on the Assible host before it can be
 used properly.
 
 The following example shows host vars configured for Kerberos authentication:
 
 .. code-block:: yaml+jinja
 
-    ansible_user: username@MY.DOMAIN.COM
-    ansible_password: Password
-    ansible_connection: winrm
-    ansible_winrm_transport: kerberos
+    assible_user: username@MY.DOMAIN.COM
+    assible_password: Password
+    assible_connection: winrm
+    assible_winrm_transport: kerberos
 
-As of Ansible version 2.3, the Kerberos ticket will be created based on
-``ansible_user`` and ``ansible_password``. If running on an older version of
-Ansible or when ``ansible_winrm_kinit_mode`` is ``manual``, a Kerberos
+As of Assible version 2.3, the Kerberos ticket will be created based on
+``assible_user`` and ``assible_password``. If running on an older version of
+Assible or when ``assible_winrm_kinit_mode`` is ``manual``, a Kerberos
 ticket must already be obtained. See below for more details.
 
 There are some extra host variables that can be set::
 
-    ansible_winrm_kinit_mode: managed/manual (manual means Ansible will not obtain a ticket)
-    ansible_winrm_kinit_cmd: the kinit binary to use to obtain a Kerberos ticket (default to kinit)
-    ansible_winrm_service: overrides the SPN prefix that is used, the default is ``HTTP`` and should rarely ever need changing
-    ansible_winrm_kerberos_delegation: allows the credentials to traverse multiple hops
-    ansible_winrm_kerberos_hostname_override: the hostname to be used for the kerberos exchange
+    assible_winrm_kinit_mode: managed/manual (manual means Assible will not obtain a ticket)
+    assible_winrm_kinit_cmd: the kinit binary to use to obtain a Kerberos ticket (default to kinit)
+    assible_winrm_service: overrides the SPN prefix that is used, the default is ``HTTP`` and should rarely ever need changing
+    assible_winrm_kerberos_delegation: allows the credentials to traverse multiple hops
+    assible_winrm_kerberos_hostname_override: the hostname to be used for the kerberos exchange
 
 Installing the Kerberos Library
 +++++++++++++++++++++++++++++++
@@ -333,7 +333,7 @@ be install using ``pip``:
 
 
 .. note::
-     While Ansible has supported Kerberos auth through ``pywinrm`` for some
+     While Assible has supported Kerberos auth through ``pywinrm`` for some
      time, optional features or more secure options may only be available in
      newer versions of the ``pywinrm`` and/or ``pykerberos`` libraries. It is
      recommended you upgrade each version to the latest available to resolve
@@ -372,7 +372,7 @@ In the section that starts with:
 
     [domain_realm]
 
-Add a line like the following for each domain that Ansible needs access for:
+Add a line like the following for each domain that Assible needs access for:
 
 .. code-block:: ini
 
@@ -385,19 +385,19 @@ for more details.
 
 Automatic Kerberos Ticket Management
 ++++++++++++++++++++++++++++++++++++
-Ansible version 2.3 and later defaults to automatically managing Kerberos tickets
-when both ``ansible_user`` and ``ansible_password`` are specified for a host. In
+Assible version 2.3 and later defaults to automatically managing Kerberos tickets
+when both ``assible_user`` and ``assible_password`` are specified for a host. In
 this process, a new ticket is created in a temporary credential cache for each
 host. This is done before each task executes to minimize the chance of ticket
 expiration. The temporary credential caches are deleted after each task
 completes and will not interfere with the default credential cache.
 
-To disable automatic ticket management, set ``ansible_winrm_kinit_mode=manual``
+To disable automatic ticket management, set ``assible_winrm_kinit_mode=manual``
 via the inventory.
 
 Automatic ticket management requires a standard ``kinit`` binary on the control
 host system path. To specify a different location or binary name, set the
-``ansible_winrm_kinit_cmd`` hostvar to the fully qualified path to a MIT krbv5
+``assible_winrm_kinit_cmd`` hostvar to the fully qualified path to a MIT krbv5
 ``kinit``-compatible binary.
 
 Manual Kerberos Ticket Management
@@ -435,7 +435,7 @@ work. To troubleshoot Kerberos issues, ensure that:
   with ``nslookup``. The same name should be returned when using ``nslookup``
   on the IP address.
 
-* The Ansible host's clock is synchronized with the domain controller. Kerberos
+* The Assible host's clock is synchronized with the domain controller. Kerberos
   is time sensitive, and a little clock drift can cause the ticket generation
   process to fail.
 
@@ -469,14 +469,14 @@ To use CredSSP authentication, the host vars are configured like so:
 
 .. code-block:: yaml+jinja
 
-    ansible_user: Username
-    ansible_password: Password
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
+    assible_user: Username
+    assible_password: Password
+    assible_connection: winrm
+    assible_winrm_transport: credssp
 
 There are some extra host variables that can be set as shown below::
 
-    ansible_winrm_credssp_disable_tlsv1_2: when true, will not use TLS 1.2 in the CredSSP auth process
+    assible_winrm_credssp_disable_tlsv1_2: when true, will not use TLS 1.2 in the CredSSP auth process
 
 CredSSP authentication is not enabled by default on a Windows host, but can
 be enabled by running the following in PowerShell:
@@ -505,7 +505,7 @@ There are two ways that older hosts can be used with CredSSP:
 * Install and enable a hotfix to enable TLS 1.2 support (recommended
   for Server 2008 R2 and Windows 7).
 
-* Set ``ansible_winrm_credssp_disable_tlsv1_2=True`` in the inventory to run
+* Set ``assible_winrm_credssp_disable_tlsv1_2=True`` in the inventory to run
   over TLS 1.0. This is the only option when connecting to Windows Server 2008, which
   has no way of supporting TLS 1.2
 
@@ -554,7 +554,7 @@ The WinRM protocol considers the channel to be encrypted if using TLS over HTTP
 recommended option as it works with all authentication options, but requires
 a certificate to be created and used on the WinRM listener.
 
-The ``ConfigureRemotingForAnsible.ps1`` creates a self-signed certificate and
+The ``ConfigureRemotingForAssible.ps1`` creates a self-signed certificate and
 creates the listener with that certificate. If in a domain environment, ADCS
 can also create a certificate for the host that is issued by the domain itself.
 
@@ -563,14 +563,14 @@ option is ``NTLM``, ``Kerberos`` or ``CredSSP``. These protocols will encrypt
 the WinRM payload with their own encryption method before sending it to the
 server. The message-level encryption is not used when running over HTTPS because the
 encryption uses the more secure TLS protocol instead. If both transport and
-message encryption is required, set ``ansible_winrm_message_encryption=always``
+message encryption is required, set ``assible_winrm_message_encryption=always``
 in the host vars.
 
 .. Note:: Message encryption over HTTP requires pywinrm>=0.3.0.
 
 A last resort is to disable the encryption requirement on the Windows host. This
 should only be used for development and debugging purposes, as anything sent
-from Ansible can be viewed, manipulated and also the remote session can completely
+from Assible can be viewed, manipulated and also the remote session can completely
 be taken over by anyone on the same network. To disable the encryption
 requirement::
 
@@ -582,7 +582,7 @@ requirement::
 
 Inventory Options
 `````````````````
-Ansible's Windows support relies on a few standard variables to indicate the
+Assible's Windows support relies on a few standard variables to indicate the
 username, password, and connection type of the remote hosts. These variables
 are most easily set up in the inventory, but can be set on the ``host_vars``/
 ``group_vars`` level.
@@ -591,96 +591,96 @@ When setting up the inventory, the following variables are required:
 
 .. code-block:: yaml+jinja
 
-    # It is suggested that these be encrypted with ansible-vault:
-    # ansible-vault edit group_vars/windows.yml
-    ansible_connection: winrm
+    # It is suggested that these be encrypted with assible-vault:
+    # assible-vault edit group_vars/windows.yml
+    assible_connection: winrm
 
     # May also be passed on the command-line via --user
-    ansible_user: Administrator
+    assible_user: Administrator
 
     # May also be supplied at runtime with --ask-pass
-    ansible_password: SecretPasswordGoesHere
+    assible_password: SecretPasswordGoesHere
 
 
-Using the variables above, Ansible will connect to the Windows host with Basic
-authentication through HTTPS. If ``ansible_user`` has a UPN value like
+Using the variables above, Assible will connect to the Windows host with Basic
+authentication through HTTPS. If ``assible_user`` has a UPN value like
 ``username@MY.DOMAIN.COM`` then the authentication option will automatically attempt
-to use Kerberos unless ``ansible_winrm_transport`` has been set to something other than
+to use Kerberos unless ``assible_winrm_transport`` has been set to something other than
 ``kerberos``.
 
 The following custom inventory variables are also supported
 for additional configuration of WinRM connections:
 
-* ``ansible_port``: The port WinRM will run over, HTTPS is ``5986`` which is
+* ``assible_port``: The port WinRM will run over, HTTPS is ``5986`` which is
   the default while HTTP is ``5985``
 
-* ``ansible_winrm_scheme``: Specify the connection scheme (``http`` or
-  ``https``) to use for the WinRM connection. Ansible uses ``https`` by default
-  unless ``ansible_port`` is ``5985``
+* ``assible_winrm_scheme``: Specify the connection scheme (``http`` or
+  ``https``) to use for the WinRM connection. Assible uses ``https`` by default
+  unless ``assible_port`` is ``5985``
 
-* ``ansible_winrm_path``: Specify an alternate path to the WinRM endpoint,
-  Ansible uses ``/wsman`` by default
+* ``assible_winrm_path``: Specify an alternate path to the WinRM endpoint,
+  Assible uses ``/wsman`` by default
 
-* ``ansible_winrm_realm``: Specify the realm to use for Kerberos
-  authentication. If ``ansible_user`` contains ``@``, Ansible will use the part
+* ``assible_winrm_realm``: Specify the realm to use for Kerberos
+  authentication. If ``assible_user`` contains ``@``, Assible will use the part
   of the username after ``@`` by default
 
-* ``ansible_winrm_transport``: Specify one or more authentication transport
-  options as a comma-separated list. By default, Ansible will use ``kerberos,
+* ``assible_winrm_transport``: Specify one or more authentication transport
+  options as a comma-separated list. By default, Assible will use ``kerberos,
   basic`` if the ``kerberos`` module is installed and a realm is defined,
   otherwise it will be ``plaintext``
 
-* ``ansible_winrm_server_cert_validation``: Specify the server certificate
-  validation mode (``ignore`` or ``validate``). Ansible defaults to
+* ``assible_winrm_server_cert_validation``: Specify the server certificate
+  validation mode (``ignore`` or ``validate``). Assible defaults to
   ``validate`` on Python 2.7.9 and higher, which will result in certificate
   validation errors against the Windows self-signed certificates. Unless
   verifiable certificates have been configured on the WinRM listeners, this
   should be set to ``ignore``
 
-* ``ansible_winrm_operation_timeout_sec``: Increase the default timeout for
-  WinRM operations, Ansible uses ``20`` by default
+* ``assible_winrm_operation_timeout_sec``: Increase the default timeout for
+  WinRM operations, Assible uses ``20`` by default
 
-* ``ansible_winrm_read_timeout_sec``: Increase the WinRM read timeout, Ansible
+* ``assible_winrm_read_timeout_sec``: Increase the WinRM read timeout, Assible
   uses ``30`` by default. Useful if there are intermittent network issues and
   read timeout errors keep occurring
 
-* ``ansible_winrm_message_encryption``: Specify the message encryption
-  operation (``auto``, ``always``, ``never``) to use, Ansible uses ``auto`` by
+* ``assible_winrm_message_encryption``: Specify the message encryption
+  operation (``auto``, ``always``, ``never``) to use, Assible uses ``auto`` by
   default. ``auto`` means message encryption is only used when
-  ``ansible_winrm_scheme`` is ``http`` and ``ansible_winrm_transport`` supports
+  ``assible_winrm_scheme`` is ``http`` and ``assible_winrm_transport`` supports
   message encryption. ``always`` means message encryption will always be used
   and ``never`` means message encryption will never be used
 
-* ``ansible_winrm_ca_trust_path``: Used to specify a different cacert container
+* ``assible_winrm_ca_trust_path``: Used to specify a different cacert container
   than the one used in the ``certifi`` module. See the HTTPS Certificate
   Validation section for more details.
 
-* ``ansible_winrm_send_cbt``: When using ``ntlm`` or ``kerberos`` over HTTPS,
+* ``assible_winrm_send_cbt``: When using ``ntlm`` or ``kerberos`` over HTTPS,
   the authentication library will try to send channel binding tokens to
   mitigate against man in the middle attacks. This flag controls whether these
   bindings will be sent or not (default: ``yes``).
 
-* ``ansible_winrm_*``: Any additional keyword arguments supported by
+* ``assible_winrm_*``: Any additional keyword arguments supported by
   ``winrm.Protocol`` may be provided in place of ``*``
 
 In addition, there are also specific variables that need to be set
 for each authentication option. See the section on authentication above for more information.
 
-.. Note:: Ansible 2.0 has deprecated the "ssh" from ``ansible_ssh_user``,
-    ``ansible_ssh_pass``, ``ansible_ssh_host``, and ``ansible_ssh_port`` to
-    become ``ansible_user``, ``ansible_password``, ``ansible_host``, and
-    ``ansible_port``. If using a version of Ansible prior to 2.0, the older
-    style (``ansible_ssh_*``) should be used instead. The shorter variables
-    are ignored, without warning, in older versions of Ansible.
+.. Note:: Assible 2.0 has deprecated the "ssh" from ``assible_ssh_user``,
+    ``assible_ssh_pass``, ``assible_ssh_host``, and ``assible_ssh_port`` to
+    become ``assible_user``, ``assible_password``, ``assible_host``, and
+    ``assible_port``. If using a version of Assible prior to 2.0, the older
+    style (``assible_ssh_*``) should be used instead. The shorter variables
+    are ignored, without warning, in older versions of Assible.
 
-.. Note:: ``ansible_winrm_message_encryption`` is different from transport
+.. Note:: ``assible_winrm_message_encryption`` is different from transport
     encryption done over TLS. The WinRM payload is still encrypted with TLS
-    when run over HTTPS, even if ``ansible_winrm_message_encryption=never``.
+    when run over HTTPS, even if ``assible_winrm_message_encryption=never``.
 
 IPv6 Addresses
 ``````````````
 IPv6 addresses can be used instead of IPv4 addresses or hostnames. This option
-is normally set in an inventory. Ansible will attempt to parse the address
+is normally set in an inventory. Assible will attempt to parse the address
 using the `ipaddress <https://docs.python.org/3/library/ipaddress.html>`_
 package and pass to pywinrm correctly.
 
@@ -693,9 +693,9 @@ would an IPv4 address or hostname:
     2001:db8::1
 
     [windows-server:vars]
-    ansible_user=username
-    ansible_password=password
-    ansible_connection=winrm
+    assible_user=username
+    assible_password=password
+    assible_connection=winrm
 
 
 .. Note:: The ipaddress library is only included by default in Python 3.x. To
@@ -707,7 +707,7 @@ HTTPS Certificate Validation
 As part of the TLS protocol, the certificate is validated to ensure the host
 matches the subject and the client trusts the issuer of the server certificate.
 When using a self-signed certificate or setting
-``ansible_winrm_server_cert_validation: ignore`` these security mechanisms are
+``assible_winrm_server_cert_validation: ignore`` these security mechanisms are
 bypassed. While self signed certificates will always need the ``ignore`` flag,
 certificates that have been issued from a certificate authority can still be
 validated.
@@ -716,17 +716,17 @@ One of the more common ways of setting up a HTTPS listener in a domain
 environment is to use Active Directory Certificate Service (AD CS). AD CS is
 used to generate signed certificates from a Certificate Signing Request (CSR).
 If the WinRM HTTPS listener is using a certificate that has been signed by
-another authority, like AD CS, then Ansible can be set up to trust that
+another authority, like AD CS, then Assible can be set up to trust that
 issuer as part of the TLS handshake.
 
-To get Ansible to trust a Certificate Authority (CA) like AD CS, the issuer
+To get Assible to trust a Certificate Authority (CA) like AD CS, the issuer
 certificate of the CA can be exported as a PEM encoded certificate. This
-certificate can then be copied locally to the Ansible controller and used as a
+certificate can then be copied locally to the Assible controller and used as a
 source of certificate validation, otherwise known as a CA chain.
 
 The CA chain can contain a single or multiple issuer certificates and each
 entry is contained on a new line. To then use the custom CA chain as part of
-the validation process, set ``ansible_winrm_ca_trust_path`` to the path of the
+the validation process, set ``assible_winrm_ca_trust_path`` to the path of the
 file. If this variable is not set, the default CA chain is used instead which
 is located in the install path of the Python package
 `certifi <https://github.com/certifi/python-certifi>`_.
@@ -743,13 +743,13 @@ TLS 1.2 Support
 As WinRM runs over the HTTP protocol, using HTTPS means that the TLS protocol
 is used to encrypt the WinRM messages. TLS will automatically attempt to
 negotiate the best protocol and cipher suite that is available to both the
-client and the server. If a match cannot be found then Ansible will error out
+client and the server. If a match cannot be found then Assible will error out
 with a message similar to::
 
     HTTPSConnectionPool(host='server', port=5986): Max retries exceeded with url: /wsman (Caused by SSLError(SSLError(1, '[SSL: UNSUPPORTED_PROTOCOL] unsupported protocol (_ssl.c:1056)')))
 
 Commonly this is when the Windows host has not been configured to support
-TLS v1.2 but it could also mean the Ansible controller has an older OpenSSL
+TLS v1.2 but it could also mean the Assible controller has an older OpenSSL
 version installed.
 
 Windows 8 and Windows Server 2012 come with TLS v1.2 installed and enabled by
@@ -757,12 +757,12 @@ default but older hosts, like Server 2008 R2 and Windows 7, have to be enabled
 manually.
 
 .. Note:: There is a bug with the TLS 1.2 patch for Server 2008 which will stop
-    Ansible from connecting to the Windows host. This means that Server 2008
+    Assible from connecting to the Windows host. This means that Server 2008
     cannot be configured to use TLS 1.2. Server 2008 R2 and Windows 7 are not
     affected by this issue and can use TLS 1.2.
 
 To verify what protocol the Windows host supports, you can run the following
-command on the Ansible controller::
+command on the Assible controller::
 
     openssl s_client -connect <hostname>:5986
 
@@ -827,7 +827,7 @@ script:
 
     Restart-Computer
 
-The below Ansible tasks can also be used to enable TLS v1.2:
+The below Assible tasks can also be used to enable TLS v1.2:
 
 .. code-block:: yaml+jinja
 
@@ -865,7 +865,7 @@ from Nartac Software.
 Limitations
 ```````````
 Due to the design of the WinRM protocol , there are a few limitations
-when using WinRM that can cause issues when creating playbooks for Ansible.
+when using WinRM that can cause issues when creating playbooks for Assible.
 These include:
 
 * Credentials are not delegated for most authentication types, which causes
@@ -885,8 +885,8 @@ These include:
 
 Some of these limitations can be mitigated by doing one of the following:
 
-* Set ``ansible_winrm_transport`` to ``credssp`` or ``kerberos`` (with
-  ``ansible_winrm_kerberos_delegation=true``) to bypass the double hop issue
+* Set ``assible_winrm_transport`` to ``credssp`` or ``kerberos`` (with
+  ``assible_winrm_kerberos_delegation=true``) to bypass the double hop issue
   and access network resources
 
 * Use ``become`` to bypass all WinRM restrictions and run a command as it would
@@ -907,7 +907,7 @@ Some of these limitations can be mitigated by doing one of the following:
        Tips and tricks for playbooks
    :ref:`List of Windows Modules <windows_modules>`
        Windows specific module list, all implemented in PowerShell
-   `User Mailing List <https://groups.google.com/group/ansible-project>`_
+   `User Mailing List <https://groups.google.com/group/assible-project>`_
        Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

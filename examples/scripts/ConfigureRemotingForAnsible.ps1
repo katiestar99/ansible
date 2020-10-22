@@ -1,10 +1,10 @@
 #Requires -Version 3.0
 
-# Configure a Windows host for remote management with Ansible
+# Configure a Windows host for remote management with Assible
 # -----------------------------------------------------------
 #
 # This script checks the current WinRM (PS Remoting) configuration and makes
-# the necessary changes to allow Ansible to connect, authenticate and
+# the necessary changes to allow Assible to connect, authenticate and
 # execute PowerShell commands.
 #
 # All events are logged to the Windows EventLog, useful for unattended runs.
@@ -32,7 +32,7 @@
 # defaults to the system's hostname and generally should not be specified.
 
 # Written by Trond Hindenes <trond@hindenes.com>
-# Updated by Chris Church <cchurch@ansible.com>
+# Updated by Chris Church <cchurch@assible.com>
 # Updated by Michael Crilly <mike@autologic.cm>
 # Updated by Anton Ouzounov <Anton.Ouzounov@careerbuilder.com>
 # Updated by Nicolas Simond <contact@nicolas-simond.com>
@@ -295,7 +295,7 @@ Else
 }
 
 # Ensure LocalAccountTokenFilterPolicy is set to 1
-# https://github.com/ansible/ansible/issues/42978
+# https://github.com/assible/assible/issues/42978
 $token_path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 $token_prop_name = "LocalAccountTokenFilterPolicy"
 $token_key = Get-Item -Path $token_path
@@ -450,4 +450,4 @@ Else
     Write-Log "Unable to establish an HTTP or HTTPS remoting session."
     Throw "Unable to establish an HTTP or HTTPS remoting session."
 }
-Write-VerboseLog "PS Remoting has been successfully configured for Ansible."
+Write-VerboseLog "PS Remoting has been successfully configured for Assible."

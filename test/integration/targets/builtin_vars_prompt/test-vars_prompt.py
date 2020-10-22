@@ -7,7 +7,7 @@ import os
 import pexpect
 import sys
 
-from ansible.module_utils.six import PY2
+from assible.module_utils.six import PY2
 
 if PY2:
     log_buffer = sys.stdout
@@ -15,9 +15,9 @@ else:
     log_buffer = sys.stdout.buffer
 
 env_vars = {
-    'ANSIBLE_ROLES_PATH': './roles',
-    'ANSIBLE_NOCOLOR': 'True',
-    'ANSIBLE_RETRY_FILES_ENABLED': 'False',
+    'ASSIBLE_ROLES_PATH': './roles',
+    'ASSIBLE_NOCOLOR': 'True',
+    'ASSIBLE_RETRY_FILES_ENABLED': 'False',
 }
 
 
@@ -31,7 +31,7 @@ def run_test(playbook, test_spec, args=None, timeout=10, env=None):
         args = sys.argv[1:]
 
     vars_prompt_test = pexpect.spawn(
-        'ansible-playbook',
+        'assible-playbook',
         args=[playbook] + args,
         timeout=timeout,
         env=env,
@@ -100,14 +100,14 @@ tests = [
          r'"password": "\$6\$']},
 
     # Test variables in prompt field
-    # https://github.com/ansible/ansible/issues/32723
+    # https://github.com/assible/assible/issues/32723
     {'playbook': 'vars_prompt-6.yml',
      'test_spec': [
          [('prompt from variable:', 'input\r')],
          '']},
 
     # Test play vars coming from vars_prompt
-    # https://github.com/ansible/ansible/issues/37984
+    # https://github.com/assible/assible/issues/37984
     {'playbook': 'vars_prompt-7.yml',
      'test_spec': [
          [('prompting for host:', 'testhost\r')],

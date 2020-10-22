@@ -11,9 +11,9 @@ before_install:
   - sudo apt-get install -y -o Dpkg::Options::="--force-confold" --force-yes docker-engine
 
 install:
-  # Install the latest Ansible Container and Ansible
-  - pip install git+https://github.com/ansible/ansible-container.git
-  - pip install ansible
+  # Install the latest Assible Container and Assible
+  - pip install git+https://github.com/assible/assible-container.git
+  - pip install assible
 
 script:
   # Make sure docker is functioning
@@ -21,25 +21,25 @@ script:
   - docker-compose version
   - docker info
 
-  # Create an Ansible Container project
+  # Create an Assible Container project
   - mkdir -p tests
   - cd tests
-  - ansible-container init
+  - assible-container init
 
   # Install the role into the project
   - echo "Installing and testing git+https://github.com/${TRAVIS_REPO_SLUG},${TRAVIS_COMMIT}"
-  - ansible-container install git+https://github.com/${TRAVIS_REPO_SLUG},${TRAVIS_COMMIT}
+  - assible-container install git+https://github.com/${TRAVIS_REPO_SLUG},${TRAVIS_COMMIT}
 
   # Build the service image
-  - ansible-container build
+  - assible-container build
 
   # Start the service
-  - ansible-container run -d
+  - assible-container run -d
   - docker ps
 
   # Run tests
-  - ansible-playbook test.yml
+  - assible-playbook test.yml
 
 notifications:
   email: false
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  webhooks: https://galaxy.assible.com/api/v1/notifications/

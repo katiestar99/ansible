@@ -60,7 +60,7 @@ class Local(CIProvider):
         """Return a resource prefix specific to this CI provider."""
         node = re.sub(r'[^a-zA-Z0-9]+', '-', platform.node().split('.')[0]).lower()
 
-        prefix = 'ansible-test-%s-%d' % (node, random.randint(10000000, 99999999))
+        prefix = 'assible-test-%s-%d' % (node, random.randint(10000000, 99999999))
 
         return prefix
 
@@ -119,12 +119,12 @@ class Local(CIProvider):
         return sorted(names)
 
     def supports_core_ci_auth(self, context):  # type: (AuthContext) -> bool
-        """Return True if Ansible Core CI is supported."""
+        """Return True if Assible Core CI is supported."""
         path = self._get_aci_key_path(context)
         return os.path.exists(path)
 
     def prepare_core_ci_auth(self, context):  # type: (AuthContext) -> t.Dict[str, t.Any]
-        """Return authentication details for Ansible Core CI."""
+        """Return authentication details for Assible Core CI."""
         path = self._get_aci_key_path(context)
         auth_key = read_text_file(path).strip()
 
@@ -144,7 +144,7 @@ class Local(CIProvider):
         return None  # not yet implemented for local
 
     def _get_aci_key_path(self, context):  # type: (AuthContext) -> str
-        path = os.path.expanduser('~/.ansible-core-ci.key')
+        path = os.path.expanduser('~/.assible-core-ci.key')
 
         if context.region:
             path += '.%s' % context.region

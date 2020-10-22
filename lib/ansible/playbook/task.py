@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,24 +21,24 @@ __metaclass__ = type
 
 import os
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleParserError, AnsibleUndefinedVariable, AnsibleAssertionError
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import iteritems, string_types
-from ansible.parsing.mod_args import ModuleArgsParser
-from ansible.parsing.yaml.objects import AnsibleBaseYAMLObject, AnsibleMapping
-from ansible.plugins.loader import lookup_loader
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.base import Base
-from ansible.playbook.block import Block
-from ansible.playbook.collectionsearch import CollectionSearch
-from ansible.playbook.conditional import Conditional
-from ansible.playbook.loop_control import LoopControl
-from ansible.playbook.role import Role
-from ansible.playbook.taggable import Taggable
-from ansible.utils.collection_loader import AnsibleCollectionConfig
-from ansible.utils.display import Display
-from ansible.utils.sentinel import Sentinel
+from assible import constants as C
+from assible.errors import AssibleError, AssibleParserError, AssibleUndefinedVariable, AssibleAssertionError
+from assible.module_utils._text import to_native
+from assible.module_utils.six import iteritems, string_types
+from assible.parsing.mod_args import ModuleArgsParser
+from assible.parsing.yaml.objects import AssibleBaseYAMLObject, AssibleMapping
+from assible.plugins.loader import lookup_loader
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.base import Base
+from assible.playbook.block import Block
+from assible.playbook.collectionsearch import CollectionSearch
+from assible.playbook.conditional import Conditional
+from assible.playbook.loop_control import LoopControl
+from assible.playbook.role import Role
+from assible.playbook.taggable import Taggable
+from assible.utils.collection_loader import AssibleCollectionConfig
+from assible.utils.display import Display
+from assible.utils.sentinel import Sentinel
 
 __all__ = ['Task']
 
@@ -93,7 +93,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
 
         # This is a reference of all the candidate action names for transparent execution of module_defaults with redirected content
         # This isn't a FieldAttribute to prevent it from being set via the playbook
-        self._ansible_internal_redirect_list = []
+        self._assible_internal_redirect_list = []
 
         self._role = role
         self._parent = None
@@ -163,13 +163,13 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
 
         loop_name = k.replace("with_", "")
         if new_ds.get('loop') is not None or new_ds.get('loop_with') is not None:
-            raise AnsibleError("duplicate loop in task: %s" % loop_name, obj=ds)
+            raise AssibleError("duplicate loop in task: %s" % loop_name, obj=ds)
         if v is None:
-            raise AnsibleError("you must specify a value when using %s" % k, obj=ds)
+            raise AssibleError("you must specify a value when using %s" % k, obj=ds)
         new_ds['loop_with'] = loop_name
         new_ds['loop'] = v
         # display.deprecated("with_ type loops are being phased out, use the 'loop' keyword instead",
-        #                    version="2.10", collection_name='ansible.builtin')
+        #                    version="2.10", collection_name='assible.builtin')
 
     def preprocess_data(self, ds):
         '''
@@ -178,17 +178,17 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
         '''
 
         if not isinstance(ds, dict):
-            raise AnsibleAssertionError('ds (%s) should be a dict but was a %s' % (ds, type(ds)))
+            raise AssibleAssertionError('ds (%s) should be a dict but was a %s' % (ds, type(ds)))
 
         # the new, cleaned datastructure, which will have legacy
         # items reduced to a standard structure suitable for the
         # attributes of the task class
-        new_ds = AnsibleMapping()
-        if isinstance(ds, AnsibleBaseYAMLObject):
-            new_ds.ansible_pos = ds.ansible_pos
+        new_ds = AssibleMapping()
+        if isinstance(ds, AssibleBaseYAMLObject):
+            new_ds.assible_pos = ds.assible_pos
 
         # since this affects the task action parsing, we have to resolve in preprocess instead of in typical validator
-        default_collection = AnsibleCollectionConfig.default_collection
+        default_collection = AssibleCollectionConfig.default_collection
 
         collections_list = ds.get('collections')
         if collections_list is None:
@@ -206,8 +206,8 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
             else:
                 collections_list = [default_collection]
 
-        if collections_list and 'ansible.builtin' not in collections_list and 'ansible.legacy' not in collections_list:
-            collections_list.append('ansible.legacy')
+        if collections_list and 'assible.builtin' not in collections_list and 'assible.legacy' not in collections_list:
+            collections_list.append('assible.legacy')
 
         if collections_list:
             ds['collections'] = collections_list
@@ -218,15 +218,15 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
         args_parser = ModuleArgsParser(task_ds=ds, collection_list=collections_list)
         try:
             (action, args, delegate_to) = args_parser.parse()
-        except AnsibleParserError as e:
+        except AssibleParserError as e:
             # if the raises exception was created with obj=ds args, then it includes the detail
             # so we dont need to add it so we can just re raise.
             if e._obj:
                 raise
             # But if it wasn't, we can add the yaml object now to get more detail
-            raise AnsibleParserError(to_native(e), obj=ds, orig_exc=e)
+            raise AssibleParserError(to_native(e), obj=ds, orig_exc=e)
         else:
-            self._ansible_internal_redirect_list = args_parser.internal_redirect_list[:]
+            self._assible_internal_redirect_list = args_parser.internal_redirect_list[:]
 
         # the command/shell/script modules used to support the `cmd` arg,
         # which corresponds to what we now call _raw_params, so move that
@@ -234,7 +234,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
         if action in ('command', 'shell', 'script'):
             if 'cmd' in args:
                 if args.get('_raw_params', '') != '':
-                    raise AnsibleError("The 'cmd' argument cannot be used when other raw parameters are specified."
+                    raise AssibleError("The 'cmd' argument cannot be used when other raw parameters are specified."
                                        " Please put everything in one or the other place.", obj=ds)
                 args['_raw_params'] = args.pop('cmd')
 
@@ -265,9 +265,9 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
                 # as we will remove this at some point in the future.
                 if action in ('include',) and k not in self._valid_attrs and k not in self.DEPRECATED_ATTRIBUTES:
                     display.deprecated("Specifying include variables at the top-level of the task is deprecated."
-                                       " Please see:\nhttps://docs.ansible.com/ansible/playbooks_roles.html#task-include-files-and-encouraging-reuse\n\n"
+                                       " Please see:\nhttps://docs.assible.com/assible/playbooks_roles.html#task-include-files-and-encouraging-reuse\n\n"
                                        " for currently supported syntax regarding included files and variables",
-                                       version="2.12", collection_name='ansible.builtin')
+                                       version="2.12", collection_name='assible.builtin')
                     new_ds['vars'][k] = v
                 elif C.INVALID_TASK_ATTRIBUTE_FAILED or k in self._valid_attrs:
                     new_ds[k] = v
@@ -278,7 +278,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
 
     def _load_loop_control(self, attr, ds):
         if not isinstance(ds, dict):
-            raise AnsibleParserError(
+            raise AssibleParserError(
                 "the `loop_control` value must be specified as a dictionary and cannot "
                 "be a variable itself (though it can contain variables)",
                 obj=ds,
@@ -289,7 +289,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
     def _validate_attributes(self, ds):
         try:
             super(Task, self)._validate_attributes(ds)
-        except AnsibleParserError as e:
+        except AssibleParserError as e:
             e.message += '\nThis error can be suppressed as a warning using the "invalid_task_attribute_failed" configuration'
             raise e
 
@@ -302,7 +302,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
         if self._parent:
             self._parent.post_validate(templar)
 
-        if AnsibleCollectionConfig.default_collection:
+        if AssibleCollectionConfig.default_collection:
             pass
 
         super(Task, self).post_validate(templar)
@@ -325,9 +325,9 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
             def _parse_env_kv(k, v):
                 try:
                     env[k] = templar.template(v, convert_bare=False)
-                except AnsibleUndefinedVariable as e:
+                except AssibleUndefinedVariable as e:
                     error = to_native(e)
-                    if self.action in ('setup', 'gather_facts') and 'ansible_facts.env' in error or 'ansible_env' in error:
+                    if self.action in ('setup', 'gather_facts') and 'assible_facts.env' in error or 'assible_env' in error:
                         # ignore as fact gathering is required for 'env' facts
                         return
                     raise
@@ -402,7 +402,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
         new_me = super(Task, self).copy()
 
         # if the task has an associated list of candidate names, copy it to the new object too
-        new_me._ansible_internal_redirect_list = self._ansible_internal_redirect_list[:]
+        new_me._assible_internal_redirect_list = self._assible_internal_redirect_list[:]
 
         new_me._parent = None
         if self._parent and not exclude_parent:
@@ -427,8 +427,8 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
             if self._role:
                 data['role'] = self._role.serialize()
 
-            if self._ansible_internal_redirect_list:
-                data['_ansible_internal_redirect_list'] = self._ansible_internal_redirect_list[:]
+            if self._assible_internal_redirect_list:
+                data['_assible_internal_redirect_list'] = self._assible_internal_redirect_list[:]
 
             data['implicit'] = self.implicit
 
@@ -437,8 +437,8 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
     def deserialize(self, data):
 
         # import is here to avoid import loops
-        from ansible.playbook.task_include import TaskInclude
-        from ansible.playbook.handler_task_include import HandlerTaskInclude
+        from assible.playbook.task_include import TaskInclude
+        from assible.playbook.handler_task_include import HandlerTaskInclude
 
         parent_data = data.get('parent', None)
         if parent_data:
@@ -460,7 +460,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
             self._role = r
             del data['role']
 
-        self._ansible_internal_redirect_list = data.get('_ansible_internal_redirect_list', [])
+        self._assible_internal_redirect_list = data.get('_assible_internal_redirect_list', [])
 
         self.implicit = data.get('implicit', False)
 
@@ -542,7 +542,7 @@ class Task(Base, Conditional, Taggable, CollectionSearch):
         return True
 
     def get_first_parent_include(self):
-        from ansible.playbook.task_include import TaskInclude
+        from assible.playbook.task_include import TaskInclude
         if self._parent:
             if isinstance(self._parent, TaskInclude):
                 return self._parent

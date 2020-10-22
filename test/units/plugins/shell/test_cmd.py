@@ -3,7 +3,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.plugins.shell.cmd import ShellModule
+from assible.plugins.shell.cmd import ShellModule
 
 
 @pytest.mark.parametrize('s, expected', [

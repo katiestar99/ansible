@@ -3,7 +3,7 @@ __metaclass__ = type
 
 import pkg_resources
 
-from ansible.plugins.lookup import LookupBase
+from assible.plugins.lookup import LookupBase
 
 
 class LookupModule(LookupBase):

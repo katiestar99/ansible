@@ -1,5 +1,5 @@
-# (c) 2014, James Cammarata <jcammarata@ansible.com>
-# (c) 2019, Ansible Project
+# (c) 2014, James Cammarata <jcammarata@assible.com>
+# (c) 2019, Assible Project
 
 - hosts: testhost
   gather_facts: false

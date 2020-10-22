@@ -1,20 +1,20 @@
 # Role Name
 
-Adds a <SERVICE_NAME> service to your [Ansible Container](https://github.com/ansible/ansible-container) project. Run the following commands
+Adds a <SERVICE_NAME> service to your [Assible Container](https://github.com/assible/assible-container) project. Run the following commands
 to install the service:
 
 ```
-# Set the working directory to your Ansible Container project root
+# Set the working directory to your Assible Container project root
 $ cd myproject
 
 # Install the service
-$ ansible-container install <USERNAME.ROLE_NAME>
+$ assible-container install <USERNAME.ROLE_NAME>
 ```
 
 ## Requirements
 
-- [Ansible Container](https://github.com/ansible/ansible-container)
-- An existing Ansible Container project. To create a project, simply run the following:
+- [Assible Container](https://github.com/assible/assible-container)
+- An existing Assible Container project. To create a project, simply run the following:
     ```
     # Create an empty project directory
     $ mkdir myproject
@@ -23,7 +23,7 @@ $ ansible-container install <USERNAME.ROLE_NAME>
     $ cd myproject
 
     # Initialize the project
-    $ ansible-container init
+    $ assible-container init
     ```
 
 - Continue listing any prerequisites here...

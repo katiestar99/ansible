@@ -1,4 +1,4 @@
-# (c) 2018, Ansible Project
+# (c) 2018, Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import absolute_import, division, print_function
@@ -6,9 +6,9 @@ __metaclass__ = type
 
 from abc import ABCMeta, abstractmethod
 
-from ansible.module_utils.six import with_metaclass
-from ansible.module_utils.common.process import get_bin_path
-from ansible.module_utils.common._utils import get_all_subclasses
+from assible.module_utils.six import with_metaclass
+from assible.module_utils.common.process import get_bin_path
+from assible.module_utils.common._utils import get_all_subclasses
 
 
 def get_all_pkg_managers():

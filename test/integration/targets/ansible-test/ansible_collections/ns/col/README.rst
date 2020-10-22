@@ -1,3 +1,3 @@
 README
 ------
-This is a simple collection used to verify that ``ansible-test`` works on a collection.
+This is a simple collection used to verify that ``assible-test`` works on a collection.

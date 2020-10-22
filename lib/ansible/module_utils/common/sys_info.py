@@ -1,5 +1,5 @@
 # Copyright (c), Michael DeHaan <michael.dehaan@gmail.com>, 2012-2013
-# Copyright (c), Toshio Kuratomi <tkuratomi@ansible.com> 2016
+# Copyright (c), Toshio Kuratomi <tkuratomi@assible.com> 2016
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import absolute_import, division, print_function
@@ -7,8 +7,8 @@ __metaclass__ = type
 
 import platform
 
-from ansible.module_utils import distro
-from ansible.module_utils.common._utils import get_all_subclasses
+from assible.module_utils import distro
+from assible.module_utils.common._utils import get_all_subclasses
 
 
 __all__ = ('get_distribution', 'get_distribution_version', 'get_platform_subclass')
@@ -64,8 +64,8 @@ def get_distribution_version():
                 version_best = distro.version(best=True)
 
                 # CentoOS maintainers believe only the major version is appropriate
-                # but Ansible users desire minor version information, e.g., 7.5.
-                # https://github.com/ansible/ansible/issues/50141#issuecomment-449452781
+                # but Assible users desire minor version information, e.g., 7.5.
+                # https://github.com/assible/assible/issues/50141#issuecomment-449452781
                 if distro_id == u'centos':
                     version = u'.'.join(version_best.split(u'.')[:2])
 
@@ -118,13 +118,13 @@ def get_platform_subclass(cls):
     :arg cls: Class to find an appropriate subclass for
     :returns: A class that implements the functionality on this platform
 
-    Some Ansible modules have different implementations depending on the platform they run on.  This
+    Some Assible modules have different implementations depending on the platform they run on.  This
     function is used to select between the various implementations and choose one.  You can look at
-    the implementation of the Ansible :ref:`User module<user_module>` module for an example of how to use this.
+    the implementation of the Assible :ref:`User module<user_module>` module for an example of how to use this.
 
     This function replaces ``basic.load_platform_subclass()``.  When you port code, you need to
     change the callers to be explicit about instantiating the class.  For instance, code in the
-    Ansible User module changed from::
+    Assible User module changed from::
 
     .. code-block:: python
 

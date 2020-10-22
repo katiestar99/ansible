@@ -33,12 +33,12 @@
     - name: Fix sudoers.d path for FreeBSD
       set_fact:
         sudoers_etc: /usr/local/etc
-      when: ansible_distribution == 'FreeBSD'
+      when: assible_distribution == 'FreeBSD'
 
     - name: Fix sudoers.d path for everything else
       set_fact:
         sudoers_etc: /etc
-      when: ansible_distribution != 'FreeBSD'
+      when: assible_distribution != 'FreeBSD'
 
     - name: Undo OpenSUSE
       lineinfile:

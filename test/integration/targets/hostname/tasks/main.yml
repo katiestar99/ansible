@@ -1,13 +1,13 @@
 # Setting the hostname in our test containers doesn't work currently
-- when: ansible_facts.virtualization_type not in ('docker', 'container')
+- when: assible_facts.virtualization_type not in ('docker', 'container')
   block:
     - name: Include distribution specific variables
       include_vars: "{{ lookup('first_found', params) }}"
       vars:
         params:
           files:
-            - "{{ ansible_facts.distribution }}.yml"
-            - "{{ ansible_facts.os_family }}.yml"
+            - "{{ assible_facts.distribution }}.yml"
+            - "{{ assible_facts.os_family }}.yml"
             - default.yml
           paths:
             - "{{ role_path }}/vars"
@@ -18,7 +18,7 @@
 
     - name: Run hostname module in check_mode
       hostname:
-        name: crocodile.ansible.test.doesthiswork.net.example.com
+        name: crocodile.assible.test.doesthiswork.net.example.com
       check_mode: true
       register: hn1
 
@@ -44,7 +44,7 @@
 
         - name: Run hostname module in check_mode
           hostname:
-            name: crocodile.ansible.test.doesthiswork.net.example.com
+            name: crocodile.assible.test.doesthiswork.net.example.com
           check_mode: true
           register: hn
 
@@ -68,7 +68,7 @@
 
     - name: Run hostname module for real now
       hostname:
-        name: crocodile.ansible.test.doesthiswork.net.example.com
+        name: crocodile.assible.test.doesthiswork.net.example.com
       register: hn2
 
     - name: Get hostname
@@ -77,7 +77,7 @@
 
     - name: Run hostname again to ensure it is idempotent
       hostname:
-        name: crocodile.ansible.test.doesthiswork.net.example.com
+        name: crocodile.assible.test.doesthiswork.net.example.com
       register: hnidem
 
     - name: Get hostname
@@ -88,7 +88,7 @@
         that:
           - hn2 is changed
           - hnidem is not changed
-          - current_after_hn2.stdout == 'crocodile.ansible.test.doesthiswork.net.example.com'
+          - current_after_hn2.stdout == 'crocodile.assible.test.doesthiswork.net.example.com'
           - current_after_hn2.stdout == current_after_hnidem.stdout
 
     - name: Include distribution specific tasks
@@ -96,7 +96,7 @@
         file: "{{ lookup('first_found', files) }}"
       vars:
         files:
-          - "{{ ansible_facts.distribution }}.yml"
+          - "{{ assible_facts.distribution }}.yml"
           - default.yml
   always:
     # Reset back to original hostname

@@ -1,21 +1,21 @@
 ########################################################################
 #
-# (C) 2015, Chris Houseknecht <chouse@ansible.com>
+# (C) 2015, Chris Houseknecht <chouse@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
 from __future__ import (absolute_import, division, print_function)
@@ -28,17 +28,17 @@ from stat import S_IRUSR, S_IWUSR
 
 import yaml
 
-from ansible import constants as C
-from ansible.galaxy.user_agent import user_agent
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.urls import open_url
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.galaxy.user_agent import user_agent
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.urls import open_url
+from assible.utils.display import Display
 
 display = Display()
 
 
 class NoTokenSentinel(object):
-    """ Represents an ansible.cfg server with not token defined (will ignore cmdline and GALAXY_TOKEN_PATH. """
+    """ Represents an assible.cfg server with not token defined (will ignore cmdline and GALAXY_TOKEN_PATH. """
     def __new__(cls, *args, **kwargs):
         return cls
 
@@ -66,7 +66,7 @@ class KeycloakToken(object):
 
         # - build a request to POST to auth_url
         #  - body is form encoded
-        #    - 'request_token' is the offline token stored in ansible.cfg
+        #    - 'request_token' is the offline token stored in assible.cfg
         #    - 'grant_type' is 'refresh_token'
         #    - 'client_id' is 'cloud-services'
         #       - should probably be based on the contents of the

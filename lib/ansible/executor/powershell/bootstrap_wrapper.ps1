@@ -1,7 +1,7 @@
 &chcp.com 65001 > $null
 
 if ($PSVersionTable.PSVersion -lt [Version]"3.0") {
-    '{"failed":true,"msg":"Ansible requires PowerShell v3.0 or newer"}'
+    '{"failed":true,"msg":"Assible requires PowerShell v3.0 or newer"}'
     exit 1
 }
 

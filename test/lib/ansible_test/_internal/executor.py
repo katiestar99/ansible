@@ -1,4 +1,4 @@
-"""Execute Ansible tests."""
+"""Execute Assible tests."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -23,7 +23,7 @@ from .thread import (
 )
 
 from .core_ci import (
-    AnsibleCoreCI,
+    AssibleCoreCI,
     SshKey,
 )
 
@@ -60,10 +60,10 @@ from .util import (
     generate_pip_command,
     find_python,
     cmd_quote,
-    ANSIBLE_LIB_ROOT,
-    ANSIBLE_TEST_DATA_ROOT,
-    ANSIBLE_TEST_CONFIG_ROOT,
-    get_ansible_version,
+    ASSIBLE_LIB_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_CONFIG_ROOT,
+    get_assible_version,
     tempdir,
     open_zipfile,
     SUPPORTED_PYTHON_VERSIONS,
@@ -92,8 +92,8 @@ from .docker_util import (
     get_docker_container_ip,
 )
 
-from .ansible_util import (
-    ansible_environment,
+from .assible_util import (
+    assible_environment,
     check_pyyaml,
 )
 
@@ -143,9 +143,9 @@ from .data import (
 )
 
 HTTPTESTER_HOSTS = (
-    'ansible.http.tests',
-    'sni1.ansible.http.tests',
-    'fail.ansible.http.tests',
+    'assible.http.tests',
+    'sni1.assible.http.tests',
+    'fail.assible.http.tests',
 )
 
 
@@ -157,7 +157,7 @@ def check_startup():
 def check_legacy_modules():
     """Detect conflicts with legacy core/extras module directories to avoid problems later."""
     for directory in 'core', 'extras':
-        path = 'lib/ansible/modules/%s' % directory
+        path = 'lib/assible/modules/%s' % directory
 
         for root, _dir_names, file_names in os.walk(path):
             if file_names:
@@ -268,7 +268,7 @@ def install_command_requirements(args, python_version=None, context=None, enable
     installed_packages.update(packages)
 
     if args.command != 'sanity':
-        install_ansible_test_requirements(args, pip)
+        install_assible_test_requirements(args, pip)
 
         # make sure setuptools is available before trying to install cryptography
         # the installed version of setuptools affects the version of cryptography to install
@@ -280,7 +280,7 @@ def install_command_requirements(args, python_version=None, context=None, enable
         # this is done instead of upgrading setuptools to allow tests to function with older distribution provided versions of setuptools
         run_command(args, generate_pip_install(pip, '',
                                                packages=[get_cryptography_requirement(args, python_version)],
-                                               constraints=os.path.join(ANSIBLE_TEST_DATA_ROOT, 'cryptography-constraints.txt')))
+                                               constraints=os.path.join(ASSIBLE_TEST_DATA_ROOT, 'cryptography-constraints.txt')))
 
     commands = [generate_pip_install(pip, args.command, packages=packages, context=context)]
 
@@ -297,7 +297,7 @@ def install_command_requirements(args, python_version=None, context=None, enable
     detect_pip_changes = len(commands) > 1
 
     # first pass to install requirements, changes expected unless environment is already set up
-    install_ansible_test_requirements(args, pip)
+    install_assible_test_requirements(args, pip)
     changes = run_pip_commands(args, pip, commands, detect_pip_changes)
 
     if changes:
@@ -323,8 +323,8 @@ def install_command_requirements(args, python_version=None, context=None, enable
         check_pyyaml(args, python_version, required=False)
 
 
-def install_ansible_test_requirements(args, pip):  # type: (EnvironmentConfig, t.List[str]) -> None
-    """Install requirements for ansible-test for the given pip if not already installed."""
+def install_assible_test_requirements(args, pip):  # type: (EnvironmentConfig, t.List[str]) -> None
+    """Install requirements for assible-test for the given pip if not already installed."""
     try:
         installed = install_command_requirements.installed
     except AttributeError:
@@ -333,9 +333,9 @@ def install_ansible_test_requirements(args, pip):  # type: (EnvironmentConfig, t
     if tuple(pip) in installed:
         return
 
-    # make sure basic ansible-test requirements are met, including making sure that pip is recent enough to support constraints
+    # make sure basic assible-test requirements are met, including making sure that pip is recent enough to support constraints
     # virtualenvs created by older distributions may include very old pip versions, such as those created in the centos6 test container (pip 6.0.8)
-    run_command(args, generate_pip_install(pip, 'ansible-test', use_constraints=False))
+    run_command(args, generate_pip_install(pip, 'assible-test', use_constraints=False))
 
     installed.add(tuple(pip))
 
@@ -385,16 +385,16 @@ def generate_egg_info(args):
     if args.explain:
         return
 
-    ansible_version = get_ansible_version()
+    assible_version = get_assible_version()
 
     # inclusion of the version number in the path is optional
     # see: https://setuptools.readthedocs.io/en/latest/formats.html#filename-embedded-metadata
-    egg_info_path = ANSIBLE_LIB_ROOT + '_base-%s.egg-info' % ansible_version
+    egg_info_path = ASSIBLE_LIB_ROOT + '_base-%s.egg-info' % assible_version
 
     if os.path.exists(egg_info_path):
         return
 
-    egg_info_path = ANSIBLE_LIB_ROOT + '_base.egg-info'
+    egg_info_path = ASSIBLE_LIB_ROOT + '_base.egg-info'
 
     if os.path.exists(egg_info_path):
         return
@@ -405,13 +405,13 @@ def generate_egg_info(args):
     # including a stub here means we don't need to locate the existing file or have setup.py generate it when running from source
     pkg_info = '''
 Metadata-Version: 1.0
-Name: ansible
+Name: assible
 Version: %s
 Platform: UNKNOWN
 Summary: Radically simple IT automation
-Author-email: info@ansible.com
+Author-email: info@assible.com
 License: GPLv3+
-''' % get_ansible_version()
+''' % get_assible_version()
 
     pkg_info_path = os.path.join(egg_info_path, 'PKG-INFO')
 
@@ -428,8 +428,8 @@ def generate_pip_install(pip, command, packages=None, constraints=None, use_cons
     :type context: str | None
     :rtype: list[str] | None
     """
-    constraints = constraints or os.path.join(ANSIBLE_TEST_DATA_ROOT, 'requirements', 'constraints.txt')
-    requirements = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'requirements', '%s.txt' % ('%s.%s' % (command, context) if context else command))
+    constraints = constraints or os.path.join(ASSIBLE_TEST_DATA_ROOT, 'requirements', 'constraints.txt')
+    requirements = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'requirements', '%s.txt' % ('%s.%s' % (command, context) if context else command))
     content_constraints = None
 
     options = []
@@ -437,7 +437,7 @@ def generate_pip_install(pip, command, packages=None, constraints=None, use_cons
     if os.path.exists(requirements) and os.path.getsize(requirements):
         options += ['-r', requirements]
 
-    if command == 'sanity' and data_context().content.is_ansible:
+    if command == 'sanity' and data_context().content.is_assible:
         requirements = os.path.join(data_context().content.sanity_path, 'code-smell', '%s.requirements.txt' % context)
 
         if os.path.exists(requirements) and os.path.getsize(requirements):
@@ -475,7 +475,7 @@ def generate_pip_install(pip, command, packages=None, constraints=None, use_cons
 
     if use_constraints:
         if content_constraints and os.path.exists(content_constraints) and os.path.getsize(content_constraints):
-            # listing content constraints first gives them priority over constraints provided by ansible-test
+            # listing content constraints first gives them priority over constraints provided by assible-test
             options.extend(['-c', content_constraints])
 
         options.extend(['-c', constraints])
@@ -506,7 +506,7 @@ def command_posix_integration(args):
     handle_layout_messages(data_context().content.integration_messages)
 
     inventory_relative_path = get_inventory_relative_path(args)
-    inventory_path = os.path.join(ANSIBLE_TEST_DATA_ROOT, os.path.basename(inventory_relative_path))
+    inventory_path = os.path.join(ASSIBLE_TEST_DATA_ROOT, os.path.basename(inventory_relative_path))
 
     all_targets = tuple(walk_posix_integration_targets(include_hidden=True))
     internal_targets = command_integration_filter(args, all_targets)
@@ -520,7 +520,7 @@ def command_network_integration(args):
     handle_layout_messages(data_context().content.integration_messages)
 
     inventory_relative_path = get_inventory_relative_path(args)
-    template_path = os.path.join(ANSIBLE_TEST_CONFIG_ROOT, os.path.basename(inventory_relative_path)) + '.template'
+    template_path = os.path.join(ASSIBLE_TEST_CONFIG_ROOT, os.path.basename(inventory_relative_path)) + '.template'
 
     if args.inventory:
         inventory_path = os.path.join(data_context().content.root, data_context().content.integration_path, args.inventory)
@@ -627,9 +627,9 @@ def network_start(args, platform, version):
     :type args: NetworkIntegrationConfig
     :type platform: str
     :type version: str
-    :rtype: AnsibleCoreCI
+    :rtype: AssibleCoreCI
     """
-    core_ci = AnsibleCoreCI(args, platform, version, stage=args.remote_stage, provider=args.remote_provider)
+    core_ci = AssibleCoreCI(args, platform, version, stage=args.remote_stage, provider=args.remote_provider)
     core_ci.start()
 
     return core_ci.save()
@@ -641,9 +641,9 @@ def network_run(args, platform, version, config):
     :type platform: str
     :type version: str
     :type config: dict[str, str]
-    :rtype: AnsibleCoreCI
+    :rtype: AssibleCoreCI
     """
-    core_ci = AnsibleCoreCI(args, platform, version, stage=args.remote_stage, provider=args.remote_provider, load=False)
+    core_ci = AssibleCoreCI(args, platform, version, stage=args.remote_stage, provider=args.remote_provider, load=False)
     core_ci.load(config)
     core_ci.wait()
 
@@ -655,7 +655,7 @@ def network_run(args, platform, version, config):
 
 def network_inventory(remotes):
     """
-    :type remotes: list[AnsibleCoreCI]
+    :type remotes: list[AssibleCoreCI]
     :rtype: str
     """
     groups = dict([(remote.platform, []) for remote in remotes])
@@ -663,9 +663,9 @@ def network_inventory(remotes):
 
     for remote in remotes:
         options = dict(
-            ansible_host=remote.connection.hostname,
-            ansible_user=remote.connection.username,
-            ansible_ssh_private_key_file=os.path.abspath(remote.ssh_key.key),
+            assible_host=remote.connection.hostname,
+            assible_user=remote.connection.username,
+            assible_ssh_private_key_file=os.path.abspath(remote.ssh_key.key),
         )
 
         settings = get_network_settings(remote.args, remote.platform, remote.version)
@@ -705,7 +705,7 @@ def command_windows_integration(args):
     handle_layout_messages(data_context().content.integration_messages)
 
     inventory_relative_path = get_inventory_relative_path(args)
-    template_path = os.path.join(ANSIBLE_TEST_CONFIG_ROOT, os.path.basename(inventory_relative_path)) + '.template'
+    template_path = os.path.join(ASSIBLE_TEST_CONFIG_ROOT, os.path.basename(inventory_relative_path)) + '.template'
 
     if args.inventory:
         inventory_path = os.path.join(data_context().content.root, data_context().content.integration_path, args.inventory)
@@ -787,7 +787,7 @@ def command_windows_integration(args):
 
                 for remote in [r for r in remotes if r.version != '2008']:
                     manage = ManageWindowsCI(remote)
-                    manage.upload(os.path.join(ANSIBLE_TEST_DATA_ROOT, 'setup', 'windows-httptester.ps1'), watcher_path)
+                    manage.upload(os.path.join(ASSIBLE_TEST_DATA_ROOT, 'setup', 'windows-httptester.ps1'), watcher_path)
 
                     # We cannot pass an array of string with -File so we just use a delimiter for multiple values
                     script = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\%s -Hosts \"%s\"" \
@@ -808,24 +808,24 @@ def command_windows_integration(args):
                     manage = ManageWindowsCI(remote)
                     manage.ssh("cmd.exe /c \"del %s /F /Q\"" % watcher_path, force_pty=False)
 
-            watcher_path = "ansible-test-http-watcher-%s.ps1" % time.time()
+            watcher_path = "assible-test-http-watcher-%s.ps1" % time.time()
             pre_target = forward_ssh_ports
             post_target = cleanup_ssh_ports
 
     def run_playbook(playbook, run_playbook_vars):  # type: (str, t.Dict[str, t.Any]) -> None
-        playbook_path = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'playbooks', playbook)
-        command = ['ansible-playbook', '-i', inventory_path, playbook_path, '-e', json.dumps(run_playbook_vars)]
+        playbook_path = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'playbooks', playbook)
+        command = ['assible-playbook', '-i', inventory_path, playbook_path, '-e', json.dumps(run_playbook_vars)]
         if args.verbosity:
             command.append('-%s' % ('v' * args.verbosity))
 
-        env = ansible_environment(args)
+        env = assible_environment(args)
         intercept_command(args, command, '', env, disable_coverage=True)
 
     remote_temp_path = None
 
     if args.coverage and not args.coverage_check:
-        # Create the remote directory that is writable by everyone. Use Ansible to talk to the remote host.
-        remote_temp_path = 'C:\\ansible_test_coverage_%s' % time.time()
+        # Create the remote directory that is writable by everyone. Use Assible to talk to the remote host.
+        remote_temp_path = 'C:\\assible_test_coverage_%s' % time.time()
         playbook_vars = {'remote_temp_path': remote_temp_path}
         run_playbook('windows_coverage_setup.yml', playbook_vars)
 
@@ -884,9 +884,9 @@ def windows_start(args, version):
     """
     :type args: WindowsIntegrationConfig
     :type version: str
-    :rtype: AnsibleCoreCI
+    :rtype: AssibleCoreCI
     """
-    core_ci = AnsibleCoreCI(args, 'windows', version, stage=args.remote_stage, provider=args.remote_provider)
+    core_ci = AssibleCoreCI(args, 'windows', version, stage=args.remote_stage, provider=args.remote_provider)
     core_ci.start()
 
     return core_ci.save()
@@ -897,9 +897,9 @@ def windows_run(args, version, config):
     :type args: WindowsIntegrationConfig
     :type version: str
     :type config: dict[str, str]
-    :rtype: AnsibleCoreCI
+    :rtype: AssibleCoreCI
     """
-    core_ci = AnsibleCoreCI(args, 'windows', version, stage=args.remote_stage, provider=args.remote_provider, load=False)
+    core_ci = AssibleCoreCI(args, 'windows', version, stage=args.remote_stage, provider=args.remote_provider, load=False)
     core_ci.load(config)
     core_ci.wait()
 
@@ -911,43 +911,43 @@ def windows_run(args, version, config):
 
 def windows_inventory(remotes):
     """
-    :type remotes: list[AnsibleCoreCI]
+    :type remotes: list[AssibleCoreCI]
     :rtype: str
     """
     hosts = []
 
     for remote in remotes:
         options = dict(
-            ansible_host=remote.connection.hostname,
-            ansible_user=remote.connection.username,
-            ansible_password=remote.connection.password,
-            ansible_port=remote.connection.port,
+            assible_host=remote.connection.hostname,
+            assible_user=remote.connection.username,
+            assible_password=remote.connection.password,
+            assible_port=remote.connection.port,
         )
 
         # used for the connection_windows_ssh test target
         if remote.ssh_key:
-            options["ansible_ssh_private_key_file"] = os.path.abspath(remote.ssh_key.key)
+            options["assible_ssh_private_key_file"] = os.path.abspath(remote.ssh_key.key)
 
         if remote.name == 'windows-2008':
             options.update(
                 # force 2008 to use PSRP for the connection plugin
-                ansible_connection='psrp',
-                ansible_psrp_auth='basic',
-                ansible_psrp_cert_validation='ignore',
+                assible_connection='psrp',
+                assible_psrp_auth='basic',
+                assible_psrp_cert_validation='ignore',
             )
         elif remote.name == 'windows-2016':
             options.update(
                 # force 2016 to use NTLM + HTTP message encryption
-                ansible_connection='winrm',
-                ansible_winrm_server_cert_validation='ignore',
-                ansible_winrm_transport='ntlm',
-                ansible_winrm_scheme='http',
-                ansible_port='5985',
+                assible_connection='winrm',
+                assible_winrm_server_cert_validation='ignore',
+                assible_winrm_transport='ntlm',
+                assible_winrm_scheme='http',
+                assible_port='5985',
             )
         else:
             options.update(
-                ansible_connection='winrm',
-                ansible_winrm_server_cert_validation='ignore',
+                assible_connection='winrm',
+                assible_winrm_server_cert_validation='ignore',
             )
 
         hosts.append(
@@ -1081,7 +1081,7 @@ def command_integration_filtered(args, targets, all_targets, inventory_path, pre
                 display.warning('SSH service not responding. Waiting %d second(s) before checking again.' % seconds)
                 time.sleep(seconds)
 
-    # Windows is different as Ansible execution is done locally but the host is remote
+    # Windows is different as Assible execution is done locally but the host is remote
     if args.inject_httptester and not isinstance(args, WindowsIntegrationConfig):
         inject_httptester(args)
 
@@ -1093,7 +1093,7 @@ def command_integration_filtered(args, targets, all_targets, inventory_path, pre
 
     # common temporary directory path that will be valid on both the controller and the remote
     # it must be common because it will be referenced in environment variables that are shared across multiple hosts
-    common_temp_path = '/tmp/ansible-test-%s' % ''.join(random.choice(string.ascii_letters + string.digits) for _idx in range(8))
+    common_temp_path = '/tmp/assible-test-%s' % ''.join(random.choice(string.ascii_letters + string.digits) for _idx in range(8))
 
     setup_common_temp_dir(args, common_temp_path)
 
@@ -1241,7 +1241,7 @@ def start_httptester(args):
     """
 
     # map ports from remote -> localhost -> container
-    # passing through localhost is only used when ansible-test is not already running inside a docker container
+    # passing through localhost is only used when assible-test is not already running inside a docker container
     ports = [
         dict(
             remote=8080,
@@ -1316,7 +1316,7 @@ def inject_httptester(args):
     """
     :type args: CommonConfig
     """
-    comment = ' # ansible-test httptester\n'
+    comment = ' # assible-test httptester\n'
     append_lines = ['127.0.0.1 %s%s' % (host, comment) for host in HTTPTESTER_HOSTS]
     hosts_path = '/etc/hosts'
 
@@ -1404,17 +1404,17 @@ def run_setup_targets(args, test_dir, target_names, targets_dict, targets_execut
         targets_executed.add(target_name)
 
 
-def integration_environment(args, target, test_dir, inventory_path, ansible_config, env_config):
+def integration_environment(args, target, test_dir, inventory_path, assible_config, env_config):
     """
     :type args: IntegrationConfig
     :type target: IntegrationTarget
     :type test_dir: str
     :type inventory_path: str
-    :type ansible_config: str | None
+    :type assible_config: str | None
     :type env_config: CloudEnvironmentConfig | None
     :rtype: dict[str, str]
     """
-    env = ansible_environment(args, ansible_config=ansible_config)
+    env = assible_environment(args, assible_config=assible_config)
 
     if args.inject_httptester:
         env.update(dict(
@@ -1426,21 +1426,21 @@ def integration_environment(args, target, test_dir, inventory_path, ansible_conf
 
     integration = dict(
         JUNIT_OUTPUT_DIR=ResultType.JUNIT.path,
-        ANSIBLE_CALLBACK_WHITELIST=','.join(sorted(set(callback_plugins))),
-        ANSIBLE_TEST_CI=args.metadata.ci_provider or get_ci_provider().code,
-        ANSIBLE_TEST_COVERAGE='check' if args.coverage_check else ('yes' if args.coverage else ''),
+        ASSIBLE_CALLBACK_WHITELIST=','.join(sorted(set(callback_plugins))),
+        ASSIBLE_TEST_CI=args.metadata.ci_provider or get_ci_provider().code,
+        ASSIBLE_TEST_COVERAGE='check' if args.coverage_check else ('yes' if args.coverage else ''),
         OUTPUT_DIR=test_dir,
         INVENTORY_PATH=os.path.abspath(inventory_path),
     )
 
     if args.debug_strategy:
-        env.update(dict(ANSIBLE_STRATEGY='debug'))
+        env.update(dict(ASSIBLE_STRATEGY='debug'))
 
     if 'non_local/' in target.aliases:
         if args.coverage:
-            display.warning('Skipping coverage reporting on Ansible modules for non-local test: %s' % target.name)
+            display.warning('Skipping coverage reporting on Assible modules for non-local test: %s' % target.name)
 
-        env.update(dict(ANSIBLE_TEST_REMOTE_INTERPRETER=''))
+        env.update(dict(ASSIBLE_TEST_REMOTE_INTERPRETER=''))
 
     env.update(integration)
 
@@ -1472,12 +1472,12 @@ def command_integration_script(args, target, test_dir, inventory_path, temp_path
         if args.verbosity:
             cmd.append('-' + ('v' * args.verbosity))
 
-        env = integration_environment(args, target, test_dir, test_env.inventory_path, test_env.ansible_config, env_config)
+        env = integration_environment(args, target, test_dir, test_env.inventory_path, test_env.assible_config, env_config)
         cwd = os.path.join(test_env.targets_dir, target.relative_path)
 
         env.update(dict(
-            # support use of adhoc ansible commands in collections without specifying the fully qualified collection name
-            ANSIBLE_PLAYBOOK_DIR=cwd,
+            # support use of adhoc assible commands in collections without specifying the fully qualified collection name
+            ASSIBLE_PLAYBOOK_DIR=cwd,
         ))
 
         if env_config and env_config.env_vars:
@@ -1515,7 +1515,7 @@ def command_integration_role(args, target, start_at_task, test_dir, inventory_pa
         hosts = 'windows'
         gather_facts = False
         variables.update(dict(
-            win_output_dir=r'C:\ansible_testing',
+            win_output_dir=r'C:\assible_testing',
         ))
     elif isinstance(args, NetworkIntegrationConfig):
         hosts = target.network_platform
@@ -1544,8 +1544,8 @@ def command_integration_role(args, target, start_at_task, test_dir, inventory_pa
         )
 
         if env_config:
-            if env_config.ansible_vars:
-                variables.update(env_config.ansible_vars)
+            if env_config.assible_vars:
+                variables.update(env_config.assible_vars)
 
             play.update(dict(
                 environment=env_config.env_vars,
@@ -1559,7 +1559,7 @@ def command_integration_role(args, target, start_at_task, test_dir, inventory_pa
 
             display.info('>>> Playbook: %s\n%s' % (filename, playbook.strip()), verbosity=3)
 
-            cmd = ['ansible-playbook', filename, '-i', os.path.relpath(test_env.inventory_path, test_env.integration_dir)]
+            cmd = ['assible-playbook', filename, '-i', os.path.relpath(test_env.inventory_path, test_env.integration_dir)]
 
             if start_at_task:
                 cmd += ['--start-at-task', start_at_task]
@@ -1580,15 +1580,15 @@ def command_integration_role(args, target, start_at_task, test_dir, inventory_pa
             if args.verbosity:
                 cmd.append('-' + ('v' * args.verbosity))
 
-            env = integration_environment(args, target, test_dir, test_env.inventory_path, test_env.ansible_config, env_config)
+            env = integration_environment(args, target, test_dir, test_env.inventory_path, test_env.assible_config, env_config)
             cwd = test_env.integration_dir
 
             env.update(dict(
-                # support use of adhoc ansible commands in collections without specifying the fully qualified collection name
-                ANSIBLE_PLAYBOOK_DIR=cwd,
+                # support use of adhoc assible commands in collections without specifying the fully qualified collection name
+                ASSIBLE_PLAYBOOK_DIR=cwd,
             ))
 
-            env['ANSIBLE_ROLES_PATH'] = test_env.targets_dir
+            env['ASSIBLE_ROLES_PATH'] = test_env.targets_dir
 
             module_coverage = 'non_local/' not in target.aliases
             intercept_command(args, cmd, target_name=target.name, env=env, cwd=cwd, temp_path=temp_path,
@@ -1948,7 +1948,7 @@ class EnvironmentDescription:
         versions += SUPPORTED_PYTHON_VERSIONS
         versions += list(set(v.split('.')[0] for v in SUPPORTED_PYTHON_VERSIONS))
 
-        version_check = os.path.join(ANSIBLE_TEST_DATA_ROOT, 'versions.py')
+        version_check = os.path.join(ASSIBLE_TEST_DATA_ROOT, 'versions.py')
         python_paths = dict((v, find_executable('python%s' % v, required=False)) for v in sorted(versions))
         pip_paths = dict((v, find_executable('pip%s' % v, required=False)) for v in sorted(versions))
         program_versions = dict((v, self.get_version([python_paths[v], version_check], warnings)) for v in sorted(python_paths) if python_paths[v])

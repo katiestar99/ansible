@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ansible Project
+# Copyright (c) 2020 Assible Project
 # # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 Function Get-PSUtilSpec {

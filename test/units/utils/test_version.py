@@ -9,7 +9,7 @@ from distutils.version import LooseVersion, StrictVersion
 
 import pytest
 
-from ansible.utils.version import _Alpha, _Numeric, SemanticVersion
+from assible.utils.version import _Alpha, _Numeric, SemanticVersion
 
 
 EQ = [

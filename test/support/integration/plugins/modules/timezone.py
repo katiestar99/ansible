@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -22,9 +22,9 @@ description:
     For Linux it can use C(timedatectl) or edit C(/etc/sysconfig/clock) or C(/etc/timezone) and C(hwclock).
     On SmartOS, C(sm-set-timezone), for macOS, C(systemsetup), for BSD, C(/etc/localtime) is modified.
     On AIX, C(chtz) is used.
-  - As of Ansible 2.3 support was added for SmartOS and BSDs.
-  - As of Ansible 2.4 support was added for macOS.
-  - As of Ansible 2.9 support was added for AIX 6.1+
+  - As of Assible 2.3 support was added for SmartOS and BSDs.
+  - As of Assible 2.4 support was added for macOS.
+  - As of Assible 2.9 support was added for AIX 6.1+
   - Windows and HPUX are not supported, please let us know if you find any other OS/distro in which this fails.
 version_added: "2.2"
 options:
@@ -83,8 +83,8 @@ import re
 import string
 import filecmp
 
-from ansible.module_utils.basic import AnsibleModule, get_distribution
-from ansible.module_utils.six import iteritems
+from assible.module_utils.basic import AssibleModule, get_distribution
+from assible.module_utils.six import iteritems
 
 
 class Timezone(object):
@@ -102,7 +102,7 @@ class Timezone(object):
         on whether the `timedatectl` command exists and is available.
 
         Args:
-            module: The AnsibleModule.
+            module: The AssibleModule.
         """
         if platform.system() == 'Linux':
             timedatectl = module.get_bin_path('timedatectl')
@@ -144,7 +144,7 @@ class Timezone(object):
         """Initialize of the class.
 
         Args:
-            module: The AnsibleModule.
+            module: The AssibleModule.
         """
         super(Timezone, self).__init__()
         self.msg = []
@@ -201,7 +201,7 @@ class Timezone(object):
         Returns:
             diff: The difference of value between phase1 and phase2.
                 This is in the format which can be used with the
-                `--diff` option of ansible-playbook.
+                `--diff` option of assible-playbook.
         """
         diff = {phase1: {}, phase2: {}}
         for key, value in iteritems(self.value):
@@ -868,7 +868,7 @@ class AIXTimezone(Timezone):
 
 def main():
     # Construct 'module' and 'tz'
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             hwclock=dict(type='str', choices=['local', 'UTC'], aliases=['rtc']),
             name=dict(type='str'),

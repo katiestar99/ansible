@@ -1,6 +1,6 @@
 # test code for the copy module and action plugin
 # (c) 2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017, Ansible Project
+# (c) 2017, Assible Project
 #
 # GNU General Public License v3 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt )
 #
@@ -71,7 +71,7 @@
   assert:
     that:
       - "copy_result.md5sum == ('foo.txt\n'|hash('md5'))"
-  when: ansible_fips|bool != True
+  when: assible_fips|bool != True
 
 - name: Check the stat results of the file
   stat:
@@ -440,13 +440,13 @@
 
 - name: Setup link target for absolute link
   copy:
-    dest: /tmp/ansible-test-abs-link
+    dest: /tmp/assible-test-abs-link
     content: target
   delegate_to: localhost
 
 - name: Setup link target dir for absolute link
   file:
-    dest: /tmp/ansible-test-abs-link-dir
+    dest: /tmp/assible-test-abs-link-dir
     state: directory
   delegate_to: localhost
 
@@ -491,7 +491,7 @@
 
 - name: Check symlink to absolute path
   stat:
-    path: '{{ remote_dir }}/sub/subdir/subdir1/ansible-test-abs-link'
+    path: '{{ remote_dir }}/sub/subdir/subdir1/assible-test-abs-link'
   register: stat_abs_link
 
 - name: Check symlink to relative path
@@ -516,7 +516,7 @@
 
 - name: Check symlink to directory outside of copy
   stat:
-    path: '{{ remote_dir }}/sub/subdir/subdir1/ansible-test-abs-link-dir'
+    path: '{{ remote_dir }}/sub/subdir/subdir1/assible-test-abs-link-dir'
   register: stat_dir_outside_copy_link
 
 - name: Assert recursive copy symlinks local_follow=False
@@ -524,7 +524,7 @@
     that:
       - "stat_abs_link.stat.exists"
       - "stat_abs_link.stat.islnk"
-      - "'/tmp/ansible-test-abs-link' == stat_abs_link.stat.lnk_target"
+      - "'/tmp/assible-test-abs-link' == stat_abs_link.stat.lnk_target"
       - "stat_relative_link.stat.exists"
       - "stat_relative_link.stat.islnk"
       - "'../bar.txt' == stat_relative_link.stat.lnk_target"
@@ -539,7 +539,7 @@
       - "'../subdir2/subdir3' in stat_dir_in_copy_link.stat.lnk_target"
       - "stat_dir_outside_copy_link.stat.exists"
       - "stat_dir_outside_copy_link.stat.islnk"
-      - "'/tmp/ansible-test-abs-link-dir' == stat_dir_outside_copy_link.stat.lnk_target"
+      - "'/tmp/assible-test-abs-link-dir' == stat_dir_outside_copy_link.stat.lnk_target"
 
 - name: Stat the recursively copied directories
   stat:
@@ -597,13 +597,13 @@
 
 - name: Setup link target for absolute link
   copy:
-    dest: /tmp/ansible-test-abs-link
+    dest: /tmp/assible-test-abs-link
     content: target
   delegate_to: localhost
 
 - name: Setup link target dir for absolute link
   file:
-    dest: /tmp/ansible-test-abs-link-dir
+    dest: /tmp/assible-test-abs-link-dir
     state: directory
   delegate_to: localhost
 
@@ -648,7 +648,7 @@
 
 - name: Check symlink to absolute path
   stat:
-    path: '{{ remote_dir }}/sub/subdir1/ansible-test-abs-link'
+    path: '{{ remote_dir }}/sub/subdir1/assible-test-abs-link'
   register: stat_abs_link
 
 - name: Check symlink to relative path
@@ -673,7 +673,7 @@
 
 - name: Check symlink to directory outside of copy
   stat:
-    path: '{{ remote_dir }}/sub/subdir1/ansible-test-abs-link-dir'
+    path: '{{ remote_dir }}/sub/subdir1/assible-test-abs-link-dir'
   register: stat_dir_outside_copy_link
 
 - name: Assert recursive copy symlinks local_follow=False trailing slash
@@ -681,7 +681,7 @@
     that:
       - "stat_abs_link.stat.exists"
       - "stat_abs_link.stat.islnk"
-      - "'/tmp/ansible-test-abs-link' == stat_abs_link.stat.lnk_target"
+      - "'/tmp/assible-test-abs-link' == stat_abs_link.stat.lnk_target"
       - "stat_relative_link.stat.exists"
       - "stat_relative_link.stat.islnk"
       - "'../bar.txt' == stat_relative_link.stat.lnk_target"
@@ -696,7 +696,7 @@
       - "'../subdir2/subdir3' in stat_dir_in_copy_link.stat.lnk_target"
       - "stat_dir_outside_copy_link.stat.exists"
       - "stat_dir_outside_copy_link.stat.islnk"
-      - "'/tmp/ansible-test-abs-link-dir' == stat_dir_outside_copy_link.stat.lnk_target"
+      - "'/tmp/assible-test-abs-link-dir' == stat_dir_outside_copy_link.stat.lnk_target"
 
 - name: Stat the recursively copied directories
   stat:
@@ -752,13 +752,13 @@
 
 - name: Setup link target for absolute link
   copy:
-    dest: /tmp/ansible-test-abs-link
+    dest: /tmp/assible-test-abs-link
     content: target
   delegate_to: localhost
 
 - name: Setup link target dir for absolute link
   file:
-    dest: /tmp/ansible-test-abs-link-dir
+    dest: /tmp/assible-test-abs-link-dir
     state: directory
   delegate_to: localhost
 
@@ -809,7 +809,7 @@
 
 - name: Check symlink to absolute path
   stat:
-    path: '{{ remote_dir }}/sub/subdir/subdir1/ansible-test-abs-link'
+    path: '{{ remote_dir }}/sub/subdir/subdir1/assible-test-abs-link'
   register: stat_abs_link
 
 - name: Check symlink to relative path
@@ -834,7 +834,7 @@
 
 - name: Check symlink to directory outside of copy
   stat:
-    path: '{{ remote_dir }}/sub/subdir/subdir1/ansible-test-abs-link-dir'
+    path: '{{ remote_dir }}/sub/subdir/subdir1/assible-test-abs-link-dir'
   register: stat_dir_outside_copy_link
 
 - name: Assert recursive copy symlinks local_follow=True
@@ -1255,7 +1255,7 @@
     - "replace_follow_result['checksum'] == remote_file_hash"
 
 # Symlink handling when the dest is already there
-# https://github.com/ansible/ansible-modules-core/issues/1568
+# https://github.com/assible/assible-modules-core/issues/1568
 
 - name: test idempotency by trying to copy to the symlink with the same contents
   copy:
@@ -1340,7 +1340,7 @@
 
 # Test that recursive copy of a directory containing a symlink to another
 # directory, with mode=preserve and local_follow=no works.
-# See: https://github.com/ansible/ansible/issues/68471
+# See: https://github.com/assible/assible/issues/68471
 
 - name: Test recursive copy of dir with symlinks, mode=preserve, local_follow=False
   copy:
@@ -1436,7 +1436,7 @@
 - name: Smoketest that copying content to an implicit relative path works
   copy:
     content: 'testing'
-    dest: 'ansible-testing.txt'
+    dest: 'assible-testing.txt'
   register: relative_results
 
 - name: Assert that copying to an implicit relative path reported changed
@@ -1448,7 +1448,7 @@
 - name: Test that copying the same content with an implicit relative path reports no change
   copy:
     content: 'testing'
-    dest: 'ansible-testing.txt'
+    dest: 'assible-testing.txt'
   register: relative_results
 
 - name: Assert that copying the same content with an implicit relative path reports no change
@@ -1460,7 +1460,7 @@
 - name: Test that copying different content with an implicit relative path reports change
   copy:
     content: 'testing2'
-    dest: 'ansible-testing.txt'
+    dest: 'assible-testing.txt'
   register: relative_results
 
 - name: Assert that copying different content with an implicit relative path reports changed
@@ -1472,7 +1472,7 @@
 - name: Smoketest that explicit relative path works
   copy:
     content: 'testing'
-    dest: './ansible-testing.txt'
+    dest: './assible-testing.txt'
   register: relative_results
 
 - name: Assert that explicit relative paths reports change
@@ -1483,7 +1483,7 @@
 
 - name: Cleanup relative path tests
   file:
-    path: 'ansible-testing.txt'
+    path: 'assible-testing.txt'
     state: absent
 
 # src is a file, dest is a non-existent directory (2 levels of directories):
@@ -2024,29 +2024,29 @@
 - block:
 
   - set_fact:
-      ansible_copy_test_user_name: 'ansible_copy_test_{{ 100000 | random }}'
+      assible_copy_test_user_name: 'assible_copy_test_{{ 100000 | random }}'
 
   - name: execute - create a user for test
     user:
-      name: '{{ ansible_copy_test_user_name }}'
+      name: '{{ assible_copy_test_user_name }}'
       state: present
     become: true
-    register: ansible_copy_test_user
+    register: assible_copy_test_user
 
   - name: execute - create a group for test
     group:
-      name: '{{ ansible_copy_test_user_name }}'
+      name: '{{ assible_copy_test_user_name }}'
       state: present
     become: true
-    register: ansible_copy_test_group
+    register: assible_copy_test_group
 
   - name: execute - Copy the directory on remote with chown
     copy:
       remote_src: True
       src: '{{ remote_dir_expanded }}/remote_dir_src/'
       dest: '{{ remote_dir_expanded }}/new_dir_with_chown'
-      owner: '{{ ansible_copy_test_user_name }}'
-      group: '{{ ansible_copy_test_user_name }}'
+      owner: '{{ assible_copy_test_user_name }}'
+      group: '{{ assible_copy_test_user_name }}'
       follow: true
     register: testcase5
     become: true
@@ -2080,38 +2080,38 @@
     assert:
       that:
       - testcase5 is changed
-      - "stat_new_dir_with_chown.stat.uid == {{ ansible_copy_test_user.uid }}"
-      - "stat_new_dir_with_chown.stat.gid == {{ ansible_copy_test_group.gid }}"
-      - "stat_new_dir_with_chown.stat.pw_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown.stat.gr_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_file1.stat.uid == {{ ansible_copy_test_user.uid }}"
-      - "stat_new_dir_with_chown_file1.stat.gid == {{ ansible_copy_test_group.gid }}"
-      - "stat_new_dir_with_chown_file1.stat.pw_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_file1.stat.gr_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_subdir.stat.uid == {{ ansible_copy_test_user.uid }}"
-      - "stat_new_dir_with_chown_subdir.stat.gid == {{ ansible_copy_test_group.gid }}"
-      - "stat_new_dir_with_chown_subdir.stat.pw_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_subdir.stat.gr_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_subdir_file12.stat.uid == {{ ansible_copy_test_user.uid }}"
-      - "stat_new_dir_with_chown_subdir_file12.stat.gid == {{ ansible_copy_test_group.gid }}"
-      - "stat_new_dir_with_chown_subdir_file12.stat.pw_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_subdir_file12.stat.gr_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_link_file12.stat.uid == {{ ansible_copy_test_user.uid }}"
-      - "stat_new_dir_with_chown_link_file12.stat.gid == {{ ansible_copy_test_group.gid }}"
-      - "stat_new_dir_with_chown_link_file12.stat.pw_name == '{{ ansible_copy_test_user_name }}'"
-      - "stat_new_dir_with_chown_link_file12.stat.gr_name == '{{ ansible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown.stat.uid == {{ assible_copy_test_user.uid }}"
+      - "stat_new_dir_with_chown.stat.gid == {{ assible_copy_test_group.gid }}"
+      - "stat_new_dir_with_chown.stat.pw_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown.stat.gr_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_file1.stat.uid == {{ assible_copy_test_user.uid }}"
+      - "stat_new_dir_with_chown_file1.stat.gid == {{ assible_copy_test_group.gid }}"
+      - "stat_new_dir_with_chown_file1.stat.pw_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_file1.stat.gr_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_subdir.stat.uid == {{ assible_copy_test_user.uid }}"
+      - "stat_new_dir_with_chown_subdir.stat.gid == {{ assible_copy_test_group.gid }}"
+      - "stat_new_dir_with_chown_subdir.stat.pw_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_subdir.stat.gr_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_subdir_file12.stat.uid == {{ assible_copy_test_user.uid }}"
+      - "stat_new_dir_with_chown_subdir_file12.stat.gid == {{ assible_copy_test_group.gid }}"
+      - "stat_new_dir_with_chown_subdir_file12.stat.pw_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_subdir_file12.stat.gr_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_link_file12.stat.uid == {{ assible_copy_test_user.uid }}"
+      - "stat_new_dir_with_chown_link_file12.stat.gid == {{ assible_copy_test_group.gid }}"
+      - "stat_new_dir_with_chown_link_file12.stat.pw_name == '{{ assible_copy_test_user_name }}'"
+      - "stat_new_dir_with_chown_link_file12.stat.gr_name == '{{ assible_copy_test_user_name }}'"
 
   always:
     - name: execute - remove the user for test
       user:
-        name: '{{ ansible_copy_test_user_name }}'
+        name: '{{ assible_copy_test_user_name }}'
         state: absent
         remove: yes
       become: true
 
     - name: execute - remove the group for test
       group:
-        name: '{{ ansible_copy_test_user_name }}'
+        name: '{{ assible_copy_test_user_name }}'
         state: absent
       become: true
 

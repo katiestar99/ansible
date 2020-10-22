@@ -1,21 +1,21 @@
 ########################################################################
 #
-# (C) 2015, Brian Coca <bcoca@ansible.com>
+# (C) 2015, Brian Coca <bcoca@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
 
@@ -31,13 +31,13 @@ import yaml
 from distutils.version import LooseVersion
 from shutil import rmtree
 
-from ansible import context
-from ansible.errors import AnsibleError
-from ansible.galaxy.user_agent import user_agent
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.urls import open_url
-from ansible.playbook.role.requirement import RoleRequirement
-from ansible.utils.display import Display
+from assible import context
+from assible.errors import AssibleError
+from assible.galaxy.user_agent import user_agent
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.urls import open_url
+from assible.playbook.role.requirement import RoleRequirement
+from assible.utils.display import Display
 
 display = Display()
 
@@ -225,11 +225,11 @@ class GalaxyRole(object):
             else:
                 role_data = self.api.lookup_role_by_name(self.src)
                 if not role_data:
-                    raise AnsibleError("- sorry, %s was not found on %s." % (self.src, self.api.api_server))
+                    raise AssibleError("- sorry, %s was not found on %s." % (self.src, self.api.api_server))
 
                 if role_data.get('role_type') == 'APP':
                     # Container Role
-                    display.warning("%s is a Container App role, and should only be installed using Ansible "
+                    display.warning("%s is a Container App role, and should only be installed using Assible "
                                     "Container" % self.name)
 
                 role_versions = self.api.fetch_role_related('versions', role_data['id'])
@@ -243,7 +243,7 @@ class GalaxyRole(object):
                         try:
                             loose_versions.sort()
                         except TypeError:
-                            raise AnsibleError(
+                            raise AssibleError(
                                 'Unable to compare role versions (%s) to determine the most recent version due to incompatible version formats. '
                                 'Please contact the role author to resolve versioning conflicts, or specify an explicit role version to '
                                 'install.' % ', '.join([v.vstring for v in loose_versions])
@@ -255,7 +255,7 @@ class GalaxyRole(object):
                         self.version = 'master'
                 elif self.version != 'master':
                     if role_versions and to_text(self.version) not in [a.get('name', None) for a in role_versions]:
-                        raise AnsibleError("- the specified version (%s) of %s was not found in the list of available versions (%s)." % (self.version,
+                        raise AssibleError("- the specified version (%s) of %s was not found in the list of available versions (%s)." % (self.version,
                                                                                                                                          self.name,
                                                                                                                                          role_versions))
 
@@ -267,14 +267,14 @@ class GalaxyRole(object):
                 tmp_file = self.fetch(role_data)
 
         else:
-            raise AnsibleError("No valid role data found")
+            raise AssibleError("No valid role data found")
 
         if tmp_file:
 
             display.debug("installing from %s" % tmp_file)
 
             if not tarfile.is_tarfile(tmp_file):
-                raise AnsibleError("the downloaded file does not appear to be a valid tar archive.")
+                raise AssibleError("the downloaded file does not appear to be a valid tar archive.")
             else:
                 role_tar_file = tarfile.open(tmp_file, "r")
                 # verify the role's meta file
@@ -296,12 +296,12 @@ class GalaxyRole(object):
                                     archive_parent_dir = meta_parent_dir
                                     meta_file = member
                 if not meta_file:
-                    raise AnsibleError("this role does not appear to have a meta/main.yml file.")
+                    raise AssibleError("this role does not appear to have a meta/main.yml file.")
                 else:
                     try:
                         self._metadata = yaml.safe_load(role_tar_file.extractfile(meta_file))
                     except Exception:
-                        raise AnsibleError("this role does not appear to have a valid meta/main.yml file.")
+                        raise AssibleError("this role does not appear to have a valid meta/main.yml file.")
 
                 # we strip off any higher-level directories for all of the files contained within
                 # the tar file here. The default is 'github_repo-target'. Gerrit instances, on the other
@@ -312,13 +312,13 @@ class GalaxyRole(object):
                     try:
                         if os.path.exists(self.path):
                             if not os.path.isdir(self.path):
-                                raise AnsibleError("the specified roles path exists and is not a directory.")
+                                raise AssibleError("the specified roles path exists and is not a directory.")
                             elif not context.CLIARGS.get("force", False):
-                                raise AnsibleError("the specified role %s appears to already exist. Use --force to replace it." % self.name)
+                                raise AssibleError("the specified role %s appears to already exist. Use --force to replace it." % self.name)
                             else:
                                 # using --force, remove the old path
                                 if not self.remove():
-                                    raise AnsibleError("%s doesn't appear to contain a role.\n  please remove this directory manually if you really "
+                                    raise AssibleError("%s doesn't appear to contain a role.\n  please remove this directory manually if you really "
                                                        "want to put the role here." % self.path)
                         else:
                             os.makedirs(self.path)
@@ -350,7 +350,7 @@ class GalaxyRole(object):
                                 self.path = self.paths[current + 1]
                                 error = False
                         if error:
-                            raise AnsibleError("Could not update files in %s: %s" % (self.path, to_native(e)))
+                            raise AssibleError("Could not update files in %s: %s" % (self.path, to_native(e)))
 
                 # return the parsed yaml metadata
                 display.display("- %s was installed successfully" % str(self))

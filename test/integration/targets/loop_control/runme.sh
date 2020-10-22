@@ -7,6 +7,6 @@ set -eux
 #ok: [localhost] => (item=looped_var bar_label) => {
 MATCH='foo_label
 bar_label'
-[ "$(ansible-playbook label.yml "$@" |grep 'item='|sed -e 's/^.*(item=looped_var \(.*\)).*$/\1/')" == "${MATCH}" ]
+[ "$(assible-playbook label.yml "$@" |grep 'item='|sed -e 's/^.*(item=looped_var \(.*\)).*$/\1/')" == "${MATCH}" ]
 
-ansible-playbook extended.yml "$@"
+assible-playbook extended.yml "$@"

@@ -1,4 +1,4 @@
-"""Sanity test for ansible-doc."""
+"""Sanity test for assible-doc."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -28,8 +28,8 @@ from ..util_common import (
     intercept_command,
 )
 
-from ..ansible_util import (
-    ansible_environment,
+from ..assible_util import (
+    assible_environment,
 )
 
 from ..config import (
@@ -45,13 +45,13 @@ from ..coverage_util import (
 )
 
 
-class AnsibleDocTest(SanitySingleVersion):
-    """Sanity test for ansible-doc."""
+class AssibleDocTest(SanitySingleVersion):
+    """Sanity test for assible-doc."""
     def filter_targets(self, targets):  # type: (t.List[TestTarget]) -> t.List[TestTarget]
         """Return the given list of test targets, filtered to include only those relevant for the test."""
         # This should use documentable plugins from constants instead
         unsupported_plugin_types = set([
-            # not supported by ansible-doc
+            # not supported by assible-doc
             'action',
             'doc_fragments',
             'filter',
@@ -98,19 +98,19 @@ class AnsibleDocTest(SanitySingleVersion):
                 doc_targets[plugin_type].append(data_context().content.prefix + plugin_name)
                 target_paths[plugin_type][data_context().content.prefix + plugin_name] = plugin_file_path
 
-        env = ansible_environment(args, color=False)
+        env = assible_environment(args, color=False)
         error_messages = []
 
         for doc_type in sorted(doc_targets):
             for format_option in [None, '--json']:
-                cmd = ['ansible-doc', '-t', doc_type]
+                cmd = ['assible-doc', '-t', doc_type]
                 if format_option is not None:
                     cmd.append(format_option)
                 cmd.extend(sorted(doc_targets[doc_type]))
 
                 try:
                     with coverage_context(args):
-                        stdout, stderr = intercept_command(args, cmd, target_name='ansible-doc', env=env, capture=True, python_version=python_version)
+                        stdout, stderr = intercept_command(args, cmd, target_name='assible-doc', env=env, capture=True, python_version=python_version)
 
                     status = 0
                 except SubprocessError as ex:
@@ -130,7 +130,7 @@ class AnsibleDocTest(SanitySingleVersion):
                     stderr = re.sub(r'\[WARNING\]: [^ ]+ [^ ]+ has been removed\n', '', stderr).strip()
 
                 if stderr:
-                    summary = u'Output on stderr from ansible-doc is considered an error.\n\n%s' % SubprocessError(cmd, stderr=stderr)
+                    summary = u'Output on stderr from assible-doc is considered an error.\n\n%s' % SubprocessError(cmd, stderr=stderr)
                     return SanityFailure(self.name, summary=summary)
 
         if args.explain:

@@ -12,4 +12,4 @@
     - name: Create a Swarm cluster
       docker_swarm:
         state: present
-        advertise_addr: "{{ansible_default_ipv4.address | default('127.0.0.1')}}"
+        advertise_addr: "{{assible_default_ipv4.address | default('127.0.0.1')}}"

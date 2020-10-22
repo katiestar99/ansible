@@ -3,14 +3,14 @@
 # conceding defeat
 - name: Windows - make sure the port forwarder is active
   win_wait_for:
-    host: ansible.http.tests
+    host: assible.http.tests
     port: 80
     state: started
     timeout: 300
 
 - name: Windows - Get client cert/key
   win_get_url:
-    url: http://ansible.http.tests/{{ item }}
+    url: http://assible.http.tests/{{ item }}
     dest: '{{ remote_tmp_dir }}\{{ item }}'
   register: win_download
   # Server 2008 R2 is slightly slower, we attempt 5 retries
@@ -22,7 +22,7 @@
 
 - name: Windows - Retrieve test cacert
   win_get_url:
-    url: http://ansible.http.tests/cacert.pem
+    url: http://assible.http.tests/cacert.pem
     dest: '{{ remote_tmp_dir }}\cacert.pem'
 
 - name: Windows - Update ca trust

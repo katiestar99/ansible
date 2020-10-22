@@ -1,21 +1,21 @@
 #!powershell
 
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-#Requires -Module Ansible.ModuleUtils.Legacy
-#Requires -Module Ansible.ModuleUtils.SID
+#Requires -Module Assible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.SID
 
 $ErrorActionPreference = 'Stop'
 
 $params = Parse-Args $args -supports_check_mode $true
-$check_mode = Get-AnsibleParam -obj $params -name "_ansible_check_mode" -type "bool" -default $false
-$diff_mode = Get-AnsibleParam -obj $params -name "_ansible_diff" -type "bool" -default $false
-$_remote_tmp = Get-AnsibleParam $params "_ansible_remote_tmp" -type "path" -default $env:TMP
+$check_mode = Get-AssibleParam -obj $params -name "_assible_check_mode" -type "bool" -default $false
+$diff_mode = Get-AssibleParam -obj $params -name "_assible_diff" -type "bool" -default $false
+$_remote_tmp = Get-AssibleParam $params "_assible_remote_tmp" -type "path" -default $env:TMP
 
-$name = Get-AnsibleParam -obj $params -name "name" -type "str" -failifempty $true
-$users = Get-AnsibleParam -obj $params -name "users" -type "list" -failifempty $true
-$action = Get-AnsibleParam -obj $params -name "action" -type "str" -default "set" -validateset "add","remove","set"
+$name = Get-AssibleParam -obj $params -name "name" -type "str" -failifempty $true
+$users = Get-AssibleParam -obj $params -name "users" -type "list" -failifempty $true
+$action = Get-AssibleParam -obj $params -name "action" -type "str" -default "set" -validateset "add","remove","set"
 
 $result = @{
     changed = $false
@@ -33,7 +33,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-namespace Ansible
+namespace Assible
 {
     public class LsaRightHelper : IDisposable
     {
@@ -292,7 +292,7 @@ Function Compare-UserList($existing_users, $new_users) {
 }
 
 # C# class we can use to enumerate/add/remove rights
-$lsa_helper = New-Object -TypeName Ansible.LsaRightHelper
+$lsa_helper = New-Object -TypeName Assible.LsaRightHelper
 
 $new_users = [System.Collections.ArrayList]@()
 foreach ($user in $users) {

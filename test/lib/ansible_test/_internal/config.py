@@ -285,16 +285,16 @@ class IntegrationConfig(TestConfig):
             self.explain = True
             self.info_stderr = True
 
-    def get_ansible_config(self):  # type: () -> str
-        """Return the path to the Ansible config for the given config."""
-        ansible_config_relative_path = os.path.join(data_context().content.integration_path, '%s.cfg' % self.command)
-        ansible_config_path = os.path.join(data_context().content.root, ansible_config_relative_path)
+    def get_assible_config(self):  # type: () -> str
+        """Return the path to the Assible config for the given config."""
+        assible_config_relative_path = os.path.join(data_context().content.integration_path, '%s.cfg' % self.command)
+        assible_config_path = os.path.join(data_context().content.root, assible_config_relative_path)
 
-        if not os.path.exists(ansible_config_path):
+        if not os.path.exists(assible_config_path):
             # use the default empty configuration unless one has been provided
-            ansible_config_path = super(IntegrationConfig, self).get_ansible_config()
+            assible_config_path = super(IntegrationConfig, self).get_assible_config()
 
-        return ansible_config_path
+        return assible_config_path
 
 
 class PosixIntegrationConfig(IntegrationConfig):

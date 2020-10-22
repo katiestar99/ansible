@@ -8,13 +8,13 @@ DOCUMENTATION = '''
     short_description: dont execute anything
     description:
         - This connection plugin just verifies parameters passed in
-    author: ansible (@core)
+    author: assible (@core)
     version_added: histerical
     options:
       password:
           description: Authentication password for the C(remote_user). Can be supplied as CLI option.
           vars:
-              - name: ansible_password
+              - name: assible_password
       remote_user:
           description:
               - User name with which to login to the remote server, normally set by the remote_user keyword.
@@ -22,12 +22,12 @@ DOCUMENTATION = '''
             - section: defaults
               key: remote_user
           vars:
-              - name: ansible_user
+              - name: assible_user
 '''
 
-from ansible.errors import AnsibleConnectionFailure
-from ansible.plugins.connection import ConnectionBase
-from ansible.utils.display import Display
+from assible.errors import AssibleConnectionFailure
+from assible.plugins.connection import ConnectionBase
+from assible.utils.display import Display
 
 display = Display()
 
@@ -47,7 +47,7 @@ class Connection(ConnectionBase):
         ''' verify '''
 
         if self.get_option('remote_user') == 'invaliduser' and self.get_option('password') == 'badpassword':
-            raise AnsibleConnectionFailure('Got invaliduser and badpassword')
+            raise AssibleConnectionFailure('Got invaliduser and badpassword')
 
         if not self._connected:
             display.vvv(u"ESTABLISH FAKELOCAL CONNECTION FOR USER: {0}".format(self._play_context.remote_user), host=self._play_context.remote_addr)

@@ -1,6 +1,6 @@
 ---
 - debug:
-    msg: "START vyos_lldp_interfaces overridden integration tests on connection={{ ansible_connection }}"
+    msg: "START vyos_lldp_interfaces overridden integration tests on connection={{ assible_connection }}"
 
 - include_tasks: _remove_config.yaml
 

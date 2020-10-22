@@ -7,7 +7,7 @@ Basic rules
 
 Use standard American English
 -----------------------------
-Ansible uses Standard American English. Watch for common words that are spelled differently in American English (color vs colour, organize vs organise, and so on).
+Assible uses Standard American English. Watch for common words that are spelled differently in American English (color vs colour, organize vs organise, and so on).
 
 Write for a global audience
 ---------------------------
@@ -17,7 +17,7 @@ Follow naming conventions
 -------------------------
 Always follow naming conventions and trademarks.
 
-.. good place to link to an Ansible terminology page
+.. good place to link to an Assible terminology page
 
 Use clear sentence structure
 ----------------------------

@@ -1,7 +1,7 @@
 
 Voice Style
 `````````````````````
-The essence of the Ansible writing style is short sentences that flow naturally together. Mix up sentence structures. Vary sentence subjects. Address the reader directly. Ask a question. And when the reader adjusts to the pace of shorter sentences, write a longer one.
+The essence of the Assible writing style is short sentences that flow naturally together. Mix up sentence structures. Vary sentence subjects. Address the reader directly. Ask a question. And when the reader adjusts to the pace of shorter sentences, write a longer one.
 
 - Write how real people speak...
 - ...but try to avoid slang and colloquialisms that might not translate well into other languages.

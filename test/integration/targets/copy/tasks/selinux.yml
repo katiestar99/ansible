@@ -1,5 +1,5 @@
 # Ensure that our logic for special filesystems works as intended
-# https://github.com/ansible/ansible/issues/70244
+# https://github.com/assible/assible/issues/70244
 - block:
     - name: Install dosfstools
       yum:

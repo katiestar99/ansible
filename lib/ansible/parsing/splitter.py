@@ -1,19 +1,19 @@
-# (c) 2014 James Cammarata, <jcammarata@ansible.com>
+# (c) 2014 James Cammarata, <jcammarata@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -22,9 +22,9 @@ __metaclass__ = type
 import codecs
 import re
 
-from ansible.errors import AnsibleParserError
-from ansible.module_utils._text import to_text
-from ansible.parsing.quoting import unquote
+from assible.errors import AssibleParserError
+from assible.module_utils._text import to_text
+from assible.parsing.quoting import unquote
 
 
 # Decode escapes adapted from rspeer's answer here:
@@ -61,10 +61,10 @@ def parse_kv(args, check_raw=False):
         try:
             vargs = split_args(args)
         except IndexError as e:
-            raise AnsibleParserError("Unable to parse argument string", orig_exc=e)
+            raise AssibleParserError("Unable to parse argument string", orig_exc=e)
         except ValueError as ve:
             if 'no closing quotation' in str(ve).lower():
-                raise AnsibleParserError("error parsing argument string, try quoting the entire line.", orig_exc=ve)
+                raise AssibleParserError("error parsing argument string, try quoting the entire line.", orig_exc=ve)
             else:
                 raise
 
@@ -166,7 +166,7 @@ def split_args(args):
     example output: ['a=b', 'c="foo bar"']
 
     Basically this is a variation shlex that has some more intelligence for
-    how Ansible needs to use it.
+    how Assible needs to use it.
     '''
 
     # the list of params parsed out of the arg string
@@ -282,6 +282,6 @@ def split_args(args):
     # If we're done and things are not at zero depth or we're still inside quotes,
     # raise an error to indicate that the args were unbalanced
     if print_depth or block_depth or comment_depth or inside_quotes:
-        raise AnsibleParserError(u"failed at splitting arguments, either an unbalanced jinja2 block or quotes: {0}".format(args))
+        raise AssibleParserError(u"failed at splitting arguments, either an unbalanced jinja2 block or quotes: {0}".format(args))
 
     return params

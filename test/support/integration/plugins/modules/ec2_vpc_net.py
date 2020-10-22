@@ -1,12 +1,12 @@
 #!/usr/bin/python
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -199,15 +199,15 @@ vpc:
 try:
     import botocore
 except ImportError:
-    pass  # Handled by AnsibleAWSModule
+    pass  # Handled by AssibleAWSModule
 
 from time import sleep, time
-from ansible.module_utils.aws.core import AnsibleAWSModule
-from ansible.module_utils.ec2 import (AWSRetry, camel_dict_to_snake_dict, compare_aws_tags,
-                                      ansible_dict_to_boto3_tag_list, boto3_tag_list_to_ansible_dict)
-from ansible.module_utils.six import string_types
-from ansible.module_utils._text import to_native
-from ansible.module_utils.network.common.utils import to_subnet
+from assible.module_utils.aws.core import AssibleAWSModule
+from assible.module_utils.ec2 import (AWSRetry, camel_dict_to_snake_dict, compare_aws_tags,
+                                      assible_dict_to_boto3_tag_list, boto3_tag_list_to_assible_dict)
+from assible.module_utils.six import string_types
+from assible.module_utils._text import to_native
+from assible.module_utils.network.common.utils import to_subnet
 
 
 def vpc_exists(module, vpc, name, cidr_block, multi):
@@ -275,11 +275,11 @@ def update_vpc_tags(connection, module, vpc_id, tags, name):
         tags_to_update, dummy = compare_aws_tags(current_tags, tags, False)
         if tags_to_update:
             if not module.check_mode:
-                tags = ansible_dict_to_boto3_tag_list(tags_to_update)
+                tags = assible_dict_to_boto3_tag_list(tags_to_update)
                 vpc_obj = connection.create_tags(Resources=[vpc_id], Tags=tags, aws_retry=True)
 
                 # Wait for tags to be updated
-                expected_tags = boto3_tag_list_to_ansible_dict(tags)
+                expected_tags = boto3_tag_list_to_assible_dict(tags)
                 filters = [{'Name': 'tag:{0}'.format(key), 'Values': [value]} for key, value in expected_tags.items()]
                 connection.get_waiter('vpc_available').wait(VpcIds=[vpc_id], Filters=filters)
 
@@ -378,7 +378,7 @@ def main():
         purge_cidrs=dict(type='bool', default=False),
     )
 
-    module = AnsibleAWSModule(
+    module = AssibleAWSModule(
         argument_spec=argument_spec,
         supports_check_mode=True
     )
@@ -498,7 +498,7 @@ def main():
         wait_for_vpc_attribute(connection, module, vpc_id, 'enableDnsHostnames', dns_hostnames)
 
         final_state = camel_dict_to_snake_dict(get_vpc(module, connection, vpc_id))
-        final_state['tags'] = boto3_tag_list_to_ansible_dict(final_state.get('tags', []))
+        final_state['tags'] = boto3_tag_list_to_assible_dict(final_state.get('tags', []))
         final_state['id'] = final_state.pop('vpc_id')
 
         module.exit_json(changed=changed, vpc=final_state)

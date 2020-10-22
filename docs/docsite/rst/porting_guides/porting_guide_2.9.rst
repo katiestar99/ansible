@@ -2,14 +2,14 @@
 .. _porting_2.9_guide:
 
 *************************
-Ansible 2.9 Porting Guide
+Assible 2.9 Porting Guide
 *************************
 
-This section discusses the behavioral changes between Ansible 2.8 and Ansible 2.9.
+This section discusses the behavioral changes between Assible 2.8 and Assible 2.9.
 
-It is intended to assist in updating your playbooks, plugins and other parts of your Ansible infrastructure so they will work with this version of Ansible.
+It is intended to assist in updating your playbooks, plugins and other parts of your Assible infrastructure so they will work with this version of Assible.
 
-We suggest you read this page along with `Ansible Changelog for 2.9 <https://github.com/ansible/ansible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst>`_ to understand what updates you may need to make.
+We suggest you read this page along with `Assible Changelog for 2.9 <https://github.com/assible/assible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst>`_ to understand what updates you may need to make.
 
 This document is part of a collection on porting. The complete list of porting guides can be found at :ref:`porting guides <porting_guides>`.
 
@@ -27,16 +27,16 @@ Inventory
 Loops
 -----
 
-Ansible 2.9 handles "unsafe" data more robustly, ensuring that data marked "unsafe" is not templated. In previous versions, Ansible recursively marked all data returned by the direct use of ``lookup()`` as "unsafe", but only marked structured data returned by indirect lookups using ``with_X`` style loops as "unsafe" if the returned elements were strings. Ansible 2.9 treats these two approaches consistently.
+Assible 2.9 handles "unsafe" data more robustly, ensuring that data marked "unsafe" is not templated. In previous versions, Assible recursively marked all data returned by the direct use of ``lookup()`` as "unsafe", but only marked structured data returned by indirect lookups using ``with_X`` style loops as "unsafe" if the returned elements were strings. Assible 2.9 treats these two approaches consistently.
 
-As a result, if you use ``with_dict`` to return keys with templatable values, your templates may no longer work as expected in Ansible 2.9.
+As a result, if you use ``with_dict`` to return keys with templatable values, your templates may no longer work as expected in Assible 2.9.
 
 To allow the old behavior, switch from using ``with_X`` to using ``loop`` with a filter as described at :ref:`migrating_to_loop`.
 
 Command Line
 ============
 
-* The location of the Galaxy token file has changed from ``~/.ansible_galaxy`` to ``~/.ansible/galaxy_token``. You can configure both path and file name with the :ref:`galaxy_token_path` config.
+* The location of the Galaxy token file has changed from ``~/.assible_galaxy`` to ``~/.assible/galaxy_token``. You can configure both path and file name with the :ref:`galaxy_token_path` config.
 
 
 Deprecated
@@ -48,20 +48,20 @@ No notable changes
 Collection loader changes
 =========================
 
-The way to import a PowerShell or C# module util from a collection has changed in the Ansible 2.9 release. In Ansible
+The way to import a PowerShell or C# module util from a collection has changed in the Assible 2.9 release. In Assible
 2.8 a util was imported with the following syntax:
 
 .. code-block:: powershell
 
-    #AnsibleRequires -CSharpUtil AnsibleCollections.namespace_name.collection_name.util_filename
-    #AnsibleRequires -PowerShell AnsibleCollections.namespace_name.collection_name.util_filename
+    #AssibleRequires -CSharpUtil AssibleCollections.namespace_name.collection_name.util_filename
+    #AssibleRequires -PowerShell AssibleCollections.namespace_name.collection_name.util_filename
 
-In Ansible 2.9 this was changed to:
+In Assible 2.9 this was changed to:
 
 .. code-block:: powershell
 
-    #AnsibleRequires -CSharpUtil ansible_collections.namespace_name.collection_name.plugins.module_utils.util_filename
-    #AnsibleRequires -PowerShell ansible_collections.namespace_name.collection_name.plugins.module_utils.util_filename
+    #AssibleRequires -CSharpUtil assible_collections.namespace_name.collection_name.plugins.module_utils.util_filename
+    #AssibleRequires -PowerShell assible_collections.namespace_name.collection_name.plugins.module_utils.util_filename
 
 The change in the collection import name also requires any C# util namespaces to be updated with the newer name
 format. This is more verbose but is designed to make sure we avoid plugin name conflicts across separate plugin types
@@ -71,10 +71,10 @@ and to standardise how imports work in PowerShell with how Python modules work.
 Modules
 =======
 
-* The ``win_get_url`` and ``win_uri`` module now sends requests with a default ``User-Agent`` of ``ansible-httpget``. This can be changed by using the ``http_agent`` key.
+* The ``win_get_url`` and ``win_uri`` module now sends requests with a default ``User-Agent`` of ``assible-httpget``. This can be changed by using the ``http_agent`` key.
 * The ``apt`` module now honors ``update_cache=false`` while installing its own dependency and skips the cache update. Explicitly setting ``update_cache=true`` or omitting the param ``update_cache`` will result in a cache update while installing its own dependency.
 
-* Version 2.9.12 of Ansible changed the default mode of file-based tasks to ``0o600 & ~umask`` when the user did not specify a ``mode`` parameter on file-based tasks. This was in response to a CVE report which we have reconsidered. As a result, the mode change has been reverted in 2.9.13, and mode will now default to ``0o666 & ~umask`` as in previous versions of Ansible.
+* Version 2.9.12 of Assible changed the default mode of file-based tasks to ``0o600 & ~umask`` when the user did not specify a ``mode`` parameter on file-based tasks. This was in response to a CVE report which we have reconsidered. As a result, the mode change has been reverted in 2.9.13, and mode will now default to ``0o666 & ~umask`` as in previous versions of Assible.
 * If you changed any tasks to specify less restrictive permissions while using 2.9.12, those changes will be unnecessary (but will do no harm) in 2.9.13.
 * To avoid the issue raised in CVE-2020-1736, specify a ``mode`` parameter in all file-based tasks that accept it.
 
@@ -84,7 +84,7 @@ Modules
 Renaming from ``_facts`` to ``_info``
 --------------------------------------
 
-Ansible 2.9 renamed a lot of modules from ``<something>_facts`` to ``<something>_info``, because the modules do not return :ref:`Ansible facts <vars_and_facts>`. Ansible facts relate to a specific host. For example, the configuration of a network interface, the operating system on a unix server, and the list of packages installed on a Windows box are all Ansible facts. The renamed modules return values that are not unique to the host. For example, account information or region data for a cloud provider. Renaming these modules should provide more clarity about the types of return values each set of modules offers.
+Assible 2.9 renamed a lot of modules from ``<something>_facts`` to ``<something>_info``, because the modules do not return :ref:`Assible facts <vars_and_facts>`. Assible facts relate to a specific host. For example, the configuration of a network interface, the operating system on a unix server, and the list of packages installed on a Windows box are all Assible facts. The renamed modules return values that are not unique to the host. For example, account information or region data for a cloud provider. Renaming these modules should provide more clarity about the types of return values each set of modules offers.
 
 Writing modules
 ---------------
@@ -96,22 +96,22 @@ Writing modules
 
   .. code-block:: python
 
-    # File: ansible_collections/my_namespace/my_collection/plugins/modules/my_module.py
+    # File: assible_collections/my_namespace/my_collection/plugins/modules/my_module.py
     # Old way to use an absolute import to import module_utils from the collection:
-    from ansible_collections.my_namespace.my_collection.plugins.module_utils import my_util
+    from assible_collections.my_namespace.my_collection.plugins.module_utils import my_util
     # New way using a relative import:
     from ..module_utils import my_util
 
-  Modules and module_utils shipped with Ansible can use relative imports as well but the savings
+  Modules and module_utils shipped with Assible can use relative imports as well but the savings
   are smaller:
 
   .. code-block:: python
 
-    # File: ansible/modules/system/ping.py
+    # File: assible/modules/system/ping.py
     # Old way to use an absolute import to import module_utils from core:
-    from ansible.module_utils.basic import AnsibleModule
+    from assible.module_utils.basic import AssibleModule
     # New way using a relative import:
-    from ...module_utils.basic import AnsibleModule
+    from ...module_utils.basic import AssibleModule
 
   Each single dot (``.``) represents one level of the tree (equivalent to ``../`` in filesystem relative links).
 
@@ -124,21 +124,21 @@ Modules removed
 The following modules no longer exist:
 
 * Apstra's ``aos_*`` modules.  See the new modules at  `https://github.com/apstra <https://github.com/apstra>`_.
-* ec2_ami_find use :ref:`ec2_ami_facts <ansible_2_9:ec2_ami_facts_module>` instead.
-* kubernetes use :ref:`k8s <ansible_2_9:k8s_module>` instead.
-* nxos_ip_interface use :ref:`nxos_l3_interface <ansible_2_9:nxos_l3_interface_module>` instead.
-* nxos_portchannel use :ref:`nxos_linkagg <ansible_2_9:nxos_linkagg_module>` instead.
-* nxos_switchport use :ref:`nxos_l2_interface <ansible_2_9:nxos_l2_interface_module>` instead.
-* oc use :ref:`k8s <ansible_2_9:k8s_module>` instead.
-* panos_nat_policy use :ref:`panos_nat_rule <ansible_2_9:panos_nat_rule_module>` instead.
-* panos_security_policy use :ref:`panos_security_rule <ansible_2_9:panos_security_rule_module>` instead.
-* vsphere_guest use :ref:`vmware_guest <ansible_2_9:vmware_guest_module>` instead.
+* ec2_ami_find use :ref:`ec2_ami_facts <assible_2_9:ec2_ami_facts_module>` instead.
+* kubernetes use :ref:`k8s <assible_2_9:k8s_module>` instead.
+* nxos_ip_interface use :ref:`nxos_l3_interface <assible_2_9:nxos_l3_interface_module>` instead.
+* nxos_portchannel use :ref:`nxos_linkagg <assible_2_9:nxos_linkagg_module>` instead.
+* nxos_switchport use :ref:`nxos_l2_interface <assible_2_9:nxos_l2_interface_module>` instead.
+* oc use :ref:`k8s <assible_2_9:k8s_module>` instead.
+* panos_nat_policy use :ref:`panos_nat_rule <assible_2_9:panos_nat_rule_module>` instead.
+* panos_security_policy use :ref:`panos_security_rule <assible_2_9:panos_security_rule_module>` instead.
+* vsphere_guest use :ref:`vmware_guest <assible_2_9:vmware_guest_module>` instead.
 
 
 Deprecation notices
 -------------------
 
-The following modules will be removed in Ansible 2.13. Please update update your playbooks accordingly.
+The following modules will be removed in Assible 2.13. Please update update your playbooks accordingly.
 
 * cs_instance_facts use :ref:`cs_instance_info <cs_instance_info_module>` instead.
 
@@ -335,12 +335,12 @@ The following modules will be removed in Ansible 2.13. Please update update your
 * vyos_lldp_interface use :ref:`vyos_lldp_interfaces <vyos_lldp_interfaces_module>` instead.
 
 
-The following functionality will be removed in Ansible 2.12. Please update update your playbooks accordingly.
+The following functionality will be removed in Assible 2.12. Please update update your playbooks accordingly.
 
 * ``vmware_cluster`` DRS, HA and VSAN configuration; use :ref:`vmware_cluster_drs <vmware_cluster_drs_module>`, :ref:`vmware_cluster_ha <vmware_cluster_ha_module>` and :ref:`vmware_cluster_vsan <vmware_cluster_vsan_module>` instead.
 
 
-The following functionality will be removed in Ansible 2.13. Please update update your playbooks accordingly.
+The following functionality will be removed in Assible 2.13. Please update update your playbooks accordingly.
 
 * ``openssl_certificate`` deprecates the ``assertonly`` provider.
   Please see the :ref:`openssl_certificate <openssl_certificate_module>` documentation examples on how to
@@ -350,7 +350,7 @@ The following functionality will be removed in Ansible 2.13. Please update updat
 
 
 For the following modules, the PyOpenSSL-based backend ``pyopenssl`` has been deprecated and will be
-removed in Ansible 2.13:
+removed in Assible 2.13:
 
 * :ref:`get_certificate <get_certificate_module>`
 * :ref:`openssl_certificate <openssl_certificate_module>`
@@ -366,7 +366,7 @@ Renamed modules
 ^^^^^^^^^^^^^^^
 
 The following modules have been renamed. The old name is deprecated and will
-be removed in Ansible 2.13. Please update update your playbooks accordingly.
+be removed in Assible 2.13. Please update update your playbooks accordingly.
 
 * The ``ali_instance_facts`` module was renamed to :ref:`ali_instance_info <ali_instance_info_module>`.
 * The ``aws_acm_facts`` module was renamed to :ref:`aws_acm_info <aws_acm_info_module>`.
@@ -375,7 +375,7 @@ be removed in Ansible 2.13. Please update update your playbooks accordingly.
 * The ``aws_kms_facts`` module was renamed to :ref:`aws_kms_info <aws_kms_info_module>`.
 * The ``aws_region_facts`` module was renamed to :ref:`aws_region_info <aws_region_info_module>`.
 * The ``aws_s3_bucket_facts`` module was renamed to :ref:`aws_s3_bucket_info <aws_s3_bucket_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``aws_sgw_facts`` module was renamed to :ref:`aws_sgw_info <aws_sgw_info_module>`.
 * The ``aws_waf_facts`` module was renamed to :ref:`aws_waf_info <aws_waf_info_module>`.
@@ -396,10 +396,10 @@ be removed in Ansible 2.13. Please update update your playbooks accordingly.
 * The ``bigip_device_facts`` module was renamed to :ref:`bigip_device_info <bigip_device_info_module>`.
 * The ``bigiq_device_facts`` module was renamed to :ref:`bigiq_device_info <bigiq_device_info_module>`.
 * The ``cloudformation_facts`` module was renamed to :ref:`cloudformation_info <cloudformation_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``cloudfront_facts`` module was renamed to :ref:`cloudfront_info <cloudfront_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``cloudwatchlogs_log_group_facts`` module was renamed to :ref:`cloudwatchlogs_log_group_info <cloudwatchlogs_log_group_info_module>`.
 * The ``digital_ocean_account_facts`` module was renamed to :ref:`digital_ocean_account_info <digital_ocean_account_info_module>`.
@@ -438,11 +438,11 @@ be removed in Ansible 2.13. Please update update your playbooks accordingly.
 * The ``ec2_vpc_vgw_facts`` module was renamed to :ref:`ec2_vpc_vgw_info <ec2_vpc_vgw_info_module>`.
 * The ``ec2_vpc_vpn_facts`` module was renamed to :ref:`ec2_vpc_vpn_info <ec2_vpc_vpn_info_module>`.
 * The ``ecs_service_facts`` module was renamed to :ref:`ecs_service_info <ecs_service_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ecs_taskdefinition_facts`` module was renamed to :ref:`ecs_taskdefinition_info <ecs_taskdefinition_info_module>`.
 * The ``efs_facts`` module was renamed to :ref:`efs_info <efs_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``elasticache_facts`` module was renamed to :ref:`elasticache_info <elasticache_info_module>`.
 * The ``elb_application_lb_facts`` module was renamed to :ref:`elb_application_lb_info <elb_application_lb_info_module>`.
@@ -504,40 +504,40 @@ be removed in Ansible 2.13. Please update update your playbooks accordingly.
 * The ``gcpubsub_facts`` module was renamed to :ref:`gcpubsub_info <gcpubsub_info_module>`.
 * The ``github_webhook_facts`` module was renamed to :ref:`github_webhook_info <github_webhook_info_module>`.
 * The ``gluster_heal_facts`` module was renamed to :ref:`gluster_heal_info <gluster_heal_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_datacenter_facts`` module was renamed to :ref:`hcloud_datacenter_info <hcloud_datacenter_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_floating_ip_facts`` module was renamed to :ref:`hcloud_floating_ip_info <hcloud_floating_ip_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_image_facts`` module was renamed to :ref:`hcloud_image_info <hcloud_image_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_location_facts`` module was renamed to :ref:`hcloud_location_info <hcloud_location_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_server_facts`` module was renamed to :ref:`hcloud_server_info <hcloud_server_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_server_type_facts`` module was renamed to :ref:`hcloud_server_type_info <hcloud_server_type_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_ssh_key_facts`` module was renamed to :ref:`hcloud_ssh_key_info <hcloud_ssh_key_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hcloud_volume_facts`` module was renamed to :ref:`hcloud_volume_info <hcloud_volume_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``hpilo_facts`` module was renamed to :ref:`hpilo_info <hpilo_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``iam_mfa_device_facts`` module was renamed to :ref:`iam_mfa_device_info <iam_mfa_device_info_module>`.
 * The ``iam_role_facts`` module was renamed to :ref:`iam_role_info <iam_role_info_module>`.
 * The ``iam_server_certificate_facts`` module was renamed to :ref:`iam_server_certificate_info <iam_server_certificate_info_module>`.
 * The ``idrac_redfish_facts`` module was renamed to :ref:`idrac_redfish_info <idrac_redfish_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``intersight_facts`` module was renamed to :ref:`intersight_info <intersight_info_module>`.
 * The ``jenkins_job_facts`` module was renamed to :ref:`jenkins_job_info <jenkins_job_info_module>`.
@@ -546,144 +546,144 @@ be removed in Ansible 2.13. Please update update your playbooks accordingly.
 * The ``memset_server_facts`` module was renamed to :ref:`memset_server_info <memset_server_info_module>`.
 * The ``one_image_facts`` module was renamed to :ref:`one_image_info <one_image_info_module>`.
 * The ``onepassword_facts`` module was renamed to :ref:`onepassword_info <onepassword_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_datacenter_facts`` module was renamed to :ref:`oneview_datacenter_info <oneview_datacenter_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_enclosure_facts`` module was renamed to :ref:`oneview_enclosure_info <oneview_enclosure_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_ethernet_network_facts`` module was renamed to :ref:`oneview_ethernet_network_info <oneview_ethernet_network_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_fc_network_facts`` module was renamed to :ref:`oneview_fc_network_info <oneview_fc_network_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_fcoe_network_facts`` module was renamed to :ref:`oneview_fcoe_network_info <oneview_fcoe_network_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_logical_interconnect_group_facts`` module was renamed to :ref:`oneview_logical_interconnect_group_info <oneview_logical_interconnect_group_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_network_set_facts`` module was renamed to :ref:`oneview_network_set_info <oneview_network_set_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``oneview_san_manager_facts`` module was renamed to :ref:`oneview_san_manager_info <oneview_san_manager_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_flavor_facts`` module was renamed to :ref:`os_flavor_info <os_flavor_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_image_facts`` module was renamed to :ref:`os_image_info <os_image_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_keystone_domain_facts`` module was renamed to :ref:`os_keystone_domain_info <os_keystone_domain_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_networks_facts`` module was renamed to :ref:`os_networks_info <os_networks_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_port_facts`` module was renamed to :ref:`os_port_info <os_port_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_project_facts`` module was renamed to :ref:`os_project_info <os_project_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_server_facts`` module was renamed to :ref:`os_server_info <os_server_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_subnets_facts`` module was renamed to :ref:`os_subnets_info <os_subnets_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``os_user_facts`` module was renamed to :ref:`os_user_info <os_user_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_affinity_label_facts`` module was renamed to :ref:`ovirt_affinity_label_info <ovirt_affinity_label_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_api_facts`` module was renamed to :ref:`ovirt_api_info <ovirt_api_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_cluster_facts`` module was renamed to :ref:`ovirt_cluster_info <ovirt_cluster_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_datacenter_facts`` module was renamed to :ref:`ovirt_datacenter_info <ovirt_datacenter_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_disk_facts`` module was renamed to :ref:`ovirt_disk_info <ovirt_disk_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_event_facts`` module was renamed to :ref:`ovirt_event_info <ovirt_event_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_external_provider_facts`` module was renamed to :ref:`ovirt_external_provider_info <ovirt_external_provider_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_group_facts`` module was renamed to :ref:`ovirt_group_info <ovirt_group_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_host_facts`` module was renamed to :ref:`ovirt_host_info <ovirt_host_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_host_storage_facts`` module was renamed to :ref:`ovirt_host_storage_info <ovirt_host_storage_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_network_facts`` module was renamed to :ref:`ovirt_network_info <ovirt_network_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_nic_facts`` module was renamed to :ref:`ovirt_nic_info <ovirt_nic_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_permission_facts`` module was renamed to :ref:`ovirt_permission_info <ovirt_permission_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_quota_facts`` module was renamed to :ref:`ovirt_quota_info <ovirt_quota_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_scheduling_policy_facts`` module was renamed to :ref:`ovirt_scheduling_policy_info <ovirt_scheduling_policy_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_snapshot_facts`` module was renamed to :ref:`ovirt_snapshot_info <ovirt_snapshot_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_storage_domain_facts`` module was renamed to :ref:`ovirt_storage_domain_info <ovirt_storage_domain_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_storage_template_facts`` module was renamed to :ref:`ovirt_storage_template_info <ovirt_storage_template_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_storage_vm_facts`` module was renamed to :ref:`ovirt_storage_vm_info <ovirt_storage_vm_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_tag_facts`` module was renamed to :ref:`ovirt_tag_info <ovirt_tag_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_template_facts`` module was renamed to :ref:`ovirt_template_info <ovirt_template_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_user_facts`` module was renamed to :ref:`ovirt_user_info <ovirt_user_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_vm_facts`` module was renamed to :ref:`ovirt_vm_info <ovirt_vm_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``ovirt_vmpool_facts`` module was renamed to :ref:`ovirt_vmpool_info <ovirt_vmpool_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``python_requirements_facts`` module was renamed to :ref:`python_requirements_info <python_requirements_info_module>`.
 * The ``rds_instance_facts`` module was renamed to :ref:`rds_instance_info <rds_instance_info_module>`.
 * The ``rds_snapshot_facts`` module was renamed to :ref:`rds_snapshot_info <rds_snapshot_info_module>`.
 * The ``redfish_facts`` module was renamed to :ref:`redfish_info <redfish_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``redshift_facts`` module was renamed to :ref:`redshift_info <redshift_info_module>`.
 * The ``route53_facts`` module was renamed to :ref:`route53_info <route53_info_module>`.
 * The ``smartos_image_facts`` module was renamed to :ref:`smartos_image_info <ali_instance_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``vertica_facts`` module was renamed to :ref:`vertica_info <vertica_info_module>`.
-  When called with the new name, the module no longer returns ``ansible_facts``.
+  When called with the new name, the module no longer returns ``assible_facts``.
   To access return values, :ref:`register a variable <registered_variables>`.
 * The ``vmware_cluster_facts`` module was renamed to :ref:`vmware_cluster_info <vmware_cluster_info_module>`.
 * The ``vmware_datastore_facts`` module was renamed to :ref:`vmware_datastore_info <vmware_datastore_info_module>`.
@@ -730,19 +730,19 @@ Networking
 Network resource modules
 ------------------------
 
-Ansible 2.9 introduced the first batch of network resource modules. Sections of a network device's configuration can be thought of as a resource provided by that device. Network resource modules are intentionally scoped to configure a single resource and you can combine them as building blocks to configure complex network services. The older modules are deprecated in Ansible 2.9 and will be removed in Ansible 2.13. You should scan the list of deprecated modules above and replace them with the new network resource modules in your playbooks. See `Ansible Network Features in 2.9 <https://www.ansible.com/blog/network-features-coming-soon-in-ansible-engine-2.9>`_ for details.
+Assible 2.9 introduced the first batch of network resource modules. Sections of a network device's configuration can be thought of as a resource provided by that device. Network resource modules are intentionally scoped to configure a single resource and you can combine them as building blocks to configure complex network services. The older modules are deprecated in Assible 2.9 and will be removed in Assible 2.13. You should scan the list of deprecated modules above and replace them with the new network resource modules in your playbooks. See `Assible Network Features in 2.9 <https://www.assible.com/blog/network-features-coming-soon-in-assible-engine-2.9>`_ for details.
 
 Improved ``gather_facts`` support for network devices
 -----------------------------------------------------
 
-In Ansible 2.9, the ``gather_facts`` keyword now supports gathering network device facts in standardized key/value pairs. You can feed these network facts into further tasks to manage the network device. You can also use the new ``gather_network_resources`` parameter with the network ``*_facts`` modules (such as :ref:`eos_facts <eos_facts_module>`) to return just a subset of the device configuration.  See :ref:`network_gather_facts` for an example.
+In Assible 2.9, the ``gather_facts`` keyword now supports gathering network device facts in standardized key/value pairs. You can feed these network facts into further tasks to manage the network device. You can also use the new ``gather_network_resources`` parameter with the network ``*_facts`` modules (such as :ref:`eos_facts <eos_facts_module>`) to return just a subset of the device configuration.  See :ref:`network_gather_facts` for an example.
 
 Top-level connection arguments removed in 2.9
 ---------------------------------------------
 
 Top-level connection arguments like ``username``, ``host``, and ``password`` are  removed in version 2.9.
 
-**OLD** In Ansible < 2.4
+**OLD** In Assible < 2.4
 
 .. code-block:: yaml
 
@@ -756,4 +756,4 @@ Top-level connection arguments like ``username``, ``host``, and ``password`` are
         auth_pass: cisco
 
 
-Change your playbooks to the connection types ``network_cli`` and ``netconf`` using standard Ansible connection properties, and setting those properties in inventory by group. As you update your playbooks and inventory files, you can easily make the change to ``become`` for privilege escalation (on platforms that support it). For more information, see the :ref:`using become with network modules<become_network>` guide and the :ref:`platform documentation<platform_options>`.
+Change your playbooks to the connection types ``network_cli`` and ``netconf`` using standard Assible connection properties, and setting those properties in inventory by group. As you update your playbooks and inventory files, you can easily make the change to ``become`` for privilege escalation (on platforms that support it). For more information, see the :ref:`using become with network modules<become_network>` guide and the :ref:`platform documentation<platform_options>`.

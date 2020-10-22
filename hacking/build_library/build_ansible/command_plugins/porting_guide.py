@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -17,14 +17,14 @@ PORTING_GUIDE_TEMPLATE = """
 .. _porting_{{ ver }}_guide:
 
 **************************
-Ansible {{ ver }} Porting Guide
+Assible {{ ver }} Porting Guide
 **************************
 
-This section discusses the behavioral changes between Ansible {{ prev_ver }} and Ansible {{ ver }}.
+This section discusses the behavioral changes between Assible {{ prev_ver }} and Assible {{ ver }}.
 
-It is intended to assist in updating your playbooks, plugins and other parts of your Ansible infrastructure so they will work with this version of Ansible.
+It is intended to assist in updating your playbooks, plugins and other parts of your Assible infrastructure so they will work with this version of Assible.
 
-We suggest you read this page along with `Ansible Changelog for {{ ver }} <https://github.com/ansible/ansible/blob/devel/changelogs/CHANGELOG-v{{ ver }}.rst>`_ to understand what updates you may need to make.
+We suggest you read this page along with `Assible Changelog for {{ ver }} <https://github.com/assible/assible/blob/devel/changelogs/CHANGELOG-v{{ ver }}.rst>`_ to understand what updates you may need to make.
 
 This document is part of a collection on porting. The complete list of porting guides can be found at :ref:`porting guides <porting_guides>`.
 
@@ -129,7 +129,7 @@ class PortingGuideCommand(Command):
     def init_parser(cls, add_parser):
         parser = add_parser(cls.name, description="Generate a fresh porting guide template")
         parser.add_argument("--version", dest="version", type=str, required=True, action='store',
-                            help="Version of Ansible to write the porting guide for")
+                            help="Version of Assible to write the porting guide for")
 
     @staticmethod
     def main(args):

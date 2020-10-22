@@ -16,7 +16,7 @@ try:
     from setuptools.command.install_lib import install_lib as InstallLib
     from setuptools.command.install_scripts import install_scripts as InstallScripts
 except ImportError:
-    print("Ansible now needs setuptools in order to build. Install it using"
+    print("Assible now needs setuptools in order to build. Install it using"
           " your package manager (usually python-setuptools) or via pip (pip"
           " install setuptools).", file=sys.stderr)
     sys.exit(1)
@@ -24,7 +24,7 @@ except ImportError:
 # `distutils` must be imported after `setuptools` or it will cause explosions
 # with `setuptools >=48.0.0, <49.1`.
 # Refs:
-# * https://github.com/ansible/ansible/issues/70456
+# * https://github.com/assible/assible/issues/70456
 # * https://github.com/pypa/setuptools/issues/2230
 # * https://github.com/pypa/setuptools/commit/bd110264
 from distutils.command.build_scripts import build_scripts as BuildScripts
@@ -50,9 +50,9 @@ def find_package_info(*file_paths):
     raise RuntimeError("Unable to find package info.")
 
 
-def _validate_install_ansible_base():
-    """Validate that we can install ansible-base. Currently this only
-    cares about upgrading to ansible-base from ansible<2.10
+def _validate_install_assible_base():
+    """Validate that we can install assible-base. Currently this only
+    cares about upgrading to assible-base from assible<2.10
     """
     # Skip common commands we can ignore
     # Do NOT add bdist_wheel here, we don't ship wheels
@@ -62,7 +62,7 @@ def _validate_install_ansible_base():
     if set(('sdist', 'egg_info')).intersection(sys.argv):
         return
 
-    if os.getenv('ANSIBLE_SKIP_CONFLICT_CHECK', '') not in ('', '0'):
+    if os.getenv('ASSIBLE_SKIP_CONFLICT_CHECK', '') not in ('', '0'):
         return
 
     # Save these for later restoring things to pre invocation
@@ -75,7 +75,7 @@ def _validate_install_ansible_base():
     sys.path[:] = [p for p in sys.path if abspath(p) != abspath('lib')]
 
     try:
-        from ansible.release import __version__
+        from assible.release import __version__
     except ImportError:
         pass
     else:
@@ -87,20 +87,20 @@ def _validate_install_ansible_base():
 
     %s
 
-    Cannot install ansible-base with a pre-existing ansible==%s
+    Cannot install assible-base with a pre-existing assible==%s
     installation.
 
-    Installing ansible-base with ansible-2.9 or older currently installed with
-    pip is known to cause problems. Please uninstall ansible and install the new
+    Installing assible-base with assible-2.9 or older currently installed with
+    pip is known to cause problems. Please uninstall assible and install the new
     version:
 
-        pip uninstall ansible
-        pip install ansible-base
+        pip uninstall assible
+        pip install assible-base
 
     If you want to skip the conflict checks and manually resolve any issues
-    afterwards, set the ANSIBLE_SKIP_CONFLICT_CHECK environment variable:
+    afterwards, set the ASSIBLE_SKIP_CONFLICT_CHECK environment variable:
 
-        ANSIBLE_SKIP_CONFLICT_CHECK=1 pip install ansible-base
+        ASSIBLE_SKIP_CONFLICT_CHECK=1 pip install assible-base
 
     %s
                 ''' % (stars, __version__, stars)
@@ -112,7 +112,7 @@ def _validate_install_ansible_base():
         sys.modules.update(sys_modules)
 
 
-_validate_install_ansible_base()
+_validate_install_assible_base()
 
 
 SYMLINK_CACHE = 'SYMLINK_CACHE.json'
@@ -127,8 +127,8 @@ def _find_symlinks(topdir, extension=''):
 
     .. warn::
 
-        We want the symlinks in :file:`bin/` that link into :file:`lib/ansible/*` (currently,
-        :command:`ansible`, :command:`ansible-test`, and :command:`ansible-connection`) to become
+        We want the symlinks in :file:`bin/` that link into :file:`lib/assible/*` (currently,
+        :command:`assible`, :command:`assible-test`, and :command:`assible-connection`) to become
         real files on install.  Updates to the heuristic here *must not* add them to the symlink
         cache.
     """
@@ -199,7 +199,7 @@ def _maintain_symlinks(symlink_type, base_path):
             # Sanity check that something we know should be a symlink was
             # found.  We'll take that to mean that the current directory
             # structure properly reflects symlinks in the git repo
-            if 'ansible-playbook' in symlink_data['script']['ansible']:
+            if 'assible-playbook' in symlink_data['script']['assible']:
                 _cache_symlinks(symlink_data)
             else:
                 raise RuntimeError(
@@ -264,7 +264,7 @@ class SDistCommand(SDist):
 
         # Print warnings at the end because no one will see warnings before all the normal status
         # output
-        if os.environ.get('_ANSIBLE_SDIST_FROM_MAKEFILE', False) != '1':
+        if os.environ.get('_ASSIBLE_SDIST_FROM_MAKEFILE', False) != '1':
             warnings.warn('When setup.py sdist is run from outside of the Makefile,'
                           ' the generated tarball may be incomplete.  Use `make snapshot`'
                           ' to create a tarball from an arbitrary checkout or use'
@@ -294,14 +294,14 @@ PYCRYPTO_DIST = 'pycrypto'
 
 
 def get_crypto_req():
-    """Detect custom crypto from ANSIBLE_CRYPTO_BACKEND env var.
+    """Detect custom crypto from ASSIBLE_CRYPTO_BACKEND env var.
 
     pycrypto or cryptography. We choose a default but allow the user to
     override it. This translates into pip install of the sdist deciding what
     package to install and also the runtime dependencies that pkg_resources
     knows about.
     """
-    crypto_backend = os.environ.get('ANSIBLE_CRYPTO_BACKEND', '').strip()
+    crypto_backend = os.environ.get('ASSIBLE_CRYPTO_BACKEND', '').strip()
 
     if crypto_backend == PYCRYPTO_DIST:
         # Attempt to set version requirements
@@ -336,7 +336,7 @@ def get_dynamic_setup_params():
 
 
 here = os.path.abspath(os.path.dirname(__file__))
-__version__, __author__ = find_package_info(here, 'lib', 'ansible', 'release.py')
+__version__, __author__ = find_package_info(here, 'lib', 'assible', 'release.py')
 static_setup_params = dict(
     # Use the distutils SDist so that symlinks are not expanded
     # Use a custom Build for the same reason
@@ -347,26 +347,26 @@ static_setup_params = dict(
         'install_scripts': InstallScriptsCommand,
         'sdist': SDistCommand,
     },
-    name='ansible-base',
+    name='assible-base',
     version=__version__,
     description='Radically simple IT automation',
     author=__author__,
-    author_email='info@ansible.com',
-    url='https://ansible.com/',
+    author_email='info@assible.com',
+    url='https://assible.com/',
     project_urls={
-        'Bug Tracker': 'https://github.com/ansible/ansible/issues',
-        'CI: Shippable': 'https://app.shippable.com/github/ansible/ansible',
-        'Code of Conduct': 'https://docs.ansible.com/ansible/latest/community/code_of_conduct.html',
-        'Documentation': 'https://docs.ansible.com/ansible/',
-        'Mailing lists': 'https://docs.ansible.com/ansible/latest/community/communication.html#mailing-list-information',
-        'Source Code': 'https://github.com/ansible/ansible',
+        'Bug Tracker': 'https://github.com/assible/assible/issues',
+        'CI: Shippable': 'https://app.shippable.com/github/assible/assible',
+        'Code of Conduct': 'https://docs.assible.com/assible/latest/community/code_of_conduct.html',
+        'Documentation': 'https://docs.assible.com/assible/',
+        'Mailing lists': 'https://docs.assible.com/assible/latest/community/communication.html#mailing-list-information',
+        'Source Code': 'https://github.com/assible/assible',
     },
     license='GPLv3+',
-    # Ansible will also make use of a system copy of python-six and
+    # Assible will also make use of a system copy of python-six and
     # python-selectors2 if installed but use a Bundled copy if it's not.
     python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*',
     package_dir={'': 'lib',
-                 'ansible_test': 'test/lib/ansible_test'},
+                 'assible_test': 'test/lib/assible_test'},
     packages=find_packages('lib') + find_packages('test/lib'),
     include_package_data=True,
     classifiers=[
@@ -390,17 +390,17 @@ static_setup_params = dict(
         'Topic :: Utilities',
     ],
     scripts=[
-        'bin/ansible',
-        'bin/ansible-playbook',
-        'bin/ansible-pull',
-        'bin/ansible-doc',
-        'bin/ansible-galaxy',
-        'bin/ansible-console',
-        'bin/ansible-connection',
-        'bin/ansible-vault',
-        'bin/ansible-config',
-        'bin/ansible-inventory',
-        'bin/ansible-test',
+        'bin/assible',
+        'bin/assible-playbook',
+        'bin/assible-pull',
+        'bin/assible-doc',
+        'bin/assible-galaxy',
+        'bin/assible-console',
+        'bin/assible-connection',
+        'bin/assible-vault',
+        'bin/assible-config',
+        'bin/assible-inventory',
+        'bin/assible-test',
     ],
     data_files=[],
     # Installing as zip files would break due to references to __file__

@@ -1,31 +1,31 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import os
 
-from ansible import constants as C
-from ansible.errors import AnsibleParserError, AnsibleUndefinedVariable, AnsibleFileNotFound, AnsibleAssertionError
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import string_types
-from ansible.parsing.mod_args import ModuleArgsParser
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleParserError, AssibleUndefinedVariable, AssibleFileNotFound, AssibleAssertionError
+from assible.module_utils._text import to_native
+from assible.module_utils.six import string_types
+from assible.parsing.mod_args import ModuleArgsParser
+from assible.utils.display import Display
 
 display = Display()
 
@@ -38,10 +38,10 @@ def load_list_of_blocks(ds, play, parent_block=None, role=None, task_include=Non
     '''
 
     # we import here to prevent a circular dependency with imports
-    from ansible.playbook.block import Block
+    from assible.playbook.block import Block
 
     if not isinstance(ds, (list, type(None))):
-        raise AnsibleAssertionError('%s should be a list or None but is %s' % (ds, type(ds)))
+        raise AssibleAssertionError('%s should be a list or None but is %s' % (ds, type(ds)))
 
     block_list = []
     if ds:
@@ -88,21 +88,21 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
     '''
 
     # we import here to prevent a circular dependency with imports
-    from ansible.playbook.block import Block
-    from ansible.playbook.handler import Handler
-    from ansible.playbook.task import Task
-    from ansible.playbook.task_include import TaskInclude
-    from ansible.playbook.role_include import IncludeRole
-    from ansible.playbook.handler_task_include import HandlerTaskInclude
-    from ansible.template import Templar
+    from assible.playbook.block import Block
+    from assible.playbook.handler import Handler
+    from assible.playbook.task import Task
+    from assible.playbook.task_include import TaskInclude
+    from assible.playbook.role_include import IncludeRole
+    from assible.playbook.handler_task_include import HandlerTaskInclude
+    from assible.template import Templar
 
     if not isinstance(ds, list):
-        raise AnsibleAssertionError('The ds (%s) should be a list but was a %s' % (ds, type(ds)))
+        raise AssibleAssertionError('The ds (%s) should be a list but was a %s' % (ds, type(ds)))
 
     task_list = []
     for task_ds in ds:
         if not isinstance(task_ds, dict):
-            raise AnsibleAssertionError('The ds (%s) should be a dict but was a %s' % (ds, type(ds)))
+            raise AssibleAssertionError('The ds (%s) should be a dict but was a %s' % (ds, type(ds)))
 
         if 'block' in task_ds:
             t = Block.load(
@@ -120,13 +120,13 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
             args_parser = ModuleArgsParser(task_ds)
             try:
                 (action, args, delegate_to) = args_parser.parse(skip_action_validation=True)
-            except AnsibleParserError as e:
+            except AssibleParserError as e:
                 # if the raises exception was created with obj=ds args, then it includes the detail
                 # so we dont need to add it so we can just re raise.
                 if e._obj:
                     raise
                 # But if it wasn't, we can add the yaml object now to get more detail
-                raise AnsibleParserError(to_native(e), obj=task_ds, orig_exc=e)
+                raise AssibleParserError(to_native(e), obj=task_ds, orig_exc=e)
 
             if action in ('include', 'import_tasks', 'include_tasks'):
 
@@ -157,7 +157,7 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
                 elif t.static is not None:
                     display.deprecated("The use of 'static' has been deprecated. "
                                        "Use 'import_tasks' for static inclusion, or 'include_tasks' for dynamic inclusion",
-                                       version='2.12', collection_name='ansible.builtin')
+                                       version='2.12', collection_name='assible.builtin')
                     is_static = t.static
                 else:
                     is_static = C.DEFAULT_TASK_INCLUDES_STATIC or \
@@ -167,9 +167,9 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
                 if is_static:
                     if t.loop is not None:
                         if action == 'import_tasks':
-                            raise AnsibleParserError("You cannot use loops on 'import_tasks' statements. You should use 'include_tasks' instead.", obj=task_ds)
+                            raise AssibleParserError("You cannot use loops on 'import_tasks' statements. You should use 'include_tasks' instead.", obj=task_ds)
                         else:
-                            raise AnsibleParserError("You cannot use 'static' on an include with a loop", obj=task_ds)
+                            raise AssibleParserError("You cannot use 'static' on an include with a loop", obj=task_ds)
 
                     # we set a flag to indicate this include was static
                     t.statically_loaded = True
@@ -189,9 +189,9 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
                             continue
                         try:
                             parent_include_dir = os.path.dirname(templar.template(parent_include.args.get('_raw_params')))
-                        except AnsibleUndefinedVariable as e:
+                        except AssibleUndefinedVariable as e:
                             if not parent_include.statically_loaded:
-                                raise AnsibleParserError(
+                                raise AssibleParserError(
                                     "Error when evaluating variable in dynamic parent include path: %s. "
                                     "When using static imports, the parent dynamic include cannot utilize host facts "
                                     "or variables from inventory" % parent_include.args.get('_raw_params'),
@@ -220,8 +220,8 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
                     if not found:
                         try:
                             include_target = templar.template(t.args['_raw_params'])
-                        except AnsibleUndefinedVariable as e:
-                            raise AnsibleParserError(
+                        except AssibleUndefinedVariable as e:
+                            raise AssibleParserError(
                                 "Error when evaluating variable in import path: %s.\n\n"
                                 "When using static imports, ensure that any variables used in their names are defined in vars/vars_files\n"
                                 "or extra-vars passed in from the command line. Static imports cannot use variables from facts or inventory\n"
@@ -240,14 +240,14 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
                             display.warning('file %s is empty and had no tasks to include' % include_file)
                             continue
                         elif not isinstance(data, list):
-                            raise AnsibleParserError("included task files must contain a list of tasks", obj=data)
+                            raise AssibleParserError("included task files must contain a list of tasks", obj=data)
 
                         # since we can't send callbacks here, we display a message directly in
                         # the same fashion used by the on_include callback. We also do it here,
                         # because the recursive nature of helper methods means we may be loading
                         # nested includes, and we want the include order printed correctly
                         display.vv("statically imported: %s" % include_file)
-                    except AnsibleFileNotFound:
+                    except AssibleFileNotFound:
                         if action != 'include' or t.static or \
                            C.DEFAULT_TASK_INCLUDES_STATIC or \
                            C.DEFAULT_HANDLER_INCLUDES_STATIC and use_handlers:
@@ -257,9 +257,9 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
                             "explicitly marked as 'static: yes', we will try and include it dynamically "
                             "later. In the future, this will be an error unless 'static: no' is used "
                             "on the include task. If you do not want missing includes to be considered "
-                            "dynamic, use 'static: yes' on the include or set the global ansible.cfg "
+                            "dynamic, use 'static: yes' on the include or set the global assible.cfg "
                             "options to make all includes static for tasks and/or handlers" % include_file,
-                            version="2.12", collection_name='ansible.builtin'
+                            version="2.12", collection_name='assible.builtin'
                         )
                         task_list.append(t)
                         continue
@@ -287,16 +287,16 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
 
                     if len(tags) > 0:
                         if action in ('include_tasks', 'import_tasks'):
-                            raise AnsibleParserError('You cannot specify "tags" inline to the task, it is a task keyword')
+                            raise AssibleParserError('You cannot specify "tags" inline to the task, it is a task keyword')
                         if len(ti_copy.tags) > 0:
-                            raise AnsibleParserError(
+                            raise AssibleParserError(
                                 "Include tasks should not specify tags in more than one way (both via args and directly on the task). "
                                 "Mixing styles in which tags are specified is prohibited for whole import hierarchy, not only for single import statement",
                                 obj=task_ds,
                                 suppress_extended_error=True,
                             )
                         display.deprecated("You should not specify tags in the include parameters. All tags should be specified using the task-level option",
-                                           version="2.12", collection_name='ansible.builtin')
+                                           version="2.12", collection_name='assible.builtin')
                     else:
                         tags = ti_copy.tags[:]
 
@@ -335,15 +335,15 @@ def load_list_of_tasks(ds, play, block=None, role=None, task_include=None, use_h
                 elif ir.static is not None:
                     display.deprecated("The use of 'static' for 'include_role' has been deprecated. "
                                        "Use 'import_role' for static inclusion, or 'include_role' for dynamic inclusion",
-                                       version='2.12', collection_name='ansible.builtin')
+                                       version='2.12', collection_name='assible.builtin')
                     is_static = ir.static
 
                 if is_static:
                     if ir.loop is not None:
                         if action == 'import_role':
-                            raise AnsibleParserError("You cannot use loops on 'import_role' statements. You should use 'include_role' instead.", obj=task_ds)
+                            raise AssibleParserError("You cannot use loops on 'import_role' statements. You should use 'include_role' instead.", obj=task_ds)
                         else:
-                            raise AnsibleParserError("You cannot use 'static' on an include_role with a loop", obj=task_ds)
+                            raise AssibleParserError("You cannot use 'static' on an include_role with a loop", obj=task_ds)
 
                     # we set a flag to indicate this include was static
                     ir.statically_loaded = True
@@ -382,10 +382,10 @@ def load_list_of_roles(ds, play, current_role_path=None, variable_manager=None, 
     :return:
     """
     # we import here to prevent a circular dependency with imports
-    from ansible.playbook.role.include import RoleInclude
+    from assible.playbook.role.include import RoleInclude
 
     if not isinstance(ds, list):
-        raise AnsibleAssertionError('ds (%s) should be a list but was a %s' % (ds, type(ds)))
+        raise AssibleAssertionError('ds (%s) should be a list but was a %s' % (ds, type(ds)))
 
     roles = []
     for role_def in ds:

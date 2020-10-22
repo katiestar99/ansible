@@ -5,8 +5,8 @@
   tasks:
   - add_host:
       name: host1
-      ansible_connection: local
-      ansible_host: 127.0.0.1
+      assible_connection: local
+      assible_host: 127.0.0.1
 
 - hosts: all
   gather_facts: no

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2019 Ansible Project
+# (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -7,10 +7,10 @@ __metaclass__ = type
 
 import pytest
 
-import ansible.module_utils.common.warnings as warnings
+import assible.module_utils.common.warnings as warnings
 
-from ansible.module_utils.common.warnings import warn, get_warning_messages
-from ansible.module_utils.six import PY3
+from assible.module_utils.common.warnings import warn, get_warning_messages
+from assible.module_utils.six import PY3
 
 
 @pytest.fixture

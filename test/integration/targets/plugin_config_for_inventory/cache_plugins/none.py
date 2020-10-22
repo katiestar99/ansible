@@ -1,12 +1,12 @@
 # (c) 2014, Brian Coca, Josh Drake, et al
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.plugins.cache import BaseCacheModule
+from assible.plugins.cache import BaseCacheModule
 
 DOCUMENTATION = '''
     cache: none
@@ -14,13 +14,13 @@ DOCUMENTATION = '''
     description:
         - No caching at all
     version_added: historical
-    author: core team (@ansible-core)
+    author: core team (@assible-core)
     options:
       _timeout:
         default: 86400
         description: Expiration timeout for the cache plugin data
         env:
-          - name: ANSIBLE_CACHE_PLUGIN_TIMEOUT
+          - name: ASSIBLE_CACHE_PLUGIN_TIMEOUT
         ini:
           - key: fact_caching_timeout
             section: defaults

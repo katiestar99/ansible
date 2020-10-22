@@ -13,7 +13,7 @@ a few responsibilities that come with that increased power.
 Adding and removing committers
 ==============================
 
-The Ansible Team will periodically review who is actively contributing to Ansible to grant or revoke
+The Assible Team will periodically review who is actively contributing to Assible to grant or revoke
 contributors' ability to commit on their own.  GitHub Admins are the people who have the power to
 actually manage the GitHub permissions.
 

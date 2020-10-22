@@ -1,11 +1,11 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
 # Copyright (c), Michael DeHaan <michael.dehaan@gmail.com>, 2012-2013
-# Copyright (c), Toshio Kuratomi <tkuratomi@ansible.com>, 2015
+# Copyright (c), Toshio Kuratomi <tkuratomi@assible.com>, 2015
 #
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 #
@@ -67,15 +67,15 @@ except ImportError:
     # Python 3
     import http.client as httplib
 
-import ansible.module_utils.six.moves.http_cookiejar as cookiejar
-import ansible.module_utils.six.moves.urllib.request as urllib_request
-import ansible.module_utils.six.moves.urllib.error as urllib_error
+import assible.module_utils.six.moves.http_cookiejar as cookiejar
+import assible.module_utils.six.moves.urllib.request as urllib_request
+import assible.module_utils.six.moves.urllib.error as urllib_error
 
-from ansible.module_utils.common.collections import Mapping
-from ansible.module_utils.six import PY3, string_types
-from ansible.module_utils.six.moves import cStringIO
-from ansible.module_utils.basic import get_distribution, missing_required_lib
-from ansible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.common.collections import Mapping
+from assible.module_utils.six import PY3, string_types
+from assible.module_utils.six.moves import cStringIO
+from assible.module_utils.basic import get_distribution, missing_required_lib
+from assible.module_utils._text import to_bytes, to_native, to_text
 
 try:
     # python3
@@ -89,7 +89,7 @@ except ImportError:
 urllib_request.HTTPRedirectHandler.http_error_308 = urllib_request.HTTPRedirectHandler.http_error_307
 
 try:
-    from ansible.module_utils.six.moves.urllib.parse import urlparse, urlunparse
+    from assible.module_utils.six.moves.urllib.parse import urlparse, urlunparse
     HAS_URLPARSE = True
 except Exception:
     HAS_URLPARSE = False
@@ -948,7 +948,7 @@ class SSLValidationHandler(urllib_request.BaseHandler):
 
         # fall back to a user-deployed cert in a standard
         # location if the OS platform one is not available
-        paths_checked.append('/etc/ansible')
+        paths_checked.append('/etc/assible')
 
         tmp_path = None
         if not HAS_SSLCONTEXT:
@@ -1096,7 +1096,7 @@ class SSLValidationHandler(urllib_request.BaseHandler):
                         ssl_s = ssl.wrap_socket(s, ca_certs=tmp_ca_cert_path, cert_reqs=ssl.CERT_REQUIRED, ssl_version=PROTOCOL)
                         match_hostname(ssl_s.getpeercert(), self.hostname)
                 else:
-                    raise ProxyError('Unsupported proxy scheme: %s. Currently ansible only supports HTTP proxies.' % proxy_parts.get('scheme'))
+                    raise ProxyError('Unsupported proxy scheme: %s. Currently assible only supports HTTP proxies.' % proxy_parts.get('scheme'))
             else:
                 s = socket.create_connection((self.hostname, self.port))
                 if context:
@@ -1196,7 +1196,7 @@ class Request:
 
         For documentation of params, see ``Request.open``
 
-        >>> from ansible.module_utils.urls import Request
+        >>> from assible.module_utils.urls import Request
         >>> r = Request()
         >>> r.open('GET', 'http://httpbin.org/cookies/set?k1=v1').read()
         '{\n  "cookies": {\n    "k1": "v1"\n  }\n}\n'
@@ -1278,7 +1278,7 @@ class Request:
             connection to the provided url
         :kwarg ca_path: (optional) String of file system path to CA cert bundle to use
         :kwarg unredirected_headers: (optional) A list of headers to not attach on a redirected request
-        :returns: HTTPResponse. Added in Ansible 2.9
+        :returns: HTTPResponse. Added in Assible 2.9
         """
 
         method = method.upper()
@@ -1676,8 +1676,8 @@ def url_argument_spec():
     return dict(
         url=dict(type='str'),
         force=dict(type='bool', default=False, aliases=['thirsty'],
-                   deprecated_aliases=[dict(name='thirsty', version='2.13', collection_name='ansible.builtin')]),
-        http_agent=dict(type='str', default='ansible-httpget'),
+                   deprecated_aliases=[dict(name='thirsty', version='2.13', collection_name='assible.builtin')]),
+        http_agent=dict(type='str', default='assible-httpget'),
         use_proxy=dict(type='bool', default=True),
         validate_certs=dict(type='bool', default=True),
         url_username=dict(type='str'),
@@ -1694,7 +1694,7 @@ def fetch_url(module, url, data=None, headers=None, method=None,
               use_gssapi=False, unix_socket=None, ca_path=None, cookies=None):
     """Sends a request via HTTP(S) or FTP (needs the module as parameter)
 
-    :arg module: The AnsibleModule (used to get username, password etc. (s.b.).
+    :arg module: The AssibleModule (used to get username, password etc. (s.b.).
     :arg url:             The url to use.
 
     :kwarg data:          The data to be sent (in case of POST/PUT).
@@ -1739,7 +1739,7 @@ def fetch_url(module, url, data=None, headers=None, method=None,
 
     username = module.params.get('url_username', '')
     password = module.params.get('url_password', '')
-    http_agent = module.params.get('http_agent', 'ansible-httpget')
+    http_agent = module.params.get('http_agent', 'assible-httpget')
     force_basic_auth = module.params.get('force_basic_auth', '')
 
     follow_redirects = module.params.get('follow_redirects', 'urllib2')
@@ -1837,7 +1837,7 @@ def fetch_file(module, url, data=None, headers=None, method=None,
     '''Download and save a file via HTTP(S) or FTP (needs the module as parameter).
     This is basically a wrapper around fetch_url().
 
-    :arg module: The AnsibleModule (used to get username, password etc. (s.b.).
+    :arg module: The AssibleModule (used to get username, password etc. (s.b.).
     :arg url:             The url to use.
 
     :kwarg data:          The data to be sent (in case of POST/PUT).

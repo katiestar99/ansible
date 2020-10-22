@@ -1,9 +1,9 @@
 .. _oVirt_module_development:
 
-oVirt Ansible Modules
+oVirt Assible Modules
 =====================
 
-The set of modules for interacting with oVirt/RHV are currently part of the community.general collection (on `Galaxy <https://galaxy.ansible.com/community/general>`_, source code `repository <https://github.com/ansible-collections/community.general/tree/main/plugins/modules/cloud/ovirt>`_). This document serves as developer coding guidelines for creating oVirt/RHV modules.
+The set of modules for interacting with oVirt/RHV are currently part of the community.general collection (on `Galaxy <https://galaxy.assible.com/community/general>`_, source code `repository <https://github.com/assible-collections/community.general/tree/main/plugins/modules/cloud/ovirt>`_). This document serves as developer coding guidelines for creating oVirt/RHV modules.
 
 .. contents::
    :local:
@@ -65,7 +65,7 @@ methods:
     except ImportError:
         pass
 
-    from ansible.module_utils.ovirt import (
+    from assible.module_utils.ovirt import (
         BaseModule,
         equal
     )
@@ -102,8 +102,8 @@ entity of the SDK.
 
 .. code:: python
 
-    from ansible.module_utils.basic import AnsibleModule
-    from ansible.module_utils.ovirt import (
+    from assible.module_utils.basic import AssibleModule
+    from assible.module_utils.ovirt import (
         check_sdk,
         create_connection,
         ovirt_full_argument_spec,
@@ -124,10 +124,10 @@ entity of the SDK.
         comment=dict(default=None),
     )
 
-    # Create the Ansible module, please always implement the
+    # Create the Assible module, please always implement the
     # feature called 'check_mode', for 'create', 'update' and
     # 'delete' operations it's implemented by default in BaseModule:
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
     )
@@ -213,8 +213,8 @@ Testing
 -------
 
 -  Integration testing is currently done in oVirt's CI system
-   `on Jenkins <https://jenkins.ovirt.org/view/All/job/ovirt-system-tests_ansible-suite-master/>`__
+   `on Jenkins <https://jenkins.ovirt.org/view/All/job/ovirt-system-tests_assible-suite-master/>`__
    and
-   `on GitHub <https://github.com/oVirt/ovirt-system-tests/tree/master/ansible-suite-master/>`__.
+   `on GitHub <https://github.com/oVirt/ovirt-system-tests/tree/master/assible-suite-master/>`__.
 -  Please consider using these integration tests if you create a new module or add a new feature to an existing
    module.

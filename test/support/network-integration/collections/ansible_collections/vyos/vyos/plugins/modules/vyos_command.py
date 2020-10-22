@@ -1,22 +1,22 @@
 #!/usr/bin/python
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-ANSIBLE_METADATA = {
+ASSIBLE_METADATA = {
     "metadata_version": "1.1",
     "status": ["preview"],
     "supported_by": "network",
@@ -32,7 +32,7 @@ description:
   successfully.  If the conditional statements are not met in the wait period, the
   task fails.
 - Certain C(show) commands in VyOS produce many lines of output and use a custom pager
-  that can cause this module to hang.  If the value of the environment variable C(ANSIBLE_VYOS_TERMINAL_LENGTH)
+  that can cause this module to hang.  If the value of the environment variable C(ASSIBLE_VYOS_TERMINAL_LENGTH)
   is not set, the default number of 10000 is used.
 extends_documentation_fragment:
 - vyos.vyos.vyos
@@ -133,19 +133,19 @@ warnings:
 """
 import time
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.parsing import (
+from assible.module_utils._text import to_text
+from assible.module_utils.basic import AssibleModule
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.parsing import (
     Conditional,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+from assible_collections.assible.netcommon.plugins.module_utils.network.common.utils import (
     transform_commands,
     to_lines,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
     run_commands,
 )
-from ansible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
+from assible_collections.vyos.vyos.plugins.module_utils.network.vyos.vyos import (
     vyos_argument_spec,
 )
 
@@ -176,7 +176,7 @@ def main():
 
     spec.update(vyos_argument_spec)
 
-    module = AnsibleModule(argument_spec=spec, supports_check_mode=True)
+    module = AssibleModule(argument_spec=spec, supports_check_mode=True)
 
     warnings = list()
     result = {"changed": False, "warnings": warnings}

@@ -1,11 +1,11 @@
 #!/usr/bin/python
-# This file is part of Ansible
+# This file is part of Assible
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -191,7 +191,7 @@ options:
   state:
     version_added: "1.3"
     description:
-      - Create, terminate, start, stop or restart instances. The state 'restarted' was added in Ansible 2.2.
+      - Create, terminate, start, stop or restart instances. The state 'restarted' was added in Assible 2.2.
       - When I(state=absent), I(instance_ids) is required.
       - When I(state=running), I(state=stopped) or I(state=restarted) then either I(instance_ids) or I(instance_tags) is required.
     default: 'present'
@@ -612,10 +612,10 @@ import traceback
 from ast import literal_eval
 from distutils.version import LooseVersion
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.ec2 import get_aws_connection_info, ec2_argument_spec, ec2_connect
-from ansible.module_utils.six import get_function_code, string_types
-from ansible.module_utils._text import to_bytes, to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.ec2 import get_aws_connection_info, ec2_argument_spec, ec2_connect
+from assible.module_utils.six import get_function_code, string_types
+from assible.module_utils._text import to_bytes, to_text
 
 try:
     import boto.ec2
@@ -877,7 +877,7 @@ def await_spot_requests(module, ec2, spot_requests, count):
     """
     Wait for a group of spot requests to be fulfilled, or fail.
 
-    module: Ansible module object
+    module: Assible module object
     ec2: authenticated ec2 connection object
     spot_requests: boto.ec2.spotinstancerequest.SpotInstanceRequest object returned by ec2.request_spot_instances
     count: Total number of instances to be created by the spot requests
@@ -992,7 +992,7 @@ def create_instances(module, ec2, vpc, override_count=None):
     """
     Creates new instances
 
-    module : AnsibleModule object
+    module : AssibleModule object
     ec2: authenticated ec2 connection object
 
     Returns:
@@ -1334,7 +1334,7 @@ def terminate_instances(module, ec2, instance_ids):
     """
     Terminates a list of instances
 
-    module: Ansible module object
+    module: Assible module object
     ec2: authenticated ec2 connection object
     termination_list: a list of instances to terminate in the form of
       [ {id: <inst-id>}, ..]
@@ -1403,7 +1403,7 @@ def startstop_instances(module, ec2, instance_ids, state, instance_tags):
     """
     Starts or stops a list of existing instances
 
-    module: Ansible module object
+    module: Assible module object
     ec2: authenticated ec2 connection object
     instance_ids: The list of instances to start in the form of
       [ {id: <inst-id>}, ..]
@@ -1513,7 +1513,7 @@ def restart_instances(module, ec2, instance_ids, state, instance_tags):
     """
     Restarts a list of existing instances
 
-    module: Ansible module object
+    module: Assible module object
     ec2: authenticated ec2 connection object
     instance_ids: The list of instances to start in the form of
       [ {id: <inst-id>}, ..]
@@ -1578,7 +1578,7 @@ def check_termination_protection(module, inst):
     """
     Check the instance disableApiTermination attribute.
 
-    module: Ansible module object
+    module: Assible module object
     inst: EC2 instance object
 
     returns: True if state changed None otherwise
@@ -1595,7 +1595,7 @@ def check_source_dest_attr(module, inst, ec2):
     """
     Check the instance sourceDestCheck attribute.
 
-    module: Ansible module object
+    module: Assible module object
     inst: EC2 instance object
 
     returns: True if state changed None otherwise
@@ -1675,7 +1675,7 @@ def main():
         )
     )
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         mutually_exclusive=[
             # Can be uncommented when we finish the deprecation cycle.
@@ -1695,7 +1695,7 @@ def main():
         module.deprecate(
             msg='Support for passing both group and group_id has been deprecated. '
             'Currently group_id is ignored, in future passing both will result in an error',
-            version='2.14', collection_name='ansible.builtin')
+            version='2.14', collection_name='assible.builtin')
 
     if not HAS_BOTO:
         module.fail_json(msg='boto required for this module')

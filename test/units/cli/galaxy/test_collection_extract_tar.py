@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Ansible Project
+# Copyright (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -7,8 +7,8 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.errors import AnsibleError
-from ansible.galaxy.collection import _extract_tar_dir
+from assible.errors import AssibleError
+from assible.galaxy.collection import _extract_tar_dir
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def test_extract_tar_member_trailing_sep(mocker):
     m_tarfile = mocker.Mock()
     m_tarfile.getmember = mocker.Mock(side_effect=KeyError)
 
-    with pytest.raises(AnsibleError, match='Unable to extract'):
+    with pytest.raises(AssibleError, match='Unable to extract'):
         _extract_tar_dir(m_tarfile, '/some/dir/', b'/some/dest')
 
     assert m_tarfile.getmember.call_count == 1
@@ -34,7 +34,7 @@ def test_extract_tar_member_no_trailing_sep(mocker):
     m_tarfile = mocker.Mock()
     m_tarfile.getmember = mocker.Mock(side_effect=KeyError)
 
-    with pytest.raises(AnsibleError, match='Unable to extract'):
+    with pytest.raises(AssibleError, match='Unable to extract'):
         _extract_tar_dir(m_tarfile, '/some/dir', b'/some/dest')
 
     assert m_tarfile.getmember.call_count == 2

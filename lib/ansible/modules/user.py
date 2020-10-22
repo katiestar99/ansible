@@ -14,7 +14,7 @@ version_added: "0.2"
 short_description: Manage user accounts
 description:
     - Manage user accounts and user attributes.
-    - For Windows targets, use the M(ansible.windows.win_user) module instead.
+    - For Windows targets, use the M(assible.windows.win_user) module instead.
 options:
     name:
         description:
@@ -55,7 +55,7 @@ options:
         description:
             - List of groups user will be added to. When set to an empty string C(''),
               the user is removed from all groups except the primary group.
-            - Before Ansible 2.3, the only input format allowed was a comma separated string.
+            - Before Assible 2.3, the only input format allowed was a comma separated string.
         type: list
         elements: str
     append:
@@ -68,8 +68,8 @@ options:
     shell:
         description:
             - Optionally set the user's shell.
-            - On macOS, before Ansible 2.5, the default shell for non-system users was C(/usr/bin/false).
-              Since Ansible 2.5, the default shell for non-system users on macOS is C(/bin/bash).
+            - On macOS, before Assible 2.5, the default shell for non-system users was C(/usr/bin/false).
+              Since Assible 2.5, the default shell for non-system users on macOS is C(/bin/bash).
             - See notes for details on how other operating systems determine the default shell by
               the underlying tool.
         type: str
@@ -89,7 +89,7 @@ options:
             - On macOS systems, this value has to be cleartext. Beware of security issues.
             - To create a disabled account on Linux systems, set this to C('!') or C('*').
             - To create a disabled account on OpenBSD, set this to C('*************').
-            - See U(https://docs.ansible.com/ansible/faq.html#how-do-i-generate-encrypted-passwords-for-the-user-module)
+            - See U(https://docs.assible.com/assible/faq.html#how-do-i-generate-encrypted-passwords-for-the-user-module)
               for details on various ways to generate these password values.
         type: str
     state:
@@ -102,7 +102,7 @@ options:
         description:
             - Unless set to C(no), a home directory will be made for the user
               when the account is created or if the home directory does not exist.
-            - Changed from C(createhome) to C(create_home) in Ansible 2.5.
+            - Changed from C(createhome) to C(create_home) in Assible 2.5.
         type: bool
         default: yes
         aliases: [ createhome ]
@@ -167,7 +167,7 @@ options:
         description:
             - Optionally define the comment for the SSH key.
         type: str
-        default: ansible-generated on $HOSTNAME
+        default: assible-generated on $HOSTNAME
         version_added: "0.9"
     ssh_key_passphrase:
         description:
@@ -187,7 +187,7 @@ options:
         description:
             - An expiry time for the user in epoch, it will be ignored on platforms that do not support this.
             - Currently supported on GNU/Linux, FreeBSD, and DragonFlyBSD.
-            - Since Ansible 2.6 you can remove the expiry time by specifying a negative value.
+            - Since Assible 2.6 you can remove the expiry time by specifying a negative value.
               Currently supported on GNU/Linux and FreeBSD.
         type: float
         version_added: "1.9"
@@ -239,7 +239,7 @@ options:
         version_added: "2.8"
 notes:
   - There are specific requirements per platform on user management utilities. However
-    they generally come pre-installed with the system and Ansible will require they
+    they generally come pre-installed with the system and Assible will require they
     are present at runtime. If they are not, a descriptive error message will be shown.
   - On SunOS platforms, the shadow file is backed up automatically since this module edits it directly.
     On other platforms, the shadow file is backed up by the underlying tools used by this module.
@@ -251,9 +251,9 @@ notes:
   - On all other platforms, this module uses C(useradd) to create, C(usermod) to modify, and
     C(userdel) to remove accounts.
 seealso:
-- module: ansible.posix.authorized_key
-- module: ansible.builtin.group
-- module: ansible.windows.win_user
+- module: assible.posix.authorized_key
+- module: assible.builtin.group
+- module: assible.windows.win_user
 author:
 - Stephen Fromm (@sfromm)
 '''
@@ -293,7 +293,7 @@ EXAMPLES = r'''
     groups: developers
     expires: 1422403387
 
-- name: Starting at Ansible 2.6, modify user, remove expiry time
+- name: Starting at Assible 2.6, modify user, remove expiry time
   user:
     name: james18
     expires: -1
@@ -364,7 +364,7 @@ ssh_fingerprint:
   description: Fingerprint of generated SSH key
   returned: When C(generate_ssh_key) is C(True)
   type: str
-  sample: '2048 SHA256:aYNHYcyVm87Igh0IMEDMbvW0QDlRQfE0aJugp684ko8 ansible-generated on host (RSA)'
+  sample: '2048 SHA256:aYNHYcyVm87Igh0IMEDMbvW0QDlRQfE0aJugp684ko8 assible-generated on host (RSA)'
 ssh_key_file:
   description: Path to generated SSH private key file
   returned: When C(generate_ssh_key) is C(True)
@@ -377,7 +377,7 @@ ssh_public_key:
   sample: >
     'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC95opt4SPEC06tOYsJQJIuN23BbLMGmYo8ysVZQc4h2DZE9ugbjWWGS1/pweUGjVstgzMkBEeBCByaEf/RJKNecKRPeGd2Bw9DCj/bn5Z6rGfNENKBmo
     618mUJBvdlEgea96QGjOwSB7/gmonduC7gsWDMNcOdSE3wJMTim4lddiBx4RgC9yXsJ6Tkz9BHD73MXPpT5ETnse+A3fw3IGVSjaueVnlUyUmOBf7fzmZbhlFVXf2Zi2rFTXqvbdGHKkzpw1U8eB8xFPP7y
-    d5u1u0e6Acju/8aZ/l17IDFiLke5IzlqIMRTEbDwLNeO84YQKWTm9fODHzhYe0yvxqLiK07 ansible-generated on host'
+    d5u1u0e6Acju/8aZ/l17IDFiLke5IzlqIMRTEbDwLNeO84YQKWTm9fODHzhYe0yvxqLiK07 assible-generated on host'
 stderr:
   description: Standard error from running commands
   returned: When stderr is returned by a command that is run
@@ -415,10 +415,10 @@ import subprocess
 import time
 import math
 
-from ansible.module_utils import distro
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.sys_info import get_platform_subclass
+from assible.module_utils import distro
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.common.sys_info import get_platform_subclass
 
 try:
     import spwd
@@ -511,7 +511,7 @@ class User(object):
             # Change the argument_spec in 2.14 and remove this warning
             # required_by={'append': ['groups']}
             module.warn("'append' is set, but no 'groups' are specified. Use 'groups' for appending new groups."
-                        "This will change to an error in Ansible 2.14.")
+                        "This will change to an error in Assible 2.14.")
 
     def check_password_encrypted(self):
         # Darwin needs cleartext password, so skip validation
@@ -554,7 +554,7 @@ class User(object):
             self.module.debug('In check mode, would have run: "%s"' % cmd)
             return (0, '', '')
         else:
-            # cast all args to strings ansible-modules-core/issues/4397
+            # cast all args to strings assible-modules-core/issues/4397
             cmd = [str(x) for x in cmd]
             return self.module.run_command(cmd, use_unsafe_shell=use_unsafe_shell, data=data)
 
@@ -2901,9 +2901,9 @@ def main():
         bits=0,
         type='rsa',
         passphrase=None,
-        comment='ansible-generated on %s' % socket.gethostname()
+        comment='assible-generated on %s' % socket.gethostname()
     )
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(type='str', default='present', choices=['absent', 'present']),
             name=dict(type='str', required=True, aliases=['user']),

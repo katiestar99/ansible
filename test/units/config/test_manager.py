@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -10,10 +10,10 @@ import os
 import os.path
 import pytest
 
-from ansible.config.manager import ConfigManager, Setting, ensure_type, resolve_path, get_config_type
-from ansible.errors import AnsibleOptionsError, AnsibleError
-from ansible.module_utils.six import integer_types, string_types
-from ansible.parsing.yaml.objects import AnsibleVaultEncryptedUnicode
+from assible.config.manager import ConfigManager, Setting, ensure_type, resolve_path, get_config_type
+from assible.errors import AssibleOptionsError, AssibleError
+from assible.module_utils.six import integer_types, string_types
+from assible.parsing.yaml.objects import AssibleVaultEncryptedUnicode
 
 curdir = os.path.dirname(__file__)
 cfg_file = os.path.join(curdir, 'test.cfg')
@@ -112,21 +112,21 @@ class TestConfigManager:
         assert self.manager.get_config_value('config_entry', cfile=cfg_file2) == 'fromini2'
 
     def test_config_types(self):
-        assert get_config_type('/tmp/ansible.ini') == 'ini'
-        assert get_config_type('/tmp/ansible.cfg') == 'ini'
-        assert get_config_type('/tmp/ansible.yaml') == 'yaml'
-        assert get_config_type('/tmp/ansible.yml') == 'yaml'
+        assert get_config_type('/tmp/assible.ini') == 'ini'
+        assert get_config_type('/tmp/assible.cfg') == 'ini'
+        assert get_config_type('/tmp/assible.yaml') == 'yaml'
+        assert get_config_type('/tmp/assible.yml') == 'yaml'
 
     def test_config_types_negative(self):
-        with pytest.raises(AnsibleOptionsError) as exec_info:
-            get_config_type('/tmp/ansible.txt')
+        with pytest.raises(AssibleOptionsError) as exec_info:
+            get_config_type('/tmp/assible.txt')
         assert "Unsupported configuration file extension for" in str(exec_info.value)
 
     def test_read_config_yaml_file(self):
         assert isinstance(self.manager._read_config_yaml_file(os.path.join(curdir, 'test.yml')), dict)
 
     def test_read_config_yaml_file_negative(self):
-        with pytest.raises(AnsibleError) as exec_info:
+        with pytest.raises(AssibleError) as exec_info:
             self.manager._read_config_yaml_file(os.path.join(curdir, 'test_non_existent.yml'))
 
         assert "Missing base YAML definition file (bad install?)" in str(exec_info.value)
@@ -137,7 +137,7 @@ class TestConfigManager:
             def decrypt(self, value):
                 return value
 
-        vault_var = AnsibleVaultEncryptedUnicode(b"vault text")
+        vault_var = AssibleVaultEncryptedUnicode(b"vault text")
         vault_var.vault = MockVault()
 
         actual_value, actual_origin = self.manager._loop_entries({'name': vault_var}, [{'name': 'name'}])
@@ -150,7 +150,7 @@ class TestConfigManager:
             def decrypt(self, value):
                 return value
 
-        vault_var = AnsibleVaultEncryptedUnicode(b"vault text")
+        vault_var = AssibleVaultEncryptedUnicode(b"vault text")
         vault_var.vault = MockVault()
 
         actual_value = ensure_type(vault_var, value_type)

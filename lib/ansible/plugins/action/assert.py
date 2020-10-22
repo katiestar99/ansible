@@ -1,27 +1,27 @@
 # Copyright 2012, Dag Wieers <dag@wieers.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.errors import AnsibleError
-from ansible.playbook.conditional import Conditional
-from ansible.plugins.action import ActionBase
-from ansible.module_utils.six import string_types
-from ansible.module_utils.parsing.convert_bool import boolean
+from assible.errors import AssibleError
+from assible.playbook.conditional import Conditional
+from assible.plugins.action import ActionBase
+from assible.module_utils.six import string_types
+from assible.module_utils.parsing.convert_bool import boolean
 
 
 class ActionModule(ActionBase):
@@ -38,7 +38,7 @@ class ActionModule(ActionBase):
         del tmp  # tmp no longer has any effect
 
         if 'that' not in self._task.args:
-            raise AnsibleError('conditional required in "that" string')
+            raise AssibleError('conditional required in "that" string')
 
         fail_msg = None
         success_msg = None
@@ -48,18 +48,18 @@ class ActionModule(ActionBase):
             fail_msg = 'Assertion failed'
         elif isinstance(fail_msg, list):
             if not all(isinstance(x, string_types) for x in fail_msg):
-                raise AnsibleError('Type of one of the elements in fail_msg or msg list is not string type')
+                raise AssibleError('Type of one of the elements in fail_msg or msg list is not string type')
         elif not isinstance(fail_msg, (string_types, list)):
-            raise AnsibleError('Incorrect type for fail_msg or msg, expected a string or list and got %s' % type(fail_msg))
+            raise AssibleError('Incorrect type for fail_msg or msg, expected a string or list and got %s' % type(fail_msg))
 
         success_msg = self._task.args.get('success_msg')
         if success_msg is None:
             success_msg = 'All assertions passed'
         elif isinstance(success_msg, list):
             if not all(isinstance(x, string_types) for x in success_msg):
-                raise AnsibleError('Type of one of the elements in success_msg list is not string type')
+                raise AssibleError('Type of one of the elements in success_msg list is not string type')
         elif not isinstance(success_msg, (string_types, list)):
-            raise AnsibleError('Incorrect type for success_msg, expected a string or list and got %s' % type(success_msg))
+            raise AssibleError('Incorrect type for success_msg, expected a string or list and got %s' % type(success_msg))
 
         quiet = boolean(self._task.args.get('quiet', False), strict=False)
 
@@ -75,7 +75,7 @@ class ActionModule(ActionBase):
         # that value now
         cond = Conditional(loader=self._loader)
         if not quiet:
-            result['_ansible_verbose_always'] = True
+            result['_assible_verbose_always'] = True
 
         for that in thats:
             cond.when = [that]

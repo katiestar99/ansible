@@ -17,7 +17,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -202,11 +202,11 @@ EXAMPLES = '''
 import xml
 import re
 from xml.dom.minidom import parseString as parseXML
-from ansible.module_utils.six import iteritems
-from ansible.module_utils._text import to_native
+from assible.module_utils.six import iteritems
+from assible.module_utils._text import to_native
 
 # import module snippets
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 class Package:
@@ -479,7 +479,7 @@ def repo_refresh(m):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             name=dict(required=True, aliases=['pkg'], type='list'),
             state=dict(required=False, default='present', choices=['absent', 'installed', 'latest', 'present', 'removed', 'dist-upgrade']),

@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -23,24 +23,24 @@ DOCUMENTATION = '''
     short_description: Executes tasks without waiting for all hosts
     description:
         - Task execution is as fast as possible per batch as defined by C(serial) (default all).
-          Ansible will not wait for other hosts to finish the current task before queuing more tasks for other hosts.
+          Assible will not wait for other hosts to finish the current task before queuing more tasks for other hosts.
           All hosts are still attempted for the current task, but it prevents blocking new tasks for hosts that have already finished.
         - With the free strategy, unlike the default linear strategy, a host that is slow or stuck on a specific task
           won't hold up the rest of the hosts and tasks.
     version_added: "2.0"
-    author: Ansible Core Team
+    author: Assible Core Team
 '''
 
 import time
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.playbook.included_file import IncludedFile
-from ansible.plugins.loader import action_loader
-from ansible.plugins.strategy import StrategyBase
-from ansible.template import Templar
-from ansible.module_utils._text import to_text
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.playbook.included_file import IncludedFile
+from assible.plugins.loader import action_loader
+from assible.plugins.strategy import StrategyBase
+from assible.template import Templar
+from assible.module_utils._text import to_text
+from assible.utils.display import Display
 
 display = Display()
 
@@ -139,7 +139,7 @@ class StrategyModule(StrategyBase):
                         try:
                             throttle = int(templar.template(task.throttle))
                         except Exception as e:
-                            raise AnsibleError("Failed to convert the throttle value to an integer.", obj=task._ds, orig_exc=e)
+                            raise AssibleError("Failed to convert the throttle value to an integer.", obj=task._ds, orig_exc=e)
 
                         if throttle > 0:
                             same_tasks = 0
@@ -173,7 +173,7 @@ class StrategyModule(StrategyBase):
                         run_once = templar.template(task.run_once) or action and getattr(action, 'BYPASS_HOST_LOOP', False)
                         if run_once:
                             if action and getattr(action, 'BYPASS_HOST_LOOP', False):
-                                raise AnsibleError("The '%s' module bypasses the host loop, which is currently not supported in the free strategy "
+                                raise AssibleError("The '%s' module bypasses the host loop, which is currently not supported in the free strategy "
                                                    "and would instead execute for every host in the inventory list." % task.action, obj=task._ds)
                             else:
                                 display.warning("Using run_once with the free strategy is not currently supported. This task will still be "
@@ -252,7 +252,7 @@ class StrategyModule(StrategyBase):
                             )
                         else:
                             new_blocks = self._load_included_file(included_file, iterator=iterator)
-                    except AnsibleError as e:
+                    except AssibleError as e:
                         for host in included_file._hosts:
                             iterator.mark_host_failed(host)
                         display.warning(to_text(e))

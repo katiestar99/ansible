@@ -8,9 +8,9 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.six import Iterator
-from ansible.module_utils.common._collections_compat import Sequence
-from ansible.module_utils.common.collections import ImmutableDict, is_iterable, is_sequence
+from assible.module_utils.six import Iterator
+from assible.module_utils.common._collections_compat import Sequence
+from assible.module_utils.common.collections import ImmutableDict, is_iterable, is_sequence
 
 
 class SeqStub:
@@ -35,7 +35,7 @@ class IterableStub:
         return IteratorStub()
 
 
-class FakeAnsibleVaultEncryptedUnicode(Sequence):
+class FakeAssibleVaultEncryptedUnicode(Sequence):
     __ENCRYPTED__ = True
 
     def __init__(self, data):
@@ -49,7 +49,7 @@ class FakeAnsibleVaultEncryptedUnicode(Sequence):
 
 
 TEST_STRINGS = u'he', u'Україна', u'Česká republika'
-TEST_STRINGS = TEST_STRINGS + tuple(s.encode('utf-8') for s in TEST_STRINGS) + (FakeAnsibleVaultEncryptedUnicode(u'foo'),)
+TEST_STRINGS = TEST_STRINGS + tuple(s.encode('utf-8') for s in TEST_STRINGS) + (FakeAssibleVaultEncryptedUnicode(u'foo'),)
 
 TEST_ITEMS_NON_SEQUENCES = (
     {}, object(), frozenset(),

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright: (c) 2014, 2015 YAEGASHI Takeshi <yaegashi@debian.org>
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -22,7 +22,7 @@ options:
   path:
     description:
     - The file to modify.
-    - Before Ansible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
+    - Before Assible 2.3 this option was only usable as I(dest), I(destfile) and I(name).
     type: path
     required: yes
     aliases: [ dest, destfile, name ]
@@ -38,7 +38,7 @@ options:
     - C({mark}) will be replaced with the values in C(marker_begin) (default="BEGIN") and C(marker_end) (default="END").
     - Using a custom marker without the C({mark}) variable may result in the block being repeatedly inserted on subsequent playbook runs.
     type: str
-    default: '# {mark} ANSIBLE MANAGED BLOCK'
+    default: '# {mark} ASSIBLE MANAGED BLOCK'
   block:
     description:
     - The text to insert inside the marker lines.
@@ -74,22 +74,22 @@ options:
     default: no
   marker_begin:
     description:
-    - This will be inserted at C({mark}) in the opening ansible block marker.
+    - This will be inserted at C({mark}) in the opening assible block marker.
     type: str
     default: BEGIN
     version_added: '2.5'
   marker_end:
     required: false
     description:
-    - This will be inserted at C({mark}) in the closing ansible block marker.
+    - This will be inserted at C({mark}) in the closing assible block marker.
     type: str
     default: END
     version_added: '2.5'
 notes:
   - This module supports check mode.
   - When using 'with_*' loops be aware that if you do not set a unique mark the block will be overwritten on each iteration.
-  - As of Ansible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
-  - Option I(follow) has been removed in Ansible 2.5, because this module modifies the contents of the file so I(follow=no) doesn't make sense.
+  - As of Assible 2.3, the I(dest) option has been changed to I(path) as default, but I(dest) still works as well.
+  - Option I(follow) has been removed in Assible 2.5, because this module modifies the contents of the file so I(follow=no) doesn't make sense.
   - When more then one block should be handled in one file you must change the I(marker) per task.
 extends_documentation_fragment:
 - files
@@ -97,12 +97,12 @@ extends_documentation_fragment:
 '''
 
 EXAMPLES = r'''
-# Before Ansible 2.3, option 'dest' or 'name' was used instead of 'path'
+# Before Assible 2.3, option 'dest' or 'name' was used instead of 'path'
 - name: Insert/Update "Match User" configuration block in /etc/ssh/sshd_config
   blockinfile:
     path: /etc/ssh/sshd_config
     block: |
-      Match User ansible-agent
+      Match User assible-agent
       PasswordAuthentication no
 
 - name: Insert/Update eth0 configuration stanza in /etc/network/interfaces
@@ -124,16 +124,16 @@ EXAMPLES = r'''
 - name: Insert/Update HTML surrounded by custom markers after <body> line
   blockinfile:
     path: /var/www/html/index.html
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    marker: "<!-- {mark} ASSIBLE MANAGED BLOCK -->"
     insertafter: "<body>"
     block: |
-      <h1>Welcome to {{ ansible_hostname }}</h1>
-      <p>Last updated on {{ ansible_date_time.iso8601 }}</p>
+      <h1>Welcome to {{ assible_hostname }}</h1>
+      <p>Last updated on {{ assible_date_time.iso8601 }}</p>
 
 - name: Remove HTML as well as surrounding markers
   blockinfile:
     path: /var/www/html/index.html
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    marker: "<!-- {mark} ASSIBLE MANAGED BLOCK -->"
     block: ""
 
 - name: Add mappings to /etc/hosts
@@ -141,7 +141,7 @@ EXAMPLES = r'''
     path: /etc/hosts
     block: |
       {{ item.ip }} {{ item.name }}
-    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.name }}"
+    marker: "# {mark} ASSIBLE MANAGED BLOCK {{ item.name }}"
   loop:
     - { name: host1, ip: 10.10.1.10 }
     - { name: host2, ip: 10.10.1.11 }
@@ -151,9 +151,9 @@ EXAMPLES = r'''
 import re
 import os
 import tempfile
-from ansible.module_utils.six import b
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils._text import to_bytes
+from assible.module_utils.six import b
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils._text import to_bytes
 
 
 def write_changes(module, contents, path):
@@ -191,11 +191,11 @@ def check_file_attrs(module, changed, message, diff):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             path=dict(type='path', required=True, aliases=['dest', 'destfile', 'name']),
             state=dict(type='str', default='present', choices=['absent', 'present']),
-            marker=dict(type='str', default='# {mark} ANSIBLE MANAGED BLOCK'),
+            marker=dict(type='str', default='# {mark} ASSIBLE MANAGED BLOCK'),
             block=dict(type='str', default='', aliases=['content']),
             insertafter=dict(type='str'),
             insertbefore=dict(type='str'),
@@ -266,8 +266,8 @@ def main():
     marker0 = re.sub(b(r'{mark}'), b(params['marker_begin']), marker) + b(os.linesep)
     marker1 = re.sub(b(r'{mark}'), b(params['marker_end']), marker) + b(os.linesep)
     if present and block:
-        # Escape sequences like '\n' need to be handled in Ansible 1.x
-        if module.ansible_version.startswith('1.'):
+        # Escape sequences like '\n' need to be handled in Assible 1.x
+        if module.assible_version.startswith('1.'):
             block = re.sub('', block, '')
         if not block.endswith(b(os.linesep)):
             block += b(os.linesep)

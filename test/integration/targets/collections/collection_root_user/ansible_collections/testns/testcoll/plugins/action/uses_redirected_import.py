@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.plugins.action import ActionBase
-from ansible.module_utils.formerly_core import thingtocall
+from assible.plugins.action import ActionBase
+from assible.module_utils.formerly_core import thingtocall
 
 
 class ActionModule(ActionBase):

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2016, Ansible RedHat, Inc
+# Copyright: (c) 2016, Assible RedHat, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -11,9 +11,9 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: set_stats
-short_description: Set stats for the current ansible run
+short_description: Set stats for the current assible run
 description:
-     - This module allows setting/accumulating stats on the current ansible run, either per host or for all hosts in the run.
+     - This module allows setting/accumulating stats on the current assible run, either per host or for all hosts in the run.
      - This module is also supported for Windows targets.
 author: Brian Coca (@bcoca)
 options:
@@ -33,7 +33,7 @@ options:
     type: bool
     default: yes
 notes:
-    - In order for custom stats to be displayed, you must set C(show_custom_stats) in C(ansible.cfg) or C(ANSIBLE_SHOW_CUSTOM_STATS) to C(yes).
+    - In order for custom stats to be displayed, you must set C(show_custom_stats) in C(assible.cfg) or C(ASSIBLE_SHOW_CUSTOM_STATS) to C(yes).
     - This module is also supported for Windows targets.
 version_added: "2.3"
 '''
@@ -50,7 +50,7 @@ EXAMPLES = r'''
     data:
       one_stat: 11
       other_stat: "{{ local_var * 2 }}"
-      another_stat: "{{ some_registered_var.results | map(attribute='ansible_facts.some_fact') | list }}"
+      another_stat: "{{ some_registered_var.results | map(attribute='assible_facts.some_fact') | list }}"
     per_host: no
 
 

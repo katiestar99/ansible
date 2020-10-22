@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2016 Guido Günther <agx@sigxcpu.org>, Daniel Lobato Garcia <dlobatog@redhat.com>
-# Copyright (c) 2018 Ansible Project
+# Copyright (c) 2018 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -60,12 +60,12 @@ DOCUMENTATION = '''
         type: boolean
         default: False
       want_hostcollections:
-        description: Toggle, if true the plugin will create Ansible groups for host collections
+        description: Toggle, if true the plugin will create Assible groups for host collections
         type: boolean
         default: False
         version_added: '2.10'
-      want_ansible_ssh_host:
-        description: Toggle, if true the plugin will populate the ansible_ssh_host variable to explicitly specify the connection target
+      want_assible_ssh_host:
+        description: Toggle, if true the plugin will populate the assible_ssh_host variable to explicitly specify the connection target
         type: boolean
         default: False
         version_added: '2.10'
@@ -76,17 +76,17 @@ EXAMPLES = '''
 # my.foreman.yml
 plugin: foreman
 url: http://localhost:2222
-user: ansible-tester
+user: assible-tester
 password: secure
 validate_certs: False
 '''
 
 from distutils.version import LooseVersion
 
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.common._collections_compat import MutableMapping
-from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable, to_safe_group_name, Constructable
+from assible.errors import AssibleError
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.common._collections_compat import MutableMapping
+from assible.plugins.inventory import BaseInventoryPlugin, Cacheable, to_safe_group_name, Constructable
 
 # 3rd party imports
 try:
@@ -94,13 +94,13 @@ try:
     if LooseVersion(requests.__version__) < LooseVersion('1.1.0'):
         raise ImportError
 except ImportError:
-    raise AnsibleError('This script requires python-requests 1.1 as a minimum version')
+    raise AssibleError('This script requires python-requests 1.1 as a minimum version')
 
 from requests.auth import HTTPBasicAuth
 
 
 class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
-    ''' Host inventory parser for ansible using foreman as source. '''
+    ''' Host inventory parser for assible using foreman as source. '''
 
     NAME = 'foreman'
 
@@ -251,7 +251,7 @@ class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
                     host_data = self._get_host_data_by_id(host['id'])
                     hostcollections = host_data.get('host_collections')
                     if hostcollections:
-                        # Create Ansible groups for host collections
+                        # Create Assible groups for host collections
                         for hostcollection in hostcollections:
                             try:
                                 hostcollection_group = to_safe_group_name('%shostcollection_%s' % (self.get_option('group_prefix'),
@@ -261,15 +261,15 @@ class InventoryModule(BaseInventoryPlugin, Cacheable, Constructable):
                             except ValueError as e:
                                 self.display.warning("Could not create groups for host collections for %s, skipping: %s" % (host_name, to_text(e)))
 
-                # put ansible_ssh_host as hostvar
-                if self.get_option('want_ansible_ssh_host'):
+                # put assible_ssh_host as hostvar
+                if self.get_option('want_assible_ssh_host'):
                     for key in ('ip', 'ipv4', 'ipv6'):
                         if host.get(key):
                             try:
-                                self.inventory.set_variable(host_name, 'ansible_ssh_host', host[key])
+                                self.inventory.set_variable(host_name, 'assible_ssh_host', host[key])
                                 break
                             except ValueError as e:
-                                self.display.warning("Could not set hostvar ansible_ssh_host to '%s' for the '%s' host, skipping: %s" %
+                                self.display.warning("Could not set hostvar assible_ssh_host to '%s' for the '%s' host, skipping: %s" %
                                                      (host[key], host_name, to_text(e)))
 
                 strict = self.get_option('strict')

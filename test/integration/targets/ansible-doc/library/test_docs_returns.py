@@ -10,7 +10,7 @@ short_description: Test module
 description:
     - Test module
 author:
-    - Ansible Core Team
+    - Assible Core Team
 '''
 
 EXAMPLES = '''
@@ -41,11 +41,11 @@ a_first:
 '''
 
 
-from ansible.module_utils.basic import AnsibleModule
+from assible.module_utils.basic import AssibleModule
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(),
     )
 

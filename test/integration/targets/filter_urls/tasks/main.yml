@@ -1,5 +1,5 @@
 - name: Get Jinja2 version
-  shell: "{{ ansible_python_interpreter }} -c 'import jinja2; print(jinja2.__version__)'"
+  shell: "{{ assible_python_interpreter }} -c 'import jinja2; print(jinja2.__version__)'"
   register: jinja2_version
 
 - name: Print Jinja2 version

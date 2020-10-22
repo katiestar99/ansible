@@ -1,11 +1,11 @@
 #!powershell
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#AnsibleRequires -CSharpUtil Ansible.Service
-#Requires -Module Ansible.ModuleUtils.ArgvParser
-#Requires -Module Ansible.ModuleUtils.CommandUtil
+#AssibleRequires -CSharpUtil Assible.Basic
+#AssibleRequires -CSharpUtil Assible.Service
+#Requires -Module Assible.ModuleUtils.ArgvParser
+#Requires -Module Assible.ModuleUtils.CommandUtil
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, @{})
+$module = [Assible.Basic.AssibleModule]::Create($args, @{})
 
 $path = "$env:SystemRoot\System32\svchost.exe"
 
@@ -153,12 +153,12 @@ Function Invoke-Sc {
 
 $tests = [Ordered]@{
     "Props on service created by New-Service" = {
-        $actual = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $actual = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
 
         $actual.ServiceName | Assert-Equals -Expected $serviceName
-        $actual.ServiceType | Assert-Equals -Expected ([Ansible.Service.ServiceType]::Win32OwnProcess)
-        $actual.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::DemandStart)
-        $actual.ErrorControl | Assert-Equals -Expected ([Ansible.Service.ErrorControl]::Normal)
+        $actual.ServiceType | Assert-Equals -Expected ([Assible.Service.ServiceType]::Win32OwnProcess)
+        $actual.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::DemandStart)
+        $actual.ErrorControl | Assert-Equals -Expected ([Assible.Service.ErrorControl]::Normal)
         $actual.Path | Assert-Equals -Expected ('"{0}"' -f $path)
         $actual.LoadOrderGroup | Assert-Equals -Expected ""
         $actual.DependentOn.Count | Assert-Equals -Expected 0
@@ -172,39 +172,39 @@ $tests = [Ordered]@{
         $actual.FailureActions.Command | Assert-Equals -Expected $null
         $actual.FailureActions.Actions.Count | Assert-Equals -Expected 0
         $actual.FailureActionsOnNonCrashFailures | Assert-Equals -Expected $false
-        $actual.ServiceSidInfo | Assert-Equals -Expected ([Ansible.Service.ServiceSidInfo]::None)
+        $actual.ServiceSidInfo | Assert-Equals -Expected ([Assible.Service.ServiceSidInfo]::None)
         $actual.RequiredPrivileges.Count | Assert-Equals -Expected 0
         # Cannot test default values as it differs per OS version
         $null -ne $actual.PreShutdownTimeout | Assert-Equals -Expected $true
         $actual.Triggers.Count | Assert-Equals -Expected 0
         $actual.PreferredNode | Assert-Equals -Expected $null
         if ([Environment]::OSVersion.Version -ge [Version]'6.3') {
-            $actual.LaunchProtection | Assert-Equals -Expected ([Ansible.Service.LaunchProtection]::None)
+            $actual.LaunchProtection | Assert-Equals -Expected ([Assible.Service.LaunchProtection]::None)
         } else {
             $actual.LaunchProtection | Assert-Equals -Expected $null
         }
-        $actual.State | Assert-Equals -Expected ([Ansible.Service.ServiceStatus]::Stopped)
+        $actual.State | Assert-Equals -Expected ([Assible.Service.ServiceStatus]::Stopped)
         $actual.Win32ExitCode | Assert-Equals -Expected 1077  # ERROR_SERVICE_NEVER_STARTED
         $actual.ServiceExitCode | Assert-Equals -Expected 0
         $actual.Checkpoint | Assert-Equals -Expected 0
         $actual.WaitHint | Assert-Equals -Expected 0
         $actual.ProcessId | Assert-Equals -Expected 0
-        $actual.ServiceFlags | Assert-Equals -Expected ([Ansible.Service.ServiceFlags]::None)
+        $actual.ServiceFlags | Assert-Equals -Expected ([Assible.Service.ServiceFlags]::None)
         $actual.DependedBy.Count | Assert-Equals 0
     }
 
     "Service creation through util" = {
         $testName = "$($serviceName)_2"
-        $actual = [Ansible.Service.Service]::Create($testName, '"{0}"' -f $path)
+        $actual = [Assible.Service.Service]::Create($testName, '"{0}"' -f $path)
 
         try {
             $cmdletService = Get-Service -Name $testName -ErrorAction SilentlyContinue
             $null -ne $cmdletService | Assert-Equals -Expected $true
 
             $actual.ServiceName | Assert-Equals -Expected $testName
-            $actual.ServiceType | Assert-Equals -Expected ([Ansible.Service.ServiceType]::Win32OwnProcess)
-            $actual.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::DemandStart)
-            $actual.ErrorControl | Assert-Equals -Expected ([Ansible.Service.ErrorControl]::Normal)
+            $actual.ServiceType | Assert-Equals -Expected ([Assible.Service.ServiceType]::Win32OwnProcess)
+            $actual.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::DemandStart)
+            $actual.ErrorControl | Assert-Equals -Expected ([Assible.Service.ErrorControl]::Normal)
             $actual.Path | Assert-Equals -Expected ('"{0}"' -f $path)
             $actual.LoadOrderGroup | Assert-Equals -Expected ""
             $actual.DependentOn.Count | Assert-Equals -Expected 0
@@ -218,23 +218,23 @@ $tests = [Ordered]@{
             $actual.FailureActions.Command | Assert-Equals -Expected $null
             $actual.FailureActions.Actions.Count | Assert-Equals -Expected 0
             $actual.FailureActionsOnNonCrashFailures | Assert-Equals -Expected $false
-            $actual.ServiceSidInfo | Assert-Equals -Expected ([Ansible.Service.ServiceSidInfo]::None)
+            $actual.ServiceSidInfo | Assert-Equals -Expected ([Assible.Service.ServiceSidInfo]::None)
             $actual.RequiredPrivileges.Count | Assert-Equals -Expected 0
             $null -ne $actual.PreShutdownTimeout | Assert-Equals -Expected $true
             $actual.Triggers.Count | Assert-Equals -Expected 0
             $actual.PreferredNode | Assert-Equals -Expected $null
             if ([Environment]::OSVersion.Version -ge [Version]'6.3') {
-                $actual.LaunchProtection | Assert-Equals -Expected ([Ansible.Service.LaunchProtection]::None)
+                $actual.LaunchProtection | Assert-Equals -Expected ([Assible.Service.LaunchProtection]::None)
             } else {
                 $actual.LaunchProtection | Assert-Equals -Expected $null
             }
-            $actual.State | Assert-Equals -Expected ([Ansible.Service.ServiceStatus]::Stopped)
+            $actual.State | Assert-Equals -Expected ([Assible.Service.ServiceStatus]::Stopped)
             $actual.Win32ExitCode | Assert-Equals -Expected 1077  # ERROR_SERVICE_NEVER_STARTED
             $actual.ServiceExitCode | Assert-Equals -Expected 0
             $actual.Checkpoint | Assert-Equals -Expected 0
             $actual.WaitHint | Assert-Equals -Expected 0
             $actual.ProcessId | Assert-Equals -Expected 0
-            $actual.ServiceFlags | Assert-Equals -Expected ([Ansible.Service.ServiceFlags]::None)
+            $actual.ServiceFlags | Assert-Equals -Expected ([Assible.Service.ServiceFlags]::None)
             $actual.DependedBy.Count | Assert-Equals 0
         } finally {
             $actual.Delete()
@@ -244,8 +244,8 @@ $tests = [Ordered]@{
     "Fail to open non-existing service" = {
         $failed = $false
         try {
-            $null = New-Object -TypeName Ansible.Service.Service -ArgumentList 'fake_service'
-        } catch [Ansible.Service.ServiceManagerException] {
+            $null = New-Object -TypeName Assible.Service.Service -ArgumentList 'fake_service'
+        } catch [Assible.Service.ServiceManagerException] {
             # 1060 == ERROR_SERVICE_DOES_NOT_EXIST
             $_.Exception.Message -like '*Win32ErrorCode 1060 - 0x00000424*' | Assert-Equals -Expected $true
             $failed = $true
@@ -255,18 +255,18 @@ $tests = [Ordered]@{
     }
 
     "Open with specific access rights" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList @(
-            $serviceName, [Ansible.Service.ServiceRights]'QueryConfig, QueryStatus'
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList @(
+            $serviceName, [Assible.Service.ServiceRights]'QueryConfig, QueryStatus'
         )
 
         # QueryStatus can get the status
-        $service.State | Assert-Equals -Expected ([Ansible.Service.ServiceStatus]::Stopped)
+        $service.State | Assert-Equals -Expected ([Assible.Service.ServiceStatus]::Stopped)
 
         # Should fail to get the config because we did not request that right
         $failed = $false
         try {
             $service.Path = 'fail'
-        } catch [Ansible.Service.ServiceManagerException] {
+        } catch [Assible.Service.ServiceManagerException] {
             # 5 == ERROR_ACCESS_DENIED
             $_.Exception.Message -like '*Win32ErrorCode 5 - 0x00000005*' | Assert-Equals -Expected $true
             $failed = $true
@@ -277,39 +277,39 @@ $tests = [Ordered]@{
     }
 
     "Modfiy ServiceType" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
-        $service.ServiceType = [Ansible.Service.ServiceType]::Win32ShareProcess
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
+        $service.ServiceType = [Assible.Service.ServiceType]::Win32ShareProcess
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
-        $service.ServiceType | Assert-Equals -Expected ([Ansible.Service.ServiceType]::Win32ShareProcess)
+        $service.ServiceType | Assert-Equals -Expected ([Assible.Service.ServiceType]::Win32ShareProcess)
         $actual.TYPE | Assert-Equals -Expected "20  WIN32_SHARE_PROCESS"
 
         $null = Invoke-Sc -Action config -Name $serviceName -Arguments @{type="own"}
         $service.Refresh()
-        $service.ServiceType | Assert-Equals -Expected ([Ansible.Service.ServiceType]::Win32OwnProcess)
+        $service.ServiceType | Assert-Equals -Expected ([Assible.Service.ServiceType]::Win32OwnProcess)
     }
 
     "Create desktop interactive service" = {
-        $service = New-Object -Typename Ansible.Service.Service -ArgumentList $serviceName
-        $service.ServiceType = [Ansible.Service.ServiceType]'Win32OwnProcess, InteractiveProcess'
+        $service = New-Object -Typename Assible.Service.Service -ArgumentList $serviceName
+        $service.ServiceType = [Assible.Service.ServiceType]'Win32OwnProcess, InteractiveProcess'
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
         $actual.TYPE | Assert-Equals -Expected "110  WIN32_OWN_PROCESS (interactive)"
-        $service.ServiceType | Assert-Equals -Expected ([Ansible.Service.ServiceType]'Win32OwnProcess, InteractiveProcess')
+        $service.ServiceType | Assert-Equals -Expected ([Assible.Service.ServiceType]'Win32OwnProcess, InteractiveProcess')
 
         # Change back from interactive process
-        $service.ServiceType = [Ansible.Service.ServiceType]::Win32OwnProcess
+        $service.ServiceType = [Assible.Service.ServiceType]::Win32OwnProcess
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
         $actual.TYPE | Assert-Equals -Expected "10  WIN32_OWN_PROCESS"
-        $service.ServiceType | Assert-Equals -Expected ([Ansible.Service.ServiceType]::Win32OwnProcess)
+        $service.ServiceType | Assert-Equals -Expected ([Assible.Service.ServiceType]::Win32OwnProcess)
 
         $service.Account = [System.Security.Principal.SecurityIdentifier]'S-1-5-20'
 
         $failed = $false
         try {
-            $service.ServiceType = [Ansible.Service.ServiceType]'Win32OwnProcess, InteractiveProcess'
-        } catch [Ansible.Service.ServiceManagerException] {
+            $service.ServiceType = [Assible.Service.ServiceType]'Win32OwnProcess, InteractiveProcess'
+        } catch [Assible.Service.ServiceManagerException] {
             $failed = $true
             $_.Exception.NativeErrorCode | Assert-Equals -Expected 87  # ERROR_INVALID_PARAMETER
         }
@@ -320,68 +320,68 @@ $tests = [Ordered]@{
     }
 
     "Modify StartType" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
-        $service.StartType = [Ansible.Service.ServiceStartType]::Disabled
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
+        $service.StartType = [Assible.Service.ServiceStartType]::Disabled
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
-        $service.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::Disabled)
+        $service.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::Disabled)
         $actual.START_TYPE | Assert-Equals -Expected "4   DISABLED"
 
         $null = Invoke-Sc -Action config -Name $serviceName -Arguments @{start="demand"}
         $service.Refresh()
-        $service.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::DemandStart)
+        $service.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::DemandStart)
     }
 
     "Modify StartType auto delayed" = {
         # Delayed start type is a modifier of the AutoStart type. It uses a separate config entry to define and this
         # makes sure the util does that correctly from various types and back.
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
-        $service.StartType = [Ansible.Service.ServiceStartType]::Disabled  # Start from Disabled
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
+        $service.StartType = [Assible.Service.ServiceStartType]::Disabled  # Start from Disabled
 
         # Disabled -> Auto Start Delayed
-        $service.StartType = [Ansible.Service.ServiceStartType]::AutoStartDelayed
+        $service.StartType = [Assible.Service.ServiceStartType]::AutoStartDelayed
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
-        $service.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::AutoStartDelayed)
+        $service.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::AutoStartDelayed)
         $actual.START_TYPE | Assert-Equals -Expected "2   AUTO_START  (DELAYED)"
 
         # Auto Start Delayed -> Auto Start
-        $service.StartType = [Ansible.Service.ServiceStartType]::AutoStart
+        $service.StartType = [Assible.Service.ServiceStartType]::AutoStart
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
-        $service.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::AutoStart)
+        $service.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::AutoStart)
         $actual.START_TYPE | Assert-Equals -Expected "2   AUTO_START"
 
         # Auto Start -> Auto Start Delayed
-        $service.StartType = [Ansible.Service.ServiceStartType]::AutoStartDelayed
+        $service.StartType = [Assible.Service.ServiceStartType]::AutoStartDelayed
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
-        $service.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::AutoStartDelayed)
+        $service.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::AutoStartDelayed)
         $actual.START_TYPE | Assert-Equals -Expected "2   AUTO_START  (DELAYED)"
 
         # Auto Start Delayed -> Manual
-        $service.StartType = [Ansible.Service.ServiceStartType]::DemandStart
+        $service.StartType = [Assible.Service.ServiceStartType]::DemandStart
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
-        $service.StartType | Assert-Equals -Expected ([Ansible.Service.ServiceStartType]::DemandStart)
+        $service.StartType | Assert-Equals -Expected ([Assible.Service.ServiceStartType]::DemandStart)
         $actual.START_TYPE | Assert-Equals -Expected "3   DEMAND_START"
     }
 
     "Modify ErrorControl" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
-        $service.ErrorControl = [Ansible.Service.ErrorControl]::Severe
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
+        $service.ErrorControl = [Assible.Service.ErrorControl]::Severe
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
-        $service.ErrorControl | Assert-Equals -Expected ([Ansible.Service.ErrorControl]::Severe)
+        $service.ErrorControl | Assert-Equals -Expected ([Assible.Service.ErrorControl]::Severe)
         $actual.ERROR_CONTROL | Assert-Equals -Expected "2   SEVERE"
 
         $null = Invoke-Sc -Action config -Name $serviceName -Arguments @{error="ignore"}
         $service.Refresh()
-        $service.ErrorControl | Assert-Equals -Expected ([Ansible.Service.ErrorControl]::Ignore)
+        $service.ErrorControl | Assert-Equals -Expected ([Assible.Service.ErrorControl]::Ignore)
     }
 
     "Modify Path" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.Path = "Fake path"
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
@@ -394,7 +394,7 @@ $tests = [Ordered]@{
     }
 
     "Modify LoadOrderGroup" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.LoadOrderGroup = "my group"
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
@@ -407,7 +407,7 @@ $tests = [Ordered]@{
     }
 
     "Modify DependentOn" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.DependentOn = @("HTTP", "WinRM")
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
@@ -427,7 +427,7 @@ $tests = [Ordered]@{
         $networkSid = [System.Security.Principal.SecurityIdentifier]'S-1-5-20'
         $networkName = $networkSid.Translate([System.Security.Principal.NTAccount])
 
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.Account = $networkSid
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
@@ -447,7 +447,7 @@ $tests = [Ordered]@{
     "Modify Account - user" = {
         $currentSid = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
 
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.Account = $currentSid
         $service.Password = 'password'
 
@@ -477,7 +477,7 @@ $tests = [Ordered]@{
     "Modify Account - virtual account" = {
         $account = [System.Security.Principal.NTAccount]"NT SERVICE\$serviceName"
 
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.Account = $account
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
@@ -493,7 +493,7 @@ $tests = [Ordered]@{
         $gmsaSid = $gmsaName.Translate([System.Security.Principal.SecurityIdentifier])
         $gmsaNetlogon = $gmsaSid.Translate([System.Security.Principal.NTAccount])
 
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.Account = $gmsaName
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
@@ -515,7 +515,7 @@ $tests = [Ordered]@{
     }
 
     "Modify DisplayName" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.DisplayName = "Custom Service Name"
 
         $actual = Invoke-Sc -Action qc -Name $serviceName
@@ -528,7 +528,7 @@ $tests = [Ordered]@{
     }
 
     "Modify Description" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.Description = "My custom service description"
 
         $actual = Invoke-Sc -Action qdescription -Name $serviceName
@@ -546,18 +546,18 @@ $tests = [Ordered]@{
     }
 
     "Modify FailureActions" = {
-        $newAction = [Ansible.Service.FailureActions]@{
+        $newAction = [Assible.Service.FailureActions]@{
             ResetPeriod = 86400
             RebootMsg = 'Reboot msg'
             Command = 'Command line'
             Actions = @(
-                [Ansible.Service.Action]@{Type = [Ansible.Service.FailureAction]::RunCommand; Delay = 1000},
-                [Ansible.Service.Action]@{Type = [Ansible.Service.FailureAction]::RunCommand; Delay = 2000},
-                [Ansible.Service.Action]@{Type = [Ansible.Service.FailureAction]::Restart; Delay = 1000},
-                [Ansible.Service.Action]@{Type = [Ansible.Service.FailureAction]::Reboot; Delay = 1000}
+                [Assible.Service.Action]@{Type = [Assible.Service.FailureAction]::RunCommand; Delay = 1000},
+                [Assible.Service.Action]@{Type = [Assible.Service.FailureAction]::RunCommand; Delay = 2000},
+                [Assible.Service.Action]@{Type = [Assible.Service.FailureAction]::Restart; Delay = 1000},
+                [Assible.Service.Action]@{Type = [Assible.Service.FailureAction]::Reboot; Delay = 1000}
             )
         }
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.FailureActions = $newAction
 
         $actual = Invoke-Sc -Action qfailure -Name $serviceName
@@ -572,7 +572,7 @@ $tests = [Ordered]@{
         $service.FailureActions.Actions.Count | Assert-Equals -Expected 4
 
         # Test that we can change individual settings and it doesn't change all
-        $service.FailureActions = [Ansible.Service.FailureActions]@{ResetPeriod = 172800}
+        $service.FailureActions = [Assible.Service.FailureActions]@{ResetPeriod = 172800}
 
         $actual = Invoke-Sc -Action qfailure -Name $serviceName
         $actual.'RESET_PERIOD (in seconds)' | Assert-Equals -Expected 172800
@@ -581,7 +581,7 @@ $tests = [Ordered]@{
         $actual.FAILURE_ACTIONS.Count | Assert-Equals -Expected 4
         $service.FailureActions.Actions.Count | Assert-Equals -Expected 4
 
-        $service.FailureActions = [Ansible.Service.FailureActions]@{RebootMsg = "New reboot msg"}
+        $service.FailureActions = [Assible.Service.FailureActions]@{RebootMsg = "New reboot msg"}
 
         $actual = Invoke-Sc -Action qfailure -Name $serviceName
         $actual.'RESET_PERIOD (in seconds)' | Assert-Equals -Expected 172800
@@ -590,7 +590,7 @@ $tests = [Ordered]@{
         $actual.FAILURE_ACTIONS.Count | Assert-Equals -Expected 4
         $service.FailureActions.Actions.Count | Assert-Equals -Expected 4
 
-        $service.FailureActions = [Ansible.Service.FailureActions]@{Command = "New command line"}
+        $service.FailureActions = [Assible.Service.FailureActions]@{Command = "New command line"}
 
         $actual = Invoke-Sc -Action qfailure -Name $serviceName
         $actual.'RESET_PERIOD (in seconds)' | Assert-Equals -Expected 172800
@@ -600,11 +600,11 @@ $tests = [Ordered]@{
         $service.FailureActions.Actions.Count | Assert-Equals -Expected 4
 
         # Test setting both ResetPeriod and Actions together
-        $service.FailureActions = [Ansible.Service.FailureActions]@{
+        $service.FailureActions = [Assible.Service.FailureActions]@{
             ResetPeriod = 86400
             Actions = @(
-                [Ansible.Service.Action]@{Type = [Ansible.Service.FailureAction]::RunCommand; Delay = 5000},
-                [Ansible.Service.Action]@{Type = [Ansible.Service.FailureAction]::None; Delay = 0}
+                [Assible.Service.Action]@{Type = [Assible.Service.FailureAction]::RunCommand; Delay = 5000},
+                [Assible.Service.Action]@{Type = [Assible.Service.FailureAction]::None; Delay = 0}
             )
         }
 
@@ -615,11 +615,11 @@ $tests = [Ordered]@{
         # sc.exe does not show the None action it just ends the list, so we verify from get_FailureActions
         $actual.FAILURE_ACTIONS | Assert-Equals -Expected "RUN PROCESS -- Delay = 5000 milliseconds."
         $service.FailureActions.Actions.Count | Assert-Equals -Expected 2
-        $service.FailureActions.Actions[1].Type | Assert-Equals -Expected ([Ansible.Service.FailureAction]::None)
+        $service.FailureActions.Actions[1].Type | Assert-Equals -Expected ([Assible.Service.FailureAction]::None)
 
         # Test setting just Actions without ResetPeriod
-        $service.FailureActions = [Ansible.Service.FailureActions]@{
-            Actions = [Ansible.Service.Action]@{Type = [Ansible.Service.FailureAction]::RunCommand; Delay = 10000}
+        $service.FailureActions = [Assible.Service.FailureActions]@{
+            Actions = [Assible.Service.Action]@{Type = [Assible.Service.FailureAction]::RunCommand; Delay = 10000}
         }
         $actual = Invoke-Sc -Action qfailure -Name $serviceName
         $actual.'RESET_PERIOD (in seconds)' | Assert-Equals -Expected 86400
@@ -629,7 +629,7 @@ $tests = [Ordered]@{
         $service.FailureActions.Actions.Count | Assert-Equals -Expected 1
 
         # Test removing all actions
-        $service.FailureActions = [Ansible.Service.FailureActions]@{
+        $service.FailureActions = [Assible.Service.FailureActions]@{
             Actions = @()
         }
         $actual = Invoke-Sc -Action qfailure -Name $serviceName
@@ -652,14 +652,14 @@ $tests = [Ordered]@{
         $actual.RebootMsg | Assert-Equals -Expected "sc reboot msg"
         $actual.Command | Assert-Equals -Expected "sc command line"
         $actual.Actions.Count | Assert-Equals -Expected 2
-        $actual.Actions[0].Type | Assert-Equals -Expected ([Ansible.Service.FailureAction]::RunCommand)
+        $actual.Actions[0].Type | Assert-Equals -Expected ([Assible.Service.FailureAction]::RunCommand)
         $actual.Actions[0].Delay | Assert-Equals -Expected 5000
-        $actual.Actions[1].Type | Assert-Equals -Expected ([Ansible.Service.FailureAction]::Reboot)
+        $actual.Actions[1].Type | Assert-Equals -Expected ([Assible.Service.FailureAction]::Reboot)
         $actual.Actions[1].Delay | Assert-Equals -Expected 800
     }
 
     "Modify FailureActionsOnNonCrashFailures" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.FailureActionsOnNonCrashFailures = $true
 
         $actual = Invoke-Sc -Action qfailureflag -Name $serviceName
@@ -671,25 +671,25 @@ $tests = [Ordered]@{
     }
 
     "Modify ServiceSidInfo" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
-        $service.ServiceSidInfo = [Ansible.Service.ServiceSidInfo]::None
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
+        $service.ServiceSidInfo = [Assible.Service.ServiceSidInfo]::None
 
         $actual = Invoke-Sc -Action qsidtype -Name $serviceName
-        $service.ServiceSidInfo | Assert-Equals -Expected ([Ansible.Service.ServiceSidInfo]::None)
+        $service.ServiceSidInfo | Assert-Equals -Expected ([Assible.Service.ServiceSidInfo]::None)
         $actual.SERVICE_SID_TYPE | Assert-Equals -Expected 'NONE'
 
         $null = Invoke-Sc -Action sidtype -Name $serviceName -Arguments @(,'unrestricted')
-        $service.ServiceSidInfo | Assert-Equals -Expected ([Ansible.Service.ServiceSidInfo]::Unrestricted)
+        $service.ServiceSidInfo | Assert-Equals -Expected ([Assible.Service.ServiceSidInfo]::Unrestricted)
 
-        $service.ServiceSidInfo = [Ansible.Service.ServiceSidInfo]::Restricted
+        $service.ServiceSidInfo = [Assible.Service.ServiceSidInfo]::Restricted
 
         $actual = Invoke-Sc -Action qsidtype -Name $serviceName
-        $service.ServiceSidInfo | Assert-Equals -Expected ([Ansible.Service.ServiceSidInfo]::Restricted)
+        $service.ServiceSidInfo | Assert-Equals -Expected ([Assible.Service.ServiceSidInfo]::Restricted)
         $actual.SERVICE_SID_TYPE | Assert-Equals -Expected 'RESTRICTED'
     }
 
     "Modify RequiredPrivileges" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.RequiredPrivileges = @("SeBackupPrivilege", "SeTcbPrivilege")
 
         $actual = Invoke-Sc -Action qprivs -Name $serviceName
@@ -715,7 +715,7 @@ $tests = [Ordered]@{
     }
 
     "Modify PreShutdownTimeout" = {
-        $service = New-Object -TypeName Ansible.Service.Service -ArgumentList $serviceName
+        $service = New-Object -TypeName Assible.Service.Service -ArgumentList $serviceName
         $service.PreShutdownTimeout = 60000
 
         # sc.exe doesn't seem to have a query argument for this, just get it from the registry
@@ -726,67 +726,67 @@ $tests = [Ordered]@{
     }
 
     "Modify Triggers" = {
-        $service = [Ansible.Service.Service]$serviceName
+        $service = [Assible.Service.Service]$serviceName
         $service.Triggers = @(
-            [Ansible.Service.Trigger]@{
-                Type = [Ansible.Service.TriggerType]::DomainJoin
-                Action = [Ansible.Service.TriggerAction]::ServiceStop
-                SubType = [Guid][Ansible.Service.Trigger]::DOMAIN_JOIN_GUID
+            [Assible.Service.Trigger]@{
+                Type = [Assible.Service.TriggerType]::DomainJoin
+                Action = [Assible.Service.TriggerAction]::ServiceStop
+                SubType = [Guid][Assible.Service.Trigger]::DOMAIN_JOIN_GUID
             },
-            [Ansible.Service.Trigger]@{
-                Type = [Ansible.Service.TriggerType]::NetworkEndpoint
-                Action = [Ansible.Service.TriggerAction]::ServiceStart
-                SubType = [Guid][Ansible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
-                DataItems = [Ansible.Service.TriggerItem]@{
-                    Type = [Ansible.Service.TriggerDataType]::String
+            [Assible.Service.Trigger]@{
+                Type = [Assible.Service.TriggerType]::NetworkEndpoint
+                Action = [Assible.Service.TriggerAction]::ServiceStart
+                SubType = [Guid][Assible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
+                DataItems = [Assible.Service.TriggerItem]@{
+                    Type = [Assible.Service.TriggerDataType]::String
                     Data = 'my named pipe'
                 }
             },
-            [Ansible.Service.Trigger]@{
-                Type = [Ansible.Service.TriggerType]::NetworkEndpoint
-                Action = [Ansible.Service.TriggerAction]::ServiceStart
-                SubType = [Guid][Ansible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
-                DataItems = [Ansible.Service.TriggerItem]@{
-                    Type = [Ansible.Service.TriggerDataType]::String
+            [Assible.Service.Trigger]@{
+                Type = [Assible.Service.TriggerType]::NetworkEndpoint
+                Action = [Assible.Service.TriggerAction]::ServiceStart
+                SubType = [Guid][Assible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
+                DataItems = [Assible.Service.TriggerItem]@{
+                    Type = [Assible.Service.TriggerDataType]::String
                     Data = 'my named pipe 2'
                 }
             },
-            [Ansible.Service.Trigger]@{
-                Type = [Ansible.Service.TriggerType]::Custom
-                Action = [Ansible.Service.TriggerAction]::ServiceStart
+            [Assible.Service.Trigger]@{
+                Type = [Assible.Service.TriggerType]::Custom
+                Action = [Assible.Service.TriggerAction]::ServiceStart
                 SubType = [Guid]'9bf04e57-05dc-4914-9ed9-84bf992db88c'
                 DataItems = @(
-                    [Ansible.Service.TriggerItem]@{
-                        Type = [Ansible.Service.TriggerDataType]::Binary
+                    [Assible.Service.TriggerItem]@{
+                        Type = [Assible.Service.TriggerDataType]::Binary
                         Data = [byte[]]@(1, 2, 3, 4)
                     },
-                    [Ansible.Service.TriggerItem]@{
-                        Type = [Ansible.Service.TriggerDataType]::Binary
+                    [Assible.Service.TriggerItem]@{
+                        Type = [Assible.Service.TriggerDataType]::Binary
                         Data = [byte[]]@(5, 6, 7, 8, 9)
                     }
                 )
             }
-            [Ansible.Service.Trigger]@{
-                Type = [Ansible.Service.TriggerType]::Custom
-                Action = [Ansible.Service.TriggerAction]::ServiceStart
+            [Assible.Service.Trigger]@{
+                Type = [Assible.Service.TriggerType]::Custom
+                Action = [Assible.Service.TriggerAction]::ServiceStart
                 SubType = [Guid]'9fbcfc7e-7581-4d46-913b-53bb15c80c51'
                 DataItems = @(
-                    [Ansible.Service.TriggerItem]@{
-                        Type = [Ansible.Service.TriggerDataType]::String
+                    [Assible.Service.TriggerItem]@{
+                        Type = [Assible.Service.TriggerDataType]::String
                         Data = 'entry 1'
                     },
-                    [Ansible.Service.TriggerItem]@{
-                        Type = [Ansible.Service.TriggerDataType]::String
+                    [Assible.Service.TriggerItem]@{
+                        Type = [Assible.Service.TriggerDataType]::String
                         Data = 'entry 2'
                     }
                 )
             },
-            [Ansible.Service.Trigger]@{
-                Type = [Ansible.Service.TriggerType]::FirewallPortEvent
-                Action = [Ansible.Service.TriggerAction]::ServiceStop
-                SubType = [Guid][Ansible.Service.Trigger]::FIREWALL_PORT_CLOSE_GUID
-                DataItems = [Ansible.Service.TriggerItem]@{
-                    Type = [Ansible.Service.TriggerDataType]::String
+            [Assible.Service.Trigger]@{
+                Type = [Assible.Service.TriggerType]::FirewallPortEvent
+                Action = [Assible.Service.TriggerAction]::ServiceStop
+                SubType = [Guid][Assible.Service.Trigger]::FIREWALL_PORT_CLOSE_GUID
+                DataItems = [Assible.Service.TriggerItem]@{
+                    Type = [Assible.Service.TriggerDataType]::String
                     Data = [System.Collections.Generic.List[String]]@("1234", "tcp", "imagepath", "servicename")
                 }
             }
@@ -797,18 +797,18 @@ $tests = [Ordered]@{
         $actual.Triggers.Count | Assert-Equals -Expected 6
         $actual.Triggers[0].Type | Assert-Equals -Expected 'DOMAIN JOINED STATUS'
         $actual.Triggers[0].Action | Assert-Equals -Expected 'STOP SERVICE'
-        $actual.Triggers[0].SubType | Assert-Equals -Expected "$([Ansible.Service.Trigger]::DOMAIN_JOIN_GUID) [DOMAIN JOINED]"
+        $actual.Triggers[0].SubType | Assert-Equals -Expected "$([Assible.Service.Trigger]::DOMAIN_JOIN_GUID) [DOMAIN JOINED]"
         $actual.Triggers[0].Data.Count | Assert-Equals -Expected 0
 
         $actual.Triggers[1].Type | Assert-Equals -Expected 'NETWORK EVENT'
         $actual.Triggers[1].Action | Assert-Equals -Expected 'START SERVICE'
-        $actual.Triggers[1].SubType | Assert-Equals -Expected "$([Ansible.Service.Trigger]::NAMED_PIPE_EVENT_GUID) [NAMED PIPE EVENT]"
+        $actual.Triggers[1].SubType | Assert-Equals -Expected "$([Assible.Service.Trigger]::NAMED_PIPE_EVENT_GUID) [NAMED PIPE EVENT]"
         $actual.Triggers[1].Data.Count | Assert-Equals -Expected 1
         $actual.Triggers[1].Data[0] | Assert-Equals -Expected 'my named pipe'
 
         $actual.Triggers[2].Type | Assert-Equals -Expected 'NETWORK EVENT'
         $actual.Triggers[2].Action | Assert-Equals -Expected 'START SERVICE'
-        $actual.Triggers[2].SubType | Assert-Equals -Expected "$([Ansible.Service.Trigger]::NAMED_PIPE_EVENT_GUID) [NAMED PIPE EVENT]"
+        $actual.Triggers[2].SubType | Assert-Equals -Expected "$([Assible.Service.Trigger]::NAMED_PIPE_EVENT_GUID) [NAMED PIPE EVENT]"
         $actual.Triggers[2].Data.Count | Assert-Equals -Expected 1
         $actual.Triggers[2].Data[0] | Assert-Equals -Expected 'my named pipe 2'
 
@@ -828,7 +828,7 @@ $tests = [Ordered]@{
 
         $actual.Triggers[5].Type | Assert-Equals -Expected 'FIREWALL PORT EVENT'
         $actual.Triggers[5].Action | Assert-Equals -Expected 'STOP SERVICE'
-        $actual.Triggers[5].SubType | Assert-Equals -Expected "$([Ansible.Service.Trigger]::FIREWALL_PORT_CLOSE_GUID) [PORT CLOSE]"
+        $actual.Triggers[5].SubType | Assert-Equals -Expected "$([Assible.Service.Trigger]::FIREWALL_PORT_CLOSE_GUID) [PORT CLOSE]"
         $actual.Triggers[5].Data.Count | Assert-Equals -Expected 1
         $actual.Triggers[5].Data[0] | Assert-Equals -Expected '1234;tcp;imagepath;servicename'
 
@@ -839,17 +839,17 @@ $tests = [Ordered]@{
         $actual.Triggers.Count | Assert-Equals -Expected 0
 
         # Add a single trigger
-        $service.Triggers = [Ansible.Service.Trigger]@{
-            Type = [Ansible.Service.TriggerType]::GroupPolicy
-            Action = [Ansible.Service.TriggerAction]::ServiceStart
-            SubType = [Guid][Ansible.Service.Trigger]::MACHINE_POLICY_PRESENT_GUID
+        $service.Triggers = [Assible.Service.Trigger]@{
+            Type = [Assible.Service.TriggerType]::GroupPolicy
+            Action = [Assible.Service.TriggerAction]::ServiceStart
+            SubType = [Guid][Assible.Service.Trigger]::MACHINE_POLICY_PRESENT_GUID
         }
 
         $actual = Invoke-Sc -Action qtriggerinfo -Name $serviceName
         $actual.Triggers.Count | Assert-Equals -Expected 1
         $actual.Triggers[0].Type | Assert-Equals -Expected 'GROUP POLICY'
         $actual.Triggers[0].Action | Assert-Equals -Expected 'START SERVICE'
-        $actual.Triggers[0].SubType | Assert-Equals -Expected "$([Ansible.Service.Trigger]::MACHINE_POLICY_PRESENT_GUID) [MACHINE POLICY PRESENT]"
+        $actual.Triggers[0].SubType | Assert-Equals -Expected "$([Assible.Service.Trigger]::MACHINE_POLICY_PRESENT_GUID) [MACHINE POLICY PRESENT]"
         $actual.Triggers[0].Data.Count | Assert-Equals -Expected 0
 
         # Remove trigger with empty list
@@ -871,48 +871,48 @@ $tests = [Ordered]@{
         $actual = $service.Triggers
         $actual.Count | Assert-Equals -Expected 6
 
-        $actual[0].Type | Assert-Equals -Expected ([Ansible.Service.TriggerType]::NetworkEndpoint)
-        $actual[0].Action | Assert-Equals -Expected ([Ansible.Service.TriggerAction]::ServiceStart)
-        $actual[0].SubType = [Guid][Ansible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
+        $actual[0].Type | Assert-Equals -Expected ([Assible.Service.TriggerType]::NetworkEndpoint)
+        $actual[0].Action | Assert-Equals -Expected ([Assible.Service.TriggerAction]::ServiceStart)
+        $actual[0].SubType = [Guid][Assible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
         $actual[0].DataItems.Count | Assert-Equals -Expected 1
-        $actual[0].DataItems[0].Type | Assert-Equals -Expected ([Ansible.Service.TriggerDataType]::String)
+        $actual[0].DataItems[0].Type | Assert-Equals -Expected ([Assible.Service.TriggerDataType]::String)
         $actual[0].DataItems[0].Data | Assert-Equals -Expected 'abc'
 
-        $actual[1].Type | Assert-Equals -Expected ([Ansible.Service.TriggerType]::NetworkEndpoint)
-        $actual[1].Action | Assert-Equals -Expected ([Ansible.Service.TriggerAction]::ServiceStart)
-        $actual[1].SubType = [Guid][Ansible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
+        $actual[1].Type | Assert-Equals -Expected ([Assible.Service.TriggerType]::NetworkEndpoint)
+        $actual[1].Action | Assert-Equals -Expected ([Assible.Service.TriggerAction]::ServiceStart)
+        $actual[1].SubType = [Guid][Assible.Service.Trigger]::NAMED_PIPE_EVENT_GUID
         $actual[1].DataItems.Count | Assert-Equals -Expected 1
-        $actual[1].DataItems[0].Type | Assert-Equals -Expected ([Ansible.Service.TriggerDataType]::String)
+        $actual[1].DataItems[0].Type | Assert-Equals -Expected ([Assible.Service.TriggerDataType]::String)
         $actual[1].DataItems[0].Data | Assert-Equals -Expected 'def'
 
-        $actual[2].Type | Assert-Equals -Expected ([Ansible.Service.TriggerType]::Custom)
-        $actual[2].Action | Assert-Equals -Expected ([Ansible.Service.TriggerAction]::ServiceStart)
+        $actual[2].Type | Assert-Equals -Expected ([Assible.Service.TriggerType]::Custom)
+        $actual[2].Action | Assert-Equals -Expected ([Assible.Service.TriggerAction]::ServiceStart)
         $actual[2].SubType = [Guid]'d4497e12-ac36-4823-af61-92db0dbd4a76'
         $actual[2].DataItems.Count | Assert-Equals -Expected 2
-        $actual[2].DataItems[0].Type | Assert-Equals -Expected ([Ansible.Service.TriggerDataType]::Binary)
+        $actual[2].DataItems[0].Type | Assert-Equals -Expected ([Assible.Service.TriggerDataType]::Binary)
         ,$actual[2].DataItems[0].Data | Assert-Equals -Expected ([byte[]]@(17, 34, 51, 68))
-        $actual[2].DataItems[1].Type | Assert-Equals -Expected ([Ansible.Service.TriggerDataType]::Binary)
+        $actual[2].DataItems[1].Type | Assert-Equals -Expected ([Assible.Service.TriggerDataType]::Binary)
         ,$actual[2].DataItems[1].Data | Assert-Equals -Expected ([byte[]]@(170, 187, 204, 221))
 
-        $actual[3].Type | Assert-Equals -Expected ([Ansible.Service.TriggerType]::Custom)
-        $actual[3].Action | Assert-Equals -Expected ([Ansible.Service.TriggerAction]::ServiceStart)
+        $actual[3].Type | Assert-Equals -Expected ([Assible.Service.TriggerType]::Custom)
+        $actual[3].Action | Assert-Equals -Expected ([Assible.Service.TriggerAction]::ServiceStart)
         $actual[3].SubType = [Guid]'435a1742-22c5-4234-9db3-e32dafde695c'
         $actual[3].DataItems.Count | Assert-Equals -Expected 2
-        $actual[3].DataItems[0].Type | Assert-Equals -Expected ([Ansible.Service.TriggerDataType]::String)
+        $actual[3].DataItems[0].Type | Assert-Equals -Expected ([Assible.Service.TriggerDataType]::String)
         $actual[3].DataItems[0].Data | Assert-Equals -Expected '11223344'
-        $actual[3].DataItems[1].Type | Assert-Equals -Expected ([Ansible.Service.TriggerDataType]::String)
+        $actual[3].DataItems[1].Type | Assert-Equals -Expected ([Assible.Service.TriggerDataType]::String)
         $actual[3].DataItems[1].Data | Assert-Equals -Expected 'aabbccdd'
 
-        $actual[4].Type | Assert-Equals -Expected ([Ansible.Service.TriggerType]::FirewallPortEvent)
-        $actual[4].Action | Assert-Equals -Expected ([Ansible.Service.TriggerAction]::ServiceStop)
-        $actual[4].SubType = [Guid][Ansible.Service.Trigger]::FIREWALL_PORT_CLOSE_GUID
+        $actual[4].Type | Assert-Equals -Expected ([Assible.Service.TriggerType]::FirewallPortEvent)
+        $actual[4].Action | Assert-Equals -Expected ([Assible.Service.TriggerAction]::ServiceStop)
+        $actual[4].SubType = [Guid][Assible.Service.Trigger]::FIREWALL_PORT_CLOSE_GUID
         $actual[4].DataItems.Count | Assert-Equals -Expected 1
-        $actual[4].DataItems[0].Type | Assert-Equals -Expected ([Ansible.Service.TriggerDataType]::String)
+        $actual[4].DataItems[0].Type | Assert-Equals -Expected ([Assible.Service.TriggerDataType]::String)
         ,$actual[4].DataItems[0].Data | Assert-Equals -Expected @('1234', 'tcp', 'imagepath', 'servicename')
 
-        $actual[5].Type | Assert-Equals -Expected ([Ansible.Service.TriggerType]::IpAddressAvailability)
-        $actual[5].Action | Assert-Equals -Expected ([Ansible.Service.TriggerAction]::ServiceStop)
-        $actual[5].SubType = [Guid][Ansible.Service.Trigger]::NETWORK_MANAGER_LAST_IP_ADDRESS_REMOVAL_GUID
+        $actual[5].Type | Assert-Equals -Expected ([Assible.Service.TriggerType]::IpAddressAvailability)
+        $actual[5].Action | Assert-Equals -Expected ([Assible.Service.TriggerAction]::ServiceStop)
+        $actual[5].SubType = [Guid][Assible.Service.Trigger]::NETWORK_MANAGER_LAST_IP_ADDRESS_REMOVAL_GUID
         $actual[5].DataItems.Count | Assert-Equals -Expected 0
     }
 
@@ -922,7 +922,7 @@ $tests = [Ordered]@{
 
 # setup and teardown should favour native tools to create and delete the service and not the util we are testing.
 foreach ($testImpl in $tests.GetEnumerator()) {
-    $serviceName = "ansible_$([System.IO.Path]::GetRandomFileName())"
+    $serviceName = "assible_$([System.IO.Path]::GetRandomFileName())"
     $null = New-Service -Name $serviceName -BinaryPathName ('"{0}"' -f $path) -StartupType Manual
 
     try {

@@ -1,6 +1,6 @@
 :orphan:
 
-ansible-var-precedence-check
+assible-var-precedence-check
 ============================
 
-Check the order of precedence for Ansible variables against :ref:`ansible_variable_precedence`.
+Check the order of precedence for Assible variables against :ref:`assible_variable_precedence`.

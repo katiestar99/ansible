@@ -1,4 +1,4 @@
-# Copyright: (c) 2017, Ansible Project
+# Copyright: (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -21,17 +21,17 @@ try:
 except ImportError:
     from yaml import SafeLoader
 
-from ansible.config.data import ConfigData
-from ansible.errors import AnsibleOptionsError, AnsibleError
-from ansible.module_utils._text import to_text, to_bytes, to_native
-from ansible.module_utils.common._collections_compat import Mapping, Sequence
-from ansible.module_utils.six import PY3, string_types
-from ansible.module_utils.six.moves import configparser
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.parsing.quoting import unquote
-from ansible.parsing.yaml.objects import AnsibleVaultEncryptedUnicode
-from ansible.utils import py3compat
-from ansible.utils.path import cleanup_tmp_file, makedirs_safe, unfrackpath
+from assible.config.data import ConfigData
+from assible.errors import AssibleOptionsError, AssibleError
+from assible.module_utils._text import to_text, to_bytes, to_native
+from assible.module_utils.common._collections_compat import Mapping, Sequence
+from assible.module_utils.six import PY3, string_types
+from assible.module_utils.six.moves import configparser
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.parsing.quoting import unquote
+from assible.parsing.yaml.objects import AssibleVaultEncryptedUnicode
+from assible.utils import py3compat
+from assible.utils.path import cleanup_tmp_file, makedirs_safe, unfrackpath
 
 
 Plugin = namedtuple('Plugin', 'name type')
@@ -120,7 +120,7 @@ def ensure_type(value, value_type, origin=None):
                 value = resolve_path(value, basedir=basedir)
                 if not os.path.exists(value):
                     makedirs_safe(value, 0o700)
-                prefix = 'ansible-local-%s' % os.getpid()
+                prefix = 'assible-local-%s' % os.getpid()
                 value = tempfile.mkdtemp(prefix=prefix, dir=value)
                 atexit.register(cleanup_tmp_file, value, warn=True)
             else:
@@ -149,13 +149,13 @@ def ensure_type(value, value_type, origin=None):
                 errmsg = 'dictionary'
 
         elif value_type in ('str', 'string'):
-            if isinstance(value, (string_types, AnsibleVaultEncryptedUnicode, bool, int, float, complex)):
+            if isinstance(value, (string_types, AssibleVaultEncryptedUnicode, bool, int, float, complex)):
                 value = unquote(to_text(value, errors='surrogate_or_strict'))
             else:
                 errmsg = 'string'
 
         # defaults to string type
-        elif isinstance(value, (string_types, AnsibleVaultEncryptedUnicode)):
+        elif isinstance(value, (string_types, AssibleVaultEncryptedUnicode)):
             value = unquote(to_text(value, errors='surrogate_or_strict'))
 
         if errmsg:
@@ -184,7 +184,7 @@ def get_config_type(cfile):
         elif ext in ('.yaml', '.yml'):
             ftype = 'yaml'
         else:
-            raise AnsibleOptionsError("Unsupported configuration file extension for %s: %s" % (cfile, to_native(ext)))
+            raise AssibleOptionsError("Unsupported configuration file extension for %s: %s" % (cfile, to_native(ext)))
 
     return ftype
 
@@ -202,25 +202,25 @@ def get_ini_config_value(p, entry):
 
 
 def find_ini_config_file(warnings=None):
-    ''' Load INI Config File order(first found is used): ENV, CWD, HOME, /etc/ansible '''
+    ''' Load INI Config File order(first found is used): ENV, CWD, HOME, /etc/assible '''
     # FIXME: eventually deprecate ini configs
 
     if warnings is None:
         # Note: In this case, warnings does nothing
         warnings = set()
 
-    # A value that can never be a valid path so that we can tell if ANSIBLE_CONFIG was set later
+    # A value that can never be a valid path so that we can tell if ASSIBLE_CONFIG was set later
     # We can't use None because we could set path to None.
     SENTINEL = object
 
     potential_paths = []
 
     # Environment setting
-    path_from_env = os.getenv("ANSIBLE_CONFIG", SENTINEL)
+    path_from_env = os.getenv("ASSIBLE_CONFIG", SENTINEL)
     if path_from_env is not SENTINEL:
         path_from_env = unfrackpath(path_from_env, follow=False)
         if os.path.isdir(to_bytes(path_from_env)):
-            path_from_env = os.path.join(path_from_env, "ansible.cfg")
+            path_from_env = os.path.join(path_from_env, "assible.cfg")
         potential_paths.append(path_from_env)
 
     # Current working directory
@@ -228,7 +228,7 @@ def find_ini_config_file(warnings=None):
     try:
         cwd = os.getcwd()
         perms = os.stat(cwd)
-        cwd_cfg = os.path.join(cwd, "ansible.cfg")
+        cwd_cfg = os.path.join(cwd, "assible.cfg")
         if perms.st_mode & stat.S_IWOTH:
             # Working directory is world writable so we'll skip it.
             # Still have to look for a file here, though, so that we know if we have to warn
@@ -241,10 +241,10 @@ def find_ini_config_file(warnings=None):
         pass
 
     # Per user location
-    potential_paths.append(unfrackpath("~/.ansible.cfg", follow=False))
+    potential_paths.append(unfrackpath("~/.assible.cfg", follow=False))
 
     # System location
-    potential_paths.append("/etc/ansible/ansible.cfg")
+    potential_paths.append("/etc/assible/assible.cfg")
 
     for path in potential_paths:
         b_path = to_bytes(path)
@@ -254,13 +254,13 @@ def find_ini_config_file(warnings=None):
         path = None
 
     # Emit a warning if all the following are true:
-    # * We did not use a config from ANSIBLE_CONFIG
-    # * There's an ansible.cfg in the current working directory that we skipped
+    # * We did not use a config from ASSIBLE_CONFIG
+    # * There's an assible.cfg in the current working directory that we skipped
     if path_from_env != path and warn_cmd_public:
-        warnings.add(u"Ansible is being run in a world writable directory (%s),"
-                     u" ignoring it as an ansible.cfg source."
+        warnings.add(u"Assible is being run in a world writable directory (%s),"
+                     u" ignoring it as an assible.cfg source."
                      u" For more information see"
-                     u" https://docs.ansible.com/ansible/devel/reference_appendices/config.html#cfg-in-world-writable-dir"
+                     u" https://docs.assible.com/assible/devel/reference_appendices/config.html#cfg-in-world-writable-dir"
                      % to_text(cwd))
 
     return path
@@ -296,12 +296,12 @@ class ConfigManager(object):
 
     def _read_config_yaml_file(self, yml_file):
         # TODO: handle relative paths as relative to the directory containing the current playbook instead of CWD
-        # Currently this is only used with absolute paths to the `ansible/config` directory
+        # Currently this is only used with absolute paths to the `assible/config` directory
         yml_file = to_bytes(yml_file)
         if os.path.exists(yml_file):
             with open(yml_file, 'rb') as config_def:
                 return yaml_load(config_def, Loader=SafeLoader) or {}
-        raise AnsibleError(
+        raise AssibleError(
             "Missing base YAML definition file (bad install?): %s" % to_native(yml_file))
 
     def _parse_config_file(self, cfile=None):
@@ -319,7 +319,7 @@ class ConfigManager(object):
                     try:
                         cfg_text = to_text(f.read(), errors='surrogate_or_strict')
                     except UnicodeError as e:
-                        raise AnsibleOptionsError("Error reading config file(%s) because the config file was not utf8 encoded: %s" % (cfile, to_native(e)))
+                        raise AssibleOptionsError("Error reading config file(%s) because the config file was not utf8 encoded: %s" % (cfile, to_native(e)))
                 try:
                     if PY3:
                         self._parsers[cfile].read_string(cfg_text)
@@ -327,13 +327,13 @@ class ConfigManager(object):
                         cfg_file = io.StringIO(cfg_text)
                         self._parsers[cfile].readfp(cfg_file)
                 except configparser.Error as e:
-                    raise AnsibleOptionsError("Error reading config file (%s): %s" % (cfile, to_native(e)))
+                    raise AssibleOptionsError("Error reading config file (%s): %s" % (cfile, to_native(e)))
             # FIXME: this should eventually handle yaml config files
             # elif ftype == 'yaml':
             #     with open(cfile, 'rb') as config_stream:
             #         self._parsers[cfile] = yaml.safe_load(config_stream)
             else:
-                raise AnsibleOptionsError("Unsupported configuration file type: %s" % to_native(ftype))
+                raise AssibleOptionsError("Unsupported configuration file type: %s" % to_native(ftype))
 
     def _find_yaml_config_files(self):
         ''' Load YAML Config Files in order, check merge flags, keep origin of settings'''
@@ -396,7 +396,7 @@ class ConfigManager(object):
                 continue
             if temp_value is not None:  # only set if entry is defined in container
                 # inline vault variables should be converted to a text string
-                if isinstance(temp_value, AnsibleVaultEncryptedUnicode):
+                if isinstance(temp_value, AssibleVaultEncryptedUnicode):
                     temp_value = to_text(temp_value, errors='surrogate_or_strict')
 
                 value = temp_value
@@ -414,10 +414,10 @@ class ConfigManager(object):
         try:
             value, _drop = self.get_config_value_and_origin(config, cfile=cfile, plugin_type=plugin_type, plugin_name=plugin_name,
                                                             keys=keys, variables=variables, direct=direct)
-        except AnsibleError:
+        except AssibleError:
             raise
         except Exception as e:
-            raise AnsibleError("Unhandled exception when retrieving %s:\n%s" % (config, to_native(e)), orig_exc=e)
+            raise AssibleError("Unhandled exception when retrieving %s:\n%s" % (config, to_native(e)), orig_exc=e)
         return value
 
     def get_config_value_and_origin(self, config, cfile=None, plugin_type=None, plugin_name=None, keys=None, variables=None, direct=None):
@@ -500,7 +500,7 @@ class ConfigManager(object):
                 if value is None:
                     if defs[config].get('required', False):
                         if not plugin_type or config not in INTERNAL_DEFS.get(plugin_type, {}):
-                            raise AnsibleError("No setting was provided for required configuration %s" %
+                            raise AssibleError("No setting was provided for required configuration %s" %
                                                to_native(_get_entry(plugin_type, plugin_name, config)))
                     else:
                         value = defs[config].get('default')
@@ -518,14 +518,14 @@ class ConfigManager(object):
                     origin = 'default'
                     value = ensure_type(defs[config].get('default'), defs[config].get('type'), origin=origin)
                 else:
-                    raise AnsibleOptionsError('Invalid type for configuration option %s: %s' %
+                    raise AssibleOptionsError('Invalid type for configuration option %s: %s' %
                                               (to_native(_get_entry(plugin_type, plugin_name, config)), to_native(e)))
 
             # deal with deprecation of the setting
             if 'deprecated' in defs[config] and origin != 'default':
                 self.DEPRECATED.append((config, defs[config].get('deprecated')))
         else:
-            raise AnsibleError('Requested entry (%s) was not defined in configuration.' % to_native(_get_entry(plugin_type, plugin_name, config)))
+            raise AssibleError('Requested entry (%s) was not defined in configuration.' % to_native(_get_entry(plugin_type, plugin_name, config)))
 
         return value, origin
 
@@ -546,7 +546,7 @@ class ConfigManager(object):
             configfile = self._config_file
 
         if not isinstance(defs, dict):
-            raise AnsibleOptionsError("Invalid configuration definition type: %s for %s" % (type(defs), defs))
+            raise AssibleOptionsError("Invalid configuration definition type: %s for %s" % (type(defs), defs))
 
         # update the constant for config file
         self.data.update_setting(Setting('CONFIG_FILE', configfile, '', 'string'))
@@ -555,14 +555,14 @@ class ConfigManager(object):
         # env and config defs can have several entries, ordered in list from lowest to highest precedence
         for config in defs:
             if not isinstance(defs[config], dict):
-                raise AnsibleOptionsError("Invalid configuration definition '%s': type is %s" % (to_native(config), type(defs[config])))
+                raise AssibleOptionsError("Invalid configuration definition '%s': type is %s" % (to_native(config), type(defs[config])))
 
             # get value and origin
             try:
                 value, origin = self.get_config_value_and_origin(config, configfile)
             except Exception as e:
                 # Printing the problem here because, in the current code:
-                # (1) we can't reach the error handler for AnsibleError before we
+                # (1) we can't reach the error handler for AssibleError before we
                 #     hit a different error due to lack of working config.
                 # (2) We don't have access to display yet because display depends on config
                 #     being properly loaded.
@@ -571,7 +571,7 @@ class ConfigManager(object):
                 # above problem #1 has been fixed.  Revamp this to be more like the try: except
                 # in get_config_value() at that time.
                 sys.stderr.write("Unhandled error:\n %s\n\n" % traceback.format_exc())
-                raise AnsibleError("Invalid settings supplied for %s: %s\n" % (config, to_native(e)), orig_exc=e)
+                raise AssibleError("Invalid settings supplied for %s: %s\n" % (config, to_native(e)), orig_exc=e)
 
             # set the constant
             self.data.update_setting(Setting(config, value, origin, defs[config].get('type', 'string')))

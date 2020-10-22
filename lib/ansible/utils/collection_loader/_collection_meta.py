@@ -1,4 +1,4 @@
-# (c) 2019 Ansible Project
+# (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -11,9 +11,9 @@ except ImportError:
     from yaml import SafeLoader
 
 try:
-    from collections.abc import Mapping   # pylint: disable=ansible-bad-import-from
+    from collections.abc import Mapping   # pylint: disable=assible-bad-import-from
 except ImportError:
-    from collections import Mapping  # pylint: disable=ansible-bad-import-from
+    from collections import Mapping  # pylint: disable=assible-bad-import-from
 
 
 def _meta_yml_to_dict(yaml_string_data, content_id):

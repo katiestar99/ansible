@@ -1,19 +1,19 @@
 # Copyright 2017 RedHat, inc
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 #############################################
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -36,14 +36,14 @@ DOCUMENTATION = '''
           - key: stage
             section: vars_host_group_vars
         env:
-          - name: ANSIBLE_VARS_PLUGIN_STAGE
+          - name: ASSIBLE_VARS_PLUGIN_STAGE
       _valid_extensions:
         default: [".yml", ".yaml", ".json"]
         description:
           - "Check all of these extensions when looking for 'variable' files which should be YAML or JSON or vaulted versions of these."
           - 'This affects vars_files, include_vars, inventory and vars plugins among others.'
         env:
-          - name: ANSIBLE_YAML_FILENAME_EXT
+          - name: ASSIBLE_YAML_FILENAME_EXT
         ini:
           - section: yaml_valid_extensions
             key: defaults
@@ -53,13 +53,13 @@ DOCUMENTATION = '''
 '''
 
 import os
-from ansible import constants as C
-from ansible.errors import AnsibleParserError
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.plugins.vars import BaseVarsPlugin
-from ansible.inventory.host import Host
-from ansible.inventory.group import Group
-from ansible.utils.vars import combine_vars
+from assible import constants as C
+from assible.errors import AssibleParserError
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.plugins.vars import BaseVarsPlugin
+from assible.inventory.host import Host
+from assible.inventory.group import Group
+from assible.utils.vars import combine_vars
 
 FOUND = {}
 
@@ -83,7 +83,7 @@ class VarsModule(BaseVarsPlugin):
             elif isinstance(entity, Group):
                 subdir = 'group_vars'
             else:
-                raise AnsibleParserError("Supplied entity must be Host or Group, got %s instead" % (type(entity)))
+                raise AssibleParserError("Supplied entity must be Host or Group, got %s instead" % (type(entity)))
 
             # avoid 'chroot' type inventory hostnames /path/to/chroot
             if not entity.name.startswith(os.path.sep):
@@ -111,5 +111,5 @@ class VarsModule(BaseVarsPlugin):
                             data = combine_vars(data, new_data)
 
                 except Exception as e:
-                    raise AnsibleParserError(to_native(e))
+                    raise AssibleParserError(to_native(e))
         return data

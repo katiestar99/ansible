@@ -25,7 +25,7 @@ options:
   fail_msg:
     description:
       - The customized message used for a failing assertion.
-      - This argument was called 'msg' before Ansible 2.7, now it is renamed to 'fail_msg' with alias 'msg'.
+      - This argument was called 'msg' before Assible 2.7, now it is renamed to 'fail_msg' with alias 'msg'.
     type: str
     aliases: [ msg ]
     version_added: "2.7"
@@ -43,16 +43,16 @@ options:
 notes:
      - This module is also supported for Windows targets.
 seealso:
-- module: ansible.builtin.debug
-- module: ansible.builtin.fail
-- module: ansible.builtin.meta
+- module: assible.builtin.debug
+- module: assible.builtin.fail
+- module: assible.builtin.meta
 author:
-    - Ansible Core Team
+    - Assible Core Team
     - Michael DeHaan
 '''
 
 EXAMPLES = r'''
-- assert: { that: "ansible_os_family != 'RedHat'" }
+- assert: { that: "assible_os_family != 'RedHat'" }
 
 - assert:
     that:
@@ -67,7 +67,7 @@ EXAMPLES = r'''
     fail_msg: "'my_param' must be between 0 and 100"
     success_msg: "'my_param' is between 0 and 100"
 
-- name: Please use 'msg' when ansible version is smaller than 2.7
+- name: Please use 'msg' when assible version is smaller than 2.7
   assert:
     that:
       - my_param <= 100

@@ -1,8 +1,8 @@
-# This is the configuration template for ansible-test cloudscale integration tests.
+# This is the configuration template for assible-test cloudscale integration tests.
 #
 # You do not need this template if you are:
 #
-# 1) Running integration tests without using ansible-test.
+# 1) Running integration tests without using assible-test.
 #
 
 [default]

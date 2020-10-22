@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -21,19 +21,19 @@ __metaclass__ = type
 
 import os
 
-from ansible.errors import AnsibleError, AnsibleParserError, AnsibleAssertionError
-from ansible.module_utils.six import iteritems, binary_type, text_type
-from ansible.module_utils.common._collections_compat import Container, Mapping, Set, Sequence
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.base import Base
-from ansible.playbook.collectionsearch import CollectionSearch
-from ansible.playbook.conditional import Conditional
-from ansible.playbook.helpers import load_list_of_blocks
-from ansible.playbook.role.metadata import RoleMetadata
-from ansible.playbook.taggable import Taggable
-from ansible.plugins.loader import add_all_plugin_dirs
-from ansible.utils.collection_loader import AnsibleCollectionConfig
-from ansible.utils.vars import combine_vars
+from assible.errors import AssibleError, AssibleParserError, AssibleAssertionError
+from assible.module_utils.six import iteritems, binary_type, text_type
+from assible.module_utils.common._collections_compat import Container, Mapping, Set, Sequence
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.base import Base
+from assible.playbook.collectionsearch import CollectionSearch
+from assible.playbook.conditional import Conditional
+from assible.playbook.helpers import load_list_of_blocks
+from assible.playbook.role.metadata import RoleMetadata
+from assible.playbook.taggable import Taggable
+from assible.plugins.loader import add_all_plugin_dirs
+from assible.utils.collection_loader import AssibleCollectionConfig
+from assible.utils.vars import combine_vars
 
 
 __all__ = ['Role', 'hash_params']
@@ -41,7 +41,7 @@ __all__ = ['Role', 'hash_params']
 # TODO: this should be a utility function, but can't be a member of
 #       the role due to the fact that it would require the use of self
 #       in a static method. This is also used in the base class for
-#       strategies (ansible/plugins/strategy/__init__.py)
+#       strategies (assible/plugins/strategy/__init__.py)
 
 
 def hash_params(params):
@@ -167,7 +167,7 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
             # TODO: need to fix cycle detection in role load (maybe use an empty dict
             #  for the in-flight in role cache as a sentinel that we're already trying to load
             #  that role?)
-            # see https://github.com/ansible/ansible/issues/61527
+            # see https://github.com/assible/assible/issues/61527
             r = Role(play=play, from_files=from_files, from_include=from_include)
             r._load_role_data(role_include, parent_role=parent_role)
 
@@ -179,7 +179,7 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
             return r
 
         except RuntimeError:
-            raise AnsibleError("A recursion loop was detected with the roles specified. Make sure child roles do not have dependencies on parent roles",
+            raise AssibleError("A recursion loop was detected with the roles specified. Make sure child roles do not have dependencies on parent roles",
                                obj=role_include._ds)
 
     def _load_role_data(self, role_include, parent_role=None):
@@ -209,13 +209,13 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
         if self._role_vars is None:
             self._role_vars = dict()
         elif not isinstance(self._role_vars, dict):
-            raise AnsibleParserError("The vars/main.yml file for role '%s' must contain a dictionary of variables" % self._role_name)
+            raise AssibleParserError("The vars/main.yml file for role '%s' must contain a dictionary of variables" % self._role_name)
 
         self._default_vars = self._load_role_yaml('defaults', main=self._from_files.get('defaults'), allow_dir=True)
         if self._default_vars is None:
             self._default_vars = dict()
         elif not isinstance(self._default_vars, dict):
-            raise AnsibleParserError("The defaults/main.yml file for role '%s' must contain a dictionary of variables" % self._role_name)
+            raise AssibleParserError("The defaults/main.yml file for role '%s' must contain a dictionary of variables" % self._role_name)
 
         # load the role's other files, if they exist
         metadata = self._load_role_yaml('meta')
@@ -230,11 +230,11 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
         self.collections = []
 
         # configure plugin/collection loading; either prepend the current role's collection or configure legacy plugin loading
-        # FIXME: need exception for explicit ansible.legacy?
+        # FIXME: need exception for explicit assible.legacy?
         if self._role_collection:  # this is a collection-hosted role
             self.collections.insert(0, self._role_collection)
         else:  # this is a legacy role, but set the default collection if there is one
-            default_collection = AnsibleCollectionConfig.default_collection
+            default_collection = AssibleCollectionConfig.default_collection
             if default_collection:
                 self.collections.insert(0, default_collection)
             # legacy role, ensure all plugin dirs under the role are added to plugin search path
@@ -247,8 +247,8 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
         # if any collections were specified, ensure that core or legacy synthetic collections are always included
         if self.collections:
             # default append collection is core for collection-hosted roles, legacy for others
-            default_append_collection = 'ansible.builtin' if self._role_collection else 'ansible.legacy'
-            if 'ansible.builtin' not in self.collections and 'ansible.legacy' not in self.collections:
+            default_append_collection = 'assible.builtin' if self._role_collection else 'assible.legacy'
+            if 'assible.builtin' not in self.collections and 'assible.legacy' not in self.collections:
                 self.collections.append(default_append_collection)
 
         task_data = self._load_role_yaml('tasks', main=self._from_files.get('tasks'))
@@ -256,7 +256,7 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
             try:
                 self._task_blocks = load_list_of_blocks(task_data, play=self._play, role=self, loader=self._loader, variable_manager=self._variable_manager)
             except AssertionError as e:
-                raise AnsibleParserError("The tasks/main.yml file for role '%s' must contain a list of tasks" % self._role_name,
+                raise AssibleParserError("The tasks/main.yml file for role '%s' must contain a list of tasks" % self._role_name,
                                          obj=task_data, orig_exc=e)
 
         handler_data = self._load_role_yaml('handlers', main=self._from_files.get('handlers'))
@@ -265,7 +265,7 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
                 self._handler_blocks = load_list_of_blocks(handler_data, play=self._play, role=self, use_handlers=True, loader=self._loader,
                                                            variable_manager=self._variable_manager)
             except AssertionError as e:
-                raise AnsibleParserError("The handlers/main.yml file for role '%s' must contain a list of tasks" % self._role_name,
+                raise AssibleParserError("The handlers/main.yml file for role '%s' must contain a list of tasks" % self._role_name,
                                          obj=handler_data, orig_exc=e)
 
     def _load_role_yaml(self, subdir, main=None, allow_dir=False):
@@ -293,7 +293,7 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
                         data = new_data
                 return data
             elif main is not None:
-                raise AnsibleParserError("Could not find specified file in role: %s/%s" % (subdir, main))
+                raise AssibleParserError("Could not find specified file in role: %s/%s" % (subdir, main))
         return None
 
     def _load_dependencies(self):
@@ -315,7 +315,7 @@ class Role(Base, Conditional, Taggable, CollectionSearch):
     def add_parent(self, parent_role):
         ''' adds a role to the list of this roles parents '''
         if not isinstance(parent_role, Role):
-            raise AnsibleAssertionError()
+            raise AssibleAssertionError()
 
         if parent_role not in self._parents:
             self._parents.append(parent_role)

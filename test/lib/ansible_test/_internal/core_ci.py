@@ -1,4 +1,4 @@
-"""Access Ansible Core CI remote services."""
+"""Access Assible Core CI remote services."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -28,7 +28,7 @@ from .io import (
 from .util import (
     ApplicationError,
     display,
-    ANSIBLE_TEST_DATA_ROOT,
+    ASSIBLE_TEST_DATA_ROOT,
 )
 
 from .util_common import (
@@ -50,12 +50,12 @@ from .data import (
 )
 
 AWS_ENDPOINTS = {
-    'us-east-1': 'https://ansible-core-ci.testing.ansible.com',
+    'us-east-1': 'https://assible-core-ci.testing.assible.com',
 }
 
 
-class AnsibleCoreCI:
-    """Client for Ansible Core CI services."""
+class AssibleCoreCI:
+    """Client for Assible Core CI services."""
     def __init__(self, args, platform, version, stage='prod', persist=True, load=True, provider=None, arch=None):
         """
         :type args: EnvironmentConfig
@@ -116,7 +116,7 @@ class AnsibleCoreCI:
             ),
         )
 
-        # Currently ansible-core-ci has no concept of arch selection. This effectively means each provider only supports one arch.
+        # Currently assible-core-ci has no concept of arch selection. This effectively means each provider only supports one arch.
         # The list below identifies which platforms accept an arch, and which one. These platforms can only be used with the specified arch.
         provider_arches = dict(
             ibmvpc='power',
@@ -152,11 +152,11 @@ class AnsibleCoreCI:
 
                 raise ApplicationError('Provider "%s" does not support specification of an arch.' % self.provider)
 
-        self.path = os.path.expanduser('~/.ansible/test/instances/%s-%s-%s' % (self.name, self.provider, self.stage))
+        self.path = os.path.expanduser('~/.assible/test/instances/%s-%s-%s' % (self.name, self.provider, self.stage))
 
         if self.provider in ('aws', 'azure', 'ibmps', 'ibmvpc'):
             if args.remote_aws_region:
-                display.warning('The --remote-aws-region option is obsolete and will be removed in a future version of ansible-test.')
+                display.warning('The --remote-aws-region option is obsolete and will be removed in a future version of assible-test.')
                 # permit command-line override of region selection
                 region = args.remote_aws_region
                 # use a dedicated CI key when overriding the region selection
@@ -239,7 +239,7 @@ class AnsibleCoreCI:
         sleep = 3
 
         for _iteration in range(1, 10):
-            response = client.get('https://ansible-ci-files.s3.amazonaws.com/ansible-test/parallels-endpoints.txt')
+            response = client.get('https://assible-ci-files.s3.amazonaws.com/assible-test/parallels-endpoints.txt')
 
             if response.status_code == 200:
                 endpoints = tuple(response.response.splitlines())
@@ -253,7 +253,7 @@ class AnsibleCoreCI:
 
     @property
     def available(self):
-        """Return True if Ansible Core CI is supported."""
+        """Return True if Assible Core CI is supported."""
         return self.ci_provider.supports_core_ci_auth(self.auth_context)
 
     def start(self):
@@ -380,7 +380,7 @@ class AnsibleCoreCI:
         display.info('Initializing new %s/%s instance %s.' % (self.platform, self.version, self.instance_id), verbosity=1)
 
         if self.platform == 'windows':
-            winrm_config = read_text_file(os.path.join(ANSIBLE_TEST_DATA_ROOT, 'setup', 'ConfigureRemotingForAnsible.ps1'))
+            winrm_config = read_text_file(os.path.join(ASSIBLE_TEST_DATA_ROOT, 'setup', 'ConfigureRemotingForAssible.ps1'))
         else:
             winrm_config = None
 
@@ -606,7 +606,7 @@ class SshKey:
             self.pub_contents = read_text_file(self.pub).strip()
 
     def get_in_tree_key_pair_paths(self):  # type: () -> t.Optional[t.Tuple[str, str]]
-        """Return the ansible-test SSH key pair paths from the content tree."""
+        """Return the assible-test SSH key pair paths from the content tree."""
         temp_dir = ResultType.TMP.path
 
         key = os.path.join(temp_dir, self.KEY_NAME)
@@ -615,8 +615,8 @@ class SshKey:
         return key, pub
 
     def get_source_key_pair_paths(self):  # type: () -> t.Optional[t.Tuple[str, str]]
-        """Return the ansible-test SSH key pair paths for the current user."""
-        base_dir = os.path.expanduser('~/.ansible/test/')
+        """Return the assible-test SSH key pair paths for the current user."""
+        base_dir = os.path.expanduser('~/.assible/test/')
 
         key = os.path.join(base_dir, self.KEY_NAME)
         pub = os.path.join(base_dir, self.PUB_NAME)
@@ -624,7 +624,7 @@ class SshKey:
         return key, pub
 
     def get_key_pair(self):  # type: () -> t.Optional[t.Tuple[str, str]]
-        """Return the ansible-test SSH key pair paths if present, otherwise return None."""
+        """Return the assible-test SSH key pair paths if present, otherwise return None."""
         key, pub = self.get_in_tree_key_pair_paths()
 
         if os.path.isfile(key) and os.path.isfile(pub):
@@ -638,7 +638,7 @@ class SshKey:
         return None
 
     def generate_key_pair(self, args):  # type: (EnvironmentConfig) -> t.Tuple[str, str]
-        """Generate an SSH key pair for use by all ansible-test invocations for the current user."""
+        """Generate an SSH key pair for use by all assible-test invocations for the current user."""
         key, pub = self.get_source_key_pair_paths()
 
         if not args.explain:

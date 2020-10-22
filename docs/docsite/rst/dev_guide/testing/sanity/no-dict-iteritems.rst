@@ -10,7 +10,7 @@ The ``dict.iteritems`` method has been removed in Python 3. There are two recomm
 
 .. code-block:: python
 
-    from ansible.module_utils.six import iteritems
+    from assible.module_utils.six import iteritems
 
     for KEY, VALUE in iteritems(DICT):
         pass

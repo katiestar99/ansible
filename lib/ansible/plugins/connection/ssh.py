@@ -1,7 +1,7 @@
 # Copyright (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
 # Copyright 2015 Abhijit Menon-Sen <ams@2ndQuadrant.com>
-# Copyright 2017 Toshio Kuratomi <tkuratomi@ansible.com>
-# Copyright (c) 2017 Ansible Project
+# Copyright 2017 Toshio Kuratomi <tkuratomi@assible.com>
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -11,19 +11,19 @@ DOCUMENTATION = '''
     name: ssh
     short_description: connect via ssh client binary
     description:
-        - This connection plugin allows ansible to communicate to the target machines via normal ssh command line.
-        - Ansible does not expose a channel to allow communication between the user and the ssh process to accept
+        - This connection plugin allows assible to communicate to the target machines via normal ssh command line.
+        - Assible does not expose a channel to allow communication between the user and the ssh process to accept
           a password manually to decrypt an ssh key when using this connection plugin (which is the default). The
           use of ``ssh-agent`` is highly recommended.
-    author: ansible (@core)
+    author: assible (@core)
     version_added: historical
     options:
       host:
           description: Hostname/ip to connect to.
           default: inventory_hostname
           vars:
-               - name: ansible_host
-               - name: ansible_ssh_host
+               - name: assible_host
+               - name: assible_ssh_host
       host_key_checking:
           description: Determines if ssh should check host keys
           type: boolean
@@ -34,20 +34,20 @@ DOCUMENTATION = '''
                 key: 'host_key_checking'
                 version_added: '2.5'
           env:
-              - name: ANSIBLE_HOST_KEY_CHECKING
-              - name: ANSIBLE_SSH_HOST_KEY_CHECKING
+              - name: ASSIBLE_HOST_KEY_CHECKING
+              - name: ASSIBLE_SSH_HOST_KEY_CHECKING
                 version_added: '2.5'
           vars:
-              - name: ansible_host_key_checking
+              - name: assible_host_key_checking
                 version_added: '2.5'
-              - name: ansible_ssh_host_key_checking
+              - name: assible_ssh_host_key_checking
                 version_added: '2.5'
       password:
           description: Authentication password for the C(remote_user). Can be supplied as CLI option.
           vars:
-              - name: ansible_password
-              - name: ansible_ssh_pass
-              - name: ansible_ssh_password
+              - name: assible_password
+              - name: assible_ssh_pass
+              - name: assible_ssh_password
       sshpass_prompt:
           description: Password prompt that sshpass should search for. Supported by sshpass 1.06 and up.
           default: ''
@@ -55,9 +55,9 @@ DOCUMENTATION = '''
               - section: 'ssh_connection'
                 key: 'sshpass_prompt'
           env:
-              - name: ANSIBLE_SSHPASS_PROMPT
+              - name: ASSIBLE_SSHPASS_PROMPT
           vars:
-              - name: ansible_sshpass_prompt
+              - name: assible_sshpass_prompt
           version_added: '2.10'
       ssh_args:
           description: Arguments to pass to all ssh cli tools
@@ -66,9 +66,9 @@ DOCUMENTATION = '''
               - section: 'ssh_connection'
                 key: 'ssh_args'
           env:
-              - name: ANSIBLE_SSH_ARGS
+              - name: ASSIBLE_SSH_ARGS
           vars:
-              - name: ansible_ssh_args
+              - name: assible_ssh_args
                 version_added: '2.7'
       ssh_common_args:
           description: Common extra args for all ssh CLI tools
@@ -77,52 +77,52 @@ DOCUMENTATION = '''
                 key: 'ssh_common_args'
                 version_added: '2.7'
           env:
-              - name: ANSIBLE_SSH_COMMON_ARGS
+              - name: ASSIBLE_SSH_COMMON_ARGS
                 version_added: '2.7'
           vars:
-              - name: ansible_ssh_common_args
+              - name: assible_ssh_common_args
       ssh_executable:
           default: ssh
           description:
             - This defines the location of the ssh binary. It defaults to ``ssh`` which will use the first ssh binary available in $PATH.
             - This option is usually not required, it might be useful when access to system ssh is restricted,
               or when using ssh wrappers to connect to remote hosts.
-          env: [{name: ANSIBLE_SSH_EXECUTABLE}]
+          env: [{name: ASSIBLE_SSH_EXECUTABLE}]
           ini:
           - {key: ssh_executable, section: ssh_connection}
-          #const: ANSIBLE_SSH_EXECUTABLE
+          #const: ASSIBLE_SSH_EXECUTABLE
           version_added: "2.2"
           vars:
-              - name: ansible_ssh_executable
+              - name: assible_ssh_executable
                 version_added: '2.7'
       sftp_executable:
           default: sftp
           description:
             - This defines the location of the sftp binary. It defaults to ``sftp`` which will use the first binary available in $PATH.
-          env: [{name: ANSIBLE_SFTP_EXECUTABLE}]
+          env: [{name: ASSIBLE_SFTP_EXECUTABLE}]
           ini:
           - {key: sftp_executable, section: ssh_connection}
           version_added: "2.6"
           vars:
-              - name: ansible_sftp_executable
+              - name: assible_sftp_executable
                 version_added: '2.7'
       scp_executable:
           default: scp
           description:
             - This defines the location of the scp binary. It defaults to `scp` which will use the first binary available in $PATH.
-          env: [{name: ANSIBLE_SCP_EXECUTABLE}]
+          env: [{name: ASSIBLE_SCP_EXECUTABLE}]
           ini:
           - {key: scp_executable, section: ssh_connection}
           version_added: "2.6"
           vars:
-              - name: ansible_scp_executable
+              - name: assible_scp_executable
                 version_added: '2.7'
       scp_extra_args:
           description: Extra exclusive to the ``scp`` CLI
           vars:
-              - name: ansible_scp_extra_args
+              - name: assible_scp_extra_args
           env:
-            - name: ANSIBLE_SCP_EXTRA_ARGS
+            - name: ASSIBLE_SCP_EXTRA_ARGS
               version_added: '2.7'
           ini:
             - key: scp_extra_args
@@ -131,9 +131,9 @@ DOCUMENTATION = '''
       sftp_extra_args:
           description: Extra exclusive to the ``sftp`` CLI
           vars:
-              - name: ansible_sftp_extra_args
+              - name: assible_sftp_extra_args
           env:
-            - name: ANSIBLE_SFTP_EXTRA_ARGS
+            - name: ASSIBLE_SFTP_EXTRA_ARGS
               version_added: '2.7'
           ini:
             - key: sftp_extra_args
@@ -142,28 +142,28 @@ DOCUMENTATION = '''
       ssh_extra_args:
           description: Extra exclusive to the 'ssh' CLI
           vars:
-              - name: ansible_ssh_extra_args
+              - name: assible_ssh_extra_args
           env:
-            - name: ANSIBLE_SSH_EXTRA_ARGS
+            - name: ASSIBLE_SSH_EXTRA_ARGS
               version_added: '2.7'
           ini:
             - key: ssh_extra_args
               section: ssh_connection
               version_added: '2.7'
       retries:
-          # constant: ANSIBLE_SSH_RETRIES
+          # constant: ASSIBLE_SSH_RETRIES
           description: Number of attempts to connect.
           default: 3
           type: integer
           env:
-            - name: ANSIBLE_SSH_RETRIES
+            - name: ASSIBLE_SSH_RETRIES
           ini:
             - section: connection
               key: retries
             - section: ssh_connection
               key: retries
           vars:
-            - name: ansible_ssh_retries
+            - name: assible_ssh_retries
               version_added: '2.7'
       port:
           description: Remote port to connect to.
@@ -173,34 +173,34 @@ DOCUMENTATION = '''
             - section: defaults
               key: remote_port
           env:
-            - name: ANSIBLE_REMOTE_PORT
+            - name: ASSIBLE_REMOTE_PORT
           vars:
-            - name: ansible_port
-            - name: ansible_ssh_port
+            - name: assible_port
+            - name: assible_ssh_port
       remote_user:
           description:
               - User name with which to login to the remote server, normally set by the remote_user keyword.
-              - If no user is supplied, Ansible will let the ssh client binary choose the user as it normally
+              - If no user is supplied, Assible will let the ssh client binary choose the user as it normally
           ini:
             - section: defaults
               key: remote_user
           env:
-            - name: ANSIBLE_REMOTE_USER
+            - name: ASSIBLE_REMOTE_USER
           vars:
-            - name: ansible_user
-            - name: ansible_ssh_user
+            - name: assible_user
+            - name: assible_ssh_user
       pipelining:
-          default: ANSIBLE_PIPELINING
+          default: ASSIBLE_PIPELINING
           description:
             - Pipelining reduces the number of SSH operations required to execute a module on the remote server,
-              by executing many Ansible modules without actual file transfer.
+              by executing many Assible modules without actual file transfer.
             - This can result in a very significant performance improvement when enabled.
             - However this conflicts with privilege escalation (become).
               For example, when using sudo operations you must first disable 'requiretty' in the sudoers file for the target hosts,
               which is why this feature is disabled by default.
           env:
-            - name: ANSIBLE_PIPELINING
-            - name: ANSIBLE_SSH_PIPELINING
+            - name: ASSIBLE_PIPELINING
+            - name: ASSIBLE_SSH_PIPELINING
           ini:
             - section: defaults
               key: pipelining
@@ -208,8 +208,8 @@ DOCUMENTATION = '''
               key: pipelining
           type: boolean
           vars:
-            - name: ansible_pipelining
-            - name: ansible_ssh_pipelining
+            - name: assible_pipelining
+            - name: assible_ssh_pipelining
       private_key_file:
           description:
               - Path to private key file to use for authentication
@@ -217,68 +217,68 @@ DOCUMENTATION = '''
             - section: defaults
               key: private_key_file
           env:
-            - name: ANSIBLE_PRIVATE_KEY_FILE
+            - name: ASSIBLE_PRIVATE_KEY_FILE
           vars:
-            - name: ansible_private_key_file
-            - name: ansible_ssh_private_key_file
+            - name: assible_private_key_file
+            - name: assible_ssh_private_key_file
 
       control_path:
         description:
           - This is the location to save ssh's ControlPath sockets, it uses ssh's variable substitution.
-          - Since 2.3, if null, ansible will generate a unique hash. Use `%(directory)s` to indicate where to use the control dir path setting.
+          - Since 2.3, if null, assible will generate a unique hash. Use `%(directory)s` to indicate where to use the control dir path setting.
         env:
-          - name: ANSIBLE_SSH_CONTROL_PATH
+          - name: ASSIBLE_SSH_CONTROL_PATH
         ini:
           - key: control_path
             section: ssh_connection
         vars:
-          - name: ansible_control_path
+          - name: assible_control_path
             version_added: '2.7'
       control_path_dir:
-        default: ~/.ansible/cp
+        default: ~/.assible/cp
         description:
           - This sets the directory to use for ssh control path if the control path setting is null.
           - Also, provides the `%(directory)s` variable for the control path setting.
         env:
-          - name: ANSIBLE_SSH_CONTROL_PATH_DIR
+          - name: ASSIBLE_SSH_CONTROL_PATH_DIR
         ini:
           - section: ssh_connection
             key: control_path_dir
         vars:
-          - name: ansible_control_path_dir
+          - name: assible_control_path_dir
             version_added: '2.7'
       sftp_batch_mode:
         default: 'yes'
         description: 'TODO: write it'
-        env: [{name: ANSIBLE_SFTP_BATCH_MODE}]
+        env: [{name: ASSIBLE_SFTP_BATCH_MODE}]
         ini:
         - {key: sftp_batch_mode, section: ssh_connection}
         type: bool
         vars:
-          - name: ansible_sftp_batch_mode
+          - name: assible_sftp_batch_mode
             version_added: '2.7'
       scp_if_ssh:
         default: smart
         description:
           - "Preferred method to use when transfering files over ssh"
-          - When set to smart, Ansible will try them until one succeeds or they all fail
+          - When set to smart, Assible will try them until one succeeds or they all fail
           - If set to True, it will force 'scp', if False it will use 'sftp'
-        env: [{name: ANSIBLE_SCP_IF_SSH}]
+        env: [{name: ASSIBLE_SCP_IF_SSH}]
         ini:
         - {key: scp_if_ssh, section: ssh_connection}
         vars:
-          - name: ansible_scp_if_ssh
+          - name: assible_scp_if_ssh
             version_added: '2.7'
       use_tty:
         version_added: '2.5'
         default: 'yes'
         description: add -tt to ssh commands to force tty allocation
-        env: [{name: ANSIBLE_SSH_USETTY}]
+        env: [{name: ASSIBLE_SSH_USETTY}]
         ini:
         - {key: usetty, section: ssh_connection}
         type: bool
         vars:
-          - name: ansible_ssh_use_tty
+          - name: assible_ssh_use_tty
             version_added: '2.7'
 '''
 
@@ -292,23 +292,23 @@ import subprocess
 import time
 
 from functools import wraps
-from ansible import constants as C
-from ansible.errors import (
-    AnsibleAuthenticationFailure,
-    AnsibleConnectionFailure,
-    AnsibleError,
-    AnsibleFileNotFound,
+from assible import constants as C
+from assible.errors import (
+    AssibleAuthenticationFailure,
+    AssibleConnectionFailure,
+    AssibleError,
+    AssibleFileNotFound,
 )
-from ansible.errors import AnsibleOptionsError
-from ansible.module_utils.compat import selectors
-from ansible.module_utils.six import PY3, text_type, binary_type
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.parsing.convert_bool import BOOLEANS, boolean
-from ansible.plugins.connection import ConnectionBase, BUFSIZE
-from ansible.plugins.shell.powershell import _parse_clixml
-from ansible.utils.display import Display
-from ansible.utils.path import unfrackpath, makedirs_safe
+from assible.errors import AssibleOptionsError
+from assible.module_utils.compat import selectors
+from assible.module_utils.six import PY3, text_type, binary_type
+from assible.module_utils.six.moves import shlex_quote
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.parsing.convert_bool import BOOLEANS, boolean
+from assible.plugins.connection import ConnectionBase, BUFSIZE
+from assible.plugins.shell.powershell import _parse_clixml
+from assible.utils.display import Display
+from assible.utils.path import unfrackpath, makedirs_safe
 
 display = Display()
 
@@ -321,7 +321,7 @@ b_NOT_SSH_ERRORS = (b'Traceback (most recent call last):',  # Python-2.6 when th
 SSHPASS_AVAILABLE = None
 
 
-class AnsibleControlPersistBrokenPipeError(AnsibleError):
+class AssibleControlPersistBrokenPipeError(AssibleError):
     ''' ControlPersist broken pipe '''
     pass
 
@@ -339,7 +339,7 @@ def _handle_error(remaining_retries, command, return_tuple, no_log, host, displa
                 msg = '{0} <error censored due to no log>'.format(msg)
             else:
                 msg = '{0} {1}'.format(msg, to_native(return_tuple[2]).rstrip())
-            raise AnsibleAuthenticationFailure(msg)
+            raise AssibleAuthenticationFailure(msg)
 
         # sshpass returns codes are 1-6. We handle 5 previously, so this catches other scenarios.
         # No exception is raised, so the connection is retried - except when attempting to use
@@ -353,7 +353,7 @@ def _handle_error(remaining_retries, command, return_tuple, no_log, host, displa
                 if "sshpass: invalid option -- 'P'" in details:
                     details = 'Installed sshpass version does not support customized password prompts. ' \
                               'Upgrade sshpass to use sshpass_prompt, or otherwise switch to ssh keys.'
-                    raise AnsibleError('{0} {1}'.format(msg, details))
+                    raise AssibleError('{0} {1}'.format(msg, details))
                 msg = '{0} {1}'.format(msg, details)
 
     if return_tuple[0] == 255:
@@ -369,7 +369,7 @@ def _handle_error(remaining_retries, command, return_tuple, no_log, host, displa
                 msg = '{0} <error censored due to no log>'.format(msg)
             else:
                 msg = '{0} {1}'.format(msg, to_native(return_tuple[2]).rstrip())
-            raise AnsibleConnectionFailure(msg)
+            raise AssibleConnectionFailure(msg)
 
     # For other errors, no exception is raised so the connection is retried and we only log the messages
     if 1 <= return_tuple[0] <= 254:
@@ -395,7 +395,7 @@ def _ssh_retry(func):
     """
     @wraps(func)
     def wrapped(self, *args, **kwargs):
-        remaining_tries = int(C.ANSIBLE_SSH_RETRIES) + 1
+        remaining_tries = int(C.ASSIBLE_SSH_RETRIES) + 1
         cmd_summary = u"%s..." % to_text(args[0])
         conn_password = self.get_option('password') or self._play_context.password
         for attempt in range(remaining_tries):
@@ -415,7 +415,7 @@ def _ssh_retry(func):
                     # 0 = success
                     # 1-254 = remote command return code
                     # 255 could be a failure from the ssh command itself
-                except (AnsibleControlPersistBrokenPipeError):
+                except (AssibleControlPersistBrokenPipeError):
                     # Retry one more time because of the ControlPersist broken pipe (see #16731)
                     cmd = args[0]
                     if conn_password and isinstance(cmd, list):
@@ -431,11 +431,11 @@ def _ssh_retry(func):
                 break
 
             # 5 = Invalid/incorrect password from sshpass
-            except AnsibleAuthenticationFailure:
-                # Raising this exception, which is subclassed from AnsibleConnectionFailure, prevents further retries
+            except AssibleAuthenticationFailure:
+                # Raising this exception, which is subclassed from AssibleConnectionFailure, prevents further retries
                 raise
 
-            except (AnsibleConnectionFailure, Exception) as e:
+            except (AssibleConnectionFailure, Exception) as e:
 
                 if attempt == remaining_tries - 1:
                     raise
@@ -444,7 +444,7 @@ def _ssh_retry(func):
                     if pause > 30:
                         pause = 30
 
-                    if isinstance(e, AnsibleConnectionFailure):
+                    if isinstance(e, AssibleConnectionFailure):
                         msg = u"ssh_retry: attempt: %d, ssh return code is 255. cmd (%s), pausing for %d seconds" % (attempt + 1, cmd_summary, pause)
                     else:
                         msg = (u"ssh_retry: attempt: %d, caught exception(%s) from cmd (%s), "
@@ -471,8 +471,8 @@ class Connection(ConnectionBase):
         self.host = self._play_context.remote_addr
         self.port = self._play_context.port
         self.user = self._play_context.remote_user
-        self.control_path = C.ANSIBLE_SSH_CONTROL_PATH
-        self.control_path_dir = C.ANSIBLE_SSH_CONTROL_PATH_DIR
+        self.control_path = C.ASSIBLE_SSH_CONTROL_PATH
+        self.control_path_dir = C.ASSIBLE_SSH_CONTROL_PATH_DIR
 
         # Windows operates differently from a POSIX connection/shell plugin,
         # we need to set various properties to ensure SSH on Windows continues
@@ -576,7 +576,7 @@ class Connection(ConnectionBase):
 
         if conn_password:
             if not self._sshpass_available():
-                raise AnsibleError("to use the 'ssh' connection type with passwords, you must install the sshpass program")
+                raise AssibleError("to use the 'ssh' connection type with passwords, you must install the sshpass program")
 
             self.sshpass_pipe = os.pipe()
             b_command += [b'sshpass', b'-d' + to_bytes(self.sshpass_pipe[0], nonstring='simplerepr', errors='surrogate_or_strict')]
@@ -608,31 +608,31 @@ class Connection(ConnectionBase):
             b_command.append(b'-vvv')
 
         #
-        # Next, we add [ssh_connection]ssh_args from ansible.cfg.
+        # Next, we add [ssh_connection]ssh_args from assible.cfg.
         #
 
         ssh_args = self.get_option('ssh_args')
         if ssh_args:
             b_args = [to_bytes(a, errors='surrogate_or_strict') for a in
                       self._split_ssh_args(ssh_args)]
-            self._add_args(b_command, b_args, u"ansible.cfg set ssh_args")
+            self._add_args(b_command, b_args, u"assible.cfg set ssh_args")
 
         # Now we add various arguments controlled by configuration file settings
-        # (e.g. host_key_checking) or inventory variables (ansible_ssh_port) or
+        # (e.g. host_key_checking) or inventory variables (assible_ssh_port) or
         # a combination thereof.
 
         if not C.HOST_KEY_CHECKING:
             b_args = (b"-o", b"StrictHostKeyChecking=no")
-            self._add_args(b_command, b_args, u"ANSIBLE_HOST_KEY_CHECKING/host_key_checking disabled")
+            self._add_args(b_command, b_args, u"ASSIBLE_HOST_KEY_CHECKING/host_key_checking disabled")
 
         if self._play_context.port is not None:
             b_args = (b"-o", b"Port=" + to_bytes(self._play_context.port, nonstring='simplerepr', errors='surrogate_or_strict'))
-            self._add_args(b_command, b_args, u"ANSIBLE_REMOTE_PORT/remote_port/ansible_port set")
+            self._add_args(b_command, b_args, u"ASSIBLE_REMOTE_PORT/remote_port/assible_port set")
 
         key = self._play_context.private_key_file
         if key:
             b_args = (b"-o", b'IdentityFile="' + to_bytes(os.path.expanduser(key), errors='surrogate_or_strict') + b'"')
-            self._add_args(b_command, b_args, u"ANSIBLE_PRIVATE_KEY_FILE/private_key_file/ansible_ssh_private_key_file set")
+            self._add_args(b_command, b_args, u"ASSIBLE_PRIVATE_KEY_FILE/private_key_file/assible_ssh_private_key_file set")
 
         if not conn_password:
             self._add_args(
@@ -641,7 +641,7 @@ class Connection(ConnectionBase):
                     b"-o", b"PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey",
                     b"-o", b"PasswordAuthentication=no"
                 ),
-                u"ansible_password/ansible_ssh_password not set"
+                u"assible_password/assible_ssh_password not set"
             )
 
         user = self._play_context.remote_user
@@ -649,13 +649,13 @@ class Connection(ConnectionBase):
             self._add_args(
                 b_command,
                 (b"-o", b'User="%s"' % to_bytes(self._play_context.remote_user, errors='surrogate_or_strict')),
-                u"ANSIBLE_REMOTE_USER/remote_user/ansible_user/user/-u set"
+                u"ASSIBLE_REMOTE_USER/remote_user/assible_user/user/-u set"
             )
 
         self._add_args(
             b_command,
             (b"-o", b"ConnectTimeout=" + to_bytes(self._play_context.timeout, errors='surrogate_or_strict', nonstring='simplerepr')),
-            u"ANSIBLE_TIMEOUT/timeout set"
+            u"ASSIBLE_TIMEOUT/timeout set"
         )
 
         # Add in any common or binary-specific arguments from the PlayContext
@@ -682,7 +682,7 @@ class Connection(ConnectionBase):
                 # The directory must exist and be writable.
                 makedirs_safe(b_cpdir, 0o700)
                 if not os.access(b_cpdir, os.W_OK):
-                    raise AnsibleError("Cannot write to ControlPath %s" % to_native(cpdir))
+                    raise AssibleError("Cannot write to ControlPath %s" % to_native(cpdir))
 
                 if not self.control_path:
                     self.control_path = self._create_control_path(
@@ -713,11 +713,11 @@ class Connection(ConnectionBase):
             fh.close()
         except (OSError, IOError) as e:
             # The ssh connection may have already terminated at this point, with a more useful error
-            # Only raise AnsibleConnectionFailure if the ssh process is still alive
+            # Only raise AssibleConnectionFailure if the ssh process is still alive
             time.sleep(0.001)
             ssh_process.poll()
             if getattr(ssh_process, 'returncode', None) is None:
-                raise AnsibleConnectionFailure(
+                raise AssibleConnectionFailure(
                     'Data could not be sent to remote host "%s". Make sure this host can be reached '
                     'over ssh: %s' % (self.host, to_native(e)), orig_exc=e
                 )
@@ -829,7 +829,7 @@ class Connection(ConnectionBase):
                                          stderr=subprocess.PIPE)
                 stdin = p.stdin
             except (OSError, IOError) as e:
-                raise AnsibleError('Unable to execute ssh command line on a controller due to: %s' % to_native(e))
+                raise AssibleError('Unable to execute ssh command line on a controller due to: %s' % to_native(e))
 
         # If we are using SSH password authentication, write the password into
         # the pipe we opened in _build_command.
@@ -923,7 +923,7 @@ class Connection(ConnectionBase):
                         if poll is not None:
                             break
                         self._terminate_process(p)
-                        raise AnsibleError('Timeout (%ds) waiting for privilege escalation prompt: %s' % (timeout, to_native(b_stdout)))
+                        raise AssibleError('Timeout (%ds) waiting for privilege escalation prompt: %s' % (timeout, to_native(b_stdout)))
 
                 # Read whatever output is available on stdout and stderr, and stop
                 # listening to the pipe if it's been closed.
@@ -1000,19 +1000,19 @@ class Connection(ConnectionBase):
                         display.vvv(u'Escalation failed')
                         self._terminate_process(p)
                         self._flags['become_error'] = False
-                        raise AnsibleError('Incorrect %s password' % self.become.name)
+                        raise AssibleError('Incorrect %s password' % self.become.name)
                     elif self._flags['become_nopasswd_error']:
                         display.vvv(u'Escalation requires password')
                         self._terminate_process(p)
                         self._flags['become_nopasswd_error'] = False
-                        raise AnsibleError('Missing %s password' % self.become.name)
+                        raise AssibleError('Missing %s password' % self.become.name)
                     elif self._flags['become_prompt']:
                         # This shouldn't happen, because we should see the "Sorry,
                         # try again" message first.
                         display.vvv(u'Escalation prompt repeated')
                         self._terminate_process(p)
                         self._flags['become_prompt'] = False
-                        raise AnsibleError('Incorrect %s password' % self.become.name)
+                        raise AssibleError('Incorrect %s password' % self.become.name)
 
                 # Once we're sure that the privilege escalation prompt, if any, has
                 # been dealt with, we can send any initial data and start waiting
@@ -1054,12 +1054,12 @@ class Connection(ConnectionBase):
 
         if C.HOST_KEY_CHECKING:
             if cmd[0] == b"sshpass" and p.returncode == 6:
-                raise AnsibleError('Using a SSH password instead of a key is not possible because Host Key checking is enabled and sshpass does not support '
+                raise AssibleError('Using a SSH password instead of a key is not possible because Host Key checking is enabled and sshpass does not support '
                                    'this.  Please add this host\'s fingerprint to your known_hosts file to manage this host.')
 
         controlpersisterror = b'Bad configuration option: ControlPersist' in b_stderr or b'unknown configuration option: ControlPersist' in b_stderr
         if p.returncode != 0 and controlpersisterror:
-            raise AnsibleError('using -c ssh on certain older ssh versions may not support ControlPersist, set ANSIBLE_SSH_ARGS="" '
+            raise AssibleError('using -c ssh on certain older ssh versions may not support ControlPersist, set ASSIBLE_SSH_ARGS="" '
                                '(or ssh_args in [ssh_connection] section of the config file) before running again')
 
         # If we find a broken pipe because of ControlPersist timeout expiring (see #16731),
@@ -1069,10 +1069,10 @@ class Connection(ConnectionBase):
 
             additional = to_native(b_stderr)
             if controlpersist_broken_pipe:
-                raise AnsibleControlPersistBrokenPipeError('Data could not be sent because of ControlPersist broken pipe: %s' % additional)
+                raise AssibleControlPersistBrokenPipeError('Data could not be sent because of ControlPersist broken pipe: %s' % additional)
 
             elif in_data and checkrc:
-                raise AnsibleConnectionFailure('Data could not be sent to remote host "%s". Make sure this host can be reached over ssh: %s'
+                raise AssibleConnectionFailure('Data could not be sent to remote host "%s". Make sure this host can be reached over ssh: %s'
                                                % (self.host, additional))
 
         return (p.returncode, b_stdout, b_stderr)
@@ -1102,7 +1102,7 @@ class Connection(ConnectionBase):
         ssh_transfer_method = self._play_context.ssh_transfer_method
         if ssh_transfer_method is not None:
             if not (ssh_transfer_method in ('smart', 'sftp', 'scp', 'piped')):
-                raise AnsibleOptionsError('transfer_method needs to be one of [smart|sftp|scp|piped]')
+                raise AssibleOptionsError('transfer_method needs to be one of [smart|sftp|scp|piped]')
             if ssh_transfer_method == 'smart':
                 methods = smart_methods
             else:
@@ -1115,7 +1115,7 @@ class Connection(ConnectionBase):
                 if scp_if_ssh in BOOLEANS:
                     scp_if_ssh = boolean(scp_if_ssh, strict=False)
                 elif scp_if_ssh != 'smart':
-                    raise AnsibleOptionsError('scp_if_ssh needs to be one of [smart|True|False]')
+                    raise AssibleOptionsError('scp_if_ssh needs to be one of [smart|True|False]')
             if scp_if_ssh == 'smart':
                 methods = smart_methods
             elif scp_if_ssh is True:
@@ -1161,14 +1161,14 @@ class Connection(ConnectionBase):
             else:
                 # If not in smart mode, the data will be printed by the raise below
                 if len(methods) > 1:
-                    display.warning(u'%s transfer mechanism failed on %s. Use ANSIBLE_DEBUG=1 to see detailed information' % (method, host))
+                    display.warning(u'%s transfer mechanism failed on %s. Use ASSIBLE_DEBUG=1 to see detailed information' % (method, host))
                     display.debug(u'%s' % to_text(stdout))
                     display.debug(u'%s' % to_text(stderr))
 
         if returncode == 255:
-            raise AnsibleConnectionFailure("Failed to connect to the host via %s: %s" % (method, to_native(stderr)))
+            raise AssibleConnectionFailure("Failed to connect to the host via %s: %s" % (method, to_native(stderr)))
         else:
-            raise AnsibleError("failed to transfer file to %s %s:\n%s\n%s" %
+            raise AssibleError("failed to transfer file to %s %s:\n%s\n%s" %
                                (to_native(in_path), to_native(out_path), to_native(stdout), to_native(stderr)))
 
     def _escape_win_path(self, path):
@@ -1235,7 +1235,7 @@ class Connection(ConnectionBase):
 
         display.vvv(u"PUT {0} TO {1}".format(in_path, out_path), host=self.host)
         if not os.path.exists(to_bytes(in_path, errors='surrogate_or_strict')):
-            raise AnsibleFileNotFound("file or module does not exist: {0}".format(to_native(in_path)))
+            raise AssibleFileNotFound("file or module does not exist: {0}".format(to_native(in_path)))
 
         if getattr(self._shell, "_IS_WINDOWS", False):
             out_path = self._escape_win_path(out_path)

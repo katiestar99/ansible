@@ -1,11 +1,11 @@
-# (c) 2019 Ansible Project
+# (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.module_utils.common.text.converters import to_text
-from ansible.module_utils.six import with_metaclass
+from assible.module_utils.common.text.converters import to_text
+from assible.module_utils.six import with_metaclass
 
 
 class _EventSource:
@@ -39,7 +39,7 @@ class _EventSource:
                     raise
 
 
-class _AnsibleCollectionConfig(type):
+class _AssibleCollectionConfig(type):
     def __init__(cls, meta, name, bases):
         cls._collection_finder = None
         cls._default_collection = None
@@ -52,7 +52,7 @@ class _AnsibleCollectionConfig(type):
     @collection_finder.setter
     def collection_finder(cls, value):
         if cls._collection_finder:
-            raise ValueError('an AnsibleCollectionFinder has already been configured')
+            raise ValueError('an AssibleCollectionFinder has already been configured')
 
         cls._collection_finder = value
 
@@ -93,9 +93,9 @@ class _AnsibleCollectionConfig(type):
 
     def _require_finder(cls):
         if not cls._collection_finder:
-            raise NotImplementedError('an AnsibleCollectionFinder has not been installed in this process')
+            raise NotImplementedError('an AssibleCollectionFinder has not been installed in this process')
 
 
 # concrete class of our metaclass type that defines the class properties we want
-class AnsibleCollectionConfig(with_metaclass(_AnsibleCollectionConfig)):
+class AssibleCollectionConfig(with_metaclass(_AssibleCollectionConfig)):
     pass

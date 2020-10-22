@@ -1,6 +1,6 @@
 # Copyright: (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2016, Toshio Kuratomi <tkuratomi@ansible.com>
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2016, Toshio Kuratomi <tkuratomi@assible.com>
+# Copyright: (c) 2018, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -14,23 +14,23 @@ import sys
 
 from abc import ABCMeta, abstractmethod
 
-from ansible.cli.arguments import option_helpers as opt_help
-from ansible import constants as C
-from ansible import context
-from ansible.errors import AnsibleError
-from ansible.inventory.manager import InventoryManager
-from ansible.module_utils.six import with_metaclass, string_types
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.parsing.dataloader import DataLoader
-from ansible.parsing.vault import PromptVaultSecret, get_file_vault_secret
-from ansible.plugins.loader import add_all_plugin_dirs
-from ansible.release import __version__
-from ansible.utils.collection_loader import AnsibleCollectionConfig
-from ansible.utils.collection_loader._collection_finder import _get_collection_name_from_path
-from ansible.utils.display import Display
-from ansible.utils.path import unfrackpath
-from ansible.utils.unsafe_proxy import to_unsafe_text
-from ansible.vars.manager import VariableManager
+from assible.cli.arguments import option_helpers as opt_help
+from assible import constants as C
+from assible import context
+from assible.errors import AssibleError
+from assible.inventory.manager import InventoryManager
+from assible.module_utils.six import with_metaclass, string_types
+from assible.module_utils._text import to_bytes, to_text
+from assible.parsing.dataloader import DataLoader
+from assible.parsing.vault import PromptVaultSecret, get_file_vault_secret
+from assible.plugins.loader import add_all_plugin_dirs
+from assible.release import __version__
+from assible.utils.collection_loader import AssibleCollectionConfig
+from assible.utils.collection_loader._collection_finder import _get_collection_name_from_path
+from assible.utils.display import Display
+from assible.utils.path import unfrackpath
+from assible.utils.unsafe_proxy import to_unsafe_text
+from assible.vars.manager import VariableManager
 
 try:
     import argcomplete
@@ -43,7 +43,7 @@ display = Display()
 
 
 class CLI(with_metaclass(ABCMeta, object)):
-    ''' code behind bin/ansible* programs '''
+    ''' code behind bin/assible* programs '''
 
     PAGER = 'less'
 
@@ -66,17 +66,17 @@ class CLI(with_metaclass(ABCMeta, object)):
 
         if C.DEVEL_WARNING and __version__.endswith('dev0'):
             display.warning(
-                'You are running the development version of Ansible. You should only run Ansible from "devel" if '
-                'you are modifying the Ansible engine, or trying out features under development. This is a rapidly '
+                'You are running the development version of Assible. You should only run Assible from "devel" if '
+                'you are modifying the Assible engine, or trying out features under development. This is a rapidly '
                 'changing source of code and can become unstable at any point.'
             )
 
     @abstractmethod
     def run(self):
-        """Run the ansible command
+        """Run the assible command
 
         Subclasses must implement this method.  It does the actual work of
-        running an Ansible command.
+        running an Assible command.
         """
         self.parse()
 
@@ -194,7 +194,7 @@ class CLI(with_metaclass(ABCMeta, object)):
                 # without erroring globally
                 try:
                     prompted_vault_secret.load()
-                except AnsibleError as exc:
+                except AssibleError as exc:
                     display.warning('Error in vault password prompt (%s): %s' % (vault_id_name, exc))
                     raise
 
@@ -215,7 +215,7 @@ class CLI(with_metaclass(ABCMeta, object)):
             # an invalid password file will error globally
             try:
                 file_vault_secret.load()
-            except AnsibleError as exc:
+            except AssibleError as exc:
                 display.warning('Error in vault password file loading (%s): %s' % (vault_id_name, to_text(exc)))
                 raise
 
@@ -275,7 +275,7 @@ class CLI(with_metaclass(ABCMeta, object)):
     @abstractmethod
     def init_parser(self, usage="", desc=None, epilog=None):
         """
-        Create an options parser for most ansible scripts
+        Create an options parser for most assible scripts
 
         Subclasses need to implement this method.  They will usually call the base class's
         init_parser to create a basic version and then add their own options on top of that.
@@ -283,8 +283,8 @@ class CLI(with_metaclass(ABCMeta, object)):
         An implementation will look something like this::
 
             def init_parser(self):
-                super(MyCLI, self).init_parser(usage="My Ansible CLI", inventory_opts=True)
-                ansible.arguments.option_helpers.add_runas_options(self.parser)
+                super(MyCLI, self).init_parser(usage="My Assible CLI", inventory_opts=True)
+                assible.arguments.option_helpers.add_runas_options(self.parser)
                 self.parser.add_option('--my-option', dest='my_option', action='store')
         """
         self.parser = opt_help.create_base_parser(os.path.basename(self.args[0]), usage=usage, desc=desc, epilog=epilog, )
@@ -302,7 +302,7 @@ class CLI(with_metaclass(ABCMeta, object)):
             def post_process_args(self, options):
                 options = super(MyCLI, self).post_process_args(options)
                 if options.addition and options.subtraction:
-                    raise AnsibleOptionsError('Only one of --addition and --subtraction can be specified')
+                    raise AssibleOptionsError('Only one of --addition and --subtraction can be specified')
                 if isinstance(options.listofhosts, string_types):
                     options.listofhosts = string_types.split(',')
                 return options
@@ -345,13 +345,13 @@ class CLI(with_metaclass(ABCMeta, object)):
                 options.inventory = C.DEFAULT_HOST_LIST
 
         # Dup args set on the root parser and sub parsers results in the root parser ignoring the args. e.g. doing
-        # 'ansible-galaxy -vvv init' has no verbosity set but 'ansible-galaxy init -vvv' sets a level of 3. To preserve
+        # 'assible-galaxy -vvv init' has no verbosity set but 'assible-galaxy init -vvv' sets a level of 3. To preserve
         # back compat with pre-argparse changes we manually scan and set verbosity based on the argv values.
-        if self.parser.prog in ['ansible-galaxy', 'ansible-vault'] and not options.verbosity:
+        if self.parser.prog in ['assible-galaxy', 'assible-vault'] and not options.verbosity:
             verbosity_arg = next(iter([arg for arg in self.args if arg.startswith('-v')]), None)
             if verbosity_arg:
                 display.deprecated("Setting verbosity before the arg sub command is deprecated, set the verbosity "
-                                   "after the sub command", "2.13", collection_name='ansible.builtin')
+                                   "after the sub command", "2.13", collection_name='assible.builtin')
                 options.verbosity = verbosity_arg.count('v')
 
         return options
@@ -382,29 +382,29 @@ class CLI(with_metaclass(ABCMeta, object)):
 
     @staticmethod
     def version_info(gitinfo=False):
-        ''' return full ansible version info '''
+        ''' return full assible version info '''
         if gitinfo:
             # expensive call, user with care
-            ansible_version_string = opt_help.version()
+            assible_version_string = opt_help.version()
         else:
-            ansible_version_string = __version__
-        ansible_version = ansible_version_string.split()[0]
-        ansible_versions = ansible_version.split('.')
-        for counter in range(len(ansible_versions)):
-            if ansible_versions[counter] == "":
-                ansible_versions[counter] = 0
+            assible_version_string = __version__
+        assible_version = assible_version_string.split()[0]
+        assible_versions = assible_version.split('.')
+        for counter in range(len(assible_versions)):
+            if assible_versions[counter] == "":
+                assible_versions[counter] = 0
             try:
-                ansible_versions[counter] = int(ansible_versions[counter])
+                assible_versions[counter] = int(assible_versions[counter])
             except Exception:
                 pass
-        if len(ansible_versions) < 3:
-            for counter in range(len(ansible_versions), 3):
-                ansible_versions.append(0)
-        return {'string': ansible_version_string.strip(),
-                'full': ansible_version,
-                'major': ansible_versions[0],
-                'minor': ansible_versions[1],
-                'revision': ansible_versions[2]}
+        if len(assible_versions) < 3:
+            for counter in range(len(assible_versions), 3):
+                assible_versions.append(0)
+        return {'string': assible_version_string.strip(),
+                'full': assible_version,
+                'major': assible_versions[0],
+                'minor': assible_versions[1],
+                'revision': assible_versions[2]}
 
     @staticmethod
     def pager(text):
@@ -449,11 +449,11 @@ class CLI(with_metaclass(ABCMeta, object)):
         if basedir:
             loader.set_basedir(basedir)
             add_all_plugin_dirs(basedir)
-            AnsibleCollectionConfig.playbook_paths = basedir
+            AssibleCollectionConfig.playbook_paths = basedir
             default_collection = _get_collection_name_from_path(basedir)
             if default_collection:
                 display.warning(u'running with default collection {0}'.format(default_collection))
-                AnsibleCollectionConfig.default_collection = default_collection
+                AssibleCollectionConfig.default_collection = default_collection
 
         vault_ids = list(options['vault_ids'])
         default_vault_ids = C.DEFAULT_VAULT_IDENTITY_LIST
@@ -489,6 +489,6 @@ class CLI(with_metaclass(ABCMeta, object)):
 
         hosts = inventory.list_hosts(pattern)
         if not hosts and no_hosts is False:
-            raise AnsibleError("Specified hosts and/or --limit does not match any hosts")
+            raise AssibleError("Specified hosts and/or --limit does not match any hosts")
 
         return hosts

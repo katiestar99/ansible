@@ -24,14 +24,14 @@ class ModuleDocFragment(object):
     description:
     - Configures the username to use to authenticate the connection to the remote
       device.  This value is used to authenticate the SSH session. If the value is
-      not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME)
+      not specified in the task, the value of environment variable C(ASSIBLE_NET_USERNAME)
       will be used instead.
     type: str
   password:
     description:
     - Specifies the password to use to authenticate the connection to the remote device.   This
       value is used to authenticate the SSH session. If the value is not specified
-      in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will
+      in the task, the value of environment variable C(ASSIBLE_NET_PASSWORD) will
       be used instead.
     type: str
   timeout:
@@ -45,7 +45,7 @@ class ModuleDocFragment(object):
     description:
     - Specifies the SSH key to use to authenticate the connection to the remote device.   This
       value is the path to the key used to authenticate the SSH session. If the value
-      is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE)
+      is not specified in the task, the value of environment variable C(ASSIBLE_NET_SSH_KEYFILE)
       will be used instead.
     type: path
   hostkey_verify:
@@ -61,6 +61,6 @@ class ModuleDocFragment(object):
     default: true
 notes:
 - For information on using netconf see the :ref:`Platform Options guide using Netconf<netconf_enabled_platform_options>`
-- For more information on using Ansible to manage network devices see the :ref:`Ansible
+- For more information on using Assible to manage network devices see the :ref:`Assible
   Network Guide <network_guide>`
 """

@@ -9,7 +9,7 @@ import sys
 from packaging.version import Version, VERSION_PATTERN
 
 
-class AnsibleVersionMunger(object):
+class AssibleVersionMunger(object):
     tag_offsets = dict(
         dev=0,
         a=100,
@@ -139,7 +139,7 @@ class AnsibleVersionMunger(object):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Extract/transform Ansible versions to various packaging formats')
+    parser = argparse.ArgumentParser(description='Extract/transform Assible versions to various packaging formats')
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--raw', action='store_true')
@@ -160,7 +160,7 @@ def main():
 
     sys.path.insert(0, release_loc)
 
-    from ansible import release
+    from assible import release
 
     rev = None
     if args.revision != 'auto':
@@ -168,7 +168,7 @@ def main():
 
     v_raw = release.__version__
     codename = release.__codename__
-    v = AnsibleVersionMunger(v_raw, revision=rev, codename=codename)
+    v = AssibleVersionMunger(v_raw, revision=rev, codename=codename)
 
     if args.raw:
         print(v.raw)
@@ -185,7 +185,7 @@ def main():
     elif args.codename:
         print(v.codename)
     elif args.all:
-        props = [name for (name, impl) in vars(AnsibleVersionMunger).items() if isinstance(impl, property)]
+        props = [name for (name, impl) in vars(AssibleVersionMunger).items() if isinstance(impl, property)]
 
         for propname in props:
             print('{0}: {1}'.format(propname, getattr(v, propname)))

@@ -8,8 +8,8 @@ __metaclass__ = type
 
 from units.compat.mock import MagicMock
 
-from ansible.executor.interpreter_discovery import discover_interpreter
-from ansible.module_utils._text import to_text
+from assible.executor.interpreter_discovery import discover_interpreter
+from assible.module_utils._text import to_text
 
 mock_ubuntu_platform_res = to_text(
     r'{"osrelease_content": "NAME=\"Ubuntu\"\nVERSION=\"16.04.5 LTS (Xenial Xerus)\"\nID=ubuntu\nID_LIKE=debian\n'

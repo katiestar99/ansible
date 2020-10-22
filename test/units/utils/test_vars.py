@@ -1,20 +1,20 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2015, Toshio Kuraotmi <tkuratomi@ansible.com>
+# (c) 2015, Toshio Kuraotmi <tkuratomi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -23,8 +23,8 @@ __metaclass__ = type
 from collections import defaultdict
 
 from units.compat import mock, unittest
-from ansible.errors import AnsibleError
-from ansible.utils.vars import combine_vars, merge_hash
+from assible.errors import AssibleError
+from assible.utils.vars import combine_vars, merge_hash
 
 
 class TestVariableUtils(unittest.TestCase):
@@ -70,25 +70,25 @@ class TestVariableUtils(unittest.TestCase):
     )
 
     def test_combine_vars_improper_args(self):
-        with mock.patch('ansible.constants.DEFAULT_HASH_BEHAVIOUR', 'replace'):
-            with self.assertRaises(AnsibleError):
+        with mock.patch('assible.constants.DEFAULT_HASH_BEHAVIOUR', 'replace'):
+            with self.assertRaises(AssibleError):
                 combine_vars([1, 2, 3], dict(a=1))
-            with self.assertRaises(AnsibleError):
+            with self.assertRaises(AssibleError):
                 combine_vars(dict(a=1), [1, 2, 3])
 
-        with mock.patch('ansible.constants.DEFAULT_HASH_BEHAVIOUR', 'merge'):
-            with self.assertRaises(AnsibleError):
+        with mock.patch('assible.constants.DEFAULT_HASH_BEHAVIOUR', 'merge'):
+            with self.assertRaises(AssibleError):
                 combine_vars([1, 2, 3], dict(a=1))
-            with self.assertRaises(AnsibleError):
+            with self.assertRaises(AssibleError):
                 combine_vars(dict(a=1), [1, 2, 3])
 
     def test_combine_vars_replace(self):
-        with mock.patch('ansible.constants.DEFAULT_HASH_BEHAVIOUR', 'replace'):
+        with mock.patch('assible.constants.DEFAULT_HASH_BEHAVIOUR', 'replace'):
             for test in self.combine_vars_replace_data:
                 self.assertEqual(combine_vars(test['a'], test['b']), test['result'])
 
     def test_combine_vars_merge(self):
-        with mock.patch('ansible.constants.DEFAULT_HASH_BEHAVIOUR', 'merge'):
+        with mock.patch('assible.constants.DEFAULT_HASH_BEHAVIOUR', 'merge'):
             for test in self.combine_vars_merge_data:
                 self.assertEqual(combine_vars(test['a'], test['b']), test['result'])
 

@@ -1,4 +1,4 @@
-"""Classify changes in Ansible code."""
+"""Classify changes in Assible code."""
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -361,8 +361,8 @@ class PathMapper:
 
     def _classify(self, path):  # type: (str) -> t.Optional[t.Dict[str, str]]
         """Return the classification for the given path."""
-        if data_context().content.is_ansible:
-            return self._classify_ansible(path)
+        if data_context().content.is_assible:
+            return self._classify_assible(path)
 
         if data_context().content.collection:
             return self._classify_collection(path)
@@ -670,8 +670,8 @@ class PathMapper:
 
         return None
 
-    def _classify_ansible(self, path):  # type: (str) -> t.Optional[t.Dict[str, str]]
-        """Return the classification for the given path using rules specific to Ansible."""
+    def _classify_assible(self, path):  # type: (str) -> t.Optional[t.Dict[str, str]]
+        """Return the classification for the given path using rules specific to Assible."""
         if path.startswith('test/units/compat/'):
             return {
                 'units': 'test/units/',
@@ -703,7 +703,7 @@ class PathMapper:
             return minimal
 
         if path.startswith('examples/'):
-            if path == 'examples/scripts/ConfigureRemotingForAnsible.ps1':
+            if path == 'examples/scripts/ConfigureRemotingForAssible.ps1':
                 return {
                     'windows-integration': 'connection_winrm',
                 }
@@ -713,7 +713,7 @@ class PathMapper:
         if path.startswith('hacking/'):
             return minimal
 
-        if path.startswith('lib/ansible/executor/powershell/'):
+        if path.startswith('lib/assible/executor/powershell/'):
             units_path = 'test/units/executor/powershell/'
 
             if units_path not in self.units_paths:
@@ -724,7 +724,7 @@ class PathMapper:
                 'units': units_path,
             }
 
-        if path.startswith('lib/ansible/'):
+        if path.startswith('lib/assible/'):
             return all_tests(self.args)  # broad impact, run all tests
 
         if path.startswith('licenses/'):
@@ -749,10 +749,10 @@ class PathMapper:
 
             return minimal
 
-        if path.startswith('test/ansible_test/'):
-            return minimal  # these tests are not invoked from ansible-test
+        if path.startswith('test/assible_test/'):
+            return minimal  # these tests are not invoked from assible-test
 
-        if path.startswith('test/lib/ansible_test/config/'):
+        if path.startswith('test/lib/assible_test/config/'):
             if name.startswith('cloud-config-'):
                 # noinspection PyTypeChecker
                 cloud_target = 'cloud/%s/' % name.split('-')[2].split('.')[0]
@@ -762,11 +762,11 @@ class PathMapper:
                         'integration': cloud_target,
                     }
 
-        if path.startswith('test/lib/ansible_test/_data/completion/'):
-            if path == 'test/lib/ansible_test/_data/completion/docker.txt':
+        if path.startswith('test/lib/assible_test/_data/completion/'):
+            if path == 'test/lib/assible_test/_data/completion/docker.txt':
                 return all_tests(self.args, force=True)  # force all tests due to risk of breaking changes in new test environment
 
-        if path.startswith('test/lib/ansible_test/_internal/cloud/'):
+        if path.startswith('test/lib/assible_test/_internal/cloud/'):
             cloud_target = 'cloud/%s/' % name
 
             if cloud_target in self.integration_targets_by_alias:
@@ -776,37 +776,37 @@ class PathMapper:
 
             return all_tests(self.args)  # test infrastructure, run all tests
 
-        if path.startswith('test/lib/ansible_test/_internal/sanity/'):
+        if path.startswith('test/lib/assible_test/_internal/sanity/'):
             return {
                 'sanity': 'all',  # test infrastructure, run all sanity checks
-                'integration': 'ansible-test',  # run ansible-test self tests
+                'integration': 'assible-test',  # run assible-test self tests
             }
 
-        if path.startswith('test/lib/ansible_test/_data/sanity/'):
+        if path.startswith('test/lib/assible_test/_data/sanity/'):
             return {
                 'sanity': 'all',  # test infrastructure, run all sanity checks
-                'integration': 'ansible-test',  # run ansible-test self tests
+                'integration': 'assible-test',  # run assible-test self tests
             }
 
-        if path.startswith('test/lib/ansible_test/_internal/units/'):
+        if path.startswith('test/lib/assible_test/_internal/units/'):
             return {
                 'units': 'all',  # test infrastructure, run all unit tests
-                'integration': 'ansible-test',  # run ansible-test self tests
+                'integration': 'assible-test',  # run assible-test self tests
             }
 
-        if path.startswith('test/lib/ansible_test/_data/units/'):
+        if path.startswith('test/lib/assible_test/_data/units/'):
             return {
                 'units': 'all',  # test infrastructure, run all unit tests
-                'integration': 'ansible-test',  # run ansible-test self tests
+                'integration': 'assible-test',  # run assible-test self tests
             }
 
-        if path.startswith('test/lib/ansible_test/_data/pytest/'):
+        if path.startswith('test/lib/assible_test/_data/pytest/'):
             return {
                 'units': 'all',  # test infrastructure, run all unit tests
-                'integration': 'ansible-test',  # run ansible-test self tests
+                'integration': 'assible-test',  # run assible-test self tests
             }
 
-        if path.startswith('test/lib/ansible_test/_data/requirements/'):
+        if path.startswith('test/lib/assible_test/_data/requirements/'):
             if name in (
                     'integration',
                     'network-integration',

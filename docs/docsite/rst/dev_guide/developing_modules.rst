@@ -5,11 +5,11 @@
 Should you develop a module?
 ****************************
 
-Developing Ansible modules is easy, but often it is not necessary. Before you start writing a new module, ask:
+Developing Assible modules is easy, but often it is not necessary. Before you start writing a new module, ask:
 
 1. Does a similar module already exist?
 
-An existing module may cover the functionality you want. Ansible collections include thousands of modules. Search our :ref:`list of included collections <list_of_collections>` or `Ansible Galaxy <https://galaxy.ansible.com>`_ to see if an existing module does what you need.
+An existing module may cover the functionality you want. Assible collections include thousands of modules. Search our :ref:`list of included collections <list_of_collections>` or `Assible Galaxy <https://galaxy.assible.com>`_ to see if an existing module does what you need.
 
 2. Should you use or develop an action plugin instead of a module?
 
@@ -21,7 +21,7 @@ A combination of existing modules may cover the functionality you want. You can 
 
 4. Should you create a collection instead of a single module?
 
-The functionality you want may be too large for a single module. If you want to connect Ansible to a new cloud provider, database, or network platform, you may need to :ref:`develop a new collection<developing_modules_in_groups>`.
+The functionality you want may be too large for a single module. If you want to connect Assible to a new cloud provider, database, or network platform, you may need to :ref:`develop a new collection<developing_modules_in_groups>`.
 
 * Each module should have a concise and well defined functionality. Basically, follow the UNIX philosophy of doing one thing well.
 
@@ -34,9 +34,9 @@ If your use case isn't covered by an existing module, an action plugin, or a rol
 * I want to :ref:`get started on a new module <developing_modules_general>`.
 * I want to review :ref:`tips and conventions for developing good modules <developing_modules_best_practices>`.
 * I want to :ref:`write a Windows module <developing_modules_general_windows>`.
-* I want :ref:`an overview of Ansible's architecture <developing_program_flow_modules>`.
+* I want :ref:`an overview of Assible's architecture <developing_program_flow_modules>`.
 * I want to :ref:`document my module <developing_modules_documenting>`.
-* I want to :ref:`contribute my module back to Ansible Core <developing_modules_checklist>`.
+* I want to :ref:`contribute my module back to Assible Core <developing_modules_checklist>`.
 * I want to :ref:`add unit and integration tests to my module <developing_testing>`.
 * I want to :ref:`add Python 3 support to my module <developing_python_3>`.
 * I want to :ref:`write multiple modules <developing_modules_in_groups>`.
@@ -45,7 +45,7 @@ If your use case isn't covered by an existing module, an action plugin, or a rol
 
    :ref:`list_of_collections`
        Browse existing collections, modules, and plugins
-   `Mailing List <https://groups.google.com/group/ansible-devel>`_
+   `Mailing List <https://groups.google.com/group/assible-devel>`_
        Development mailing list
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #assible IRC chat channel

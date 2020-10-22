@@ -2,9 +2,9 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from units.compat.mock import patch
-from ansible.module_utils import basic
-from ansible.modules import iptables
-from units.modules.utils import AnsibleExitJson, AnsibleFailJson, ModuleTestCase, set_module_args
+from assible.module_utils import basic
+from assible.modules import iptables
+from units.modules.utils import AssibleExitJson, AssibleFailJson, ModuleTestCase, set_module_args
 
 
 def get_bin_path(*args, **kwargs):
@@ -19,7 +19,7 @@ class TestIptables(ModuleTestCase):
 
     def setUp(self):
         super(TestIptables, self).setUp()
-        self.mock_get_bin_path = patch.object(basic.AnsibleModule, 'get_bin_path', get_bin_path)
+        self.mock_get_bin_path = patch.object(basic.AssibleModule, 'get_bin_path', get_bin_path)
         self.mock_get_bin_path.start()
         self.addCleanup(self.mock_get_bin_path.stop)  # ensure that the patching is 'undone'
         self.mock_get_iptables_version = patch.object(iptables, 'get_iptables_version', get_iptables_version)
@@ -28,7 +28,7 @@ class TestIptables(ModuleTestCase):
 
     def test_without_required_parameters(self):
         """Failure must occurs when all parameters are missing"""
-        with self.assertRaises(AnsibleFailJson):
+        with self.assertRaises(AssibleFailJson):
             set_module_args({})
             iptables.main()
 
@@ -38,9 +38,9 @@ class TestIptables(ModuleTestCase):
             'flush': True,
         })
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.return_value = 0, '', ''  # successful execution, no output
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -54,12 +54,12 @@ class TestIptables(ModuleTestCase):
         """Test flush without parameters and check == true"""
         set_module_args({
             'flush': True,
-            '_ansible_check_mode': True,
+            '_assible_check_mode': True,
         })
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.return_value = 0, '', ''  # successful execution, no output
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -80,9 +80,9 @@ class TestIptables(ModuleTestCase):
             (0, '', '')
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -116,9 +116,9 @@ class TestIptables(ModuleTestCase):
             (0, '', '')
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertFalse(result.exception.args[0]['changed'])
 
@@ -138,15 +138,15 @@ class TestIptables(ModuleTestCase):
         set_module_args({
             'policy': 'ACCEPT',
             'chain': 'INPUT',
-            '_ansible_check_mode': True,
+            '_assible_check_mode': True,
         })
         commands_results = [
             (0, 'Chain INPUT (policy DROP)\n', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -173,7 +173,7 @@ class TestIptables(ModuleTestCase):
             'destination': '7.8.9.10/42',
             'jump': 'ACCEPT',
             'action': 'insert',
-            '_ansible_check_mode': True,
+            '_assible_check_mode': True,
         })
 
         commands_results = [
@@ -181,9 +181,9 @@ class TestIptables(ModuleTestCase):
             (0, '', '')
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -219,9 +219,9 @@ class TestIptables(ModuleTestCase):
             (0, '', '')
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -267,16 +267,16 @@ class TestIptables(ModuleTestCase):
             'protocol': 'udp',
             'destination_port': '22',
             'to_ports': '8600',
-            '_ansible_check_mode': True,
+            '_assible_check_mode': True,
         })
 
         commands_results = [
             (1, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -322,9 +322,9 @@ class TestIptables(ModuleTestCase):
             (0, '', '')
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -395,9 +395,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -477,16 +477,16 @@ class TestIptables(ModuleTestCase):
             'in_interface': 'eth0',
             'out_interface': 'eth1',
             'comment': 'this is a comment',
-            '_ansible_check_mode': True,
+            '_assible_check_mode': True,
         })
 
         commands_results = [
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -533,9 +533,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -567,9 +567,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -602,7 +602,7 @@ class TestIptables(ModuleTestCase):
             'destination': '127.0.0.1'
         })
 
-        with self.assertRaises(AnsibleFailJson) as e:
+        with self.assertRaises(AssibleFailJson) as e:
             iptables.main()
         self.assertTrue(e.exception.args[0]['failed'])
         self.assertEqual(e.exception.args[0]['msg'], 'jump is TEE but all of the following are missing: gateway')
@@ -625,9 +625,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -683,9 +683,9 @@ class TestIptables(ModuleTestCase):
                 (0, '', ''),
             ]
 
-            with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+            with patch.object(basic.AssibleModule, 'run_command') as run_command:
                 run_command.side_effect = commands_results
-                with self.assertRaises(AnsibleExitJson) as result:
+                with self.assertRaises(AssibleExitJson) as result:
                     iptables.main()
                     self.assertTrue(result.exception.args[0]['changed'])
 
@@ -723,9 +723,9 @@ class TestIptables(ModuleTestCase):
                 (0, '', ''),
             ]
 
-            with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+            with patch.object(basic.AssibleModule, 'run_command') as run_command:
                 run_command.side_effect = commands_results
-                with self.assertRaises(AnsibleExitJson) as result:
+                with self.assertRaises(AssibleExitJson) as result:
                     iptables.main()
                     self.assertTrue(result.exception.args[0]['changed'])
 
@@ -753,9 +753,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -785,9 +785,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -818,9 +818,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 
@@ -854,9 +854,9 @@ class TestIptables(ModuleTestCase):
             (0, '', ''),
         ]
 
-        with patch.object(basic.AnsibleModule, 'run_command') as run_command:
+        with patch.object(basic.AssibleModule, 'run_command') as run_command:
             run_command.side_effect = commands_results
-            with self.assertRaises(AnsibleExitJson) as result:
+            with self.assertRaises(AssibleExitJson) as result:
                 iptables.main()
                 self.assertTrue(result.exception.args[0]['changed'])
 

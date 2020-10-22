@@ -38,7 +38,7 @@
     that:
     - local_utils.data == "ValueFromCustomFunction"
 
-- name: call module that imports bogus Ansible-named module_utils
+- name: call module that imports bogus Assible-named module_utils
   uses_bogus_utils:
   ignore_errors: true
   register: bogus_utils
@@ -54,7 +54,7 @@
   vars:
     # Our coverage runner does not work with recursive required. This is a limitation on PowerShell so we need to
     # disable coverage for this task
-    _ansible_coverage_remote_output: ''
+    _assible_coverage_remote_output: ''
 
 - assert:
     that:

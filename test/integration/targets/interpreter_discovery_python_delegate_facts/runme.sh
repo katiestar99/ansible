@@ -2,4 +2,4 @@
 
 set -eux
 
-ansible-playbook delegate_facts.yml -i inventory "$@"
+assible-playbook delegate_facts.yml -i inventory "$@"

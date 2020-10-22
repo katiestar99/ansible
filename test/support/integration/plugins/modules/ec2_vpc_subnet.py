@@ -1,12 +1,12 @@
 #!/usr/bin/python
-# Copyright: Ansible Project
+# Copyright: Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'core'}
 
@@ -218,13 +218,13 @@ import time
 try:
     import botocore
 except ImportError:
-    pass  # caught by AnsibleAWSModule
+    pass  # caught by AssibleAWSModule
 
-from ansible.module_utils._text import to_text
-from ansible.module_utils.aws.core import AnsibleAWSModule
-from ansible.module_utils.aws.waiters import get_waiter
-from ansible.module_utils.ec2 import (ansible_dict_to_boto3_filter_list, ansible_dict_to_boto3_tag_list,
-                                      camel_dict_to_snake_dict, boto3_tag_list_to_ansible_dict, compare_aws_tags, AWSRetry)
+from assible.module_utils._text import to_text
+from assible.module_utils.aws.core import AssibleAWSModule
+from assible.module_utils.aws.waiters import get_waiter
+from assible.module_utils.ec2 import (assible_dict_to_boto3_filter_list, assible_dict_to_boto3_tag_list,
+                                      camel_dict_to_snake_dict, boto3_tag_list_to_assible_dict, compare_aws_tags, AWSRetry)
 
 
 def get_subnet_info(subnet):
@@ -236,7 +236,7 @@ def get_subnet_info(subnet):
         subnet = camel_dict_to_snake_dict(subnet)
 
     if 'tags' in subnet:
-        subnet['tags'] = boto3_tag_list_to_ansible_dict(subnet['tags'])
+        subnet['tags'] = boto3_tag_list_to_assible_dict(subnet['tags'])
     else:
         subnet['tags'] = dict()
 
@@ -316,13 +316,13 @@ def create_subnet(conn, module, vpc_id, cidr, ipv6_cidr=None, az=None, start_tim
 def ensure_tags(conn, module, subnet, tags, purge_tags, start_time):
     changed = False
 
-    filters = ansible_dict_to_boto3_filter_list({'resource-id': subnet['id'], 'resource-type': 'subnet'})
+    filters = assible_dict_to_boto3_filter_list({'resource-id': subnet['id'], 'resource-type': 'subnet'})
     try:
         cur_tags = conn.describe_tags(Filters=filters)
     except (botocore.exceptions.ClientError, botocore.exceptions.BotoCoreError) as e:
         module.fail_json_aws(e, msg="Couldn't describe tags")
 
-    to_update, to_delete = compare_aws_tags(boto3_tag_list_to_ansible_dict(cur_tags.get('Tags')), tags, purge_tags)
+    to_update, to_delete = compare_aws_tags(boto3_tag_list_to_assible_dict(cur_tags.get('Tags')), tags, purge_tags)
 
     if to_update:
         try:
@@ -331,7 +331,7 @@ def ensure_tags(conn, module, subnet, tags, purge_tags, start_time):
                     catch_extra_error_codes=['InvalidSubnetID.NotFound']
                 )(conn.create_tags)(
                     Resources=[subnet['id']],
-                    Tags=ansible_dict_to_boto3_tag_list(to_update)
+                    Tags=assible_dict_to_boto3_tag_list(to_update)
                 )
 
             changed = True
@@ -392,7 +392,7 @@ def disassociate_ipv6_cidr(conn, module, subnet, start_time):
 
     # Wait for cidr block to be disassociated
     if module.params['wait']:
-        filters = ansible_dict_to_boto3_filter_list(
+        filters = assible_dict_to_boto3_filter_list(
             {'ipv6-cidr-block-association.state': ['disassociated'],
              'vpc-id': subnet['vpc_id']}
         )
@@ -410,7 +410,7 @@ def ensure_ipv6_cidr_block(conn, module, subnet, ipv6_cidr, check_mode, start_ti
         changed = True
 
     if ipv6_cidr:
-        filters = ansible_dict_to_boto3_filter_list({'ipv6-cidr-block-association.ipv6-cidr-block': ipv6_cidr,
+        filters = assible_dict_to_boto3_filter_list({'ipv6-cidr-block-association.ipv6-cidr-block': ipv6_cidr,
                                                      'vpc-id': subnet['vpc_id']})
 
         try:
@@ -434,7 +434,7 @@ def ensure_ipv6_cidr_block(conn, module, subnet, ipv6_cidr, check_mode, start_ti
             module.fail_json_aws(e, msg="Couldn't associate ipv6 cidr {0} to {1}".format(ipv6_cidr, subnet['id']))
         else:
             if not check_mode and wait:
-                filters = ansible_dict_to_boto3_filter_list(
+                filters = assible_dict_to_boto3_filter_list(
                     {'ipv6-cidr-block-association.state': ['associated'],
                      'vpc-id': subnet['vpc_id']}
                 )
@@ -453,7 +453,7 @@ def ensure_ipv6_cidr_block(conn, module, subnet, ipv6_cidr, check_mode, start_ti
 
 
 def get_matching_subnet(conn, module, vpc_id, cidr):
-    filters = ansible_dict_to_boto3_filter_list({'vpc-id': vpc_id, 'cidr-block': cidr})
+    filters = assible_dict_to_boto3_filter_list({'vpc-id': vpc_id, 'cidr-block': cidr})
     try:
         subnets = get_subnet_info(describe_subnets_with_backoff(conn, Filters=filters))
     except (botocore.exceptions.ClientError, botocore.exceptions.BotoCoreError) as e:
@@ -577,7 +577,7 @@ def main():
 
     required_if = [('assign_instances_ipv6', True, ['ipv6_cidr'])]
 
-    module = AnsibleAWSModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
+    module = AssibleAWSModule(argument_spec=argument_spec, supports_check_mode=True, required_if=required_if)
 
     if module.params.get('assign_instances_ipv6') and not module.params.get('ipv6_cidr'):
         module.fail_json(msg="assign_instances_ipv6 is True but ipv6_cidr is None or an empty string")

@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-# (c) 2015, Toshio Kuratomi <tkuratomi@ansible.com>
+# (c) 2015, Toshio Kuratomi <tkuratomi@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -24,17 +24,17 @@ from io import StringIO
 import pytest
 
 
-from ansible import constants as C
-from ansible.errors import AnsibleAuthenticationFailure
+from assible import constants as C
+from assible.errors import AssibleAuthenticationFailure
 from units.compat import unittest
 from units.compat.mock import patch, MagicMock, PropertyMock
-from ansible.errors import AnsibleError, AnsibleConnectionFailure, AnsibleFileNotFound
-from ansible.module_utils.compat.selectors import SelectorKey, EVENT_READ
-from ansible.module_utils.six.moves import shlex_quote
-from ansible.module_utils._text import to_bytes
-from ansible.playbook.play_context import PlayContext
-from ansible.plugins.connection import ssh
-from ansible.plugins.loader import connection_loader, become_loader
+from assible.errors import AssibleError, AssibleConnectionFailure, AssibleFileNotFound
+from assible.module_utils.compat.selectors import SelectorKey, EVENT_READ
+from assible.module_utils.six.moves import shlex_quote
+from assible.module_utils._text import to_bytes
+from assible.playbook.play_context import PlayContext
+from assible.plugins.connection import ssh
+from assible.plugins.loader import connection_loader, become_loader
 
 
 class TestConnectionBaseClass(unittest.TestCase):
@@ -42,7 +42,7 @@ class TestConnectionBaseClass(unittest.TestCase):
     def test_plugins_connection_ssh_module(self):
         play_context = PlayContext()
         play_context.prompt = (
-            '[sudo via ansible, key=ouzmdnewuhucvuaabtjmweasarviygqq] password: '
+            '[sudo via assible, key=ouzmdnewuhucvuaabtjmweasarviygqq] password: '
         )
         in_stream = StringIO()
 
@@ -231,7 +231,7 @@ class TestConnectionBaseClass(unittest.TestCase):
         conn._bare_run.return_value = (0, '', '')
         conn.host = "some_host"
 
-        C.ANSIBLE_SSH_RETRIES = 9
+        C.ASSIBLE_SSH_RETRIES = 9
 
         # Test with C.DEFAULT_SCP_IF_SSH set to smart
         # Test when SFTP works
@@ -268,12 +268,12 @@ class TestConnectionBaseClass(unittest.TestCase):
 
         # test that a non-zero rc raises an error
         conn._bare_run.return_value = (1, 'stdout', 'some errors')
-        self.assertRaises(AnsibleError, conn.put_file, '/path/to/bad/file', '/remote/path/to/file')
+        self.assertRaises(AssibleError, conn.put_file, '/path/to/bad/file', '/remote/path/to/file')
 
         # test that a not-found path raises an error
         mock_ospe.return_value = False
         conn._bare_run.return_value = (0, 'stdout', '')
-        self.assertRaises(AnsibleFileNotFound, conn.put_file, '/path/to/bad/file', '/remote/path/to/file')
+        self.assertRaises(AssibleFileNotFound, conn.put_file, '/path/to/bad/file', '/remote/path/to/file')
 
     @patch('time.sleep')
     def test_plugins_connection_ssh_fetch_file(self, mock_sleep):
@@ -288,7 +288,7 @@ class TestConnectionBaseClass(unittest.TestCase):
         conn._bare_run.return_value = (0, '', '')
         conn.host = "some_host"
 
-        C.ANSIBLE_SSH_RETRIES = 9
+        C.ASSIBLE_SSH_RETRIES = 9
 
         # Test with C.DEFAULT_SCP_IF_SSH set to smart
         # Test when SFTP works
@@ -326,7 +326,7 @@ class TestConnectionBaseClass(unittest.TestCase):
 
         # test that a non-zero rc raises an error
         conn._bare_run.return_value = (1, 'stdout', 'some errors')
-        self.assertRaises(AnsibleError, conn.fetch_file, '/path/to/bad/file', '/remote/path/to/file')
+        self.assertRaises(AssibleError, conn.fetch_file, '/path/to/bad/file', '/remote/path/to/file')
 
 
 class MockSelector(object):
@@ -380,7 +380,7 @@ def mock_run_env(request, mocker):
     request.cls.mock_popen = mock_popen
 
     request.cls.mock_selector = MockSelector()
-    mocker.patch('ansible.module_utils.compat.selectors.DefaultSelector', lambda: request.cls.mock_selector)
+    mocker.patch('assible.module_utils.compat.selectors.DefaultSelector', lambda: request.cls.mock_selector)
 
     request.cls.mock_openpty = mocker.patch('pty.openpty')
 
@@ -529,7 +529,7 @@ class TestSSHConnectionRun(object):
 class TestSSHConnectionRetries(object):
     def test_incorrect_password(self, monkeypatch):
         monkeypatch.setattr(C, 'HOST_KEY_CHECKING', False)
-        monkeypatch.setattr(C, 'ANSIBLE_SSH_RETRIES', 5)
+        monkeypatch.setattr(C, 'ASSIBLE_SSH_RETRIES', 5)
         monkeypatch.setattr('time.sleep', lambda x: None)
 
         self.mock_popen_res.stdout.read.side_effect = [b'']
@@ -549,14 +549,14 @@ class TestSSHConnectionRetries(object):
         self.conn.get_option = MagicMock()
         self.conn.get_option.return_value = True
 
-        exception_info = pytest.raises(AnsibleAuthenticationFailure, self.conn.exec_command, 'sshpass', 'some data')
+        exception_info = pytest.raises(AssibleAuthenticationFailure, self.conn.exec_command, 'sshpass', 'some data')
         assert exception_info.value.message == ('Invalid/incorrect username/password. Skipping remaining 5 retries to prevent account lockout: '
                                                 'Permission denied, please try again.')
         assert self.mock_popen.call_count == 1
 
     def test_retry_then_success(self, monkeypatch):
         monkeypatch.setattr(C, 'HOST_KEY_CHECKING', False)
-        monkeypatch.setattr(C, 'ANSIBLE_SSH_RETRIES', 3)
+        monkeypatch.setattr(C, 'ASSIBLE_SSH_RETRIES', 3)
 
         monkeypatch.setattr('time.sleep', lambda x: None)
 
@@ -587,7 +587,7 @@ class TestSSHConnectionRetries(object):
 
     def test_multiple_failures(self, monkeypatch):
         monkeypatch.setattr(C, 'HOST_KEY_CHECKING', False)
-        monkeypatch.setattr(C, 'ANSIBLE_SSH_RETRIES', 9)
+        monkeypatch.setattr(C, 'ASSIBLE_SSH_RETRIES', 9)
 
         monkeypatch.setattr('time.sleep', lambda x: None)
 
@@ -607,12 +607,12 @@ class TestSSHConnectionRetries(object):
         self.conn.get_option = MagicMock()
         self.conn.get_option.return_value = True
 
-        pytest.raises(AnsibleConnectionFailure, self.conn.exec_command, 'ssh', 'some data')
+        pytest.raises(AssibleConnectionFailure, self.conn.exec_command, 'ssh', 'some data')
         assert self.mock_popen.call_count == 10
 
     def test_abitrary_exceptions(self, monkeypatch):
         monkeypatch.setattr(C, 'HOST_KEY_CHECKING', False)
-        monkeypatch.setattr(C, 'ANSIBLE_SSH_RETRIES', 9)
+        monkeypatch.setattr(C, 'ASSIBLE_SSH_RETRIES', 9)
 
         monkeypatch.setattr('time.sleep', lambda x: None)
 
@@ -627,10 +627,10 @@ class TestSSHConnectionRetries(object):
 
     def test_put_file_retries(self, monkeypatch):
         monkeypatch.setattr(C, 'HOST_KEY_CHECKING', False)
-        monkeypatch.setattr(C, 'ANSIBLE_SSH_RETRIES', 3)
+        monkeypatch.setattr(C, 'ASSIBLE_SSH_RETRIES', 3)
 
         monkeypatch.setattr('time.sleep', lambda x: None)
-        monkeypatch.setattr('ansible.plugins.connection.ssh.os.path.exists', lambda x: True)
+        monkeypatch.setattr('assible.plugins.connection.ssh.os.path.exists', lambda x: True)
 
         self.mock_popen_res.stdout.read.side_effect = [b"", b"my_stdout\n", b"second_line"]
         self.mock_popen_res.stderr.read.side_effect = [b"", b"my_stderr"]
@@ -658,10 +658,10 @@ class TestSSHConnectionRetries(object):
 
     def test_fetch_file_retries(self, monkeypatch):
         monkeypatch.setattr(C, 'HOST_KEY_CHECKING', False)
-        monkeypatch.setattr(C, 'ANSIBLE_SSH_RETRIES', 3)
+        monkeypatch.setattr(C, 'ASSIBLE_SSH_RETRIES', 3)
 
         monkeypatch.setattr('time.sleep', lambda x: None)
-        monkeypatch.setattr('ansible.plugins.connection.ssh.os.path.exists', lambda x: True)
+        monkeypatch.setattr('assible.plugins.connection.ssh.os.path.exists', lambda x: True)
 
         self.mock_popen_res.stdout.read.side_effect = [b"", b"my_stdout\n", b"second_line"]
         self.mock_popen_res.stderr.read.side_effect = [b"", b"my_stderr"]

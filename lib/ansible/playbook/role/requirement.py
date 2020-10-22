@@ -1,29 +1,29 @@
-# (c) 2014 Michael DeHaan, <michael@ansible.com>
+# (c) 2014 Michael DeHaan, <michael@assible.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.errors import AnsibleError
-from ansible.module_utils.six import string_types
-from ansible.playbook.role.definition import RoleDefinition
-from ansible.utils.display import Display
-from ansible.utils.galaxy import scm_archive_resource
+from assible.errors import AssibleError
+from assible.module_utils.six import string_types
+from assible.playbook.role.definition import RoleDefinition
+from assible.utils.display import Display
+from assible.utils.galaxy import scm_archive_resource
 
 __all__ = ['RoleRequirement']
 
@@ -78,7 +78,7 @@ class RoleRequirement(RoleDefinition):
                 elif role.count(',') == 2:
                     (src, version, name) = role.strip().split(',', 2)
                 else:
-                    raise AnsibleError("Invalid role line (%s). Proper format is 'role_name[,version[,name]]'" % role)
+                    raise AssibleError("Invalid role line (%s). Proper format is 'role_name[,version[,name]]'" % role)
             else:
                 src = role
 
@@ -92,7 +92,7 @@ class RoleRequirement(RoleDefinition):
         if 'role' in role:
             name = role['role']
             if ',' in name:
-                raise AnsibleError("Invalid old style role requirement: %s" % name)
+                raise AssibleError("Invalid old style role requirement: %s" % name)
             else:
                 del role['role']
                 role['name'] = name

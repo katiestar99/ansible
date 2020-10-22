@@ -9,11 +9,11 @@ Release Manager Guidelines
 The release manager's purpose is to ensure a smooth release.  To achieve that goal, they need to
 coordinate between:
 
-* Developers with commit privileges on the `Ansible GitHub repository <https://github.com/ansible/ansible/>`_
+* Developers with commit privileges on the `Assible GitHub repository <https://github.com/assible/assible/>`_
 * Contributors without commit privileges
 * The community
-* Ansible documentation team
-* Ansible Tower team
+* Assible documentation team
+* Assible Tower team
 
 Pre-releases: what and why
 ==========================
@@ -52,7 +52,7 @@ ones that we are willing to leave out of the release. At this point we need user
 determine if there are any other blocker bugs lurking.
 
 Blocker bugs generally are those that cause significant problems for users. Regressions are
-more likely to be considered blockers because they will break present users' usage of Ansible.
+more likely to be considered blockers because they will break present users' usage of Assible.
 
 The Release Manager will cherry-pick fixes for new release blockers. The release manager will also
 choose whether to accept bugfixes for isolated areas of the code or defer those to the next minor
@@ -67,13 +67,13 @@ The last RC should be as close to the final as possible. The following things ma
       However, the release manager may still reject them as they have the potential to cause
       breakage that will be visible during the release process.
 
-.. note:: We want to specifically emphasize that code (in :file:`bin/`, :file:`lib/ansible/`, and
+.. note:: We want to specifically emphasize that code (in :file:`bin/`, :file:`lib/assible/`, and
     :file:`setup.py`) must be the same unless there are extraordinary extenuating circumstances.  If
     there are extenuating circumstances, the Release Manager is responsible for notifying groups
     (like the Tower Team) which would want to test the code.
 
 
-Ansible release process
+Assible release process
 =======================
 
 The release process is kept in a `separate document

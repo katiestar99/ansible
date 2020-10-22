@@ -1,18 +1,18 @@
 # (c) 2014, Chris Church <chris@ninemoreminutes.com>
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = """
-    author: Ansible Core Team
+    author: Assible Core Team
     name: winrm
     short_description: Run tasks over Microsoft's WinRM
     description:
         - Run commands or put/fetch on a target via WinRM
         - This plugin allows extra arguments to be passed that are supported by the protocol but not explicitly defined here.
-          They should take the form of variables declared with the following pattern `ansible_winrm_<option>`.
+          They should take the form of variables declared with the following pattern `assible_winrm_<option>`.
     version_added: "2.0"
     requirements:
         - pywinrm (python library)
@@ -23,22 +23,22 @@ DOCUMENTATION = """
             - Address of the windows machine
         default: inventory_hostname
         vars:
-            - name: ansible_host
-            - name: ansible_winrm_host
+            - name: assible_host
+            - name: assible_winrm_host
         type: str
       remote_user:
         description:
             - The user to log in as to the Windows machine
         vars:
-            - name: ansible_user
-            - name: ansible_winrm_user
+            - name: assible_user
+            - name: assible_winrm_user
         type: str
       remote_password:
         description: Authentication password for the C(remote_user). Can be supplied as CLI option.
         vars:
-            - name: ansible_password
-            - name: ansible_winrm_pass
-            - name: ansible_winrm_password
+            - name: assible_password
+            - name: assible_winrm_pass
+            - name: assible_winrm_password
         type: str
         aliases:
         - password  # Needed for --ask-pass to come through on delegation
@@ -47,8 +47,8 @@ DOCUMENTATION = """
             - port for winrm to connect on remote target
             - The default is the https (5986) port, if using http it should be 5985
         vars:
-          - name: ansible_port
-          - name: ansible_winrm_port
+          - name: assible_port
+          - name: assible_winrm_port
         default: 5986
         type: integer
       scheme:
@@ -58,13 +58,13 @@ DOCUMENTATION = """
               C(5985).
         choices: [http, https]
         vars:
-          - name: ansible_winrm_scheme
+          - name: assible_winrm_scheme
         type: str
       path:
         description: URI path to connect to
         default: '/wsman'
         vars:
-          - name: ansible_winrm_path
+          - name: assible_winrm_path
         type: str
       transport:
         description:
@@ -73,35 +73,35 @@ DOCUMENTATION = """
            - The choices available depend on your version of pywinrm
         type: list
         vars:
-          - name: ansible_winrm_transport
+          - name: assible_winrm_transport
       kerberos_command:
         description: kerberos command to use to request a authentication ticket
         default: kinit
         vars:
-          - name: ansible_winrm_kinit_cmd
+          - name: assible_winrm_kinit_cmd
         type: str
       kinit_args:
         description:
         - Extra arguments to pass to C(kinit) when getting the Kerberos authentication ticket.
-        - By default no extra arguments are passed into C(kinit) unless I(ansible_winrm_kerberos_delegation) is also
+        - By default no extra arguments are passed into C(kinit) unless I(assible_winrm_kerberos_delegation) is also
           set. In that case C(-f) is added to the C(kinit) args so a forwardable ticket is retrieved.
         - If set, the args will overwrite any existing defaults for C(kinit), including C(-f) for a delegated ticket.
         type: str
         vars:
-          - name: ansible_winrm_kinit_args
+          - name: assible_winrm_kinit_args
         version_added: '2.11'
       kerberos_mode:
         description:
             - kerberos usage mode.
-            - The managed option means Ansible will obtain kerberos ticket.
+            - The managed option means Assible will obtain kerberos ticket.
             - While the manual one means a ticket must already have been obtained by the user.
-            - If having issues with Ansible freezing when trying to obtain the
+            - If having issues with Assible freezing when trying to obtain the
               Kerberos ticket, you can either set this to C(manual) and obtain
-              it outside Ansible or install C(pexpect) through pip and try
+              it outside Assible or install C(pexpect) through pip and try
               again.
         choices: [managed, manual]
         vars:
-          - name: ansible_winrm_kinit_mode
+          - name: assible_winrm_kinit_mode
         type: str
       connection_timeout:
         description:
@@ -113,7 +113,7 @@ DOCUMENTATION = """
             - The default value is whatever is set in the installed version of
               pywinrm.
         vars:
-          - name: ansible_winrm_connection_timeout
+          - name: assible_winrm_connection_timeout
         type: int
 """
 
@@ -134,18 +134,18 @@ try:
 except ImportError:
     pass
 
-from ansible import constants as C
-from ansible.errors import AnsibleError, AnsibleConnectionFailure
-from ansible.errors import AnsibleFileNotFound
-from ansible.module_utils.json_utils import _filter_non_json_lines
-from ansible.module_utils.parsing.convert_bool import boolean
-from ansible.module_utils.six.moves.urllib.parse import urlunsplit
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.six import binary_type, PY3
-from ansible.plugins.connection import ConnectionBase
-from ansible.plugins.shell.powershell import _parse_clixml
-from ansible.utils.hashing import secure_hash
-from ansible.utils.display import Display
+from assible import constants as C
+from assible.errors import AssibleError, AssibleConnectionFailure
+from assible.errors import AssibleFileNotFound
+from assible.module_utils.json_utils import _filter_non_json_lines
+from assible.module_utils.parsing.convert_bool import boolean
+from assible.module_utils.six.moves.urllib.parse import urlunsplit
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.six import binary_type, PY3
+from assible.plugins.connection import ConnectionBase
+from assible.plugins.shell.powershell import _parse_clixml
+from assible.utils.hashing import secure_hash
+from assible.utils.display import Display
 
 # getargspec is deprecated in favour of getfullargspec in Python 3 but
 # getfullargspec is not available in Python 2
@@ -176,7 +176,7 @@ try:
     import pexpect
     # echo was added in pexpect 3.3+ which is newer than the RHEL package
     # we can only use pexpect for kerb auth if echo is a valid kwarg
-    # https://github.com/ansible/ansible/issues/43462
+    # https://github.com/assible/assible/issues/43462
     if hasattr(pexpect, 'spawn'):
         argspec = getargspec(pexpect.spawn.__init__)
         if 'echo' in argspec.args:
@@ -261,7 +261,7 @@ class Connection(ConnectionBase):
         unsupported_transports = set(self._winrm_transport).difference(self._winrm_supported_authtypes)
 
         if unsupported_transports:
-            raise AnsibleError('The installed version of WinRM does not support transport(s) %s' %
+            raise AssibleError('The installed version of WinRM does not support transport(s) %s' %
                                to_native(list(unsupported_transports), nonstring='simplerepr'))
 
         # if kerberos is among our transports and there's a password specified, we're managing the tickets
@@ -281,16 +281,16 @@ class Connection(ConnectionBase):
         argspec = getargspec(Protocol.__init__)
         supported_winrm_args = set(argspec.args)
         supported_winrm_args.update(internal_kwarg_mask)
-        passed_winrm_args = set([v.replace('ansible_winrm_', '') for v in self.get_option('_extras')])
+        passed_winrm_args = set([v.replace('assible_winrm_', '') for v in self.get_option('_extras')])
         unsupported_args = passed_winrm_args.difference(supported_winrm_args)
 
         # warn for kwargs unsupported by the installed version of pywinrm
         for arg in unsupported_args:
-            display.warning("ansible_winrm_{0} unsupported by pywinrm (is an up-to-date version of pywinrm installed?)".format(arg))
+            display.warning("assible_winrm_{0} unsupported by pywinrm (is an up-to-date version of pywinrm installed?)".format(arg))
 
         # pass through matching extras, excluding the list we want to treat specially
         for arg in passed_winrm_args.difference(internal_kwarg_mask).intersection(supported_winrm_args):
-            self._winrm_kwargs[arg] = self.get_option('_extras')['ansible_winrm_%s' % arg]
+            self._winrm_kwargs[arg] = self.get_option('_extras')['assible_winrm_%s' % arg]
 
     # Until pykerberos has enough goodies to implement a rudimentary kinit/klist, simplest way is to let each connection
     # auth itself with a private CCACHE.
@@ -304,15 +304,15 @@ class Connection(ConnectionBase):
         os.environ["KRB5CCNAME"] = krb5ccname
         krb5env = dict(KRB5CCNAME=krb5ccname)
 
-        # Stores various flags to call with kinit, these could be explicit args set by 'ansible_winrm_kinit_args' OR
-        # '-f' if kerberos delegation is requested (ansible_winrm_kerberos_delegation).
+        # Stores various flags to call with kinit, these could be explicit args set by 'assible_winrm_kinit_args' OR
+        # '-f' if kerberos delegation is requested (assible_winrm_kerberos_delegation).
         kinit_cmdline = [self._kinit_cmd]
         kinit_args = self.get_option('kinit_args')
         if kinit_args:
             kinit_args = [to_text(a) for a in shlex.split(kinit_args) if a.strip()]
             kinit_cmdline.extend(kinit_args)
 
-        elif boolean(self.get_option('_extras').get('ansible_winrm_kerberos_delegation', False)):
+        elif boolean(self.get_option('_extras').get('assible_winrm_kerberos_delegation', False)):
             kinit_cmdline.append('-f')
 
         kinit_cmdline.append(principal)
@@ -335,13 +335,13 @@ class Connection(ConnectionBase):
             except pexpect.ExceptionPexpect as err:
                 err_msg = "Kerberos auth failure when calling kinit cmd " \
                           "'%s': %s" % (command, to_native(err))
-                raise AnsibleConnectionFailure(err_msg)
+                raise AssibleConnectionFailure(err_msg)
 
             try:
                 child.expect(".*:")
                 child.sendline(password)
             except OSError as err:
-                # child exited before the pass was sent, Ansible will raise
+                # child exited before the pass was sent, Assible will raise
                 # error based on the rc below, just display the error here
                 display.vvvv("kinit with pexpect raised OSError: %s"
                              % to_native(err))
@@ -367,7 +367,7 @@ class Connection(ConnectionBase):
             except OSError as err:
                 err_msg = "Kerberos auth failure when calling kinit cmd " \
                           "'%s': %s" % (self._kinit_cmd, to_native(err))
-                raise AnsibleConnectionFailure(err_msg)
+                raise AssibleConnectionFailure(err_msg)
 
             stdout, stderr = p.communicate(password + b'\n')
             rc = p.returncode != 0
@@ -380,7 +380,7 @@ class Connection(ConnectionBase):
 
             err_msg = "Kerberos auth failure for principal %s with %s: %s" \
                       % (principal, proc_mechanism, exp_msg)
-            raise AnsibleConnectionFailure(err_msg)
+            raise AssibleConnectionFailure(err_msg)
 
         display.vvvvv("kinit succeeded for principal %s" % principal)
 
@@ -428,7 +428,7 @@ class Connection(ConnectionBase):
             except Exception as e:
                 err_msg = to_text(e).strip()
                 if re.search(to_text(r'Operation\s+?timed\s+?out'), err_msg, re.I):
-                    raise AnsibleError('the connection attempt timed out')
+                    raise AssibleError('the connection attempt timed out')
                 m = re.search(to_text(r'Code\s+?(\d{3})'), err_msg)
                 if m:
                     code = int(m.groups()[0])
@@ -439,9 +439,9 @@ class Connection(ConnectionBase):
                 errors.append(u'%s: %s' % (transport, err_msg))
                 display.vvvvv(u'WINRM CONNECTION ERROR: %s\n%s' % (err_msg, to_text(traceback.format_exc())), host=self._winrm_host)
         if errors:
-            raise AnsibleConnectionFailure(', '.join(map(to_native, errors)))
+            raise AssibleConnectionFailure(', '.join(map(to_native, errors)))
         else:
-            raise AnsibleError('No transport found for WinRM connection')
+            raise AssibleError('No transport found for WinRM connection')
 
     def _winrm_send_input(self, protocol, shell_id, command_id, stdin, eof=False):
         rq = {'env:Envelope': protocol._get_soap_header(
@@ -509,12 +509,12 @@ class Connection(ConnectionBase):
                     if stderr.startswith(b"#< CLIXML"):
                         stderr = _parse_clixml(stderr)
 
-                    raise AnsibleError('winrm send_input failed; \nstdout: %s\nstderr %s'
+                    raise AssibleError('winrm send_input failed; \nstdout: %s\nstderr %s'
                                        % (to_native(response.std_out), to_native(stderr)))
 
             return response
         except requests.exceptions.Timeout as exc:
-            raise AnsibleConnectionFailure('winrm connection error: %s' % to_native(exc))
+            raise AssibleConnectionFailure('winrm connection error: %s' % to_native(exc))
         finally:
             if command_id:
                 self.protocol.cleanup_command(self.shell_id, command_id)
@@ -522,9 +522,9 @@ class Connection(ConnectionBase):
     def _connect(self):
 
         if not HAS_WINRM:
-            raise AnsibleError("winrm or requests is not installed: %s" % to_native(WINRM_IMPORT_ERR))
+            raise AssibleError("winrm or requests is not installed: %s" % to_native(WINRM_IMPORT_ERR))
         elif not HAS_XMLTODICT:
-            raise AnsibleError("xmltodict is not installed: %s" % to_native(XMLTODICT_IMPORT_ERR))
+            raise AssibleError("xmltodict is not installed: %s" % to_native(XMLTODICT_IMPORT_ERR))
 
         super(Connection, self)._connect()
         if not self.protocol:
@@ -592,7 +592,7 @@ class Connection(ConnectionBase):
         out_path = self._shell._unquote(out_path)
         display.vvv('PUT "%s" TO "%s"' % (in_path, out_path), host=self._winrm_host)
         if not os.path.exists(to_bytes(in_path, errors='surrogate_or_strict')):
-            raise AnsibleFileNotFound('file or module does not exist: "%s"' % to_native(in_path))
+            raise AssibleFileNotFound('file or module does not exist: "%s"' % to_native(in_path))
 
         script_template = u'''
             begin {{
@@ -630,7 +630,7 @@ class Connection(ConnectionBase):
         result = self._winrm_exec(cmd_parts[0], cmd_parts[1:], stdin_iterator=self._put_file_stdin_iterator(in_path, out_path))
         # TODO: improve error handling
         if result.status_code != 0:
-            raise AnsibleError(to_native(result.std_err))
+            raise AssibleError(to_native(result.std_err))
 
         try:
             put_output = json.loads(result.std_out)
@@ -639,16 +639,16 @@ class Connection(ConnectionBase):
             stderr = to_bytes(result.std_err, encoding='utf-8')
             if stderr.startswith(b"#< CLIXML"):
                 stderr = _parse_clixml(stderr)
-            raise AnsibleError('winrm put_file failed; \nstdout: %s\nstderr %s' % (to_native(result.std_out), to_native(stderr)))
+            raise AssibleError('winrm put_file failed; \nstdout: %s\nstderr %s' % (to_native(result.std_out), to_native(stderr)))
 
         remote_sha1 = put_output.get("sha1")
         if not remote_sha1:
-            raise AnsibleError("Remote sha1 was not returned")
+            raise AssibleError("Remote sha1 was not returned")
 
         local_sha1 = secure_hash(in_path)
 
         if not remote_sha1 == local_sha1:
-            raise AnsibleError("Remote sha1 hash {0} does not match local hash {1}".format(to_native(remote_sha1), to_native(local_sha1)))
+            raise AssibleError("Remote sha1 hash {0} does not match local hash {1}".format(to_native(remote_sha1), to_native(local_sha1)))
 
     def fetch_file(self, in_path, out_path):
         super(Connection, self).fetch_file(in_path, out_path)
@@ -712,7 +712,7 @@ class Connection(ConnectionBase):
                         offset += len(data)
                 except Exception:
                     traceback.print_exc()
-                    raise AnsibleError('failed to transfer file to "%s"' % to_native(out_path))
+                    raise AssibleError('failed to transfer file to "%s"' % to_native(out_path))
         finally:
             if out_file:
                 out_file.close()

@@ -1,4 +1,4 @@
-- when: ansible_facts.distribution == 'MacOSX'
+- when: assible_facts.distribution == 'MacOSX'
   block:
     - name: MACOS | Find brew binary
       command: which brew

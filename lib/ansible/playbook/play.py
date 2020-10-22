@@ -1,38 +1,38 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible import constants as C
-from ansible import context
-from ansible.errors import AnsibleParserError, AnsibleAssertionError
-from ansible.module_utils._text import to_native
-from ansible.module_utils.six import string_types
-from ansible.playbook.attribute import FieldAttribute
-from ansible.playbook.base import Base
-from ansible.playbook.block import Block
-from ansible.playbook.collectionsearch import CollectionSearch
-from ansible.playbook.helpers import load_list_of_blocks, load_list_of_roles
-from ansible.playbook.role import Role
-from ansible.playbook.taggable import Taggable
-from ansible.vars.manager import preprocess_vars
-from ansible.utils.display import Display
+from assible import constants as C
+from assible import context
+from assible.errors import AssibleParserError, AssibleAssertionError
+from assible.module_utils._text import to_native
+from assible.module_utils.six import string_types
+from assible.playbook.attribute import FieldAttribute
+from assible.playbook.base import Base
+from assible.playbook.block import Block
+from assible.playbook.collectionsearch import CollectionSearch
+from assible.playbook.helpers import load_list_of_blocks, load_list_of_roles
+from assible.playbook.role import Role
+from assible.playbook.taggable import Taggable
+from assible.vars.manager import preprocess_vars
+from assible.utils.display import Display
 
 display = Display()
 
@@ -105,7 +105,7 @@ class Play(Base, Taggable, CollectionSearch):
     def load(data, variable_manager=None, loader=None, vars=None):
         if ('name' not in data or data['name'] is None) and 'hosts' in data:
             if data['hosts'] is None or all(host is None for host in data['hosts']):
-                raise AnsibleParserError("Hosts list cannot be empty - please check your playbook")
+                raise AssibleParserError("Hosts list cannot be empty - please check your playbook")
             if isinstance(data['hosts'], list):
                 data['name'] = ','.join(data['hosts'])
             else:
@@ -121,7 +121,7 @@ class Play(Base, Taggable, CollectionSearch):
         '''
 
         if not isinstance(ds, dict):
-            raise AnsibleAssertionError('while preprocessing data (%s), ds should be a dict but was a %s' % (ds, type(ds)))
+            raise AssibleAssertionError('while preprocessing data (%s), ds should be a dict but was a %s' % (ds, type(ds)))
 
         # The use of 'user' in the Play datastructure was deprecated to
         # line up with the same change for Tasks, due to the fact that
@@ -130,7 +130,7 @@ class Play(Base, Taggable, CollectionSearch):
             # this should never happen, but error out with a helpful message
             # to the user if it does...
             if 'remote_user' in ds:
-                raise AnsibleParserError("both 'user' and 'remote_user' are set for %s. "
+                raise AssibleParserError("both 'user' and 'remote_user' are set for %s. "
                                          "The use of 'user' is deprecated, and should be removed" % self.get_name(), obj=ds)
 
             ds['remote_user'] = ds['user']
@@ -146,7 +146,7 @@ class Play(Base, Taggable, CollectionSearch):
         try:
             return load_list_of_blocks(ds=ds, play=self, variable_manager=self._variable_manager, loader=self._loader)
         except AssertionError as e:
-            raise AnsibleParserError("A malformed block was encountered while loading tasks: %s" % to_native(e), obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed block was encountered while loading tasks: %s" % to_native(e), obj=self._ds, orig_exc=e)
 
     def _load_pre_tasks(self, attr, ds):
         '''
@@ -156,7 +156,7 @@ class Play(Base, Taggable, CollectionSearch):
         try:
             return load_list_of_blocks(ds=ds, play=self, variable_manager=self._variable_manager, loader=self._loader)
         except AssertionError as e:
-            raise AnsibleParserError("A malformed block was encountered while loading pre_tasks", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed block was encountered while loading pre_tasks", obj=self._ds, orig_exc=e)
 
     def _load_post_tasks(self, attr, ds):
         '''
@@ -166,7 +166,7 @@ class Play(Base, Taggable, CollectionSearch):
         try:
             return load_list_of_blocks(ds=ds, play=self, variable_manager=self._variable_manager, loader=self._loader)
         except AssertionError as e:
-            raise AnsibleParserError("A malformed block was encountered while loading post_tasks", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed block was encountered while loading post_tasks", obj=self._ds, orig_exc=e)
 
     def _load_handlers(self, attr, ds):
         '''
@@ -180,7 +180,7 @@ class Play(Base, Taggable, CollectionSearch):
                 prepend=True
             )
         except AssertionError as e:
-            raise AnsibleParserError("A malformed block was encountered while loading handlers", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed block was encountered while loading handlers", obj=self._ds, orig_exc=e)
 
     def _load_roles(self, attr, ds):
         '''
@@ -195,7 +195,7 @@ class Play(Base, Taggable, CollectionSearch):
             role_includes = load_list_of_roles(ds, play=self, variable_manager=self._variable_manager,
                                                loader=self._loader, collection_search_list=self.collections)
         except AssertionError as e:
-            raise AnsibleParserError("A malformed role declaration was encountered.", obj=self._ds, orig_exc=e)
+            raise AssibleParserError("A malformed role declaration was encountered.", obj=self._ds, orig_exc=e)
 
         roles = []
         for ri in role_includes:
@@ -211,10 +211,10 @@ class Play(Base, Taggable, CollectionSearch):
         if new_ds is not None:
             for prompt_data in new_ds:
                 if 'name' not in prompt_data:
-                    raise AnsibleParserError("Invalid vars_prompt data structure, missing 'name' key", obj=ds)
+                    raise AssibleParserError("Invalid vars_prompt data structure, missing 'name' key", obj=ds)
                 for key in prompt_data:
                     if key not in ('name', 'prompt', 'default', 'private', 'confirm', 'encrypt', 'salt_size', 'salt', 'unsafe'):
-                        raise AnsibleParserError("Invalid vars_prompt data structure, found unsupported key '%s'" % key, obj=ds)
+                        raise AssibleParserError("Invalid vars_prompt data structure, found unsupported key '%s'" % key, obj=ds)
                 vars_prompts.append(prompt_data)
         return vars_prompts
 

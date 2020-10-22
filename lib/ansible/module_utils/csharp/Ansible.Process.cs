@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-namespace Ansible.Process
+namespace Assible.Process
 {
     internal class NativeHelpers
     {

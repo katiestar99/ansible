@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 # (c) 2020, Red Hat, Inc. <relrod@redhat.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -33,10 +33,10 @@ PULL_CHERRY_PICKED_FROM = re.compile(r'\(?cherry(?:\-| )picked from(?: ?commit|)
 TICKET_NUMBER = re.compile(r'(?:^|\s)#(\d+)')
 
 
-def normalize_pr_url(pr, allow_non_ansible_ansible=False, only_number=False):
+def normalize_pr_url(pr, allow_non_assible_assible=False, only_number=False):
     '''
     Given a PullRequest, or a string containing a PR number, PR URL,
-    or internal PR URL (e.g. ansible-collections/community.general#1234),
+    or internal PR URL (e.g. assible-collections/community.general#1234),
     return either a full github URL to the PR (if only_number is False),
     or an int containing the PR number (if only_number is True).
 
@@ -48,11 +48,11 @@ def normalize_pr_url(pr, allow_non_ansible_ansible=False, only_number=False):
     if pr.isnumeric():
         if only_number:
             return int(pr)
-        return 'https://github.com/ansible/ansible/pull/{0}'.format(pr)
+        return 'https://github.com/assible/assible/pull/{0}'.format(pr)
 
-    # Allow for forcing ansible/ansible
-    if not allow_non_ansible_ansible and 'ansible/ansible' not in pr:
-        raise Exception('Non ansible/ansible repo given where not expected')
+    # Allow for forcing assible/assible
+    if not allow_non_assible_assible and 'assible/assible' not in pr:
+        raise Exception('Non assible/assible repo given where not expected')
 
     re_match = PULL_HTTP_URL_RE.match(pr)
     if re_match:
@@ -88,7 +88,7 @@ def generate_new_body(pr, source_pr):
     Given the new PR (the backport) and the originating (source) PR,
     construct the new body for the backport PR.
 
-    If the backport follows the usual ansible/ansible template, we look for the
+    If the backport follows the usual assible/assible template, we look for the
     '##### SUMMARY'-type line and add our "Backport of" line right below that.
 
     If we can't find the SUMMARY line, we add our line at the very bottom.
@@ -119,11 +119,11 @@ def generate_new_body(pr, source_pr):
 def get_prs_for_commit(g, commit):
     '''
     Given a commit hash, attempt to find the hash in any repo in the
-    ansible orgs, and then use it to determine what, if any, PR it appeared in.
+    assible orgs, and then use it to determine what, if any, PR it appeared in.
     '''
 
     commits = g.search_commits(
-        'hash:{0} org:ansible org:ansible-collections is:public'.format(commit)
+        'hash:{0} org:assible org:assible-collections is:public'.format(commit)
     ).get_page(0)
     if not commits or len(commits) == 0:
         return []
@@ -133,7 +133,7 @@ def get_prs_for_commit(g, commit):
     return pulls
 
 
-def search_backport(pr, g, ansible_ansible):
+def search_backport(pr, g, assible_assible):
     '''
     Do magic. This is basically the "brain" of 'auto'.
     It will search the PR (the newest PR - the backport) and try to find where
@@ -161,7 +161,7 @@ def search_backport(pr, g, ansible_ansible):
         if not ticket:
             ticket = title_search.group('ticket2')
         try:
-            possibilities.append(ansible_ansible.get_pull(int(ticket)))
+            possibilities.append(assible_assible.get_pull(int(ticket)))
         except Exception:
             pass
 
@@ -176,19 +176,19 @@ def search_backport(pr, g, ansible_ansible):
             continue
 
         # b. Try searching for other referenced PRs (by #nnnnn or full URL)
-        tickets = [('ansible', 'ansible', ticket) for ticket in TICKET_NUMBER.findall(line)]
+        tickets = [('assible', 'assible', ticket) for ticket in TICKET_NUMBER.findall(line)]
         tickets.extend(PULL_HTTP_URL_RE.findall(line))
         tickets.extend(PULL_URL_RE.findall(line))
         if tickets:
             for ticket in tickets:
-                # Is it a PR (even if not in ansible/ansible)?
+                # Is it a PR (even if not in assible/assible)?
                 # TODO: As a small optimization/to avoid extra calls to GitHub,
                 # we could limit this check to non-URL matches. If it's a URL,
                 # we know it's definitely a pull request.
                 try:
                     repo_path = '{0}/{1}'.format(ticket[0], ticket[1])
-                    repo = ansible_ansible
-                    if repo_path != 'ansible/ansible':
+                    repo = assible_assible
+                    if repo_path != 'assible/assible':
                         repo = g.get_repo(repo_path)
                     ticket_pr = repo.get_pull(int(ticket))
                     possibilities.append(ticket_pr)
@@ -240,18 +240,18 @@ if __name__ == '__main__':
 
     # https://github.com/settings/tokens/new
     g = Github(token)
-    ansible_ansible = g.get_repo('ansible/ansible')
+    assible_assible = g.get_repo('assible/assible')
 
     try:
         pr_num = normalize_pr_url(sys.argv[1], only_number=True)
-        new_pr = ansible_ansible.get_pull(pr_num)
+        new_pr = assible_assible.get_pull(pr_num)
     except Exception:
         print('Could not load PR {0}'.format(sys.argv[1]))
         sys.exit(1)
 
     if sys.argv[2] == 'auto':
         print('Trying to find originating PR...')
-        possibilities = search_backport(new_pr, g, ansible_ansible)
+        possibilities = search_backport(new_pr, g, assible_assible)
         if not possibilities:
             print('No match found, manual review required.')
             sys.exit(1)
@@ -264,8 +264,8 @@ if __name__ == '__main__':
     else:
         try:
             # TODO: Fix having to call this twice to save some regex evals
-            pr_num = normalize_pr_url(sys.argv[2], only_number=True, allow_non_ansible_ansible=True)
-            pr_url = normalize_pr_url(sys.argv[2], allow_non_ansible_ansible=True)
+            pr_num = normalize_pr_url(sys.argv[2], only_number=True, allow_non_assible_assible=True)
+            pr_url = normalize_pr_url(sys.argv[2], allow_non_assible_assible=True)
             pr_repo = g.get_repo(url_to_org_repo(pr_url))
             pr = pr_repo.get_pull(pr_num)
         except Exception as e:

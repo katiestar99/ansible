@@ -434,7 +434,7 @@
   register: fail_folder_to_file
   failed_when: "'object at parent directory path is already a file' not in fail_folder_to_file.msg"
 
-# https://github.com/ansible/ansible/issues/31336
+# https://github.com/assible/assible/issues/31336
 - name: create file with colon in the name
   copy:
     dest: '{{role_path}}/files-different/colon:file'

@@ -6,7 +6,7 @@
     pkgs:
       - "@Custom Group"
       - yum-utils
-  when: ansible_pkg_mgr == "yum"
+  when: assible_pkg_mgr == "yum"
 
 - name: install a group to test and dnf-utils
   yum:
@@ -16,7 +16,7 @@
     pkgs:
       - "@Custom Group"
       - dnf-utils
-  when: ansible_pkg_mgr == "dnf"
+  when: assible_pkg_mgr == "dnf"
 
 - name: check mode remove the group
   yum:

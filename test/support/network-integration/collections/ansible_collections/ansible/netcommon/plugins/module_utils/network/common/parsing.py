@@ -1,10 +1,10 @@
-# This code is part of Ansible, but is an independent component.
+# This code is part of Assible, but is an independent component.
 # This particular file snippet, and this file snippet only, is BSD licensed.
-# Modules you write using this snippet, which is embedded dynamically by Ansible
+# Modules you write using this snippet, which is embedded dynamically by Assible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
-# Copyright (c) 2015 Peter Sprygada, <psprygada@ansible.com>
+# Copyright (c) 2015 Peter Sprygada, <psprygada@assible.com>
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -29,12 +29,12 @@ import re
 import shlex
 import time
 
-from ansible.module_utils.parsing.convert_bool import (
+from assible.module_utils.parsing.convert_bool import (
     BOOLEANS_TRUE,
     BOOLEANS_FALSE,
 )
-from ansible.module_utils.six import string_types, text_type
-from ansible.module_utils.six.moves import zip
+from assible.module_utils.six import string_types, text_type
+from assible.module_utils.six.moves import zip
 
 
 def to_list(val):

@@ -41,8 +41,8 @@ options:
 notes:
     - This module is also supported for Windows targets.
 seealso:
-- module: ansible.builtin.assert
-- module: ansible.builtin.fail
+- module: assible.builtin.assert
+- module: assible.builtin.fail
 author:
 - Dag Wieers (@dagwieers)
 - Michael DeHaan
@@ -51,11 +51,11 @@ author:
 EXAMPLES = r'''
 # Example that prints the loopback address and gateway for each host
 - debug:
-    msg: System {{ inventory_hostname }} has uuid {{ ansible_product_uuid }}
+    msg: System {{ inventory_hostname }} has uuid {{ assible_product_uuid }}
 
 - debug:
-    msg: System {{ inventory_hostname }} has gateway {{ ansible_default_ipv4.gateway }}
-  when: ansible_default_ipv4.gateway is defined
+    msg: System {{ inventory_hostname }} has gateway {{ assible_default_ipv4.gateway }}
+  when: assible_default_ipv4.gateway is defined
 
 # Example that prints return information from the previous task
 - shell: /usr/bin/uptime

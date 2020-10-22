@@ -1,5 +1,5 @@
-# (c) 2012-2014, Ansible, Inc
-# (c) 2017 Ansible Project
+# (c) 2012-2014, Assible, Inc
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -20,20 +20,20 @@ DOCUMENTATION = '''
                 - section: callback_tree
                   key: directory
             env:
-                - name: ANSIBLE_CALLBACK_TREE_DIR
-            default: "~/.ansible/tree"
+                - name: ASSIBLE_CALLBACK_TREE_DIR
+            default: "~/.assible/tree"
             type: path
     description:
-        - "This callback is used by the Ansible (adhoc) command line option `-t|--tree`"
+        - "This callback is used by the Assible (adhoc) command line option `-t|--tree`"
         - This produces a JSON dump of events in a directory, a file for each host, the directory used MUST be passed as a command line option.
 '''
 
 import os
 
-from ansible.constants import TREE_DIR
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.plugins.callback import CallbackBase
-from ansible.utils.path import makedirs_safe, unfrackpath
+from assible.constants import TREE_DIR
+from assible.module_utils._text import to_bytes, to_text
+from assible.plugins.callback import CallbackBase
+from assible.utils.path import makedirs_safe, unfrackpath
 
 
 class CallbackModule(CallbackBase):

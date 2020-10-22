@@ -6,15 +6,15 @@ __metaclass__ = type
 import json
 import shutil
 
-import ansible.constants as C
-from ansible.executor.task_queue_manager import TaskQueueManager
-from ansible.module_utils.common.collections import ImmutableDict
-from ansible.inventory.manager import InventoryManager
-from ansible.parsing.dataloader import DataLoader
-from ansible.playbook.play import Play
-from ansible.plugins.callback import CallbackBase
-from ansible.vars.manager import VariableManager
-from ansible import context
+import assible.constants as C
+from assible.executor.task_queue_manager import TaskQueueManager
+from assible.module_utils.common.collections import ImmutableDict
+from assible.inventory.manager import InventoryManager
+from assible.parsing.dataloader import DataLoader
+from assible.playbook.play import Play
+from assible.plugins.callback import CallbackBase
+from assible.vars.manager import VariableManager
+from assible import context
 
 
 # Create a callback plugin so we can capture the output
@@ -53,10 +53,10 @@ class ResultsCollectorJSONCallback(CallbackBase):
 def main():
     host_list = ['localhost', 'www.example.com', 'www.google.com']
     # since the API is constructed for CLI it expects certain options to always be set in the context object
-    context.CLIARGS = ImmutableDict(connection='smart', module_path=['/to/mymodules', '/usr/share/ansible'], forks=10, become=None,
+    context.CLIARGS = ImmutableDict(connection='smart', module_path=['/to/mymodules', '/usr/share/assible'], forks=10, become=None,
                                     become_method=None, become_user=None, check=False, diff=False)
     # required for
-    # https://github.com/ansible/ansible/blob/devel/lib/ansible/inventory/manager.py#L204
+    # https://github.com/assible/assible/blob/devel/lib/assible/inventory/manager.py#L204
     sources = ','.join(host_list)
     if len(host_list) == 1:
         sources += ','
@@ -65,7 +65,7 @@ def main():
     loader = DataLoader()  # Takes care of finding and reading yaml, json and ini files
     passwords = dict(vault_pass='secret')
 
-    # Instantiate our ResultsCollectorJSONCallback for handling results as they come in. Ansible expects this to be one of its main display outlets
+    # Instantiate our ResultsCollectorJSONCallback for handling results as they come in. Assible expects this to be one of its main display outlets
     results_callback = ResultsCollectorJSONCallback()
 
     # create inventory, use path to host config file as source or hosts in a comma separated string
@@ -87,7 +87,7 @@ def main():
 
     # create data structure that represents our play, including tasks, this is basically what our YAML loader does internally.
     play_source = dict(
-        name="Ansible Play",
+        name="Assible Play",
         hosts=host_list,
         gather_facts='no',
         tasks=[
@@ -110,7 +110,7 @@ def main():
         if loader:
             loader.cleanup_all_tmp_files()
 
-    # Remove ansible tmpdir
+    # Remove assible tmpdir
     shutil.rmtree(C.DEFAULT_LOCAL_TMP, True)
 
     print("UP ***********")

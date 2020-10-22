@@ -1,4 +1,4 @@
-.. _vmware_ansible_inventory_using_filters:
+.. _vmware_assible_inventory_using_filters:
 
 ***********************************************
 Using VMware dynamic inventory plugin - Filters
@@ -19,7 +19,7 @@ Requirements
 ------------
 
 To use the VMware dynamic inventory plugins, you must install `pyVmomi <https://github.com/vmware/pyvmomi>`_
-on your control node (the host running Ansible).
+on your control node (the host running Assible).
 
 To include tag-related information for the virtual machines in your dynamic inventory, you also need the `vSphere Automation SDK <https://code.vmware.com/web/sdk/65/vsphere-automation-python>`_, which supports REST API features such as tagging and content libraries, on your control node.
 You can install the ``vSphere Automation SDK`` following `these instructions <https://github.com/vmware/vsphere-automation-sdk-python#installing-required-python-packages>`_.
@@ -28,16 +28,16 @@ You can install the ``vSphere Automation SDK`` following `these instructions <ht
 
     $ pip install pyvmomi
 
-Starting in Ansible 2.10, the VMware dynamic inventory plugin is available in the ``community.vmware`` collection included Ansible.
+Starting in Assible 2.10, the VMware dynamic inventory plugin is available in the ``community.vmware`` collection included Assible.
 Alternately, to install the latest ``community.vmware`` collection:
 
 .. code-block:: bash
 
-    $ ansible-galaxy collection install community.vmware
+    $ assible-galaxy collection install community.vmware
 
 To use this VMware dynamic inventory plugin:
 
-1. Enable it first by specifying the following in the ``ansible.cfg`` file:
+1. Enable it first by specifying the following in the ``assible.cfg`` file:
 
 .. code-block:: ini
 
@@ -126,7 +126,7 @@ Here, we are using minimum VM properties, that is ``config.name``, ``config.gues
 
 * ``config.name`` is used by the ``hostnames`` parameter.
 * ``config.guestId`` and ``summary.runtime.powerState`` are used by the ``filters`` parameter.
-* ``guest.guestId`` is used by ``ansible_host`` internally by the inventory plugin.
+* ``guest.guestId`` is used by ``assible_host`` internally by the inventory plugin.
 
 Using regular expression in filters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -157,7 +157,7 @@ For example, if we want all RHEL7 and Ubuntu VMs that are poweredOn, you can use
 Here, we are using ``guest.ipAddress`` VM property. This property is optional and depended upon VMware tools installed on VMs.
 We are using ``match`` to validate the regular expression for the given IP range.
 
-Executing ``ansible-inventory --list -i <filename>.vmware.yml`` creates a list of the virtual machines that are ready to be configured using Ansible.
+Executing ``assible-inventory --list -i <filename>.vmware.yml`` creates a list of the virtual machines that are ready to be configured using Assible.
 
 What to expect
 --------------

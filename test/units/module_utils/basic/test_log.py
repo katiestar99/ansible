@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
-# (c) 2017, Ansible Project
+# (c) 2017, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -11,11 +11,11 @@ from itertools import product
 
 import pytest
 
-import ansible.module_utils.basic
-from ansible.module_utils.six import PY3
+import assible.module_utils.basic
+from assible.module_utils.six import PY3
 
 
-class TestAnsibleModuleLogSmokeTest:
+class TestAssibleModuleLogSmokeTest:
     DATA = [u'Text string', u'Toshio くらとみ non-ascii test']
     DATA = DATA + [d.encode('utf-8') for d in DATA]
     DATA += [b'non-utf8 :\xff: test']
@@ -26,7 +26,7 @@ class TestAnsibleModuleLogSmokeTest:
         # These talk to the live daemons on the system.  Need to do this to
         # show that what we send doesn't cause an issue once it gets to the
         # daemon.  These are just smoketests to test that we don't fail.
-        mocker.patch('ansible.module_utils.basic.has_journal', False)
+        mocker.patch('assible.module_utils.basic.has_journal', False)
 
         am.log(u'Text string')
         am.log(u'Toshio くらとみ non-ascii test')
@@ -35,14 +35,14 @@ class TestAnsibleModuleLogSmokeTest:
         am.log(u'Toshio くらとみ non-ascii test'.encode('utf-8'))
         am.log(b'non-utf8 :\xff: test')
 
-    @pytest.mark.skipif(not ansible.module_utils.basic.has_journal, reason='python systemd bindings not installed')
+    @pytest.mark.skipif(not assible.module_utils.basic.has_journal, reason='python systemd bindings not installed')
     # pylint bug: https://github.com/PyCQA/pylint/issues/511
     @pytest.mark.parametrize('msg, stdin', ((m, {}) for m in DATA), indirect=['stdin'])  # pylint: disable=undefined-variable
     def test_smoketest_journal(self, am, mocker, msg):
         # These talk to the live daemons on the system.  Need to do this to
         # show that what we send doesn't cause an issue once it gets to the
         # daemon.  These are just smoketests to test that we don't fail.
-        mocker.patch('ansible.module_utils.basic.has_journal', True)
+        mocker.patch('assible.module_utils.basic.has_journal', True)
 
         am.log(u'Text string')
         am.log(u'Toshio くらとみ non-ascii test')
@@ -52,8 +52,8 @@ class TestAnsibleModuleLogSmokeTest:
         am.log(b'non-utf8 :\xff: test')
 
 
-class TestAnsibleModuleLogSyslog:
-    """Test the AnsibleModule Log Method"""
+class TestAssibleModuleLogSyslog:
+    """Test the AssibleModule Log Method"""
 
     PY2_OUTPUT_DATA = [
         (u'Text string', b'Text string'),
@@ -77,7 +77,7 @@ class TestAnsibleModuleLogSyslog:
     def test_no_log(self, am, mocker, no_log):
         """Test that when no_log is set, logging does not occur"""
         mock_syslog = mocker.patch('syslog.syslog', autospec=True)
-        mocker.patch('ansible.module_utils.basic.has_journal', False)
+        mocker.patch('assible.module_utils.basic.has_journal', False)
         am.no_log = no_log
         am.log('unittest no_log')
         if no_log:
@@ -91,16 +91,16 @@ class TestAnsibleModuleLogSyslog:
                              indirect=['stdin'])
     def test_output_matches(self, am, mocker, msg, param):
         """Check that log messages are sent correctly"""
-        mocker.patch('ansible.module_utils.basic.has_journal', False)
+        mocker.patch('assible.module_utils.basic.has_journal', False)
         mock_syslog = mocker.patch('syslog.syslog', autospec=True)
 
         am.log(msg)
         mock_syslog.assert_called_once_with(syslog.LOG_INFO, param)
 
 
-@pytest.mark.skipif(not ansible.module_utils.basic.has_journal, reason='python systemd bindings not installed')
-class TestAnsibleModuleLogJournal:
-    """Test the AnsibleModule Log Method"""
+@pytest.mark.skipif(not assible.module_utils.basic.has_journal, reason='python systemd bindings not installed')
+class TestAssibleModuleLogJournal:
+    """Test the AssibleModule Log Method"""
 
     OUTPUT_DATA = [
         (u'Text string', u'Text string'),

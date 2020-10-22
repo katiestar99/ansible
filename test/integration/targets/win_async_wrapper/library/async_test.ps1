@@ -1,13 +1,13 @@
 #!powershell
 
-# Copyright: (c) 2018, Ansible Project
+# Copyright: (c) 2018, Assible Project
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 $parsed_args = Parse-Args $args
 
-$sleep_delay_sec = Get-AnsibleParam -obj $parsed_args -name "sleep_delay_sec" -type "int" -default 0
-$fail_mode = Get-AnsibleParam -obj $parsed_args -name "fail_mode" -type "str" -default "success" -validateset "success","graceful","exception"
+$sleep_delay_sec = Get-AssibleParam -obj $parsed_args -name "sleep_delay_sec" -type "int" -default 0
+$fail_mode = Get-AssibleParam -obj $parsed_args -name "fail_mode" -type "str" -default "success" -validateset "success","graceful","exception"
 
 If($fail_mode -isnot [array]) {
     $fail_mode = @($fail_mode)

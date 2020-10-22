@@ -1,21 +1,21 @@
 .. _developing_testing:
 
 ***************
-Testing Ansible
+Testing Assible
 ***************
 
 .. contents::
    :local:
 
 
-Why test your Ansible contributions?
+Why test your Assible contributions?
 ====================================
 
 If you're a developer, one of the most valuable things you can do is to look at GitHub issues and help fix bugs, since bug-fixing is almost always prioritized over feature development.  Even for non-developers, helping to test pull requests for bug fixes and features is still immensely valuable.
 
-Ansible users who understand how to write playbooks and roles should be able to test their work.  GitHub pull requests will automatically run a variety of tests (for example, Shippable) that show bugs in action.  However, contributors must also test their work outside of the automated GitHub checks and show evidence of these tests in the PR to ensure that their work will be more likely to be reviewed and merged.
+Assible users who understand how to write playbooks and roles should be able to test their work.  GitHub pull requests will automatically run a variety of tests (for example, Shippable) that show bugs in action.  However, contributors must also test their work outside of the automated GitHub checks and show evidence of these tests in the PR to ensure that their work will be more likely to be reviewed and merged.
 
-Read on to learn how Ansible is tested, how to test your contributions locally, and how to extend testing capabilities.
+Read on to learn how Assible is tested, how to test your contributions locally, and how to extend testing capabilities.
 
 If you want to learn about testing collections, read :ref:`testing_collections`
 
@@ -32,10 +32,10 @@ At a high level we have the following classifications of tests:
 :sanity:
   * :ref:`testing_sanity`
   * Sanity tests are made up of scripts and tools used to perform static code analysis.
-  * The primary purpose of these tests is to enforce Ansible coding standards and requirements.
+  * The primary purpose of these tests is to enforce Assible coding standards and requirements.
 :integration:
   * :ref:`testing_integration`
-  * Functional tests of modules and Ansible core functionality.
+  * Functional tests of modules and Assible core functionality.
 :units:
   * :ref:`testing_units`
   * Tests directly against individual parts of the code base.
@@ -46,7 +46,7 @@ issues list and help fix bugs.  We almost always prioritize bug fixing over feat
 development.
 
 Even for non developers, helping to test pull requests for bug fixes and features is still
-immensely valuable.  Ansible users who understand writing playbooks and roles should be
+immensely valuable.  Assible users who understand writing playbooks and roles should be
 able to add integration tests and so GitHub pull requests with integration tests that show
 bugs in action will also be a great way to help.
 
@@ -62,23 +62,23 @@ When Pull Requests (PRs) are created they are tested using Shippable, a Continuo
 
 When Shippable detects an error and it can be linked back to a file that has been modified in the PR then the relevant lines will be added as a GitHub comment. For example::
 
-   The test `ansible-test sanity --test pep8` failed with the following errors:
+   The test `assible-test sanity --test pep8` failed with the following errors:
 
-   lib/ansible/modules/network/foo/bar.py:509:17: E265 block comment should start with '# '
+   lib/assible/modules/network/foo/bar.py:509:17: E265 block comment should start with '# '
 
-   The test `ansible-test sanity --test validate-modules` failed with the following error:
-   lib/ansible/modules/network/foo/bar.py:0:0: E307 version_added should be 2.4. Currently 2.3
+   The test `assible-test sanity --test validate-modules` failed with the following error:
+   lib/assible/modules/network/foo/bar.py:0:0: E307 version_added should be 2.4. Currently 2.3
 
 From the above example we can see that ``--test pep8`` and ``--test validate-modules`` have identified an issue. The commands given allow you to run the same tests locally to ensure you've fixed all issues without having to push your changes to GitHub and wait for Shippable, for example:
 
-If you haven't already got Ansible available, use the local checkout by running::
+If you haven't already got Assible available, use the local checkout by running::
 
   source hacking/env-setup
 
 Then run the tests detailed in the GitHub comment::
 
-  ansible-test sanity --test pep8
-  ansible-test sanity --test validate-modules
+  assible-test sanity --test pep8
+  assible-test sanity --test validate-modules
 
 If there isn't a GitHub comment stating what's failed you can inspect the results by clicking on the "Details" button under the "checks have failed" message at the end of the PR.
 
@@ -96,7 +96,7 @@ If either of these issues appear to be the case, you can rerun the Shippable tes
 * closing and re-opening the PR (full rebuild)
 * making another change to the PR and pushing to GitHub
 
-If the issue persists, please contact us in ``#ansible-devel`` on Freenode IRC.
+If the issue persists, please contact us in ``#assible-devel`` on Freenode IRC.
 
 
 How to test a PR
@@ -104,14 +104,14 @@ How to test a PR
 
 Ideally, code should add tests that prove that the code works. That's not always possible and tests are not always comprehensive, especially when a user doesn't have access to a wide variety of platforms, or is using an API or web service. In these cases, live testing against real equipment can be more valuable than automation that runs against simulated interfaces. In any case, things should always be tested manually the first time as well.
 
-Thankfully, helping to test Ansible is pretty straightforward, assuming you are familiar with how Ansible works.
+Thankfully, helping to test Assible is pretty straightforward, assuming you are familiar with how Assible works.
 
 Setup: Checking out a Pull Request
 ----------------------------------
 
 You can do this by:
 
-* checking out Ansible
+* checking out Assible
 * fetching the proposed changes into a test branch
 * testing
 * commenting on that particular issue on GitHub
@@ -129,16 +129,16 @@ Here's how:
 Create a fresh area to work::
 
 
-   git clone https://github.com/ansible/ansible.git ansible-pr-testing
-   cd ansible-pr-testing
+   git clone https://github.com/assible/assible.git assible-pr-testing
+   cd assible-pr-testing
 
 Next, find the pull request you'd like to test and make note of its number. It will look something like this::
 
    Use os.path.sep instead of hardcoding / #65381
 
-.. note:: Only test ``ansible:devel``
+.. note:: Only test ``assible:devel``
 
-   It is important that the PR request target be ``ansible:devel``, as we do not accept pull requests into any other branch. Dot releases are cherry-picked manually by Ansible staff.
+   It is important that the PR request target be ``assible:devel``, as we do not accept pull requests into any other branch. Dot releases are cherry-picked manually by Assible staff.
 
 Use the pull request number when you fetch the proposed changes and create your branch for testing::
 
@@ -153,8 +153,8 @@ The first command fetches the proposed changes from the pull request and creates
 .. note::
    Some users do not create feature branches, which can cause problems when they have multiple, unrelated commits in their version of ``devel``. If the source looks like ``someuser:devel``, make sure there is only one commit listed on the pull request.
 
-The Ansible source includes a script that allows you to use Ansible directly from source without requiring a
-full installation that is frequently used by developers on Ansible.
+The Assible source includes a script that allows you to use Assible directly from source without requiring a
+full installation that is frequently used by developers on Assible.
 
 Simply source it (to use the Linux/Unix terminology) to begin using it immediately::
 
@@ -179,7 +179,7 @@ Run sanity tests
 
 .. code:: shell
 
-   ansible-test sanity
+   assible-test sanity
 
 More information: :ref:`testing_sanity`
 
@@ -188,7 +188,7 @@ Run unit tests
 
 .. code:: shell
 
-   ansible-test units
+   assible-test units
 
 More information: :ref:`testing_units`
 
@@ -197,15 +197,15 @@ Run integration tests
 
 .. code:: shell
 
-   ansible-test integration -v ping
+   assible-test integration -v ping
 
 More information: :ref:`testing_integration`
 
-Any potential issues should be added as comments on the pull request (and it's acceptable to comment if the feature works as well), remembering to include the output of ``ansible --version``
+Any potential issues should be added as comments on the pull request (and it's acceptable to comment if the feature works as well), remembering to include the output of ``assible --version``
 
 Example::
 
-   Works for me! Tested on `Ansible 2.3.0`.  I verified this on CentOS 6.5 and also Ubuntu 14.04.
+   Works for me! Tested on `Assible 2.3.0`.  I verified this on CentOS 6.5 and also Ubuntu 14.04.
 
 If the PR does not resolve the issue, or if you see any failures from the unit/integration tests, just include that output instead:
 
@@ -222,16 +222,16 @@ If the PR does not resolve the issue, or if you see any failures from the unit/i
 Code Coverage Online
 ````````````````````
 
-`The online code coverage reports <https://codecov.io/gh/ansible/ansible>`_ are a good way
-to identify areas for testing improvement in Ansible.  By following red colors you can
+`The online code coverage reports <https://codecov.io/gh/assible/assible>`_ are a good way
+to identify areas for testing improvement in Assible.  By following red colors you can
 drill down through the reports to find files which have no tests at all.  Adding both
 integration and unit tests which show clearly how code should work, verify important
-Ansible functions and increase testing coverage in areas where there is none is a valuable
-way to help improve Ansible.
+Assible functions and increase testing coverage in areas where there is none is a valuable
+way to help improve Assible.
 
-The code coverage reports only cover the ``devel`` branch of Ansible where new feature
+The code coverage reports only cover the ``devel`` branch of Assible where new feature
 development takes place.  Pull requests and new code will be missing from the codecov.io
-coverage reports so local reporting is needed.  Most ``ansible-test`` commands allow you
+coverage reports so local reporting is needed.  Most ``assible-test`` commands allow you
 to collect code coverage, this is particularly useful to indicate where to extend
 testing. See :ref:`testing_running_locally` for more information.
 
@@ -239,5 +239,5 @@ testing. See :ref:`testing_running_locally` for more information.
 Want to know more about testing?
 ================================
 
-If you'd like to know more about the plans for improving testing Ansible then why not join the
-`Testing Working Group <https://github.com/ansible/community/blob/master/meetings/README.md>`_.
+If you'd like to know more about the plans for improving testing Assible then why not join the
+`Testing Working Group <https://github.com/assible/community/blob/master/meetings/README.md>`_.

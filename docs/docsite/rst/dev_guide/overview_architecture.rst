@@ -1,14 +1,14 @@
 ********************
-Ansible architecture
+Assible architecture
 ********************
 
-Ansible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs.
+Assible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs.
 
-Being designed for multi-tier deployments since day one, Ansible models your IT infrastructure by describing how all of your systems inter-relate, rather than just managing one system at a time.
+Being designed for multi-tier deployments since day one, Assible models your IT infrastructure by describing how all of your systems inter-relate, rather than just managing one system at a time.
 
-It uses no agents and no additional custom security infrastructure, so it's easy to deploy - and most importantly, it uses a very simple language (YAML, in the form of Ansible Playbooks) that allow you to describe your automation jobs in a way that approaches plain English.
+It uses no agents and no additional custom security infrastructure, so it's easy to deploy - and most importantly, it uses a very simple language (YAML, in the form of Assible Playbooks) that allow you to describe your automation jobs in a way that approaches plain English.
 
-In this section, we'll give you a really quick overview of how Ansible works so you can see how the pieces fit together.
+In this section, we'll give you a really quick overview of how Assible works so you can see how the pieces fit together.
 
 .. contents::
    :local:
@@ -16,29 +16,29 @@ In this section, we'll give you a really quick overview of how Ansible works so 
 Modules
 =======
 
-Ansible works by connecting to your nodes and pushing out scripts called "Ansible modules" to them. Most modules accept parameters that describe the desired state of the system.
-Ansible then executes these modules (over SSH by default), and removes them when finished. Your library of modules can reside on any machine, and there are no servers, daemons, or databases required.
+Assible works by connecting to your nodes and pushing out scripts called "Assible modules" to them. Most modules accept parameters that describe the desired state of the system.
+Assible then executes these modules (over SSH by default), and removes them when finished. Your library of modules can reside on any machine, and there are no servers, daemons, or databases required.
 
 You can :ref:`write your own modules <developing_modules_general>`, though you should first consider :ref:`whether you should <developing_modules>`. Typically you'll work with your favorite terminal program, a text editor, and probably a version control system to keep track of changes to your content. You may write specialized modules in any language that can return JSON (Ruby, Python, bash, and so on).
 
 Module utilities
 ================
 
-When multiple modules use the same code, Ansible stores those functions as module utilities to minimize duplication and maintenance. For example, the code that parses URLs is ``lib/ansible/module_utils/url.py``. You can :ref:`write your own module utilities <developing_module_utilities>` as well. Module utilities may only be written in Python or in PowerShell.
+When multiple modules use the same code, Assible stores those functions as module utilities to minimize duplication and maintenance. For example, the code that parses URLs is ``lib/assible/module_utils/url.py``. You can :ref:`write your own module utilities <developing_module_utilities>` as well. Module utilities may only be written in Python or in PowerShell.
 
 Plugins
 =======
 
-:ref:`Plugins <plugins_lookup>` augment Ansible's core functionality. While modules execute on the target system in separate processes (usually that means on a remote system), plugins execute on the control node within the ``/usr/bin/ansible`` process. Plugins offer options and extensions for the core features of Ansible - transforming data, logging output, connecting to inventory, and more. Ansible ships with a number of handy plugins, and you can easily :ref:`write your own <developing_plugins>`. For example, you can write an :ref:`inventory plugin <developing_inventory>` to connect to any datasource that returns JSON. Plugins must be written in Python.
+:ref:`Plugins <plugins_lookup>` augment Assible's core functionality. While modules execute on the target system in separate processes (usually that means on a remote system), plugins execute on the control node within the ``/usr/bin/assible`` process. Plugins offer options and extensions for the core features of Assible - transforming data, logging output, connecting to inventory, and more. Assible ships with a number of handy plugins, and you can easily :ref:`write your own <developing_plugins>`. For example, you can write an :ref:`inventory plugin <developing_inventory>` to connect to any datasource that returns JSON. Plugins must be written in Python.
 
 Inventory
 =========
 
-By default, Ansible represents the machines it manages in a file (INI, YAML, and so on) that puts all of your managed machines in groups of your own choosing.
+By default, Assible represents the machines it manages in a file (INI, YAML, and so on) that puts all of your managed machines in groups of your own choosing.
 
 To add new machines, there is no additional SSL signing server involved, so there's never any hassle deciding why a particular machine didn't get linked up due to obscure NTP or DNS issues.
 
-If there's another source of truth in your infrastructure, Ansible can also connect to that. Ansible can draw inventory, group, and variable information from sources like EC2, Rackspace, OpenStack, and more.
+If there's another source of truth in your infrastructure, Assible can also connect to that. Assible can draw inventory, group, and variable information from sources like EC2, Rackspace, OpenStack, and more.
 
 Here's what a plain text inventory file looks like::
 
@@ -58,9 +58,9 @@ Or, as already mentioned, use a dynamic inventory to pull your inventory from da
 Playbooks
 =========
 
-Playbooks can finely orchestrate multiple slices of your infrastructure topology, with very detailed control over how many machines to tackle at a time.  This is where Ansible starts to get most interesting.
+Playbooks can finely orchestrate multiple slices of your infrastructure topology, with very detailed control over how many machines to tackle at a time.  This is where Assible starts to get most interesting.
 
-Ansible's approach to orchestration is one of finely-tuned simplicity, as we believe your automation code should make perfect sense to you years down the road and there should be very little to remember about special syntax or features.
+Assible's approach to orchestration is one of finely-tuned simplicity, as we believe your automation code should make perfect sense to you years down the road and there should be very little to remember about special syntax or features.
 
 Here's what a simple playbook looks like::
 
@@ -76,21 +76,21 @@ Here's what a simple playbook looks like::
       - common
       - content
 
-.. _ansible_search_path:
+.. _assible_search_path:
 
-The Ansible search path
+The Assible search path
 =======================
 
 Modules, module utilities, plugins, playbooks, and roles can live in multiple locations. If you
-write your own code to extend Ansible's core features, you may have multiple files with similar or the same names in different locations on your Ansible control node. The search path determines which of these files Ansible will discover and use on any given playbook run.
+write your own code to extend Assible's core features, you may have multiple files with similar or the same names in different locations on your Assible control node. The search path determines which of these files Assible will discover and use on any given playbook run.
 
-Ansible's search path grows incrementally over a run. As
-Ansible finds each playbook and role included in a given run, it appends
+Assible's search path grows incrementally over a run. As
+Assible finds each playbook and role included in a given run, it appends
 any directories related to that playbook or role to the search path. Those
 directories remain in scope for the duration of the run, even after the playbook or role
-has finished executing. Ansible loads modules, module utilities, and plugins in this order:
+has finished executing. Assible loads modules, module utilities, and plugins in this order:
 
-1. Directories adjacent to a playbook specified on the command line. If you run Ansible with ``ansible-playbook /path/to/play.yml``, Ansible appends these directories if they exist:
+1. Directories adjacent to a playbook specified on the command line. If you run Assible with ``assible-playbook /path/to/play.yml``, Assible appends these directories if they exist:
 
    .. code-block:: bash
 
@@ -100,7 +100,7 @@ has finished executing. Ansible loads modules, module utilities, and plugins in 
 
 2. Directories adjacent to a playbook that is statically imported by a
    playbook specified on the command line. If ``play.yml`` includes
-   ``- import_playbook: /path/to/subdir/play1.yml``, Ansible appends these directories if they exist:
+   ``- import_playbook: /path/to/subdir/play1.yml``, Assible appends these directories if they exist:
 
    .. code-block:: bash
 
@@ -109,7 +109,7 @@ has finished executing. Ansible loads modules, module utilities, and plugins in 
       /path/to/subdir/plugins
 
 3. Subdirectories of a role directory referenced by a playbook. If
-   ``play.yml`` runs ``myrole``, Ansible appends these directories if they exist:
+   ``play.yml`` runs ``myrole``, Assible appends these directories if they exist:
 
    .. code-block:: bash
 
@@ -117,9 +117,9 @@ has finished executing. Ansible loads modules, module utilities, and plugins in 
       /path/to/roles/myrole/module_utils
       /path/to/roles/myrole/plugins
 
-4. Directories specified as default paths in ``ansible.cfg`` or by the related
-   environment variables, including the paths for the various plugin types. See :ref:`ansible_configuration_settings` for more information.
-   Sample ``ansible.cfg`` fields:
+4. Directories specified as default paths in ``assible.cfg`` or by the related
+   environment variables, including the paths for the various plugin types. See :ref:`assible_configuration_settings` for more information.
+   Sample ``assible.cfg`` fields:
 
    .. code-block:: bash
 
@@ -132,18 +132,18 @@ has finished executing. Ansible loads modules, module utilities, and plugins in 
 
    .. code-block:: bash
 
-      ANSIBLE_LIBRARY
-      ANSIBLE_MODULE_UTILS
-      ANSIBLE_CACHE_PLUGINS
-      ANSIBLE_FILTER_PLUGINS
+      ASSIBLE_LIBRARY
+      ASSIBLE_MODULE_UTILS
+      ASSIBLE_CACHE_PLUGINS
+      ASSIBLE_FILTER_PLUGINS
 
-5. The standard directories that ship as part of the Ansible distribution.
+5. The standard directories that ship as part of the Assible distribution.
 
 .. caution::
 
    Modules, module utilities, and plugins in user-specified directories will
    override the standard versions. This includes some files with generic names.
    For example, if you have a file named ``basic.py`` in a user-specified
-   directory, it will override the standard ``ansible.module_utils.basic``.
+   directory, it will override the standard ``assible.module_utils.basic``.
 
    If you have more than one module, module utility, or plugin with the same name in different user-specified directories, the order of commands at the command line and the order of includes and roles in each play will affect which one is found and used on that particular play.

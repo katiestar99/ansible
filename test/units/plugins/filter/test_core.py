@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2019 Ansible Project
+# Copyright (c) 2019 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -7,9 +7,9 @@ __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils._text import to_native
-from ansible.plugins.filter.core import to_uuid
-from ansible.errors import AnsibleFilterError
+from assible.module_utils._text import to_native
+from assible.plugins.filter.core import to_uuid
+from assible.errors import AssibleFilterError
 
 
 UUID_DEFAULT_NAMESPACE_TEST_CASES = (
@@ -36,6 +36,6 @@ def test_to_uuid(namespace, value, expected):
 
 
 def test_to_uuid_invalid_namespace():
-    with pytest.raises(AnsibleFilterError) as e:
+    with pytest.raises(AssibleFilterError) as e:
         to_uuid('example.com', namespace='11111111-2222-3333-4444-555555555')
     assert 'Invalid value' in to_native(e.value)

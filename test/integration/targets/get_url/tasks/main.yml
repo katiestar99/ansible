@@ -1,23 +1,23 @@
 # Test code for the get_url module
 # (c) 2014, Richard Isaacson <richard.c.isaacson@gmail.com>
 
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <https://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <https://www.gnu.org/licenses/>.
 
 - name: Determine if python looks like it will support modern ssl features like SNI
-  command: "{{ ansible_python.executable }} -c 'from ssl import SSLContext'"
+  command: "{{ assible_python.executable }} -c 'from ssl import SSLContext'"
   ignore_errors: True
   register: python_test
 
@@ -238,7 +238,7 @@
       - result is changed
       - "stat_result.stat.mode == '0070'"
 
-# https://github.com/ansible/ansible/pull/65307/
+# https://github.com/assible/assible/pull/65307/
 - name: Test that on http status 304, we get a status_code field.
   get_url:
     url: 'https://{{ httpbin_host }}/status/304'
@@ -251,7 +251,7 @@
       - "'status_code' in result"
       - "result.status_code == 304"
 
-# https://github.com/ansible/ansible/issues/29614
+# https://github.com/assible/assible/issues/29614
 - name: Change mode on an already downloaded file and specify checksum
   get_url:
     url: 'https://{{ httpbin_host }}/base64/cHR1eA=='
@@ -318,7 +318,7 @@
     that:
       - result is changed
 
-# https://github.com/ansible/ansible/issues/27617
+# https://github.com/assible/assible/issues/27617
 
 - name: set role facts
   set_fact:
@@ -372,7 +372,7 @@
     dest: "{{ remote_tmp_dir }}/testserver.py"
 
 - name: start SimpleHTTPServer for issues 27617
-  shell: cd {{ files_dir }} && {{ ansible_python.executable }} {{ remote_tmp_dir}}/testserver.py {{ http_port }}
+  shell: cd {{ files_dir }} && {{ assible_python.executable }} {{ remote_tmp_dir}}/testserver.py {{ http_port }}
   async: 90
   poll: 0
 
@@ -490,7 +490,7 @@
       - "stat_result_sha256_with_dot_71420.stat.exists == true"
       - "stat_result_sha256_with_file_scheme_71420.stat.exists == true"
 
-#https://github.com/ansible/ansible/issues/16191
+#https://github.com/assible/assible/issues/16191
 - name: Test url split with no filename
   get_url:
     url: https://{{ httpbin_host }}
@@ -517,7 +517,7 @@
 
 - name: Test client cert auth, with certs
   get_url:
-    url: "https://ansible.http.tests/ssl_client_verify"
+    url: "https://assible.http.tests/ssl_client_verify"
     client_cert: "{{ remote_tmp_dir }}/client.pem"
     client_key: "{{ remote_tmp_dir }}/client.key"
     dest: "{{ remote_tmp_dir }}/ssl_client_verify"
@@ -532,7 +532,7 @@
 - name: Assert that the ssl_client_verify file contains the correct content
   assert:
     that:
-      - '(result.content | b64decode) == "ansible.http.tests:SUCCESS"'
+      - '(result.content | b64decode) == "assible.http.tests:SUCCESS"'
   when: has_httptester
 
 - name: Test use_gssapi=True

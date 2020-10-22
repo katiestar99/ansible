@@ -1,4 +1,4 @@
-# Copyright: (c) 2016-2018, Matt Davis <mdavis@ansible.com>
+# Copyright: (c) 2016-2018, Matt Davis <mdavis@assible.com>
 # Copyright: (c) 2018, Sam Doran <sdoran@redhat.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -10,12 +10,12 @@ import time
 
 from datetime import datetime, timedelta
 
-from ansible.errors import AnsibleError, AnsibleConnectionFailure
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common.collections import is_string
-from ansible.module_utils.common.validation import check_type_str
-from ansible.plugins.action import ActionBase
-from ansible.utils.display import Display
+from assible.errors import AssibleError, AssibleConnectionFailure
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common.collections import is_string
+from assible.module_utils.common.validation import check_type_str
+from assible.plugins.action import ActionBase
+from assible.utils.display import Display
 
 display = Display()
 
@@ -43,7 +43,7 @@ class ActionModule(ActionBase):
     DEFAULT_POST_REBOOT_DELAY = 0
     DEFAULT_TEST_COMMAND = 'whoami'
     DEFAULT_BOOT_TIME_COMMAND = 'cat /proc/sys/kernel/random/boot_id'
-    DEFAULT_REBOOT_MESSAGE = 'Reboot initiated by Ansible'
+    DEFAULT_REBOOT_MESSAGE = 'Reboot initiated by Assible'
     DEFAULT_SHUTDOWN_COMMAND = 'shutdown'
     DEFAULT_SHUTDOWN_COMMAND_ARGS = '-r {delay_min} "{message}"'
     DEFAULT_SUDOABLE = True
@@ -126,20 +126,20 @@ class ActionModule(ActionBase):
         display.debug('{action}: running setup module to get distribution'.format(action=self._task.action))
         module_output = self._execute_module(
             task_vars=task_vars,
-            module_name='ansible.legacy.setup',
+            module_name='assible.legacy.setup',
             module_args={'gather_subset': 'min'})
         try:
             if module_output.get('failed', False):
-                raise AnsibleError('Failed to determine system distribution. {0}, {1}'.format(
+                raise AssibleError('Failed to determine system distribution. {0}, {1}'.format(
                     to_native(module_output['module_stdout']).strip(),
                     to_native(module_output['module_stderr']).strip()))
-            distribution['name'] = module_output['ansible_facts']['ansible_distribution'].lower()
-            distribution['version'] = to_text(module_output['ansible_facts']['ansible_distribution_version'].split('.')[0])
-            distribution['family'] = to_text(module_output['ansible_facts']['ansible_os_family'].lower())
+            distribution['name'] = module_output['assible_facts']['assible_distribution'].lower()
+            distribution['version'] = to_text(module_output['assible_facts']['assible_distribution_version'].split('.')[0])
+            distribution['family'] = to_text(module_output['assible_facts']['assible_os_family'].lower())
             display.debug("{action}: distribution: {dist}".format(action=self._task.action, dist=distribution))
             return distribution
         except KeyError as ke:
-            raise AnsibleError('Failed to get distribution information. Missing "{0}" in output.'.format(ke.args[0]))
+            raise AssibleError('Failed to get distribution information. Missing "{0}" in output.'.format(ke.args[0]))
 
     def get_shutdown_command(self, task_vars, distribution):
         shutdown_bin = self._get_value_from_facts('SHUTDOWN_COMMANDS', distribution, 'DEFAULT_SHUTDOWN_COMMAND')
@@ -158,7 +158,7 @@ class ActionModule(ActionBase):
             if not isinstance(search_paths, list) or incorrect_type:
                 raise TypeError
         except TypeError:
-            raise AnsibleError(err_msg.format(search_paths))
+            raise AssibleError(err_msg.format(search_paths))
 
         display.debug('{action}: running find module looking in {paths} to get path for "{command}"'.format(
             action=self._task.action,
@@ -166,8 +166,8 @@ class ActionModule(ActionBase):
             paths=search_paths))
         find_result = self._execute_module(
             task_vars=task_vars,
-            # prevent collection search by calling with ansible.legacy (still allows library/ override of find)
-            module_name='ansible.legacy.find',
+            # prevent collection search by calling with assible.legacy (still allows library/ override of find)
+            module_name='assible.legacy.find',
             module_args={
                 'paths': search_paths,
                 'patterns': [shutdown_bin],
@@ -177,14 +177,14 @@ class ActionModule(ActionBase):
 
         full_path = [x['path'] for x in find_result['files']]
         if not full_path:
-            raise AnsibleError('Unable to find command "{0}" in search paths: {1}'.format(shutdown_bin, search_paths))
+            raise AssibleError('Unable to find command "{0}" in search paths: {1}'.format(shutdown_bin, search_paths))
         self._shutdown_command = full_path[0]
         return self._shutdown_command
 
     def deprecated_args(self):
         for arg, version in self.DEPRECATED_ARGS.items():
             if self._task.args.get(arg) is not None:
-                display.warning("Since Ansible {version}, {arg} is no longer a valid option for {action}".format(
+                display.warning("Since Assible {version}, {arg} is no longer a valid option for {action}".format(
                     version=version,
                     arg=arg,
                     action=self._task.action))
@@ -197,7 +197,7 @@ class ActionModule(ActionBase):
             try:
                 check_type_str(boot_time_command, allow_conversion=False)
             except TypeError as e:
-                raise AnsibleError("Invalid value given for 'boot_time_command': %s." % to_native(e))
+                raise AssibleError("Invalid value given for 'boot_time_command': %s." % to_native(e))
 
         display.debug("{action}: getting boot time with command: '{command}'".format(action=self._task.action, command=boot_time_command))
         command_result = self._low_level_execute_command(boot_time_command, sudoable=self.DEFAULT_SUDOABLE)
@@ -205,7 +205,7 @@ class ActionModule(ActionBase):
         if command_result['rc'] != 0:
             stdout = command_result['stdout']
             stderr = command_result['stderr']
-            raise AnsibleError("{action}: failed to get host boot time info, rc: {rc}, stdout: {out}, stderr: {err}".format(
+            raise AssibleError("{action}: failed to get host boot time info, rc: {rc}, stdout: {out}, stderr: {err}".format(
                                action=self._task.action,
                                rc=command_result['rc'],
                                out=to_native(stdout),
@@ -275,10 +275,10 @@ class ActionModule(ActionBase):
                     display.debug('{action}: {desc} success'.format(action=self._task.action, desc=action_desc))
                 return
             except Exception as e:
-                if isinstance(e, AnsibleConnectionFailure):
+                if isinstance(e, AssibleConnectionFailure):
                     try:
                         self._connection.reset()
-                    except AnsibleConnectionFailure:
+                    except AssibleConnectionFailure:
                         pass
                 # Use exponential backoff with a max timout, plus a little bit of randomness
                 random_int = random.randint(0, 1000) / 1000
@@ -312,9 +312,9 @@ class ActionModule(ActionBase):
             display.vvv("{action}: rebooting server...".format(action=self._task.action))
             display.debug("{action}: rebooting server with command '{command}'".format(action=self._task.action, command=reboot_command))
             reboot_result = self._low_level_execute_command(reboot_command, sudoable=self.DEFAULT_SUDOABLE)
-        except AnsibleConnectionFailure as e:
+        except AssibleConnectionFailure as e:
             # If the connection is closed too quickly due to the system being shutdown, carry on
-            display.debug('{action}: AnsibleConnectionFailure caught and handled: {error}'.format(action=self._task.action, error=to_text(e)))
+            display.debug('{action}: AssibleConnectionFailure caught and handled: {error}'.format(action=self._task.action, error=to_text(e)))
             reboot_result['rc'] = 0
 
         result['start'] = datetime.utcnow()
@@ -358,7 +358,7 @@ class ActionModule(ActionBase):
                             value=original_connection_timeout))
                         self._connection.set_option("connection_timeout", original_connection_timeout)
                         self._connection.reset()
-                    except (AnsibleError, AttributeError) as e:
+                    except (AssibleError, AttributeError) as e:
                         # reset the connection to clear the custom connection timeout
                         display.debug("{action}: failed to reset connection_timeout back to default: {error}".format(action=self._task.action,
                                                                                                                      error=to_text(e)))

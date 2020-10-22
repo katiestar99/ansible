@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -19,22 +19,22 @@ import yaml
 from io import BytesIO, StringIO
 from units.compat.mock import MagicMock
 
-import ansible.module_utils.six.moves.urllib.error as urllib_error
+import assible.module_utils.six.moves.urllib.error as urllib_error
 
-from ansible import context
-from ansible.cli.galaxy import GalaxyCLI
-from ansible.errors import AnsibleError
-from ansible.galaxy import collection, api
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.utils import context_objects as co
-from ansible.utils.display import Display
+from assible import context
+from assible.cli.galaxy import GalaxyCLI
+from assible.errors import AssibleError
+from assible.galaxy import collection, api
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.utils import context_objects as co
+from assible.utils.display import Display
 
 
 def call_galaxy_cli(args):
     orig = co.GlobalCLIArgs._Singleton__instance
     co.GlobalCLIArgs._Singleton__instance = None
     try:
-        GalaxyCLI(args=['ansible-galaxy', 'collection'] + args).run()
+        GalaxyCLI(args=['assible-galaxy', 'collection'] + args).run()
     finally:
         co.GlobalCLIArgs._Singleton__instance = orig
 
@@ -121,7 +121,7 @@ def reset_cli_args():
 @pytest.fixture()
 def collection_artifact(request, tmp_path_factory):
     test_dir = to_text(tmp_path_factory.mktemp('test-ÅÑŚÌβŁÈ Collections Input'))
-    namespace = 'ansible_namespace'
+    namespace = 'assible_namespace'
     collection = 'collection'
 
     skeleton_path = os.path.join(os.path.dirname(os.path.split(__file__)[0]), 'cli', 'test_data', 'collection_skeleton')
@@ -155,14 +155,14 @@ def collection_artifact(request, tmp_path_factory):
 @pytest.fixture()
 def galaxy_server():
     context.CLIARGS._store = {'ignore_certs': False}
-    galaxy_api = api.GalaxyAPI(None, 'test_server', 'https://galaxy.ansible.com')
+    galaxy_api = api.GalaxyAPI(None, 'test_server', 'https://galaxy.assible.com')
     return galaxy_api
 
 
 def test_build_requirement_from_path(collection_artifact):
     actual = collection.CollectionRequirement.from_path(collection_artifact[0], True)
 
-    assert actual.namespace == u'ansible_namespace'
+    assert actual.namespace == u'assible_namespace'
     assert actual.name == u'collection'
     assert actual.b_path == collection_artifact[0]
     assert actual.api is None
@@ -181,7 +181,7 @@ def test_build_requirement_from_path_with_manifest(version, collection_artifact)
             'name': 'name',
             'version': version,
             'dependencies': {
-                'ansible_namespace.collection': '*'
+                'assible_namespace.collection': '*'
             }
         }
     })
@@ -198,7 +198,7 @@ def test_build_requirement_from_path_with_manifest(version, collection_artifact)
     assert actual.skip is True
     assert actual.versions == set([to_text(version)])
     assert actual.latest_version == to_text(version)
-    assert actual.dependencies == {'ansible_namespace.collection': '*'}
+    assert actual.dependencies == {'assible_namespace.collection': '*'}
 
 
 def test_build_requirement_from_path_invalid_manifest(collection_artifact):
@@ -207,7 +207,7 @@ def test_build_requirement_from_path_invalid_manifest(collection_artifact):
         manifest_obj.write(b"not json")
 
     expected = "Collection file at '%s' does not contain a valid json string." % to_native(manifest_path)
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.CollectionRequirement.from_path(collection_artifact[0], True)
 
 
@@ -250,7 +250,7 @@ def test_build_requirement_from_path_no_version(collection_artifact, monkeypatch
 def test_build_requirement_from_tar(collection_artifact):
     actual = collection.CollectionRequirement.from_tar(collection_artifact[1], True, True)
 
-    assert actual.namespace == u'ansible_namespace'
+    assert actual.namespace == u'assible_namespace'
     assert actual.name == u'collection'
     assert actual.b_path == collection_artifact[1]
     assert actual.api is None
@@ -267,7 +267,7 @@ def test_build_requirement_from_tar_fail_not_tar(tmp_path_factory):
         test_obj.write(b"\x00\x01\x02\x03")
 
     expected = "Collection artifact at '%s' is not a valid tar file." % to_native(test_file)
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.CollectionRequirement.from_tar(test_file, True, True)
 
 
@@ -281,7 +281,7 @@ def test_build_requirement_from_tar_no_manifest(tmp_path_factory):
         }
     ))
 
-    tar_path = os.path.join(test_dir, b'ansible-collections.tar.gz')
+    tar_path = os.path.join(test_dir, b'assible-collections.tar.gz')
     with tarfile.open(tar_path, 'w:gz') as tfile:
         b_io = BytesIO(json_data)
         tar_info = tarfile.TarInfo('FILES.json')
@@ -290,7 +290,7 @@ def test_build_requirement_from_tar_no_manifest(tmp_path_factory):
         tfile.addfile(tarinfo=tar_info, fileobj=b_io)
 
     expected = "Collection at '%s' does not contain the required file MANIFEST.json." % to_native(tar_path)
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.CollectionRequirement.from_tar(tar_path, True, True)
 
 
@@ -303,7 +303,7 @@ def test_build_requirement_from_tar_no_files(tmp_path_factory):
         }
     ))
 
-    tar_path = os.path.join(test_dir, b'ansible-collections.tar.gz')
+    tar_path = os.path.join(test_dir, b'assible-collections.tar.gz')
     with tarfile.open(tar_path, 'w:gz') as tfile:
         b_io = BytesIO(json_data)
         tar_info = tarfile.TarInfo('MANIFEST.json')
@@ -312,7 +312,7 @@ def test_build_requirement_from_tar_no_files(tmp_path_factory):
         tfile.addfile(tarinfo=tar_info, fileobj=b_io)
 
     expected = "Collection at '%s' does not contain the required file FILES.json." % to_native(tar_path)
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.CollectionRequirement.from_tar(tar_path, True, True)
 
 
@@ -321,7 +321,7 @@ def test_build_requirement_from_tar_invalid_manifest(tmp_path_factory):
 
     json_data = b"not a json"
 
-    tar_path = os.path.join(test_dir, b'ansible-collections.tar.gz')
+    tar_path = os.path.join(test_dir, b'assible-collections.tar.gz')
     with tarfile.open(tar_path, 'w:gz') as tfile:
         b_io = BytesIO(json_data)
         tar_info = tarfile.TarInfo('MANIFEST.json')
@@ -330,7 +330,7 @@ def test_build_requirement_from_tar_invalid_manifest(tmp_path_factory):
         tfile.addfile(tarinfo=tar_info, fileobj=b_io)
 
     expected = "Collection tar file member MANIFEST.json does not contain a valid json string."
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.CollectionRequirement.from_tar(tar_path, True, True)
 
 
@@ -435,7 +435,7 @@ def test_build_requirement_from_name_missing(galaxy_server, monkeypatch):
     monkeypatch.setattr(galaxy_server, 'get_collection_versions', mock_open)
 
     expected = "Failed to find collection namespace.collection:*"
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.CollectionRequirement.from_name('namespace.collection', [galaxy_server, galaxy_server], '*', False,
                                                    True)
 
@@ -571,7 +571,7 @@ def test_add_collection_requirement_with_conflict(galaxy_server):
                "before last requirement added: 1.0.0, 1.0.1\n" \
                "Requirements from:\n" \
                "\tbase - 'namespace.name:==1.0.2'" % galaxy_server.api_server
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.CollectionRequirement('namespace', 'name', None, galaxy_server, ['1.0.0', '1.0.1'], '==1.0.2',
                                          False)
 
@@ -584,29 +584,29 @@ def test_add_requirement_to_existing_collection_with_conflict(galaxy_server):
                "Requirements from:\n" \
                "\tbase - 'namespace.name:*'\n" \
                "\tnamespace.collection2 - 'namespace.name:1.0.2'" % galaxy_server.api_server
-    with pytest.raises(AnsibleError, match=re.escape(expected)):
+    with pytest.raises(AssibleError, match=re.escape(expected)):
         req.add_requirement('namespace.collection2', '1.0.2')
 
 
 def test_add_requirement_to_installed_collection_with_conflict():
-    source = 'https://galaxy.ansible.com'
+    source = 'https://galaxy.assible.com'
     req = collection.CollectionRequirement('namespace', 'name', None, source, ['1.0.0', '1.0.1'], '*', False,
                                            skip=True)
 
     expected = "Cannot meet requirement namespace.name:1.0.2 as it is already installed at version '1.0.1'. " \
                "Use --force to overwrite"
-    with pytest.raises(AnsibleError, match=re.escape(expected)):
+    with pytest.raises(AssibleError, match=re.escape(expected)):
         req.add_requirement(None, '1.0.2')
 
 
 def test_add_requirement_to_installed_collection_with_conflict_as_dep():
-    source = 'https://galaxy.ansible.com'
+    source = 'https://galaxy.assible.com'
     req = collection.CollectionRequirement('namespace', 'name', None, source, ['1.0.0', '1.0.1'], '*', False,
                                            skip=True)
 
     expected = "Cannot meet requirement namespace.name:1.0.2 as it is already installed at version '1.0.1'. " \
                "Use --force-with-deps to overwrite"
-    with pytest.raises(AnsibleError, match=re.escape(expected)):
+    with pytest.raises(AssibleError, match=re.escape(expected)):
         req.add_requirement('namespace.collection2', '1.0.2')
 
 
@@ -627,7 +627,7 @@ def test_install_collection(collection_artifact, monkeypatch):
 
     collection_tar = collection_artifact[1]
     output_path = os.path.join(os.path.split(collection_tar)[0], b'output')
-    collection_path = os.path.join(output_path, b'ansible_namespace', b'collection')
+    collection_path = os.path.join(output_path, b'assible_namespace', b'collection')
     os.makedirs(os.path.join(collection_path, b'delete_me'))  # Create a folder to verify the install cleans out the dir
 
     temp_path = os.path.join(os.path.split(collection_tar)[0], b'temp')
@@ -649,15 +649,15 @@ def test_install_collection(collection_artifact, monkeypatch):
     assert stat.S_IMODE(os.stat(os.path.join(collection_path, b'runme.sh')).st_mode) == 0o0755
 
     assert mock_display.call_count == 2
-    assert mock_display.mock_calls[0][1][0] == "Installing 'ansible_namespace.collection:0.1.0' to '%s'" \
+    assert mock_display.mock_calls[0][1][0] == "Installing 'assible_namespace.collection:0.1.0' to '%s'" \
         % to_text(collection_path)
-    assert mock_display.mock_calls[1][1][0] == "ansible_namespace.collection (0.1.0) was installed successfully"
+    assert mock_display.mock_calls[1][1][0] == "assible_namespace.collection (0.1.0) was installed successfully"
 
 
 def test_install_collection_with_download(galaxy_server, collection_artifact, monkeypatch):
     collection_tar = collection_artifact[1]
     output_path = os.path.join(os.path.split(collection_tar)[0], b'output')
-    collection_path = os.path.join(output_path, b'ansible_namespace', b'collection')
+    collection_path = os.path.join(output_path, b'assible_namespace', b'collection')
 
     mock_display = MagicMock()
     monkeypatch.setattr(Display, 'display', mock_display)
@@ -670,9 +670,9 @@ def test_install_collection_with_download(galaxy_server, collection_artifact, mo
     temp_path = os.path.join(os.path.split(collection_tar)[0], b'temp')
     os.makedirs(temp_path)
 
-    meta = api.CollectionVersionMetadata('ansible_namespace', 'collection', '0.1.0', 'https://downloadme.com',
+    meta = api.CollectionVersionMetadata('assible_namespace', 'collection', '0.1.0', 'https://downloadme.com',
                                          'myhash', {})
-    req = collection.CollectionRequirement('ansible_namespace', 'collection', None, galaxy_server,
+    req = collection.CollectionRequirement('assible_namespace', 'collection', None, galaxy_server,
                                            ['0.1.0'], '*', False, metadata=meta)
     req.install(to_text(output_path), temp_path)
 
@@ -685,9 +685,9 @@ def test_install_collection_with_download(galaxy_server, collection_artifact, mo
                             b'runme.sh']
 
     assert mock_display.call_count == 2
-    assert mock_display.mock_calls[0][1][0] == "Installing 'ansible_namespace.collection:0.1.0' to '%s'" \
+    assert mock_display.mock_calls[0][1][0] == "Installing 'assible_namespace.collection:0.1.0' to '%s'" \
         % to_text(collection_path)
-    assert mock_display.mock_calls[1][1][0] == "ansible_namespace.collection (0.1.0) was installed successfully"
+    assert mock_display.mock_calls[1][1][0] == "assible_namespace.collection (0.1.0) was installed successfully"
 
     assert mock_download.call_count == 1
     assert mock_download.mock_calls[0][1][0] == 'https://downloadme.com'
@@ -705,7 +705,7 @@ def test_install_collections_from_tar(collection_artifact, monkeypatch):
     monkeypatch.setattr(Display, 'display', mock_display)
 
     collection.install_collections([(to_text(collection_tar), '*', None, None)], to_text(temp_path),
-                                   [u'https://galaxy.ansible.com'], True, False, False, False, False)
+                                   [u'https://galaxy.assible.com'], True, False, False, False, False)
 
     assert os.path.isdir(collection_path)
 
@@ -717,7 +717,7 @@ def test_install_collections_from_tar(collection_artifact, monkeypatch):
     with open(os.path.join(collection_path, b'MANIFEST.json'), 'rb') as manifest_obj:
         actual_manifest = json.loads(to_text(manifest_obj.read()))
 
-    assert actual_manifest['collection_info']['namespace'] == 'ansible_namespace'
+    assert actual_manifest['collection_info']['namespace'] == 'assible_namespace'
     assert actual_manifest['collection_info']['name'] == 'collection'
     assert actual_manifest['collection_info']['version'] == '0.1.0'
 
@@ -726,7 +726,7 @@ def test_install_collections_from_tar(collection_artifact, monkeypatch):
     assert len(display_msgs) == 4
     assert display_msgs[0] == "Process install dependency map"
     assert display_msgs[1] == "Starting collection install process"
-    assert display_msgs[2] == "Installing 'ansible_namespace.collection:0.1.0' to '%s'" % to_text(collection_path)
+    assert display_msgs[2] == "Installing 'assible_namespace.collection:0.1.0' to '%s'" % to_text(collection_path)
 
 
 def test_install_collections_existing_without_force(collection_artifact, monkeypatch):
@@ -738,7 +738,7 @@ def test_install_collections_existing_without_force(collection_artifact, monkeyp
 
     # If we don't delete collection_path it will think the original build skeleton is installed so we expect a skip
     collection.install_collections([(to_text(collection_tar), '*', None, None)], to_text(temp_path),
-                                   [u'https://galaxy.ansible.com'], True, False, False, False, False)
+                                   [u'https://galaxy.assible.com'], True, False, False, False, False)
 
     assert os.path.isdir(collection_path)
 
@@ -752,7 +752,7 @@ def test_install_collections_existing_without_force(collection_artifact, monkeyp
 
     assert display_msgs[0] == "Process install dependency map"
     assert display_msgs[1] == "Starting collection install process"
-    assert display_msgs[2] == "Skipping 'ansible_namespace.collection' as it is already installed"
+    assert display_msgs[2] == "Skipping 'assible_namespace.collection' as it is already installed"
 
     for msg in display_msgs:
         assert 'WARNING' not in msg
@@ -771,7 +771,7 @@ def test_install_missing_metadata_warning(collection_artifact, monkeypatch):
             os.unlink(b_path)
 
     collection.install_collections([(to_text(collection_tar), '*', None, None)], to_text(temp_path),
-                                   [u'https://galaxy.ansible.com'], True, False, False, False, False)
+                                   [u'https://galaxy.assible.com'], True, False, False, False, False)
 
     display_msgs = [m[1][0] for m in mock_display.mock_calls if 'newline' not in m[2] and len(m[1]) == 1]
 
@@ -780,7 +780,7 @@ def test_install_missing_metadata_warning(collection_artifact, monkeypatch):
 
 # Makes sure we don't get stuck in some recursive loop
 @pytest.mark.parametrize('collection_artifact', [
-    {'ansible_namespace.collection': '>=0.0.1'},
+    {'assible_namespace.collection': '>=0.0.1'},
 ], indirect=True)
 def test_install_collection_with_circular_dependency(collection_artifact, monkeypatch):
     collection_path, collection_tar = collection_artifact
@@ -791,7 +791,7 @@ def test_install_collection_with_circular_dependency(collection_artifact, monkey
     monkeypatch.setattr(Display, 'display', mock_display)
 
     collection.install_collections([(to_text(collection_tar), '*', None, None)], to_text(temp_path),
-                                   [u'https://galaxy.ansible.com'], True, False, False, False, False)
+                                   [u'https://galaxy.assible.com'], True, False, False, False, False)
 
     assert os.path.isdir(collection_path)
 
@@ -803,7 +803,7 @@ def test_install_collection_with_circular_dependency(collection_artifact, monkey
     with open(os.path.join(collection_path, b'MANIFEST.json'), 'rb') as manifest_obj:
         actual_manifest = json.loads(to_text(manifest_obj.read()))
 
-    assert actual_manifest['collection_info']['namespace'] == 'ansible_namespace'
+    assert actual_manifest['collection_info']['namespace'] == 'assible_namespace'
     assert actual_manifest['collection_info']['name'] == 'collection'
     assert actual_manifest['collection_info']['version'] == '0.1.0'
 
@@ -812,5 +812,5 @@ def test_install_collection_with_circular_dependency(collection_artifact, monkey
     assert len(display_msgs) == 4
     assert display_msgs[0] == "Process install dependency map"
     assert display_msgs[1] == "Starting collection install process"
-    assert display_msgs[2] == "Installing 'ansible_namespace.collection:0.1.0' to '%s'" % to_text(collection_path)
-    assert display_msgs[3] == "ansible_namespace.collection (0.1.0) was installed successfully"
+    assert display_msgs[2] == "Installing 'assible_namespace.collection:0.1.0' to '%s'" % to_text(collection_path)
+    assert display_msgs[3] == "assible_namespace.collection (0.1.0) was installed successfully"

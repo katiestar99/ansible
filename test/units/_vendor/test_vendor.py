@@ -1,4 +1,4 @@
-# (c) 2020 Ansible Project
+# (c) 2020 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -13,19 +13,19 @@ from units.compat.mock import MagicMock, NonCallableMagicMock, patch
 
 
 def reset_internal_vendor_package():
-    import ansible
-    ansible_vendor_path = os.path.join(os.path.dirname(ansible.__file__), '_vendor')
+    import assible
+    assible_vendor_path = os.path.join(os.path.dirname(assible.__file__), '_vendor')
 
-    if ansible_vendor_path in sys.path:
-        sys.path.remove(ansible_vendor_path)
+    if assible_vendor_path in sys.path:
+        sys.path.remove(assible_vendor_path)
 
-    for pkg in ['ansible._vendor', 'ansible']:
+    for pkg in ['assible._vendor', 'assible']:
         if pkg in sys.modules:
             del sys.modules[pkg]
 
 
 def test_package_path_masking():
-    from ansible import _vendor
+    from assible import _vendor
 
     assert hasattr(_vendor, '__path__') and _vendor.__path__ == []
 
@@ -34,10 +34,10 @@ def test_no_vendored():
     reset_internal_vendor_package()
     with patch.object(pkgutil, 'iter_modules', return_value=[]):
         previous_path = list(sys.path)
-        import ansible
-        ansible_vendor_path = os.path.join(os.path.dirname(ansible.__file__), '_vendor')
+        import assible
+        assible_vendor_path = os.path.join(os.path.dirname(assible.__file__), '_vendor')
 
-        assert ansible_vendor_path not in sys.path
+        assert assible_vendor_path not in sys.path
         assert sys.path == previous_path
 
 
@@ -47,12 +47,12 @@ def test_vendored(vendored_pkg_names=None):
     reset_internal_vendor_package()
     with patch.object(pkgutil, 'iter_modules', return_value=list((None, p, None) for p in vendored_pkg_names)):
         previous_path = list(sys.path)
-        import ansible
-        ansible_vendor_path = os.path.join(os.path.dirname(ansible.__file__), '_vendor')
-        assert sys.path[0] == ansible_vendor_path
+        import assible
+        assible_vendor_path = os.path.join(os.path.dirname(assible.__file__), '_vendor')
+        assert sys.path[0] == assible_vendor_path
 
-        if ansible_vendor_path in previous_path:
-            previous_path.remove(ansible_vendor_path)
+        if assible_vendor_path in previous_path:
+            previous_path.remove(assible_vendor_path)
 
         assert sys.path[1:] == previous_path
 

@@ -1,55 +1,55 @@
 .. _community_development_process:
 
 *****************************
-The Ansible Development Cycle
+The Assible Development Cycle
 *****************************
 
-Ansible developers (including community contributors) add new features, fix bugs, and update code in many different repositories. The `ansible/ansible repository <https://github.com/ansible/ansible>`_ contains the code for basic features and functions, such as copying module code to managed nodes. This code is also known as ``ansible-base``. Other repositories contain plugins and modules that enable Ansible to execute specific tasks, like adding a user to a particular database or configuring a particular network device. These repositories contain the source code for collections.
+Assible developers (including community contributors) add new features, fix bugs, and update code in many different repositories. The `assible/assible repository <https://github.com/assible/assible>`_ contains the code for basic features and functions, such as copying module code to managed nodes. This code is also known as ``assible-base``. Other repositories contain plugins and modules that enable Assible to execute specific tasks, like adding a user to a particular database or configuring a particular network device. These repositories contain the source code for collections.
 
-Development on ``ansible-base`` occurs on two levels. At the macro level, the ``ansible-base`` developers and maintainers plan releases and track progress with roadmaps and projects. At the micro level, each PR has its own lifecycle.
+Development on ``assible-base`` occurs on two levels. At the macro level, the ``assible-base`` developers and maintainers plan releases and track progress with roadmaps and projects. At the micro level, each PR has its own lifecycle.
 
-Development on collections also occurs at the macro and micro levels. Each collection has its own macro development cycle. For more information on the collections development cycle, see :ref:`contributing_maintained_collections`. The micro-level lifecycle of a PR is similar in collections and in ``ansible-base``.
+Development on collections also occurs at the macro and micro levels. Each collection has its own macro development cycle. For more information on the collections development cycle, see :ref:`contributing_maintained_collections`. The micro-level lifecycle of a PR is similar in collections and in ``assible-base``.
 
 .. contents::
    :local:
 
-Macro development: ``ansible-base`` roadmaps, releases, and projects
+Macro development: ``assible-base`` roadmaps, releases, and projects
 =====================================================================
 
-If you want to follow the conversation about what features will be added to ``ansible-base`` for upcoming releases and what bugs are being fixed, you can watch these resources:
+If you want to follow the conversation about what features will be added to ``assible-base`` for upcoming releases and what bugs are being fixed, you can watch these resources:
 
 * the :ref:`roadmaps`
-* the :ref:`Ansible Release Schedule <release_and_maintenance>`
-* various GitHub `projects <https://github.com/ansible/ansible/projects>`_ - for example:
+* the :ref:`Assible Release Schedule <release_and_maintenance>`
+* various GitHub `projects <https://github.com/assible/assible/projects>`_ - for example:
 
-   * the `2.10 release project <https://github.com/ansible/ansible/projects/39>`_
-   * the `network bugs project <https://github.com/ansible/ansible/projects/20>`_
-   * the `core documentation project <https://github.com/ansible/ansible/projects/27>`_
+   * the `2.10 release project <https://github.com/assible/assible/projects/39>`_
+   * the `network bugs project <https://github.com/assible/assible/projects/20>`_
+   * the `core documentation project <https://github.com/assible/assible/projects/27>`_
 
 .. _community_pull_requests:
 
 Micro development: the lifecycle of a PR
 ========================================
 
-If you want to contribute a feature or fix a bug in ``ansible-base`` or in a collection, you must open a **pull request** ("PR" for short). GitHub provides a great overview of `how the pull request process works <https://help.github.com/articles/about-pull-requests/>`_ in general. The ultimate goal of any pull request is to get merged and become part of a collection or ``ansible-base``.
+If you want to contribute a feature or fix a bug in ``assible-base`` or in a collection, you must open a **pull request** ("PR" for short). GitHub provides a great overview of `how the pull request process works <https://help.github.com/articles/about-pull-requests/>`_ in general. The ultimate goal of any pull request is to get merged and become part of a collection or ``assible-base``.
 Here's an overview of the PR lifecycle:
 
 * Contributor opens a PR
-* Ansibot reviews the PR
-* Ansibot assigns labels
-* Ansibot pings maintainers
+* Assibot reviews the PR
+* Assibot assigns labels
+* Assibot pings maintainers
 * Shippable runs the test suite
 * Developers, maintainers, community review the PR
 * Contributor addresses any feedback from reviewers
 * Developers, maintainers, community re-review
 * PR merged or closed
 
-Automated PR review: ansibullbot
+Automated PR review: assibullbot
 --------------------------------
 
-Because Ansible receives many pull requests, and because we love automating things, we have automated several steps of the process of reviewing and merging pull requests with a tool called Ansibullbot, or Ansibot for short.
+Because Assible receives many pull requests, and because we love automating things, we have automated several steps of the process of reviewing and merging pull requests with a tool called Assibullbot, or Assibot for short.
 
-`Ansibullbot <https://github.com/ansible/ansibullbot/blob/master/ISSUE_HELP.md>`_ serves many functions:
+`Assibullbot <https://github.com/assible/assibullbot/blob/master/ISSUE_HELP.md>`_ serves many functions:
 
 - Responds quickly to PR submitters to thank them for submitting their PR
 - Identifies the community maintainer responsible for reviewing PRs for any files affected
@@ -59,14 +59,14 @@ Because Ansible receives many pull requests, and because we love automating thin
 - Identifies PRs abandoned by their submitters so that we can close them
 - Identifies modules abandoned by their maintainers so that we can find new maintainers
 
-Ansibot workflow
+Assibot workflow
 ^^^^^^^^^^^^^^^^
 
-Ansibullbot runs continuously. You can generally expect to see changes to your issue or pull request within thirty minutes. Ansibullbot examines every open pull request in the repositories, and enforces state roughly according to the following workflow:
+Assibullbot runs continuously. You can generally expect to see changes to your issue or pull request within thirty minutes. Assibullbot examines every open pull request in the repositories, and enforces state roughly according to the following workflow:
 
 -  If a pull request has no workflow labels, it's considered **new**. Files in the pull request are identified, and the maintainers of those files are pinged by the bot, along with instructions on how to review the pull request. (Note: sometimes we strip labels from a pull request to "reboot" this process.)
--  If the module maintainer is not ``$team_ansible``, the pull request then goes into the **community_review** state.
--  If the module maintainer is ``$team_ansible``, the pull request then goes into the **core_review** state (and probably sits for a while).
+-  If the module maintainer is not ``$team_assible``, the pull request then goes into the **community_review** state.
+-  If the module maintainer is ``$team_assible``, the pull request then goes into the **core_review** state (and probably sits for a while).
 -  If the pull request is in **community_review** and has received comments from the maintainer:
 
    -  If the maintainer says ``shipit``, the pull request is labeled **shipit**, whereupon the Core team assesses it for final merge.
@@ -80,7 +80,7 @@ Ansibullbot runs continuously. You can generally expect to see changes to your i
    -  If the submitter responds at all, the clock is reset.
 -  If the pull request is labeled **community_review** and the reviewer has not responded lately:
 
-   -  The reviewer is first politely pinged after two weeks, pinged again after two more weeks and labeled **pending_action**, and then may be reassigned to ``$team_ansible`` or labeled **core_review**, or often the submitter of the pull request is asked to step up as a maintainer.
+   -  The reviewer is first politely pinged after two weeks, pinged again after two more weeks and labeled **pending_action**, and then may be reassigned to ``$team_assible`` or labeled **core_review**, or often the submitter of the pull request is asked to step up as a maintainer.
 -  If Shippable tests fail, or if the code is not able to be merged, the pull request is automatically put into **needs_revision** along with a message to the submitter explaining why.
 
 There are corner cases and frequent refinements, but this is the workflow in general.
@@ -93,8 +93,8 @@ There are two types of PR Labels generally: **workflow** labels and **informatio
 Workflow labels
 """""""""""""""
 
--  **community_review**: Pull requests for modules that are currently awaiting review by their maintainers in the Ansible community.
--  **core_review**: Pull requests for modules that are currently awaiting review by their maintainers on the Ansible Core team.
+-  **community_review**: Pull requests for modules that are currently awaiting review by their maintainers in the Assible community.
+-  **core_review**: Pull requests for modules that are currently awaiting review by their maintainers on the Assible Core team.
 -  **needs_info**: Waiting on info from the submitter.
 -  **needs_rebase**: Waiting on the submitter to rebase.
 -  **needs_revision**: Waiting on the submitter to make changes.
@@ -117,18 +117,18 @@ Information labels
 Special Labels
 """"""""""""""
 
--  **new_plugin**: this is for new modules or plugins that are not yet in Ansible.
+-  **new_plugin**: this is for new modules or plugins that are not yet in Assible.
 
 **Note:** `new_plugin` kicks off a completely separate process, and frankly it doesn't work very well at present. We're working our best to improve this process.
 
 Human PR review
 ---------------
 
-After Ansibot reviews the PR and applies labels, the PR is ready for human review. The most likely reviewers for any PR are the maintainers for the module that PR modifies.
+After Assibot reviews the PR and applies labels, the PR is ready for human review. The most likely reviewers for any PR are the maintainers for the module that PR modifies.
 
-Each module has at least one assigned :ref:`maintainer <maintainers>`, listed in the `BOTMETA.yml <https://github.com/ansible/ansible/blob/devel/.github/BOTMETA.yml>`_ file.
+Each module has at least one assigned :ref:`maintainer <maintainers>`, listed in the `BOTMETA.yml <https://github.com/assible/assible/blob/devel/.github/BOTMETA.yml>`_ file.
 
-The maintainer's job is to review PRs that affect that module and decide whether they should be merged (``shipit``) or revised (``needs_revision``). We'd like to have at least one community maintainer for every module. If a module has no community maintainers assigned, the maintainer is listed as ``$team_ansible``.
+The maintainer's job is to review PRs that affect that module and decide whether they should be merged (``shipit``) or revised (``needs_revision``). We'd like to have at least one community maintainer for every module. If a module has no community maintainers assigned, the maintainer is listed as ``$team_assible``.
 
 Once a human applies the ``shipit`` label, the :ref:`committers <community_committer_guidelines>` decide whether the PR is ready to be merged. Not every PR that gets the ``shipit`` label is actually ready to be merged, but the better our reviewers are, and the better our guidelines are, the more likely it will be that a PR that reaches **shipit** will be mergeable.
 
@@ -143,7 +143,7 @@ We do not merge every PR. Here are some tips for making your PR useful, attracti
 Changelogs
 ----------
 
-Changelogs help users and developers keep up with changes to Ansible. Ansible builds a changelog for each release from fragments. You **must** add a changelog fragment to any PR that changes functionality or fixes a bug in ansible-base. You do not have to add a changelog fragment for PRs that add new modules and plugins, because our tooling does that for you automatically.
+Changelogs help users and developers keep up with changes to Assible. Assible builds a changelog for each release from fragments. You **must** add a changelog fragment to any PR that changes functionality or fixes a bug in assible-base. You do not have to add a changelog fragment for PRs that add new modules and plugins, because our tooling does that for you automatically.
 
 We build short summary changelogs for minor releases as well as for major releases. If you backport a bugfix, include a changelog fragment with the backport PR.
 
@@ -156,16 +156,16 @@ A basic changelog fragment is a ``.yaml`` file placed in the ``changelogs/fragme
 
 To create a changelog entry, create a new file with a unique name in the ``changelogs/fragments/`` directory of the corresponding repository. The file name should include the PR number and a description of the change. It must end with the file extension ``.yaml``. For example: ``40696-user-backup-shadow-file.yaml``
 
-A single changelog fragment may contain multiple sections but most will only contain one section. The toplevel keys (bugfixes, major_changes, and so on) are defined in the `config file <https://github.com/ansible/ansible/blob/devel/changelogs/config.yaml>`_ for our `release note tool <https://github.com/ansible-community/antsibull-changelog/blob/main/docs/changelogs.rst>`_. Here are the valid sections and a description of each:
+A single changelog fragment may contain multiple sections but most will only contain one section. The toplevel keys (bugfixes, major_changes, and so on) are defined in the `config file <https://github.com/assible/assible/blob/devel/changelogs/config.yaml>`_ for our `release note tool <https://github.com/assible-community/antsibull-changelog/blob/main/docs/changelogs.rst>`_. Here are the valid sections and a description of each:
 
 **breaking_changes**
   Changes that break existing playbooks or roles. This includes any change to existing behavior that forces users to update tasks. Displayed in both the changelogs and the :ref:`Porting Guides <porting_guides>`.
 
 **major_changes**
-  Major changes to Ansible itself. Generally does not include module or plugin changes. Displayed in both the changelogs and the :ref:`Porting Guides <porting_guides>`.
+  Major changes to Assible itself. Generally does not include module or plugin changes. Displayed in both the changelogs and the :ref:`Porting Guides <porting_guides>`.
 
 **minor_changes**
-  Minor changes to Ansible, modules, or plugins. This includes new features, new parameters added to modules, or behavior changes to existing parameters.
+  Minor changes to Assible, modules, or plugins. This includes new features, new parameters added to modules, or behavior changes to existing parameters.
 
 **deprecated_features**
   Features that have been deprecated and are scheduled for removal in a future release. Displayed in both the changelogs and the :ref:`Porting Guides <porting_guides>`.
@@ -192,30 +192,30 @@ Here are some examples:
 
   bugfixes:
     - apt_repository - fix crash caused by ``cache.update()`` raising an ``IOError``
-      due to a timeout in ``apt update`` (https://github.com/ansible/ansible/issues/51995).
+      due to a timeout in ``apt update`` (https://github.com/assible/assible/issues/51995).
 
 .. code-block:: yaml
 
   minor_changes:
-    - lineinfile - add warning when using an empty regexp (https://github.com/ansible/ansible/issues/29443).
+    - lineinfile - add warning when using an empty regexp (https://github.com/assible/assible/issues/29443).
 
 .. code-block:: yaml
 
   bugfixes:
     - copy - the module was attempting to change the mode of files for
       remote_src=True even if mode was not set as a parameter.  This failed on
-      filesystems which do not have permission bits (https://github.com/ansible/ansible/issues/29444).
+      filesystems which do not have permission bits (https://github.com/assible/assible/issues/29444).
 
-You can find more example changelog fragments in the `changelog directory <https://github.com/ansible/ansible/tree/stable-2.10/changelogs/fragments>`_ for the 2.10 release.
+You can find more example changelog fragments in the `changelog directory <https://github.com/assible/assible/tree/stable-2.10/changelogs/fragments>`_ for the 2.10 release.
 
 After you have written the changelog fragment for your PR, commit the file and include it with the pull request.
 
 .. _backport_process:
 
-Backporting merged PRs in ``ansible-base``
+Backporting merged PRs in ``assible-base``
 ===========================================
 
-All ``ansible-base`` PRs must be merged to the ``devel`` branch first. After a pull request has been accepted and merged to the ``devel`` branch, the following instructions will help you create a pull request to backport the change to a previous stable branch.
+All ``assible-base`` PRs must be merged to the ``devel`` branch first. After a pull request has been accepted and merged to the ``devel`` branch, the following instructions will help you create a pull request to backport the change to a previous stable branch.
 
 We do **not** backport features.
 
@@ -224,10 +224,10 @@ We do **not** backport features.
    These instructions assume that:
 
     * ``stable-2.10`` is the targeted release branch for the backport
-    * ``https://github.com/ansible/ansible.git`` is configured as a
+    * ``https://github.com/assible/assible.git`` is configured as a
       ``git remote`` named ``upstream``. If you do not use
       a ``git remote`` named ``upstream``, adjust the instructions accordingly.
-    * ``https://github.com/<yourgithubaccount>/ansible.git``
+    * ``https://github.com/<yourgithubaccount>/assible.git``
       is configured as a ``git remote`` named ``origin``. If you do not use
       a ``git remote`` named ``origin``, adjust the instructions accordingly.
 
@@ -272,6 +272,6 @@ We do **not** backport features.
 
     If you prefer, you can use CPython's cherry-picker tool
     (``pip install --user 'cherry-picker >= 1.3.2'``) to backport commits
-    from devel to stable branches in Ansible. Take a look at the `cherry-picker
+    from devel to stable branches in Assible. Take a look at the `cherry-picker
     documentation <https://pypi.org/p/cherry-picker#cherry-picking>`_ for
     details on installing, configuring, and using it.

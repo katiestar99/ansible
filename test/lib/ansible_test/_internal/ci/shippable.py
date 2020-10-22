@@ -106,11 +106,11 @@ class Shippable(CIProvider):
         return result.paths
 
     def supports_core_ci_auth(self, context):  # type: (AuthContext) -> bool
-        """Return True if Ansible Core CI is supported."""
+        """Return True if Assible Core CI is supported."""
         return True
 
     def prepare_core_ci_auth(self, context):  # type: (AuthContext) -> t.Dict[str, t.Any]
-        """Return authentication details for Ansible Core CI."""
+        """Return authentication details for Assible Core CI."""
         try:
             request = dict(
                 run_id=os.environ['SHIPPABLE_BUILD_ID'],

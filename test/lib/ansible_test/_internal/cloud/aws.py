@@ -17,7 +17,7 @@ from . import (
 )
 
 from ..core_ci import (
-    AnsibleCoreCI,
+    AssibleCoreCI,
 )
 
 
@@ -31,7 +31,7 @@ class AwsCloudProvider(CloudProvider):
         if os.path.isfile(self.config_static_path):
             return
 
-        aci = self._create_ansible_core_ci()
+        aci = self._create_assible_core_ci()
 
         if aci.available:
             return
@@ -51,12 +51,12 @@ class AwsCloudProvider(CloudProvider):
             self._setup_dynamic()
 
     def _setup_dynamic(self):
-        """Request AWS credentials through the Ansible Core CI service."""
+        """Request AWS credentials through the Assible Core CI service."""
         display.info('Provisioning %s cloud environment.' % self.platform, verbosity=1)
 
         config = self._read_config_template()
 
-        aci = self._create_ansible_core_ci()
+        aci = self._create_assible_core_ci()
 
         response = aci.start()
 
@@ -77,11 +77,11 @@ class AwsCloudProvider(CloudProvider):
 
         self._write_config(config)
 
-    def _create_ansible_core_ci(self):
+    def _create_assible_core_ci(self):
         """
-        :rtype: AnsibleCoreCI
+        :rtype: AssibleCoreCI
         """
-        return AnsibleCoreCI(self.args, 'aws', 'sts', persist=False, stage=self.args.remote_stage, provider=self.args.remote_provider)
+        return AssibleCoreCI(self.args, 'aws', 'sts', persist=False, stage=self.args.remote_stage, provider=self.args.remote_provider)
 
 
 class AwsCloudEnvironment(CloudEnvironment):
@@ -93,23 +93,23 @@ class AwsCloudEnvironment(CloudEnvironment):
         parser = ConfigParser()
         parser.read(self.config_path)
 
-        ansible_vars = dict(
+        assible_vars = dict(
             resource_prefix=self.resource_prefix,
         )
 
-        ansible_vars.update(dict(parser.items('default')))
+        assible_vars.update(dict(parser.items('default')))
 
-        display.sensitive.add(ansible_vars.get('aws_secret_key'))
-        display.sensitive.add(ansible_vars.get('security_token'))
+        display.sensitive.add(assible_vars.get('aws_secret_key'))
+        display.sensitive.add(assible_vars.get('security_token'))
 
-        if 'aws_cleanup' not in ansible_vars:
-            ansible_vars['aws_cleanup'] = not self.managed
+        if 'aws_cleanup' not in assible_vars:
+            assible_vars['aws_cleanup'] = not self.managed
 
-        env_vars = {'ANSIBLE_DEBUG_BOTOCORE_LOGS': 'True'}
+        env_vars = {'ASSIBLE_DEBUG_BOTOCORE_LOGS': 'True'}
 
         return CloudEnvironmentConfig(
             env_vars=env_vars,
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
             callback_plugins=['aws_resource_actions'],
         )
 
@@ -120,5 +120,5 @@ class AwsCloudEnvironment(CloudEnvironment):
         """
         if not tries and self.managed:
             display.notice('If %s failed due to permissions, the IAM test policy may need to be updated. '
-                           'https://docs.ansible.com/ansible/devel/dev_guide/platforms/aws_guidelines.html#aws-permissions-for-integration-tests.'
+                           'https://docs.assible.com/assible/devel/dev_guide/platforms/aws_guidelines.html#aws-permissions-for-integration-tests.'
                            % target.name)

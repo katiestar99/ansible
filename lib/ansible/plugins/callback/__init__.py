@@ -1,19 +1,19 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make coding more python3-ish
 from __future__ import (absolute_import, division, print_function)
@@ -27,19 +27,19 @@ import warnings
 
 from copy import deepcopy
 
-from ansible import constants as C
-from ansible.module_utils.common._collections_compat import MutableMapping
-from ansible.module_utils.six import PY3
-from ansible.module_utils._text import to_text
-from ansible.parsing.ajson import AnsibleJSONEncoder
-from ansible.plugins import AnsiblePlugin, get_plugin_class
-from ansible.utils.color import stringc
-from ansible.utils.display import Display
-from ansible.vars.clean import strip_internal_keys, module_response_deepcopy
+from assible import constants as C
+from assible.module_utils.common._collections_compat import MutableMapping
+from assible.module_utils.six import PY3
+from assible.module_utils._text import to_text
+from assible.parsing.ajson import AssibleJSONEncoder
+from assible.plugins import AssiblePlugin, get_plugin_class
+from assible.utils.color import stringc
+from assible.utils.display import Display
+from assible.vars.clean import strip_internal_keys, module_response_deepcopy
 
 if PY3:
     # OrderedDict is needed for a backwards compat shim on Python3.x only
-    # https://github.com/ansible/ansible/pull/49512
+    # https://github.com/assible/assible/pull/49512
     from collections import OrderedDict
 else:
     OrderedDict = None
@@ -53,10 +53,10 @@ __all__ = ["CallbackBase"]
 _DEBUG_ALLOWED_KEYS = frozenset(('msg', 'exception', 'warnings', 'deprecations'))
 
 
-class CallbackBase(AnsiblePlugin):
+class CallbackBase(AssiblePlugin):
 
     '''
-    This is a base ansible callback class that does nothing. New callbacks should
+    This is a base assible callback class that does nothing. New callbacks should
     use this class as a base and override any callback methods they wish to execute
     custom actions.
     '''
@@ -100,15 +100,15 @@ class CallbackBase(AnsiblePlugin):
         self._plugin_options = C.config.get_plugin_options(get_plugin_class(self), self._load_name, keys=task_keys, variables=var_options, direct=direct)
 
     def _run_is_verbose(self, result, verbosity=0):
-        return ((self._display.verbosity > verbosity or result._result.get('_ansible_verbose_always', False) is True)
-                and result._result.get('_ansible_verbose_override', False) is False)
+        return ((self._display.verbosity > verbosity or result._result.get('_assible_verbose_always', False) is True)
+                and result._result.get('_assible_verbose_override', False) is False)
 
     def _dump_results(self, result, indent=None, sort_keys=True, keep_invocation=False):
 
-        if not indent and (result.get('_ansible_verbose_always') or self._display.verbosity > 2):
+        if not indent and (result.get('_assible_verbose_always') or self._display.verbosity > 2):
             indent = 4
 
-        # All result keys stating with _ansible_ are internal, so remove them from the result before we output anything.
+        # All result keys stating with _assible_ are internal, so remove them from the result before we output anything.
         abridged_result = strip_internal_keys(module_response_deepcopy(result))
 
         # remove invocation unless specifically wanting it
@@ -124,7 +124,7 @@ class CallbackBase(AnsiblePlugin):
             del abridged_result['exception']
 
         try:
-            jsonified_results = json.dumps(abridged_result, cls=AnsibleJSONEncoder, indent=indent, ensure_ascii=False, sort_keys=sort_keys)
+            jsonified_results = json.dumps(abridged_result, cls=AssibleJSONEncoder, indent=indent, ensure_ascii=False, sort_keys=sort_keys)
         except TypeError:
             # Python3 bug: throws an exception when keys are non-homogenous types:
             # https://bugs.python.org/issue25457
@@ -132,7 +132,7 @@ class CallbackBase(AnsiblePlugin):
             if not OrderedDict:
                 raise
             jsonified_results = json.dumps(OrderedDict(sorted(abridged_result.items(), key=to_text)),
-                                           cls=AnsibleJSONEncoder, indent=indent,
+                                           cls=AssibleJSONEncoder, indent=indent,
                                            ensure_ascii=False, sort_keys=False)
         return jsonified_results
 
@@ -234,10 +234,10 @@ class CallbackBase(AnsiblePlugin):
 
     def _get_item_label(self, result):
         ''' retrieves the value to be displayed as a label for an item entry from a result object'''
-        if result.get('_ansible_no_log', False):
+        if result.get('_assible_no_log', False):
             item = "(censored due to no_log)"
         else:
-            item = result.get('_ansible_item_label', result.get('item'))
+            item = result.get('_assible_item_label', result.get('item'))
         return item
 
     def _process_items(self, result):
@@ -349,7 +349,7 @@ class CallbackBase(AnsiblePlugin):
     # FIXME: not called
     def v2_runner_on_async_poll(self, result):
         host = result._host.get_name()
-        jid = result._result.get('ansible_job_id')
+        jid = result._result.get('assible_job_id')
         # FIXME, get real clock
         clock = 0
         self.runner_on_async_poll(host, result._result, jid, clock)
@@ -357,13 +357,13 @@ class CallbackBase(AnsiblePlugin):
     # FIXME: not called
     def v2_runner_on_async_ok(self, result):
         host = result._host.get_name()
-        jid = result._result.get('ansible_job_id')
+        jid = result._result.get('assible_job_id')
         self.runner_on_async_ok(host, result._result, jid)
 
     # FIXME: not called
     def v2_runner_on_async_failed(self, result):
         host = result._host.get_name()
-        jid = result._result.get('ansible_job_id')
+        jid = result._result.get('assible_job_id')
         self.runner_on_async_failed(host, result._result, jid)
 
     def v2_playbook_on_start(self, playbook):

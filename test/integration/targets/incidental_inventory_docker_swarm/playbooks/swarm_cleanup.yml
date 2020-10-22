@@ -9,7 +9,7 @@
         force: yes
 
     - name: remove docker pagkages
-      action: "{{ ansible_facts.pkg_mgr }}"
+      action: "{{ assible_facts.pkg_mgr }}"
       args:
         name:
           - docker

@@ -1,10 +1,10 @@
 #!powershell
 
-#Requires -Module Ansible.ModuleUtils.Legacy
+#Requires -Module Assible.ModuleUtils.Legacy
 
 $params = Parse-Args $args -supports_check_mode $true
 
-$data = Get-AnsibleParam -obj $params -name "data" -type "str" -default "normal"
+$data = Get-AssibleParam -obj $params -name "data" -type "str" -default "normal"
 $result = @{
     changed = $false
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Ansible module to import third party repo keys to your rpm db
+# Assible module to import third party repo keys to your rpm db
 # Copyright: (c) 2013, Héctor Acosta <hector.acosta@gazzang.com>
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -72,9 +72,9 @@ import os.path
 import tempfile
 
 # import module snippets
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.urls import fetch_url
-from ansible.module_utils._text import to_native
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.urls import fetch_url
+from assible.module_utils._text import to_native
 
 
 def is_pubkey(string):
@@ -225,7 +225,7 @@ class RpmKey(object):
 
 
 def main():
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=dict(
             state=dict(type='str', default='present', choices=['absent', 'present']),
             key=dict(type='str', required=True),

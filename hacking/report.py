@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # PYTHON_ARGCOMPLETE_OK
-"""A tool to aggregate data about Ansible source and testing into a sqlite DB for reporting."""
+"""A tool to aggregate data about Assible source and testing into a sqlite DB for reporting."""
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -11,21 +11,21 @@ import os
 import sqlite3
 import sys
 
-DATABASE_PATH = os.path.expanduser('~/.ansible/report.db')
+DATABASE_PATH = os.path.expanduser('~/.assible/report.db')
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')) + '/'
-ANSIBLE_PATH = os.path.join(BASE_PATH, 'lib')
-ANSIBLE_TEST_PATH = os.path.join(BASE_PATH, 'test/lib')
+ASSIBLE_PATH = os.path.join(BASE_PATH, 'lib')
+ASSIBLE_TEST_PATH = os.path.join(BASE_PATH, 'test/lib')
 
-if ANSIBLE_PATH not in sys.path:
-    sys.path.insert(0, ANSIBLE_PATH)
+if ASSIBLE_PATH not in sys.path:
+    sys.path.insert(0, ASSIBLE_PATH)
 
-if ANSIBLE_TEST_PATH not in sys.path:
-    sys.path.insert(0, ANSIBLE_TEST_PATH)
+if ASSIBLE_TEST_PATH not in sys.path:
+    sys.path.insert(0, ASSIBLE_TEST_PATH)
 
-from ansible.module_utils.urls import open_url
-from ansible.parsing.plugin_docs import read_docstring
+from assible.module_utils.urls import open_url
+from assible.parsing.plugin_docs import read_docstring
 
-from ansible_test._internal.target import walk_integration_targets
+from assible_test._internal.target import walk_integration_targets
 
 
 def main():
@@ -78,7 +78,7 @@ def populate_database():
 
 
 def populate_modules():
-    module_dir = os.path.join(BASE_PATH, 'lib/ansible/modules/')
+    module_dir = os.path.join(BASE_PATH, 'lib/assible/modules/')
 
     modules_rows = []
 
@@ -120,7 +120,7 @@ def populate_modules():
 
 
 def populate_coverage():
-    response = open_url('https://codecov.io/api/gh/ansible/ansible/tree/devel/?src=extension')
+    response = open_url('https://codecov.io/api/gh/assible/assible/tree/devel/?src=extension')
     data = json.load(response)
     files = data['commit']['report']['files']
     coverage_rows = []

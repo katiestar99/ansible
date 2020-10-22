@@ -1,10 +1,10 @@
 .. _basic_concepts:
 
 ****************
-Ansible concepts
+Assible concepts
 ****************
 
-These concepts are common to all uses of Ansible. You need to understand them to use Ansible for any kind of automation. This basic introduction provides the background you need to follow the rest of the User Guide.
+These concepts are common to all uses of Assible. You need to understand them to use Assible for any kind of automation. This basic introduction provides the background you need to follow the rest of the User Guide.
 
 .. contents::
    :local:

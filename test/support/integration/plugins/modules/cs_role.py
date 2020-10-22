@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
+ASSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -95,18 +95,18 @@ role_type:
   sample: User
 '''
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.cloudstack import (
-    AnsibleCloudStack,
+from assible.module_utils.basic import AssibleModule
+from assible.module_utils.cloudstack import (
+    AssibleCloudStack,
     cs_argument_spec,
     cs_required_together,
 )
 
 
-class AnsibleCloudStackRole(AnsibleCloudStack):
+class AssibleCloudStackRole(AssibleCloudStack):
 
     def __init__(self, module):
-        super(AnsibleCloudStackRole, self).__init__(module)
+        super(AssibleCloudStackRole, self).__init__(module)
         self.returns = {
             'type': 'role_type',
         }
@@ -189,13 +189,13 @@ def main():
         state=dict(choices=['present', 'absent'], default='present'),
     ))
 
-    module = AnsibleModule(
+    module = AssibleModule(
         argument_spec=argument_spec,
         required_together=cs_required_together(),
         supports_check_mode=True
     )
 
-    acs_role = AnsibleCloudStackRole(module)
+    acs_role = AssibleCloudStackRole(module)
     state = module.params.get('state')
     if state == 'absent':
         role = acs_role.absent_role()

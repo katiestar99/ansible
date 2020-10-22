@@ -1,11 +1,11 @@
 [Unit]
-Description=Ansible Test Service
+Description=Assible Test Service
 
 [Service]
-ExecStart=/usr/sbin/ansible_test_service "Test\nthat newlines in scripts\nwork"
+ExecStart=/usr/sbin/assible_test_service "Test\nthat newlines in scripts\nwork"
 ExecReload=/bin/true
 Type=forking
-PIDFile=/var/run/ansible_test_service.pid
+PIDFile=/var/run/assible_test_service.pid
 
 [Install]
 WantedBy=multi-user.target

@@ -1,36 +1,36 @@
 # (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 #
-# This file is part of Ansible
+# This file is part of Assible
 #
-# Ansible is free software: you can redistribute it and/or modify
+# Assible is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Ansible is distributed in the hope that it will be useful,
+# Assible is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+# along with Assible.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from itertools import chain
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.module_utils._text import to_native, to_text
-from ansible.module_utils.common._collections_compat import Mapping, MutableMapping
-from ansible.utils.display import Display
-from ansible.utils.vars import combine_vars
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.module_utils._text import to_native, to_text
+from assible.module_utils.common._collections_compat import Mapping, MutableMapping
+from assible.utils.display import Display
+from assible.utils.vars import combine_vars
 
 display = Display()
 
 
 def to_safe_group_name(name, replacer="_", force=False, silent=False):
-    # Converts 'bad' characters in a string to underscores (or provided replacer) so they can be used as Ansible hosts or groups
+    # Converts 'bad' characters in a string to underscores (or provided replacer) so they can be used as Assible hosts or groups
 
     warn = ''
     if name:  # when deserializing we might not have name yet
@@ -54,7 +54,7 @@ def to_safe_group_name(name, replacer="_", force=False, silent=False):
 
 
 class Group:
-    ''' a group of ansible hosts '''
+    ''' a group of assible hosts '''
 
     # __slots__ = [ 'name', 'hosts', 'vars', 'child_groups', 'parent_groups', 'depth', '_hosts_cache' ]
 
@@ -179,7 +179,7 @@ class Group:
             start_ancestors = group.get_ancestors()
             new_ancestors = self.get_ancestors()
             if group in new_ancestors:
-                raise AnsibleError("Adding group '%s' as child to '%s' creates a recursive dependency loop." % (to_native(group.name), to_native(self.name)))
+                raise AssibleError("Adding group '%s' as child to '%s' creates a recursive dependency loop." % (to_native(group.name), to_native(self.name)))
             new_ancestors.add(self)
             new_ancestors.difference_update(start_ancestors)
 
@@ -219,7 +219,7 @@ class Group:
                     g.depth = depth
                     unprocessed.update(g.child_groups)
             if depth - start_depth > len(seen):
-                raise AnsibleError("The group named '%s' has a recursive dependency loop." % to_native(self.name))
+                raise AssibleError("The group named '%s' has a recursive dependency loop." % to_native(self.name))
 
     def add_host(self, host):
         added = False
@@ -243,7 +243,7 @@ class Group:
 
     def set_variable(self, key, value):
 
-        if key == 'ansible_group_priority':
+        if key == 'assible_group_priority':
             self.set_priority(int(value))
         else:
             if key in self.vars and isinstance(self.vars[key], MutableMapping) and isinstance(value, Mapping):

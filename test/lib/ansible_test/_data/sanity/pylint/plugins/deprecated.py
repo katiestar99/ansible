@@ -15,83 +15,83 @@ from pylint.interfaces import IAstroidChecker
 from pylint.checkers import BaseChecker
 from pylint.checkers.utils import check_messages
 
-from ansible.module_utils.six import string_types
-from ansible.release import __version__ as ansible_version_raw
-from ansible.utils.version import SemanticVersion
+from assible.module_utils.six import string_types
+from assible.release import __version__ as assible_version_raw
+from assible.utils.version import SemanticVersion
 
 MSGS = {
     'E9501': ("Deprecated version (%r) found in call to Display.deprecated "
-              "or AnsibleModule.deprecate",
-              "ansible-deprecated-version",
+              "or AssibleModule.deprecate",
+              "assible-deprecated-version",
               "Used when a call to Display.deprecated specifies a version "
-              "less than or equal to the current version of Ansible",
+              "less than or equal to the current version of Assible",
               {'minversion': (2, 6)}),
     'E9502': ("Display.deprecated call without a version or date",
-              "ansible-deprecated-no-version",
+              "assible-deprecated-no-version",
               "Used when a call to Display.deprecated does not specify a "
               "version or date",
               {'minversion': (2, 6)}),
     'E9503': ("Invalid deprecated version (%r) found in call to "
-              "Display.deprecated or AnsibleModule.deprecate",
-              "ansible-invalid-deprecated-version",
+              "Display.deprecated or AssibleModule.deprecate",
+              "assible-invalid-deprecated-version",
               "Used when a call to Display.deprecated specifies an invalid "
-              "Ansible version number",
+              "Assible version number",
               {'minversion': (2, 6)}),
     'E9504': ("Deprecated version (%r) found in call to Display.deprecated "
-              "or AnsibleModule.deprecate",
+              "or AssibleModule.deprecate",
               "collection-deprecated-version",
               "Used when a call to Display.deprecated specifies a collection "
               "version less than or equal to the current version of this "
               "collection",
               {'minversion': (2, 6)}),
     'E9505': ("Invalid deprecated version (%r) found in call to "
-              "Display.deprecated or AnsibleModule.deprecate",
+              "Display.deprecated or AssibleModule.deprecate",
               "collection-invalid-deprecated-version",
               "Used when a call to Display.deprecated specifies an invalid "
               "collection version number",
               {'minversion': (2, 6)}),
     'E9506': ("No collection name found in call to Display.deprecated or "
-              "AnsibleModule.deprecate",
-              "ansible-deprecated-no-collection-name",
+              "AssibleModule.deprecate",
+              "assible-deprecated-no-collection-name",
               "The current collection name in format `namespace.name` must "
               "be provided as collection_name when calling Display.deprecated "
-              "or AnsibleModule.deprecate (`ansible.builtin` for ansible-base)",
+              "or AssibleModule.deprecate (`assible.builtin` for assible-base)",
               {'minversion': (2, 6)}),
     'E9507': ("Wrong collection name (%r) found in call to "
-              "Display.deprecated or AnsibleModule.deprecate",
+              "Display.deprecated or AssibleModule.deprecate",
               "wrong-collection-deprecated",
               "The name of the current collection must be passed to the "
-              "Display.deprecated resp. AnsibleModule.deprecate calls "
-              "(`ansible.builtin` for ansible-base)",
+              "Display.deprecated resp. AssibleModule.deprecate calls "
+              "(`assible.builtin` for assible-base)",
               {'minversion': (2, 6)}),
     'E9508': ("Expired date (%r) found in call to Display.deprecated "
-              "or AnsibleModule.deprecate",
-              "ansible-deprecated-date",
+              "or AssibleModule.deprecate",
+              "assible-deprecated-date",
               "Used when a call to Display.deprecated specifies a date "
               "before today",
               {'minversion': (2, 6)}),
     'E9509': ("Invalid deprecated date (%r) found in call to "
-              "Display.deprecated or AnsibleModule.deprecate",
-              "ansible-invalid-deprecated-date",
+              "Display.deprecated or AssibleModule.deprecate",
+              "assible-invalid-deprecated-date",
               "Used when a call to Display.deprecated specifies an invalid "
               "date. It must be a string in format `YYYY-MM-DD` (ISO 8601)",
               {'minversion': (2, 6)}),
     'E9510': ("Both version and date found in call to "
-              "Display.deprecated or AnsibleModule.deprecate",
-              "ansible-deprecated-both-version-and-date",
+              "Display.deprecated or AssibleModule.deprecate",
+              "assible-deprecated-both-version-and-date",
               "Only one of version and date must be specified",
               {'minversion': (2, 6)}),
     'E9511': ("Removal version (%r) must be a major release, not a minor or "
               "patch release (see the specification at https://semver.org/)",
               "removal-version-must-be-major",
               "Used when a call to Display.deprecated or "
-              "AnsibleModule.deprecate for a collection specifies a version "
+              "AssibleModule.deprecate for a collection specifies a version "
               "which is not of the form x.0.0",
               {'minversion': (2, 6)}),
 }
 
 
-ANSIBLE_VERSION = LooseVersion('.'.join(ansible_version_raw.split('.')[:3]))
+ASSIBLE_VERSION = LooseVersion('.'.join(assible_version_raw.split('.')[:3]))
 
 
 def _get_expr_name(node):
@@ -120,7 +120,7 @@ def parse_isodate(value):
         raise ValueError(msg)
 
 
-class AnsibleDeprecatedChecker(BaseChecker):
+class AssibleDeprecatedChecker(BaseChecker):
     """Checks for Display.deprecated calls to ensure that the ``version``
     has not passed or met the time for removal
     """
@@ -147,10 +147,10 @@ class AnsibleDeprecatedChecker(BaseChecker):
     def __init__(self, *args, **kwargs):
         self.collection_version = None
         self.collection_name = None
-        super(AnsibleDeprecatedChecker, self).__init__(*args, **kwargs)
+        super(AssibleDeprecatedChecker, self).__init__(*args, **kwargs)
 
     def set_option(self, optname, value, action=None, optdict=None):
-        super(AnsibleDeprecatedChecker, self).set_option(optname, value, action, optdict)
+        super(AssibleDeprecatedChecker, self).set_option(optname, value, action, optdict)
         if optname == 'collection-version' and value is not None:
             self.collection_version = SemanticVersion(self.config.collection_version)
         if optname == 'collection-name' and value is not None:
@@ -164,11 +164,11 @@ class AnsibleDeprecatedChecker(BaseChecker):
         try:
             date_parsed = parse_isodate(date)
         except ValueError:
-            self.add_message('ansible-invalid-deprecated-date', node=node, args=(date,))
+            self.add_message('assible-invalid-deprecated-date', node=node, args=(date,))
             return
 
         if date_parsed < datetime.date.today():
-            self.add_message('ansible-deprecated-date', node=node, args=(date,))
+            self.add_message('assible-deprecated-date', node=node, args=(date,))
 
     def _check_version(self, node, version, collection_name):
         if not isinstance(version, (str, float)):
@@ -177,16 +177,16 @@ class AnsibleDeprecatedChecker(BaseChecker):
 
         version_no = str(version)
 
-        if collection_name == 'ansible.builtin':
-            # Ansible-base
+        if collection_name == 'assible.builtin':
+            # Assible-base
             try:
                 if not version_no:
                     raise ValueError('Version string should not be empty')
                 loose_version = LooseVersion(str(version_no))
-                if ANSIBLE_VERSION >= loose_version:
-                    self.add_message('ansible-deprecated-version', node=node, args=(version,))
+                if ASSIBLE_VERSION >= loose_version:
+                    self.add_message('assible-deprecated-version', node=node, args=(version,))
             except ValueError:
-                self.add_message('ansible-invalid-deprecated-version', node=node, args=(version,))
+                self.add_message('assible-invalid-deprecated-version', node=node, args=(version,))
         elif collection_name:
             # Collections
             try:
@@ -233,17 +233,17 @@ class AnsibleDeprecatedChecker(BaseChecker):
                     try:
                         version = node.args[1].value
                     except IndexError:
-                        self.add_message('ansible-deprecated-no-version', node=node)
+                        self.add_message('assible-deprecated-no-version', node=node)
                         return
                 if version and date:
-                    self.add_message('ansible-deprecated-both-version-and-date', node=node)
+                    self.add_message('assible-deprecated-both-version-and-date', node=node)
 
                 if collection_name:
-                    this_collection = collection_name == (self.collection_name or 'ansible.builtin')
+                    this_collection = collection_name == (self.collection_name or 'assible.builtin')
                     if not this_collection:
                         self.add_message('wrong-collection-deprecated', node=node, args=(collection_name,))
                 else:
-                    self.add_message('ansible-deprecated-no-collection-name', node=node)
+                    self.add_message('assible-deprecated-no-collection-name', node=node)
 
                 if date:
                     self._check_date(node, date)
@@ -256,4 +256,4 @@ class AnsibleDeprecatedChecker(BaseChecker):
 
 def register(linter):
     """required method to auto register this checker """
-    linter.register_checker(AnsibleDeprecatedChecker(linter))
+    linter.register_checker(AssibleDeprecatedChecker(linter))

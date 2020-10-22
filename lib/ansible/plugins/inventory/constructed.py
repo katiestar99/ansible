@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -32,7 +32,7 @@ EXAMPLES = r'''
 
         # this variable will only be set if I have a persistent fact cache enabled (and have non expired facts)
         # `strict: False` will skip this instead of producing an error if it is missing facts.
-        server_type: "ansible_hostname | regex_replace ('(.{6})(.{2}).*', '\\2')"
+        server_type: "assible_hostname | regex_replace ('(.{6})(.{2}).*', '\\2')"
     groups:
         # simple name matching
         webservers: inventory_hostname.startswith('web')
@@ -50,7 +50,7 @@ EXAMPLES = r'''
         # this creates a group per distro (distro_CentOS, distro_Debian) and assigns the hosts that have matching values to it,
         # using the default separator "_"
         - prefix: distro
-          key: ansible_distribution
+          key: assible_distribution
 
         # the following examples assume the first inventory is from the `aws_ec2` plugin
         # this creates a group per ec2 architecture and assign hosts to the matching ones (arch_x86_64, arch_sparc, etc)
@@ -69,13 +69,13 @@ EXAMPLES = r'''
 
 import os
 
-from ansible import constants as C
-from ansible.errors import AnsibleParserError
-from ansible.inventory.helpers import get_group_vars
-from ansible.plugins.inventory import BaseInventoryPlugin, Constructable
-from ansible.module_utils._text import to_native
-from ansible.utils.vars import combine_vars
-from ansible.vars.fact_cache import FactCache
+from assible import constants as C
+from assible.errors import AssibleParserError
+from assible.inventory.helpers import get_group_vars
+from assible.plugins.inventory import BaseInventoryPlugin, Constructable
+from assible.module_utils._text import to_native
+from assible.utils.vars import combine_vars
+from assible.vars.fact_cache import FactCache
 
 
 class InventoryModule(BaseInventoryPlugin, Constructable):
@@ -133,4 +133,4 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
                 self._add_host_to_keyed_groups(self.get_option('keyed_groups'), hostvars, host, strict=strict)
 
         except Exception as e:
-            raise AnsibleParserError("failed to parse %s: %s " % (to_native(path), to_native(e)))
+            raise AssibleParserError("failed to parse %s: %s " % (to_native(path), to_native(e)))

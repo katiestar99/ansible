@@ -11,9 +11,9 @@ DOCUMENTATION = """
     version_added: "2.0"
     options: {}
 """
-import ansible.constants as C
-from ansible.errors import AnsibleError
-from ansible.plugins.connection import ConnectionBase
+import assible.constants as C
+from assible.errors import AssibleError
+from assible.plugins.connection import ConnectionBase
 
 
 class Connection(ConnectionBase):
@@ -24,7 +24,7 @@ class Connection(ConnectionBase):
     def __init__(self, play_context, new_stdin, *args, **kwargs):
         super(Connection, self).__init__(play_context, new_stdin, *args, **kwargs)
 
-        raise AnsibleError('an error with {{ some Jinja }}')
+        raise AssibleError('an error with {{ some Jinja }}')
 
     def _connect(self):
         pass

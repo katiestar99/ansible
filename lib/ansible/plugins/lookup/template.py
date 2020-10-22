@@ -1,5 +1,5 @@
 # Copyright: (c) 2012, Michael DeHaan <michael.dehaan@gmail.com>
-# Copyright: (c) 2012-17, Ansible Project
+# Copyright: (c) 2012-17, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -62,14 +62,14 @@ _raw:
 from copy import deepcopy
 import os
 
-from ansible.errors import AnsibleError
-from ansible.plugins.lookup import LookupBase
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.template import generate_ansible_template_vars, AnsibleEnvironment, USE_JINJA2_NATIVE
-from ansible.utils.display import Display
+from assible.errors import AssibleError
+from assible.plugins.lookup import LookupBase
+from assible.module_utils._text import to_bytes, to_text
+from assible.template import generate_assible_template_vars, AssibleEnvironment, USE_JINJA2_NATIVE
+from assible.utils.display import Display
 
 if USE_JINJA2_NATIVE:
-    from ansible.utils.native_jinja import NativeJinjaText
+    from assible.utils.native_jinja import NativeJinjaText
 
 
 display = Display()
@@ -87,7 +87,7 @@ class LookupModule(LookupBase):
         variable_end_string = kwargs.get('variable_end_string', None)
 
         if USE_JINJA2_NATIVE and not jinja2_native:
-            templar = self._templar.copy_with_new_env(environment_class=AnsibleEnvironment)
+            templar = self._templar.copy_with_new_env(environment_class=AssibleEnvironment)
         else:
             templar = self._templar
 
@@ -101,7 +101,7 @@ class LookupModule(LookupBase):
                 template_data = to_text(b_template_data, errors='surrogate_or_strict')
 
                 # set jinja2 internal search path for includes
-                searchpath = variables.get('ansible_search_path', [])
+                searchpath = variables.get('assible_search_path', [])
                 if searchpath:
                     # our search paths aren't actually the proper ones for jinja includes.
                     # We want to search into the 'templates' subdir of each search path in
@@ -114,11 +114,11 @@ class LookupModule(LookupBase):
                 searchpath.insert(0, os.path.dirname(lookupfile))
 
                 # The template will have access to all existing variables,
-                # plus some added by ansible (e.g., template_{path,mtime}),
+                # plus some added by assible (e.g., template_{path,mtime}),
                 # plus anything passed to the lookup with the template_vars=
                 # argument.
                 vars = deepcopy(variables)
-                vars.update(generate_ansible_template_vars(lookupfile))
+                vars.update(generate_assible_template_vars(lookupfile))
                 vars.update(lookup_template_vars)
 
                 with templar.set_temporary_context(variable_start_string=variable_start_string,
@@ -129,11 +129,11 @@ class LookupModule(LookupBase):
 
                 if USE_JINJA2_NATIVE and not jinja2_native:
                     # jinja2_native is true globally but off for the lookup, we need this text
-                    # not to be processed by literal_eval anywhere in Ansible
+                    # not to be processed by literal_eval anywhere in Assible
                     res = NativeJinjaText(res)
 
                 ret.append(res)
             else:
-                raise AnsibleError("the template file %s could not be found for the lookup" % term)
+                raise AssibleError("the template file %s could not be found for the lookup" % term)
 
         return ret

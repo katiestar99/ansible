@@ -1,5 +1,5 @@
 # (c) 2014, Brian Coca, Josh Drake, et al
-# (c) 2017 Ansible Project
+# (c) 2017 Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -18,14 +18,14 @@ DOCUMENTATION = '''
           - A colon separated string of connection information for Redis.
         required: True
         env:
-          - name: ANSIBLE_CACHE_PLUGIN_CONNECTION
+          - name: ASSIBLE_CACHE_PLUGIN_CONNECTION
         ini:
           - key: fact_caching_connection
             section: defaults
       _prefix:
         description: User defined prefix to use when creating the DB entries
         env:
-          - name: ANSIBLE_CACHE_PLUGIN_PREFIX
+          - name: ASSIBLE_CACHE_PLUGIN_PREFIX
         ini:
           - key: fact_caching_prefix
             section: defaults
@@ -33,7 +33,7 @@ DOCUMENTATION = '''
         default: 86400
         description: Expiration timeout for the cache plugin data
         env:
-          - name: ANSIBLE_CACHE_PLUGIN_TIMEOUT
+          - name: ASSIBLE_CACHE_PLUGIN_TIMEOUT
         ini:
           - key: fact_caching_timeout
             section: defaults
@@ -43,14 +43,14 @@ DOCUMENTATION = '''
 import time
 import json
 
-from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.plugins.cache import BaseCacheModule
+from assible import constants as C
+from assible.errors import AssibleError
+from assible.plugins.cache import BaseCacheModule
 
 try:
     from redis import StrictRedis, VERSION
 except ImportError:
-    raise AnsibleError("The 'redis' python module (version 2.4.5 or newer) is required for the redis fact cache, 'pip install redis'")
+    raise AssibleError("The 'redis' python module (version 2.4.5 or newer) is required for the redis fact cache, 'pip install redis'")
 
 
 class CacheModule(BaseCacheModule):
@@ -71,7 +71,7 @@ class CacheModule(BaseCacheModule):
         self._prefix = C.CACHE_PLUGIN_PREFIX
         self._cache = {}
         self._db = StrictRedis(*connection)
-        self._keys_set = 'ansible_cache_keys'
+        self._keys_set = 'assible_cache_keys'
 
     def _make_key(self, key):
         return self._prefix + key

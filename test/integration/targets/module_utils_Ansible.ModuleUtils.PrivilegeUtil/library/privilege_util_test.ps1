@@ -1,9 +1,9 @@
 #!powershell
 
-#AnsibleRequires -CSharpUtil Ansible.Basic
-#Requires -Module Ansible.ModuleUtils.PrivilegeUtil
+#AssibleRequires -CSharpUtil Assible.Basic
+#Requires -Module Assible.ModuleUtils.PrivilegeUtil
 
-$module = [Ansible.Basic.AnsibleModule]::Create($args, @{})
+$module = [Assible.Basic.AssibleModule]::Create($args, @{})
 
 Function Assert-Equals($actual, $expected) {
     if ($actual -cne $expected) {
@@ -60,51 +60,51 @@ foreach ($raw_privilege in $raw_privilege_output) {
     $split = $raw_privilege.TrimEnd() -split " "
     $actual_privileges."$($split[0])" = ($split[-1] -eq "Enabled")
 }
-$process = [Ansible.Privilege.PrivilegeUtil]::GetCurrentProcess()
+$process = [Assible.Privilege.PrivilegeUtil]::GetCurrentProcess()
 
 ### Test PS cmdlets ###
-# test ps Get-AnsiblePrivilege
+# test ps Get-AssiblePrivilege
 foreach ($privilege in $total_privileges) {
     $expected = $null
     if ($actual_privileges.ContainsKey($privilege)) {
         $expected = $actual_privileges.$privilege
     }
-    $actual = Get-AnsiblePrivilege -Name $privilege
+    $actual = Get-AssiblePrivilege -Name $privilege
     Assert-Equals -actual $actual -expected $expected
 }
 
 # test c# GetAllPrivilegeInfo
-$actual = [Ansible.Privilege.PrivilegeUtil]::GetAllPrivilegeInfo($process)
+$actual = [Assible.Privilege.PrivilegeUtil]::GetAllPrivilegeInfo($process)
 Assert-Equals -actual $actual.GetType().Name -expected 'Dictionary`2'
 Assert-Equals -actual $actual.Count -expected $actual_privileges.Count
 foreach ($privilege in $total_privileges) {
     if ($actual_privileges.ContainsKey($privilege)) {
         $actual_value = $actual.$privilege
         if ($actual_privileges.$privilege) {
-            Assert-Equals -actual $actual_value.HasFlag([Ansible.Privilege.PrivilegeAttributes]::Enabled) -expected $true
+            Assert-Equals -actual $actual_value.HasFlag([Assible.Privilege.PrivilegeAttributes]::Enabled) -expected $true
         } else {
-            Assert-Equals -actual $actual_value.HasFlag([Ansible.Privilege.PrivilegeAttributes]::Enabled) -expected $false
+            Assert-Equals -actual $actual_value.HasFlag([Assible.Privilege.PrivilegeAttributes]::Enabled) -expected $false
         }
     }
 }
 
-# test Set-AnsiblePrivilege
-Set-AnsiblePrivilege -Name SeUndockPrivilege -Value $false  # ensure we start with a disabled privilege
+# test Set-AssiblePrivilege
+Set-AssiblePrivilege -Name SeUndockPrivilege -Value $false  # ensure we start with a disabled privilege
 
-Set-AnsiblePrivilege -Name SeUndockPrivilege -Value $true -WhatIf
-$actual = Get-AnsiblePrivilege -Name SeUndockPrivilege
+Set-AssiblePrivilege -Name SeUndockPrivilege -Value $true -WhatIf
+$actual = Get-AssiblePrivilege -Name SeUndockPrivilege
 Assert-Equals -actual $actual -expected $false
 
-Set-AnsiblePrivilege -Name SeUndockPrivilege -Value $true
-$actual = Get-AnsiblePrivilege -Name SeUndockPrivilege
+Set-AssiblePrivilege -Name SeUndockPrivilege -Value $true
+$actual = Get-AssiblePrivilege -Name SeUndockPrivilege
 Assert-Equals -actual $actual -expected $true
 
-Set-AnsiblePrivilege -Name SeUndockPrivilege -Value $false -WhatIf
-$actual = Get-AnsiblePrivilege -Name SeUndockPrivilege
+Set-AssiblePrivilege -Name SeUndockPrivilege -Value $false -WhatIf
+$actual = Get-AssiblePrivilege -Name SeUndockPrivilege
 Assert-Equals -actual $actual -expected $true
 
-Set-AnsiblePrivilege -Name SeUndockPrivilege -Value $false
-$actual = Get-AnsiblePrivilege -Name SeUndockPrivilege
+Set-AssiblePrivilege -Name SeUndockPrivilege -Value $false
+$actual = Get-AssiblePrivilege -Name SeUndockPrivilege
 Assert-Equals -actual $actual -expected $false
 
 $module.Result.data = "success"

@@ -3,12 +3,12 @@
     - name: check that facts were gathered but no local facts exist
       assert:
         that:
-            - ansible_facts is defined and 'fqdn' in ansible_facts
-            - not 'uuid' in ansible_local
+            - assible_facts is defined and 'fqdn' in assible_facts
+            - not 'uuid' in assible_local
     - name: create 'local facts' for next gathering
       copy:
         src: uuid.fact
-        dest: /etc/ansible/facts.d/
+        dest: /etc/assible/facts.d/
         mode: 0755
 
 - hosts: testhost
@@ -16,8 +16,8 @@
     - name: ensure facts are gathered and includes the new 'local facts' created above
       assert:
         that:
-            - ansible_facts is defined and 'fqdn' in ansible_facts
-            - "'uuid' in ansible_local"
+            - assible_facts is defined and 'fqdn' in assible_facts
+            - "'uuid' in assible_local"
 
     - name: cleanup 'local facts' from target
-      file: path=/etc/ansible/facts.d/uuid.fact state=absent
+      file: path=/etc/assible/facts.d/uuid.fact state=absent

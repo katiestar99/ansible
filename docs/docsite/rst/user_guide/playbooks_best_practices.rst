@@ -5,7 +5,7 @@
 Tips and tricks
 ***************
 
-These tips and tricks have helped us optimize our Ansible usage, and we offer them here as suggestions. We hope they will help you organize content, write playbooks, maintain inventory, and execute Ansible. Ultimately, though, you should use Ansible in the way that makes most sense for your organization and your goals.
+These tips and tricks have helped us optimize our Assible usage, and we offer them here as suggestions. We hope they will help you organize content, write playbooks, maintain inventory, and execute Assible. Ultimately, though, you should use Assible in the way that makes most sense for your organization and your goals.
 
 .. contents::
    :local:
@@ -13,7 +13,7 @@ These tips and tricks have helped us optimize our Ansible usage, and we offer th
 General tips
 ============
 
-These concepts apply to all Ansible activities and artifacts.
+These concepts apply to all Assible activities and artifacts.
 
 Keep it simple
 --------------
@@ -38,7 +38,7 @@ Generous use of whitespace, for example, a blank line before each block or task,
 Always name tasks
 -----------------
 
-Task names are optional, but extremely useful. In its output, Ansible shows you the name of each task it runs. Choose names that describe what each task does and why.
+Task names are optional, but extremely useful. In its output, Assible shows you the name of each task it runs. Choose names that describe what each task does and why.
 
 Always mention the state
 ------------------------
@@ -63,7 +63,7 @@ With cloud providers and other systems that maintain canonical lists of your inf
 Group inventory by function
 ---------------------------
 
-A system can be in multiple groups.  See :ref:`intro_inventory` and :ref:`intro_patterns`. If you create groups named for the function of the nodes in the group, for example *webservers* or *dbservers*, your playbooks can target machines based on function. You can assign function-specific variables using the group variable system, and design Ansible roles to handle function-specific use cases. See :ref:`playbooks_reuse_roles`.
+A system can be in multiple groups.  See :ref:`intro_inventory` and :ref:`intro_patterns`. If you create groups named for the function of the nodes in the group, for example *webservers* or *dbservers*, your playbooks can target machines based on function. You can assign function-specific variables using the group variable system, and design Assible roles to handle function-specific use cases. See :ref:`playbooks_reuse_roles`.
 
 Separate production and staging inventory
 -----------------------------------------
@@ -75,7 +75,7 @@ You can keep your production environment separate from development, test, and st
 Keep vaulted variables safely visible
 -------------------------------------
 
-You should encrypt sensitive or secret variables with Ansible Vault. However, encrypting the variable names as well as the variable values makes it hard to find the source of the values. You can keep the names of your variables accessible (by ``grep``, for example) without exposing any secrets by adding a layer of indirection:
+You should encrypt sensitive or secret variables with Assible Vault. However, encrypting the variable names as well as the variable values makes it hard to find the source of the values. You can keep the names of your variables accessible (by ``grep``, for example) without exposing any secrets by adding a layer of indirection:
 
 #. Create a ``group_vars/`` subdirectory named after the group.
 #. Inside this subdirectory, create two files named ``vars`` and ``vault``.
@@ -85,12 +85,12 @@ You should encrypt sensitive or secret variables with Ansible Vault. However, en
 #. Encrypt the ``vault`` file to protect its contents.
 #. Use the variable name from the ``vars`` file in your playbooks.
 
-When running a playbook, Ansible finds the variables in the unencrypted file, which pulls the sensitive variable values from the encrypted file. There is no limit to the number of variable and vault files or their names.
+When running a playbook, Assible finds the variables in the unencrypted file, which pulls the sensitive variable values from the encrypted file. There is no limit to the number of variable and vault files or their names.
 
 Execution tricks
 ================
 
-These tips apply to using Ansible, rather than to Ansible artifacts.
+These tips apply to using Assible, rather than to Assible artifacts.
 
 Try it in staging first
 -----------------------
@@ -107,7 +107,7 @@ Use the 'serial' keyword to control how many machines you update at once in the 
 Handling OS and distro differences
 ----------------------------------
 
-Group variables files and the ``group_by`` module work together to help Ansible execute across a range of operating systems and distributions that require different settings, packages, and tools. The ``group_by`` module creates a dynamic group of hosts matching certain criteria. This group does not need to be defined in the inventory file. This approach lets you execute different tasks on different operating systems or distributions. For example::
+Group variables files and the ``group_by`` module work together to help Assible execute across a range of operating systems and distributions that require different settings, packages, and tools. The ``group_by`` module creates a dynamic group of hosts matching certain criteria. This group does not need to be defined in the inventory file. This approach lets you execute different tasks on different operating systems or distributions. For example::
 
    ---
 
@@ -116,7 +116,7 @@ Group variables files and the ``group_by`` module work together to help Ansible 
       tasks:
         - name: Classify hosts depending on their OS distribution
           group_by:
-            key: os_{{ ansible_facts['distribution'] }}
+            key: os_{{ assible_facts['distribution'] }}
 
     # now just on the CentOS hosts...
 
@@ -143,7 +143,7 @@ You can use the same setup with ``include_vars`` when you only need OS-specific 
     - hosts: all
       tasks:
         - name: Set OS distribution dependent variables
-          include_vars: "os_{{ ansible_facts['distribution'] }}.yml"
+          include_vars: "os_{{ assible_facts['distribution'] }}.yml"
         - debug:
             var: asdf
 
@@ -158,10 +158,10 @@ This pulls in variables from the group_vars/os_CentOS.yml file.
    :ref:`list_of_collections`
        Browse existing collections, modules, and plugins
    :ref:`developing_modules`
-       Learn how to extend Ansible by writing your own modules
+       Learn how to extend Assible by writing your own modules
    :ref:`intro_patterns`
        Learn about how to select hosts
-   `GitHub examples directory <https://github.com/ansible/ansible-examples>`_
+   `GitHub examples directory <https://github.com/assible/assible-examples>`_
        Complete playbook files from the github project source
-   `Mailing List <https://groups.google.com/group/ansible-project>`_
+   `Mailing List <https://groups.google.com/group/assible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups

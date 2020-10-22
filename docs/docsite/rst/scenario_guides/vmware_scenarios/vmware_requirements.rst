@@ -10,15 +10,15 @@ VMware Prerequisites
 Installing SSL Certificates
 ===========================
 
-All vCenter and ESXi servers require SSL encryption on all connections to enforce secure communication. You must enable SSL encryption for Ansible by installing the server's SSL certificates on your Ansible control node or delegate node.
+All vCenter and ESXi servers require SSL encryption on all connections to enforce secure communication. You must enable SSL encryption for Assible by installing the server's SSL certificates on your Assible control node or delegate node.
 
-If the SSL certificate of your vCenter or ESXi server is not correctly installed on your Ansible control node, you will see the following warning when using Ansible VMware modules:
+If the SSL certificate of your vCenter or ESXi server is not correctly installed on your Assible control node, you will see the following warning when using Assible VMware modules:
 
 ``Unable to connect to vCenter or ESXi API at xx.xx.xx.xx on TCP/443: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:777)``
 
-To install the SSL certificate for your VMware server,  and run your Ansible VMware modules in encrypted mode, please follow the instructions for the server you are running with VMware.
+To install the SSL certificate for your VMware server,  and run your Assible VMware modules in encrypted mode, please follow the instructions for the server you are running with VMware.
 
-Installing vCenter SSL certificates for Ansible
+Installing vCenter SSL certificates for Assible
 -----------------------------------------------
 
 * From any web browser, go to the base URL of the vCenter Server without port number like ``https://vcenter-domain.example.com``
@@ -32,14 +32,14 @@ Installing vCenter SSL certificates for Ansible
 * Install the certificate files are trusted certificates by the process that is appropriate for your operating system.
 
 
-Installing ESXi SSL certificates for Ansible
+Installing ESXi SSL certificates for Assible
 --------------------------------------------
 
-* Enable SSH Service on ESXi either by using Ansible VMware module `vmware_host_service_manager <https://github.com/ansible-collections/vmware/blob/main/plugins/modules/vmware_host_config_manager.py>`_ or manually using vSphere Web interface.
+* Enable SSH Service on ESXi either by using Assible VMware module `vmware_host_service_manager <https://github.com/assible-collections/vmware/blob/main/plugins/modules/vmware_host_config_manager.py>`_ or manually using vSphere Web interface.
 
 * SSH to ESXi server using administrative credentials, and navigate to directory ``/etc/vmware/ssl``
 
-* Secure copy (SCP) ``rui.crt`` located in ``/etc/vmware/ssl`` directory to Ansible control node.
+* Secure copy (SCP) ``rui.crt`` located in ``/etc/vmware/ssl`` directory to Assible control node.
 
 * Install the certificate file by the process that is appropriate for your operating system.
 

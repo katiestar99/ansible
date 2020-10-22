@@ -42,10 +42,10 @@ class ACMEProvider(CloudProvider):
         super(ACMEProvider, self).__init__(args)
 
         # The simulator must be pinned to a specific version to guarantee CI passes with the version used.
-        if os.environ.get('ANSIBLE_ACME_CONTAINER'):
-            self.image = os.environ.get('ANSIBLE_ACME_CONTAINER')
+        if os.environ.get('ASSIBLE_ACME_CONTAINER'):
+            self.image = os.environ.get('ASSIBLE_ACME_CONTAINER')
         else:
-            self.image = 'quay.io/ansible/acme-test-container:2.0.0'
+            self.image = 'quay.io/assible/acme-test-container:2.0.0'
         self.container_name = ''
 
     def _wait_for_service(self, protocol, acme_host, port, local_part, name):
@@ -141,7 +141,7 @@ class ACMEProvider(CloudProvider):
             else:
                 publish_ports = []
 
-            if not os.environ.get('ANSIBLE_ACME_CONTAINER'):
+            if not os.environ.get('ASSIBLE_ACME_CONTAINER'):
                 docker_pull(self.args, self.image)
 
             docker_run(
@@ -181,10 +181,10 @@ class ACMEEnvironment(CloudEnvironment):
         """
         :rtype: CloudEnvironmentConfig
         """
-        ansible_vars = dict(
+        assible_vars = dict(
             acme_host=self._get_cloud_config('acme_host'),
         )
 
         return CloudEnvironmentConfig(
-            ansible_vars=ansible_vars,
+            assible_vars=assible_vars,
         )

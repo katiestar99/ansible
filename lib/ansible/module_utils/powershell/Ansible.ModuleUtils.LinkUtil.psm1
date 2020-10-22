@@ -1,7 +1,7 @@
-# Copyright (c) 2017 Ansible Project
+# Copyright (c) 2017 Assible Project
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
-#Requires -Module Ansible.ModuleUtils.PrivilegeUtil
+#Requires -Module Assible.ModuleUtils.PrivilegeUtil
 
 Function Load-LinkUtils() {
     $link_util = @'
@@ -12,7 +12,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Ansible
+namespace Assible
 {
     public enum LinkType
     {
@@ -392,14 +392,14 @@ namespace Ansible
 }
 '@
 
-    # FUTURE: find a better way to get the _ansible_remote_tmp variable
+    # FUTURE: find a better way to get the _assible_remote_tmp variable
     $original_tmp = $env:TMP
 
     $remote_tmp = $original_tmp
     $module_params = Get-Variable -Name complex_args -ErrorAction SilentlyContinue
     if ($module_params) {
-        if ($module_params.Value.ContainsKey("_ansible_remote_tmp") ) {
-            $remote_tmp = $module_params.Value["_ansible_remote_tmp"]
+        if ($module_params.Value.ContainsKey("_assible_remote_tmp") ) {
+            $remote_tmp = $module_params.Value["_assible_remote_tmp"]
             $remote_tmp = [System.Environment]::ExpandEnvironmentVariables($remote_tmp)
         }
     }
@@ -409,19 +409,19 @@ namespace Ansible
     $env:TMP = $original_tmp
 
     # enable the SeBackupPrivilege if it is disabled
-    $state = Get-AnsiblePrivilege -Name SeBackupPrivilege
+    $state = Get-AssiblePrivilege -Name SeBackupPrivilege
     if ($state -eq $false) {
-        Set-AnsiblePrivilege -Name SeBackupPrivilege -Value $true
+        Set-AssiblePrivilege -Name SeBackupPrivilege -Value $true
     }
 }
 
 Function Get-Link($link_path) {
-    $link_info = [Ansible.LinkUtil]::GetLinkInfo($link_path)
+    $link_info = [Assible.LinkUtil]::GetLinkInfo($link_path)
     return $link_info
 }
 
 Function Remove-Link($link_path) {
-    [Ansible.LinkUtil]::DeleteLink($link_path)
+    [Assible.LinkUtil]::DeleteLink($link_path)
 }
 
 Function New-Link($link_path, $link_target, $link_type) {
@@ -431,23 +431,23 @@ Function New-Link($link_path, $link_target, $link_type) {
 
     switch($link_type) {
         "link" {
-            $type = [Ansible.LinkType]::SymbolicLink
+            $type = [Assible.LinkType]::SymbolicLink
         }
         "junction" {
             if (Test-Path -LiteralPath $link_target -PathType Leaf) {
                 throw "cannot set the target for a junction point to a file"
             }
-            $type = [Ansible.LinkType]::JunctionPoint
+            $type = [Assible.LinkType]::JunctionPoint
         }
         "hard" {
             if (Test-Path -LiteralPath $link_target -PathType Container) {
                 throw "cannot set the target for a hard link to a directory"
             }
-            $type = [Ansible.LinkType]::HardLink
+            $type = [Assible.LinkType]::HardLink
         }
         default { throw "invalid link_type option $($link_type): expecting link, junction, hard" }
     }
-    [Ansible.LinkUtil]::CreateLink($link_path, $link_target, $type)
+    [Assible.LinkUtil]::CreateLink($link_path, $link_target, $type)
 }
 
 # this line must stay at the bottom to ensure all defined module parts are exported

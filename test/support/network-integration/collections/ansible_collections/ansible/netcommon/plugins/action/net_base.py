@@ -1,4 +1,4 @@
-# Copyright: (c) 2015, Ansible Inc,
+# Copyright: (c) 2015, Assible Inc,
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -7,9 +7,9 @@ __metaclass__ = type
 
 import copy
 
-from ansible.errors import AnsibleError
-from ansible.plugins.action import ActionBase
-from ansible.utils.display import Display
+from assible.errors import AssibleError
+from assible.plugins.action import ActionBase
+from assible.utils.display import Display
 
 display = Display()
 
@@ -60,14 +60,14 @@ class ActionModule(ActionBase):
             display.vvvv("Getting network OS from inventory")
             network_os = self._play_context.network_os
         elif (
-            "network_os" in task_vars.get("ansible_facts", {})
-            and task_vars["ansible_facts"]["network_os"]
+            "network_os" in task_vars.get("assible_facts", {})
+            and task_vars["assible_facts"]["network_os"]
         ):
             display.vvvv("Getting network OS from fact")
-            network_os = task_vars["ansible_facts"]["network_os"]
+            network_os = task_vars["assible_facts"]["network_os"]
         else:
-            raise AnsibleError(
-                "ansible_network_os must be specified on this host to use platform agnostic modules"
+            raise AssibleError(
+                "assible_network_os must be specified on this host to use platform agnostic modules"
             )
 
         return network_os

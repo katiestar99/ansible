@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2019, Ansible Project
+# Copyright: (c) 2019, Assible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Make coding more python3-ish
@@ -17,15 +17,15 @@ from hashlib import sha256
 from io import BytesIO
 from units.compat.mock import MagicMock, mock_open, patch
 
-from ansible import context
-from ansible.cli.galaxy import GalaxyCLI
-from ansible.errors import AnsibleError
-from ansible.galaxy import api, collection, token
-from ansible.module_utils._text import to_bytes, to_native, to_text
-from ansible.module_utils.six.moves import builtins
-from ansible.utils import context_objects as co
-from ansible.utils.display import Display
-from ansible.utils.hashing import secure_hash_s
+from assible import context
+from assible.cli.galaxy import GalaxyCLI
+from assible.errors import AssibleError
+from assible.galaxy import api, collection, token
+from assible.module_utils._text import to_bytes, to_native, to_text
+from assible.module_utils.six.moves import builtins
+from assible.utils import context_objects as co
+from assible.utils.display import Display
+from assible.utils.hashing import secure_hash_s
 
 
 @pytest.fixture(autouse='function')
@@ -39,11 +39,11 @@ def reset_cli_args():
 def collection_input(tmp_path_factory):
     ''' Creates a collection skeleton directory for build tests '''
     test_dir = to_text(tmp_path_factory.mktemp('test-ÅÑŚÌβŁÈ Collections Input'))
-    namespace = 'ansible_namespace'
+    namespace = 'assible_namespace'
     collection = 'collection'
     skeleton = os.path.join(os.path.dirname(os.path.split(__file__)[0]), 'cli', 'test_data', 'collection_skeleton')
 
-    galaxy_args = ['ansible-galaxy', 'collection', 'init', '%s.%s' % (namespace, collection),
+    galaxy_args = ['assible-galaxy', 'collection', 'init', '%s.%s' % (namespace, collection),
                    '-c', '--init-path', test_dir, '--collection-skeleton', skeleton]
     GalaxyCLI(args=galaxy_args).run()
     collection_dir = os.path.join(test_dir, namespace, collection)
@@ -117,14 +117,14 @@ def tmp_tarfile(tmp_path_factory, manifest_info):
 @pytest.fixture()
 def galaxy_server():
     context.CLIARGS._store = {'ignore_certs': False}
-    galaxy_api = api.GalaxyAPI(None, 'test_server', 'https://galaxy.ansible.com',
+    galaxy_api = api.GalaxyAPI(None, 'test_server', 'https://galaxy.assible.com',
                                token=token.GalaxyToken(token='key'))
     return galaxy_api
 
 
 @pytest.fixture()
 def manifest_template():
-    def get_manifest_info(namespace='ansible_namespace', name='collection', version='0.1.0'):
+    def get_manifest_info(namespace='assible_namespace', name='collection', version='0.1.0'):
         return {
             "collection_info": {
                 "namespace": namespace,
@@ -200,14 +200,14 @@ def manifest(manifest_info):
 
 @pytest.fixture()
 def mock_collection(galaxy_server):
-    def create_mock_collection(namespace='ansible_namespace', name='collection', version='0.1.0', local=True, local_installed=True):
+    def create_mock_collection(namespace='assible_namespace', name='collection', version='0.1.0', local=True, local_installed=True):
         b_path = None
         force = False
 
         if local:
             mock_collection = collection.CollectionRequirement(namespace, name, b_path, galaxy_server, [version], version, force, skip=local_installed)
         else:
-            download_url = 'https://galaxy.ansible.com/download/{0}-{1}-{2}.tar.gz'.format(namespace, name, version)
+            download_url = 'https://galaxy.assible.com/download/{0}-{1}-{2}.tar.gz'.format(namespace, name, version)
             digest = '19415a6a6df831df61cffde4a09d1d89ac8d8ca5c0586e85bea0b106d6dff29a'
             dependencies = {}
             metadata = api.CollectionVersionMetadata(namespace, name, version, download_url, digest, dependencies)
@@ -221,40 +221,40 @@ def test_build_collection_no_galaxy_yaml():
     fake_path = u'/fake/ÅÑŚÌβŁÈ/path'
     expected = to_native("The collection galaxy.yml path '%s/galaxy.yml' does not exist." % fake_path)
 
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.build_collection(fake_path, 'output', False)
 
 
 def test_build_existing_output_file(collection_input):
     input_dir, output_dir = collection_input
 
-    existing_output_dir = os.path.join(output_dir, 'ansible_namespace-collection-0.1.0.tar.gz')
+    existing_output_dir = os.path.join(output_dir, 'assible_namespace-collection-0.1.0.tar.gz')
     os.makedirs(existing_output_dir)
 
     expected = "The output collection artifact '%s' already exists, but is a directory - aborting" \
                % to_native(existing_output_dir)
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.build_collection(input_dir, output_dir, False)
 
 
 def test_build_existing_output_without_force(collection_input):
     input_dir, output_dir = collection_input
 
-    existing_output = os.path.join(output_dir, 'ansible_namespace-collection-0.1.0.tar.gz')
+    existing_output = os.path.join(output_dir, 'assible_namespace-collection-0.1.0.tar.gz')
     with open(existing_output, 'w+') as out_file:
         out_file.write("random garbage")
         out_file.flush()
 
     expected = "The file '%s' already exists. You can use --force to re-create the collection artifact." \
                % to_native(existing_output)
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection.build_collection(input_dir, output_dir, False)
 
 
 def test_build_existing_output_with_force(collection_input):
     input_dir, output_dir = collection_input
 
-    existing_output = os.path.join(output_dir, 'ansible_namespace-collection-0.1.0.tar.gz')
+    existing_output = os.path.join(output_dir, 'assible_namespace-collection-0.1.0.tar.gz')
     with open(existing_output, 'w+') as out_file:
         out_file.write("random garbage")
         out_file.flush()
@@ -269,7 +269,7 @@ def test_build_existing_output_with_force(collection_input):
 def test_invalid_yaml_galaxy_file(galaxy_yml):
     expected = to_native(b"Failed to parse the galaxy.yml at '%s' with the following error:" % galaxy_yml)
 
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection._get_galaxy_yml(galaxy_yml)
 
 
@@ -278,7 +278,7 @@ def test_missing_required_galaxy_key(galaxy_yml):
     expected = "The collection galaxy.yml at '%s' is missing the following mandatory keys: authors, name, " \
                "readme, version" % to_native(galaxy_yml)
 
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection._get_galaxy_yml(galaxy_yml)
 
 
@@ -350,7 +350,7 @@ def test_build_ignore_files_and_folders(collection_input, monkeypatch):
     monkeypatch.setattr(Display, 'vvv', mock_display)
 
     git_folder = os.path.join(input_dir, '.git')
-    retry_file = os.path.join(input_dir, 'ansible.retry')
+    retry_file = os.path.join(input_dir, 'assible.retry')
 
     tests_folder = os.path.join(input_dir, 'tests', 'output')
     tests_output_file = os.path.join(tests_folder, 'result.txt')
@@ -370,7 +370,7 @@ def test_build_ignore_files_and_folders(collection_input, monkeypatch):
 
     assert actual['format'] == 1
     for manifest_entry in actual['files']:
-        assert manifest_entry['name'] not in ['.git', 'ansible.retry', 'galaxy.yml', 'tests/output', 'tests/output/result.txt']
+        assert manifest_entry['name'] not in ['.git', 'assible.retry', 'galaxy.yml', 'tests/output', 'tests/output/result.txt']
 
     expected_msgs = [
         "Skipping '%s/galaxy.yml' for collection build" % to_text(input_dir),
@@ -531,7 +531,7 @@ def test_build_with_symlink_inside_collection(collection_input):
 
     collection.build_collection(input_dir, output_dir, False)
 
-    output_artifact = os.path.join(output_dir, 'ansible_namespace-collection-0.1.0.tar.gz')
+    output_artifact = os.path.join(output_dir, 'assible_namespace-collection-0.1.0.tar.gz')
     assert tarfile.is_tarfile(output_artifact)
 
     with tarfile.open(output_artifact, mode='r') as actual:
@@ -692,7 +692,7 @@ def test_download_file_hash_mismatch(tmp_path_factory, monkeypatch):
     monkeypatch.setattr(collection, 'open_url', mock_open)
 
     expected = "Mismatch artifact hash with downloaded file"
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection._download_file('http://google.com/file', temp_dir, 'bad', True)
 
 
@@ -700,7 +700,7 @@ def test_extract_tar_file_invalid_hash(tmp_tarfile):
     temp_dir, tfile, filename, dummy = tmp_tarfile
 
     expected = "Checksum mismatch for '%s' inside collection at '%s'" % (to_native(filename), to_native(tfile.name))
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection._extract_tar_file(tfile, filename, temp_dir, temp_dir, "fakehash")
 
 
@@ -708,7 +708,7 @@ def test_extract_tar_file_missing_member(tmp_tarfile):
     temp_dir, tfile, dummy, dummy = tmp_tarfile
 
     expected = "Collection tar at '%s' does not contain the expected file 'missing'." % to_native(tfile.name)
-    with pytest.raises(AnsibleError, match=expected):
+    with pytest.raises(AssibleError, match=expected):
         collection._extract_tar_file(tfile, 'missing', temp_dir, temp_dir)
 
 
@@ -738,36 +738,36 @@ def test_extract_tar_file_outside_dir(tmp_path_factory):
     expected = re.escape("Cannot extract tar entry '%s' as it will be placed outside the collection directory"
                          % to_native(tar_filename))
     with tarfile.open(tar_file, 'r') as tfile:
-        with pytest.raises(AnsibleError, match=expected):
+        with pytest.raises(AssibleError, match=expected):
             collection._extract_tar_file(tfile, tar_filename, os.path.join(temp_dir, to_bytes(filename)), temp_dir)
 
 
 def test_require_one_of_collections_requirements_with_both():
-    cli = GalaxyCLI(args=['ansible-galaxy', 'collection', 'verify', 'namespace.collection', '-r', 'requirements.yml'])
+    cli = GalaxyCLI(args=['assible-galaxy', 'collection', 'verify', 'namespace.collection', '-r', 'requirements.yml'])
 
-    with pytest.raises(AnsibleError) as req_err:
+    with pytest.raises(AssibleError) as req_err:
         cli._require_one_of_collections_requirements(('namespace.collection',), 'requirements.yml')
 
-    with pytest.raises(AnsibleError) as cli_err:
+    with pytest.raises(AssibleError) as cli_err:
         cli.run()
 
     assert req_err.value.message == cli_err.value.message == 'The positional collection_name arg and --requirements-file are mutually exclusive.'
 
 
 def test_require_one_of_collections_requirements_with_neither():
-    cli = GalaxyCLI(args=['ansible-galaxy', 'collection', 'verify'])
+    cli = GalaxyCLI(args=['assible-galaxy', 'collection', 'verify'])
 
-    with pytest.raises(AnsibleError) as req_err:
+    with pytest.raises(AssibleError) as req_err:
         cli._require_one_of_collections_requirements((), '')
 
-    with pytest.raises(AnsibleError) as cli_err:
+    with pytest.raises(AssibleError) as cli_err:
         cli.run()
 
     assert req_err.value.message == cli_err.value.message == 'You must specify a collection name or a requirements file.'
 
 
 def test_require_one_of_collections_requirements_with_collections():
-    cli = GalaxyCLI(args=['ansible-galaxy', 'collection', 'verify', 'namespace1.collection1', 'namespace2.collection1:1.0.0'])
+    cli = GalaxyCLI(args=['assible-galaxy', 'collection', 'verify', 'namespace1.collection1', 'namespace2.collection1:1.0.0'])
     collections = ('namespace1.collection1', 'namespace2.collection1:1.0.0',)
 
     requirements = cli._require_one_of_collections_requirements(collections, '')['collections']
@@ -775,9 +775,9 @@ def test_require_one_of_collections_requirements_with_collections():
     assert requirements == [('namespace1.collection1', '*', None, None), ('namespace2.collection1', '1.0.0', None, None)]
 
 
-@patch('ansible.cli.galaxy.GalaxyCLI._parse_requirements_file')
+@patch('assible.cli.galaxy.GalaxyCLI._parse_requirements_file')
 def test_require_one_of_collections_requirements_with_requirements(mock_parse_requirements_file, galaxy_server):
-    cli = GalaxyCLI(args=['ansible-galaxy', 'collection', 'verify', '-r', 'requirements.yml', 'namespace.collection'])
+    cli = GalaxyCLI(args=['assible-galaxy', 'collection', 'verify', '-r', 'requirements.yml', 'namespace.collection'])
     mock_parse_requirements_file.return_value = {'collections': [('namespace.collection', '1.0.5', galaxy_server)]}
     requirements = cli._require_one_of_collections_requirements((), 'requirements.yml')['collections']
 
@@ -785,18 +785,18 @@ def test_require_one_of_collections_requirements_with_requirements(mock_parse_re
     assert requirements == [('namespace.collection', '1.0.5', galaxy_server)]
 
 
-@patch('ansible.cli.galaxy.GalaxyCLI.execute_verify', spec=True)
+@patch('assible.cli.galaxy.GalaxyCLI.execute_verify', spec=True)
 def test_call_GalaxyCLI(execute_verify):
-    galaxy_args = ['ansible-galaxy', 'collection', 'verify', 'namespace.collection']
+    galaxy_args = ['assible-galaxy', 'collection', 'verify', 'namespace.collection']
 
     GalaxyCLI(args=galaxy_args).run()
 
     assert execute_verify.call_count == 1
 
 
-@patch('ansible.cli.galaxy.GalaxyCLI.execute_verify')
+@patch('assible.cli.galaxy.GalaxyCLI.execute_verify')
 def test_call_GalaxyCLI_with_implicit_role(execute_verify):
-    galaxy_args = ['ansible-galaxy', 'verify', 'namespace.implicit_role']
+    galaxy_args = ['assible-galaxy', 'verify', 'namespace.implicit_role']
 
     with pytest.raises(SystemExit):
         GalaxyCLI(args=galaxy_args).run()
@@ -804,9 +804,9 @@ def test_call_GalaxyCLI_with_implicit_role(execute_verify):
     assert not execute_verify.called
 
 
-@patch('ansible.cli.galaxy.GalaxyCLI.execute_verify')
+@patch('assible.cli.galaxy.GalaxyCLI.execute_verify')
 def test_call_GalaxyCLI_with_role(execute_verify):
-    galaxy_args = ['ansible-galaxy', 'role', 'verify', 'namespace.role']
+    galaxy_args = ['assible-galaxy', 'role', 'verify', 'namespace.role']
 
     with pytest.raises(SystemExit):
         GalaxyCLI(args=galaxy_args).run()
@@ -814,9 +814,9 @@ def test_call_GalaxyCLI_with_role(execute_verify):
     assert not execute_verify.called
 
 
-@patch('ansible.cli.galaxy.verify_collections', spec=True)
+@patch('assible.cli.galaxy.verify_collections', spec=True)
 def test_execute_verify_with_defaults(mock_verify_collections):
-    galaxy_args = ['ansible-galaxy', 'collection', 'verify', 'namespace.collection:1.0.4']
+    galaxy_args = ['assible-galaxy', 'collection', 'verify', 'namespace.collection:1.0.4']
     GalaxyCLI(args=galaxy_args).run()
 
     assert mock_verify_collections.call_count == 1
@@ -825,17 +825,17 @@ def test_execute_verify_with_defaults(mock_verify_collections):
 
     assert requirements == [('namespace.collection', '1.0.4', None, None)]
     for install_path in search_paths:
-        assert install_path.endswith('ansible_collections')
-    assert galaxy_apis[0].api_server == 'https://galaxy.ansible.com'
+        assert install_path.endswith('assible_collections')
+    assert galaxy_apis[0].api_server == 'https://galaxy.assible.com'
     assert validate is True
     assert ignore_errors is False
 
 
-@patch('ansible.cli.galaxy.verify_collections', spec=True)
+@patch('assible.cli.galaxy.verify_collections', spec=True)
 def test_execute_verify(mock_verify_collections):
     GalaxyCLI(args=[
-        'ansible-galaxy', 'collection', 'verify', 'namespace.collection:1.0.4', '--ignore-certs',
-        '-p', '~/.ansible', '--ignore-errors', '--server', 'http://galaxy-dev.com',
+        'assible-galaxy', 'collection', 'verify', 'namespace.collection:1.0.4', '--ignore-certs',
+        '-p', '~/.assible', '--ignore-errors', '--server', 'http://galaxy-dev.com',
     ]).run()
 
     assert mock_verify_collections.call_count == 1
@@ -844,7 +844,7 @@ def test_execute_verify(mock_verify_collections):
 
     assert requirements == [('namespace.collection', '1.0.4', None, None)]
     for install_path in search_paths:
-        assert install_path.endswith('ansible_collections')
+        assert install_path.endswith('assible_collections')
     assert galaxy_apis[0].api_server == 'http://galaxy-dev.com'
     assert validate is False
     assert ignore_errors is True
@@ -857,7 +857,7 @@ def test_verify_file_hash_deleted_file(manifest_info):
     namespace = manifest_info['collection_info']['namespace']
     name = manifest_info['collection_info']['name']
     version = manifest_info['collection_info']['version']
-    server = 'http://galaxy.ansible.com'
+    server = 'http://galaxy.assible.com'
 
     error_queue = []
 
@@ -881,7 +881,7 @@ def test_verify_file_hash_matching_hash(manifest_info):
     namespace = manifest_info['collection_info']['namespace']
     name = manifest_info['collection_info']['name']
     version = manifest_info['collection_info']['version']
-    server = 'http://galaxy.ansible.com'
+    server = 'http://galaxy.assible.com'
 
     error_queue = []
 
@@ -904,7 +904,7 @@ def test_verify_file_hash_mismatching_hash(manifest_info):
     namespace = manifest_info['collection_info']['namespace']
     name = manifest_info['collection_info']['name']
     version = manifest_info['collection_info']['version']
-    server = 'http://galaxy.ansible.com'
+    server = 'http://galaxy.assible.com'
 
     error_queue = []
 
@@ -952,7 +952,7 @@ def test_get_nonexistent_tar_file_member(tmp_tarfile):
 
     file_does_not_exist = filename + 'nonexistent'
 
-    with pytest.raises(AnsibleError) as err:
+    with pytest.raises(AssibleError) as err:
         collection._get_tar_file_member(tfile, file_does_not_exist)
 
     assert to_text(err.value.message) == "Collection tar at '%s' does not contain the expected file '%s'." % (to_text(tfile.name), file_does_not_exist)
@@ -1004,7 +1004,7 @@ def test_verify_successful_debug_info(monkeypatch, mock_collection):
         assert mock_display.call_count == 4
         assert mock_display.call_args_list[0][0][0] == "Verifying '%s.%s:%s'." % (namespace, name, version)
         assert mock_display.call_args_list[1][0][0] == "Installed collection found at './%s/%s'" % (namespace, name)
-        located = "Remote collection found at 'https://galaxy.ansible.com/download/%s-%s-%s.tar.gz'" % (namespace, name, version)
+        located = "Remote collection found at 'https://galaxy.assible.com/download/%s-%s-%s.tar.gz'" % (namespace, name, version)
         assert mock_display.call_args_list[2][0][0] == located
         verified = "Successfully verified that checksums for '%s.%s:%s' match the remote collection" % (namespace, name, version)
         assert mock_display.call_args_list[3][0][0] == verified
@@ -1142,7 +1142,7 @@ def test_verify_identical(monkeypatch, mock_collection, manifest_info, files_man
 
 @patch.object(os.path, 'isdir', return_value=True)
 def test_verify_collections_no_version(mock_isdir, mock_collection, monkeypatch):
-    namespace = 'ansible_namespace'
+    namespace = 'assible_namespace'
     name = 'collection'
     version = '*'  # Occurs if MANIFEST.json does not exist
 
@@ -1151,17 +1151,17 @@ def test_verify_collections_no_version(mock_isdir, mock_collection, monkeypatch)
 
     collections = [('%s.%s' % (namespace, name), version, None)]
 
-    with pytest.raises(AnsibleError) as err:
+    with pytest.raises(AssibleError) as err:
         collection.verify_collections(collections, './', local_collection.api, False, False)
 
     err_msg = 'Collection %s.%s does not appear to have a MANIFEST.json. ' % (namespace, name)
-    err_msg += 'A MANIFEST.json is expected if the collection has been built and installed via ansible-galaxy.'
+    err_msg += 'A MANIFEST.json is expected if the collection has been built and installed via assible-galaxy.'
     assert err.value.message == err_msg
 
 
 @patch.object(collection.CollectionRequirement, 'verify')
 def test_verify_collections_not_installed(mock_verify, mock_collection, monkeypatch):
-    namespace = 'ansible_namespace'
+    namespace = 'assible_namespace'
     name = 'collection'
     version = '1.0.0'
 
@@ -1177,7 +1177,7 @@ def test_verify_collections_not_installed(mock_verify, mock_collection, monkeypa
     apis = [local_collection.api]
 
     with patch.object(collection, '_download_file') as mock_download_file:
-        with pytest.raises(AnsibleError) as err:
+        with pytest.raises(AssibleError) as err:
             collection.verify_collections(collections, search_path, apis, validate_certs, ignore_errors)
 
     assert err.value.message == "Collection %s.%s is not installed in any of the collection paths." % (namespace, name)
@@ -1185,7 +1185,7 @@ def test_verify_collections_not_installed(mock_verify, mock_collection, monkeypa
 
 @patch.object(collection.CollectionRequirement, 'verify')
 def test_verify_collections_not_installed_ignore_errors(mock_verify, mock_collection, monkeypatch):
-    namespace = 'ansible_namespace'
+    namespace = 'assible_namespace'
     name = 'collection'
     version = '1.0.0'
 
@@ -1214,7 +1214,7 @@ def test_verify_collections_not_installed_ignore_errors(mock_verify, mock_collec
 @patch.object(os.path, 'isdir', return_value=True)
 @patch.object(collection.CollectionRequirement, 'verify')
 def test_verify_collections_no_remote(mock_verify, mock_isdir, mock_collection, monkeypatch):
-    namespace = 'ansible_namespace'
+    namespace = 'assible_namespace'
     name = 'collection'
     version = '1.0.0'
 
@@ -1227,7 +1227,7 @@ def test_verify_collections_no_remote(mock_verify, mock_isdir, mock_collection, 
     ignore_errors = False
     apis = []
 
-    with pytest.raises(AnsibleError) as err:
+    with pytest.raises(AssibleError) as err:
         collection.verify_collections(collections, search_path, apis, validate_certs, ignore_errors)
 
     assert err.value.message == "Failed to find remote collection %s.%s:%s on any of the galaxy servers" % (namespace, name, version)
@@ -1236,7 +1236,7 @@ def test_verify_collections_no_remote(mock_verify, mock_isdir, mock_collection, 
 @patch.object(os.path, 'isdir', return_value=True)
 @patch.object(collection.CollectionRequirement, 'verify')
 def test_verify_collections_no_remote_ignore_errors(mock_verify, mock_isdir, mock_collection, monkeypatch):
-    namespace = 'ansible_namespace'
+    namespace = 'assible_namespace'
     name = 'collection'
     version = '1.0.0'
 
@@ -1263,10 +1263,10 @@ def test_verify_collections_tarfile(monkeypatch):
 
     monkeypatch.setattr(os.path, 'isfile', MagicMock(return_value=True))
 
-    invalid_format = 'ansible_namespace-collection-0.1.0.tar.gz'
+    invalid_format = 'assible_namespace-collection-0.1.0.tar.gz'
     collections = [(invalid_format, '*', None)]
 
-    with pytest.raises(AnsibleError) as err:
+    with pytest.raises(AssibleError) as err:
         collection.verify_collections(collections, './', [], False, False)
 
     msg = "'%s' is not a valid collection name. The format namespace.name is expected." % invalid_format
@@ -1280,7 +1280,7 @@ def test_verify_collections_path(monkeypatch):
     invalid_format = 'collections/collection_namespace/collection_name'
     collections = [(invalid_format, '*', None)]
 
-    with pytest.raises(AnsibleError) as err:
+    with pytest.raises(AssibleError) as err:
         collection.verify_collections(collections, './', [], False, False)
 
     msg = "'%s' is not a valid collection name. The format namespace.name is expected." % invalid_format
@@ -1291,10 +1291,10 @@ def test_verify_collections_url(monkeypatch):
 
     monkeypatch.setattr(os.path, 'isfile', MagicMock(return_value=False))
 
-    invalid_format = 'https://galaxy.ansible.com/download/ansible_namespace-collection-0.1.0.tar.gz'
+    invalid_format = 'https://galaxy.assible.com/download/assible_namespace-collection-0.1.0.tar.gz'
     collections = [(invalid_format, '*', None)]
 
-    with pytest.raises(AnsibleError) as err:
+    with pytest.raises(AssibleError) as err:
         collection.verify_collections(collections, './', [], False, False)
 
     msg = "'%s' is not a valid collection name. The format namespace.name is expected." % invalid_format

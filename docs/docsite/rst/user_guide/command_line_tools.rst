@@ -3,18 +3,18 @@
 Working with command line tools
 ===============================
 
-Most users are familiar with `ansible` and `ansible-playbook`, but those are not the only utilities Ansible provides.
-Below is a complete list of Ansible utilities. Each page contains a description of the utility and a listing of supported parameters.
+Most users are familiar with `assible` and `assible-playbook`, but those are not the only utilities Assible provides.
+Below is a complete list of Assible utilities. Each page contains a description of the utility and a listing of supported parameters.
 
 .. toctree::
    :maxdepth: 1
 
-   ../cli/ansible.rst
-   ../cli/ansible-config.rst
-   ../cli/ansible-console.rst
-   ../cli/ansible-doc.rst
-   ../cli/ansible-galaxy.rst
-   ../cli/ansible-inventory.rst
-   ../cli/ansible-playbook.rst
-   ../cli/ansible-pull.rst
-   ../cli/ansible-vault.rst
+   ../cli/assible.rst
+   ../cli/assible-config.rst
+   ../cli/assible-console.rst
+   ../cli/assible-doc.rst
+   ../cli/assible-galaxy.rst
+   ../cli/assible-inventory.rst
+   ../cli/assible-playbook.rst
+   ../cli/assible-pull.rst
+   ../cli/assible-vault.rst
